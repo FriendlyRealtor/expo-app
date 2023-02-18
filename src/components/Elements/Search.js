@@ -15,7 +15,7 @@ export default ({submit = false, containerStyle, topicPress = (title) => {}, onS
     const theme = useTheme();
     const navigation = useNavigation();
     return <View style={[AppStyle.style.paddingHorizontalLarge, AppStyle.style.marginBottom, containerStyle]}>
-        
+
         <View style={[{ flexDirection: 'row' }, AppStyle.style.marginVerticalLarge]}>
             <Searchbar
                 placeholder="Search..."
@@ -30,23 +30,5 @@ export default ({submit = false, containerStyle, topicPress = (title) => {}, onS
                 </TouchableOpacity>
             </View>
         </View>
-        {
-            !hiddenBottom? <><Text style={[AppStyle.style.p, { color: theme.colors.active, fontWeight: 'normal', textAlign: 'center', marginBottom: width * 0.05}]}>{'50% off Promo Applies to Purschase of $25'.toUpperCase()}</Text>
-            <FlatList
-                data={topics}
-                keyExtractor={(item, index) => `header-topics-${index}`}
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-                extraData={chooseTopic}
-                renderItem={({item, index}) => {
-                    return <TouchableOpacity style={{marginRight: width * 0.03}} onPress={() => {
-                        if(topicPress != undefined)
-                            topicPress(item.title);
-                    }}>
-                        <Text style={[{ paddingHorizontal: width * 0.02 }, item.title == chooseTopic? { color: theme.colors.secondary } : null]}>{item.title}</Text>
-                    </TouchableOpacity>
-                }}
-            /></> : <></>
-        }
     </View>
 }

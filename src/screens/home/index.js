@@ -30,6 +30,7 @@ export default () => {
             </View>
 		</ScrollView>*/}
 			<Text>Get CRM Valuation on the go!</Text>
+			<Search topicPress={(title) => console.log("search", title)} />
 			<Button label={"Click Me"} onPress={() => console.log('click')} />
     	</Layout>
 		)
