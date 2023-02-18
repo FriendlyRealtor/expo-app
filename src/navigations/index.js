@@ -126,11 +126,11 @@ function App() {
           component={NotificationScreen}
           options={options("Notification", true)}
         />
-        <Stack.Screen 
+        {/*<Stack.Screen 
           name={RouteName.Search}
           component={Search}
           options={options("Search", true)}
-        />
+	/>*/}
       </Stack.Navigator>
     </NavigationContainer>
   );
