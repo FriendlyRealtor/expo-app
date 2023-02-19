@@ -6,6 +6,10 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+		"plugins": [
+			"expo-tracking-transparency",
+			"@react-native-google-signin/google-signin"
+		],
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -18,13 +22,14 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      }
+      "supportsTablet": true,
+			"bundleIdentifier": "jubileeinvestments.Real-Estate-App",
+			"config": {
+				"googleSignIn": {
+					"reservedClientId": "com.googleusercontent.apps.154068447777-70bbsl9rsmsi27tv3snugb9hj8br2vng"
+				}
+			},
+			"googleServicesFile": "./GoogleService-Info.plist"
     },
     "web": {
       "favicon": "./assets/favicon.png"

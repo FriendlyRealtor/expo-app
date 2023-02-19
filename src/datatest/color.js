@@ -1,3 +1,1 @@
-export const color = [
-    'red', 'blue', 'black', 'gray'
-]
+export const color = ['red', 'blue', 'black', 'gray'];

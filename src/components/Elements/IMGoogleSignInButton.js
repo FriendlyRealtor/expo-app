@@ -1,4 +1,4 @@
-export default function IMGoogleSignInButton({ containerStyle, onPress }) {
+export default function IMGoogleSignInButton({containerStyle, onPress}) {
   return (
     <TouchableOpacity onPress={onPress} style={containerStyle}>
       <Image
@@ -6,5 +6,5 @@ export default function IMGoogleSignInButton({ containerStyle, onPress }) {
         style={styles.image}
       />
     </TouchableOpacity>
-  )
+  );
 }

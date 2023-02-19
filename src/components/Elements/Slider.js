@@ -1,18 +1,19 @@
-import React from "react";
-import {
-  View,
-  Image,
-} from "react-native";
-import Animated, { useSharedValue, useAnimatedScrollHandler, runOnJS } from 'react-native-reanimated';
-import { Style } from "./Style/Slider";
-export default React.forwardRef(({images, onChangePosition = (x) => {}}, ref) => {
+import React from 'react';
+import {View, Image} from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedScrollHandler,
+  runOnJS,
+} from 'react-native-reanimated';
+import {Style} from './Style/Slider';
+export default React.forwardRef(({images, onChangePosition = x => {}}, ref) => {
   const scrollRef = React.useRef();
   const translateX = useSharedValue(0);
-  const scrollHandler = useAnimatedScrollHandler((event) => {
-      translateX.value = event.contentOffset.x;
-      runOnJS(onChangePosition)(event.contentOffset.x);
+  const scrollHandler = useAnimatedScrollHandler(event => {
+    translateX.value = event.contentOffset.x;
+    runOnJS(onChangePosition)(event.contentOffset.x);
   });
-  React.useEffect(() => { 
+  React.useEffect(() => {
     scrollRef?.current?.scrollTo({x: 0, y: 0, animated: false});
   }, [images]);
 
@@ -28,10 +29,7 @@ export default React.forwardRef(({images, onChangePosition = (x) => {}}, ref) =>
       >
         {images.map((image, imageIndex) => {
           return (
-            <Animated.View
-              style={Style.imageContainer}
-              key={imageIndex}
-            >
+            <Animated.View style={Style.imageContainer} key={imageIndex}>
               <Image source={image.image} style={Style.image} />
             </Animated.View>
           );
