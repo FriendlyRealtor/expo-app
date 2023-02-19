@@ -22,7 +22,7 @@ export default ({submit = false, containerStyle, topicPress = (title) => {}, onS
                 onChangeText={setSearch}
                 value={search}
                 style={[AppStyle.style.groupContainer, Style.searchContainer, Style.searchInput]}
-                onIconPress={submit? () => onSubmit(search) : () => navigation.navigate(RouteName.Search)}
+                onIconPress={submit ? () => onSubmit(search) : () => navigation.navigate(RouteName.Search)}
             />
             <View style={[AppStyle.style.groupContainer, AppStyle.style.nonePadding, AppStyle.style.contentMiddle, { height: 48, width: 48 }]}>
                 <TouchableOpacity style={[AppStyle.style.headerButton]}>
