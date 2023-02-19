@@ -18,6 +18,6 @@ export default ({
       ]}
       onPress={onPress}
       style={[{borderRadius: 30}, style]}
-    ></Button>
+    />
   );
 };
