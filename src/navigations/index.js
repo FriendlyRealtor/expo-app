@@ -31,15 +31,10 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName={RouteName.Intro}>
-        <Stack.Screen name={RouteName.Intro} component={IntroScreen} 
-          options={{ headerShown: false, cardStyleInterpolator: forFadeOpacityZero, gestureEnabled: true, animationEnabled: false , cardOverlayEnabled: true, cardStyle: {backgroundColor: 'transparent'}}}
-          detachInactiveScreens
-          />
         <Stack.Screen
           name={RouteName.Login}
           component={LoginScreen}
           options={{ headerShown: false, cardStyleInterpolator: forFadeOpacityZero, gestureEnabled: true, cardOverlayEnabled: true, cardStyle: {backgroundColor: 'transparent'} }}
-          
         />
         <Stack.Screen
           name={RouteName.ForgotPassword}
