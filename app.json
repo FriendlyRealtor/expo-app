@@ -6,10 +6,10 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-		"plugins": [
-			"expo-tracking-transparency",
-			"@react-native-google-signin/google-signin"
-		],
+    "plugins": [
+      "expo-tracking-transparency",
+      "@react-native-google-signin/google-signin"
+    ],
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -23,13 +23,16 @@
     ],
     "ios": {
       "supportsTablet": true,
-			"bundleIdentifier": "jubileeinvestments.Real-Estate-App",
-			"config": {
-				"googleSignIn": {
-					"reservedClientId": "com.googleusercontent.apps.154068447777-70bbsl9rsmsi27tv3snugb9hj8br2vng"
-				}
-			},
-			"googleServicesFile": "./GoogleService-Info.plist"
+      "bundleIdentifier": "jubileeinvestments.Real-Estate-App",
+      "config": {
+        "googleSignIn": {
+          "reservedClientId": "com.googleusercontent.apps.154068447777-70bbsl9rsmsi27tv3snugb9hj8br2vng"
+        }
+      },
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "infoPlist": {
+        "NSUserTrackingUsageDescription": "Allow this app to collect app-related data that can be used for tracking you or your device."
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -39,6 +42,9 @@
         "projectId": "03613ba6-fe49-4a83-9564-6180c192c06a"
       }
     },
-    "owner": "trelliski"
+    "owner": "trelliski",
+    "android": {
+      "package": "com.trelliski.balancelifestyle"
+    }
   }
 }

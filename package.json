@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "android": "expo run:android",
-    "ios": "expo run:ios",
+    "android": "npx expo run:android",
+    "dev-ios": "eas build --profile development-simulator --platform ios",
+    "ios": "npx expo run:ios",
     "lint": "eslint .",
     "prettier": "prettier --write '*.js' 'src/**/*.js'",
-    "start": "expo start --dev-client",
-    "web": "expo start --web"
+    "start": "npx expo start --dev-client",
+    "web": "npx expo start --web"
   },
   "dependencies": {
     "@invertase/react-native-apple-authentication": "^2.2.2",

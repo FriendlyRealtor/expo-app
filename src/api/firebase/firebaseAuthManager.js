@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import * as Location from 'expo-location';
 import {EventRegister} from 'react-native-event-listeners';
 import * as Facebook from 'expo-facebook';
@@ -6,7 +7,6 @@ import appleAuth, {
   AppleAuthRequestOperation,
 } from '@invertase/react-native-apple-authentication';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
-
 import {processAndUploadMediaFile} from '../users/api/media/storage';
 import * as authAPI from './authClient';
 import {updateUser} from '../users';

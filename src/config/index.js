@@ -1,11 +1,31 @@
-import React, {useContext} from 'react';
+import React, { useEffect, useContext } from 'react';
 import {Platform} from 'react-native';
+import firebase from '@react-native-firebase/app';
 
 const regexForNames = /^[a-zA-Z]{2,25}$/;
 
 export const ConfigContext = React.createContext({});
 
 export const ConfigProvider = ({children}) => {
+
+	useEffect(() => {
+		const asyncFunc = async () => {
+			// Initialize Firebase
+			const credentials = {
+				apiKey: "AIzaSyCI0IoNQbXn3a0_QAyhPOXwpKM6Wqk1hnQ",
+				authDomain: "real-estate-app-9a719.firebaseapp.com",
+				projectId: "real-estate-app-9a719",
+				storageBucket: "real-estate-app-9a719.appspot.com",
+				messagingSenderId: "154068447777",
+				appId: "1:154068447777:web:881b49a540dae817b76960",
+				measurementId: "G-PLQ3PXXWJJ"
+			};
+			await firebase.initializeApp(credentials);
+		}
+
+		asyncFunc()
+	}, [])
+
   const config = {
     isSMSAuthEnabled: true,
     isGoogleAuthEnabled: true,
