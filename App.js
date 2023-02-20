@@ -1,32 +1,17 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
+import React from 'react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import React, { useEffect } from 'react';
-import {
-  View, LogBox
-} from 'react-native';
-import AppNavigation from './src/navigations';
-import {ConfigProvider} from './src/config';
-import {AuthProvider} from './src/hooks/useAuth';
-import { authManager } from './src/api/firebase/firebaseAuthManager'
+import { RootNavigator } from './navigation/RootNavigator';
+import { AuthenticatedUserProvider } from './providers';
 
 const App = () => {
-	useEffect(() => {
-    LogBox.ignoreAllLogs(true);
-  }, []);
-
   return (
-    <ConfigProvider>
-			<AuthProvider>
-				<AppNavigation />
-			</AuthProvider>
-		</ConfigProvider>
-
+    <AuthenticatedUserProvider>
+      <SafeAreaProvider>
+        <RootNavigator />
+      </SafeAreaProvider>
+    </AuthenticatedUserProvider>
   );
 };
+
 export default App;
