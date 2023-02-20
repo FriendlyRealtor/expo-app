@@ -5,11 +5,11 @@ import {updateUser} from '../users';
 import {ErrorCode} from '../ErrorCode';
 import {getUnixTimeStamp} from '../../helper/utils/DatetimeUtils';
 
-const usersRef = firestore().collection('users');
 
 const handleUserFromAuthStateChanged = (user, resolve) => {
   if (user) {
-    usersRef
+		if (firestore().collection('users')) {
+			firestore().collection('users')
       .doc(user.uid)
       .get()
       .then(document => {
@@ -19,6 +19,7 @@ const handleUserFromAuthStateChanged = (user, resolve) => {
       .catch(error => {
         resolve(null);
       });
+		}
   } else {
     resolve(null);
   }

@@ -13,6 +13,7 @@ import {
 import AppNavigation from './src/navigations';
 import {ConfigProvider} from './src/config';
 import {AuthProvider} from './src/hooks/useAuth';
+import { authManager } from './src/api/firebase/firebaseAuthManager'
 
 const App = () => {
 	useEffect(() => {

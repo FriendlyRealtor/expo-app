@@ -15,8 +15,6 @@ import {ErrorCode} from '../../api/ErrorCode';
 const defaultProfilePhotoURL =
   'https://www.iosapptemplates.com/wp-content/uploads/2019/06/empty-avatar.jpg';
 
-
-console.log("claling")
 const validateUsernameFieldIfNeeded = (inputFields, appConfig) => {
   return new Promise((resolve, reject) => {
     const usernamePattern = /^[aA-zZ]\w{3,29}$/;
