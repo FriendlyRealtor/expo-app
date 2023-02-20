@@ -26,7 +26,7 @@ export const LoginScreen = ({ navigation }) => {
         <KeyboardAwareScrollView enableOnAndroid={true}>
           {/* LogoContainer: consits app logo and screen title */}
           <View style={styles.logoContainer}>
-            <Text style={styles.screenTitle}>jjdck!</Text>
+            <Text style={styles.screenTitle}>Welcome Back!</Text>
           </View>
           <Formik
             initialValues={{
