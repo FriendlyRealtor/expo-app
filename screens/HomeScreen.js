@@ -2,9 +2,9 @@ import React, {useCallback, useState} from 'react';
 import {
   View,
 	Text,
-	Button
 } from 'react-native';
 import { TextInput } from '../components'
+import { Card, Button } from 'react-native-paper';
 
 //data test
 import axios from 'axios';
@@ -18,7 +18,7 @@ export const HomeScreen = () => {
   const getCrmValuation = useCallback(() => {
     axios({
       method: 'get',
-      url: `http://localhost:3000/crm?param=${id}`,
+      url: `http://localhost:5000/crm?param=${id}`,
     })
       .then(response => {
         if (response.data) {
@@ -36,31 +36,33 @@ export const HomeScreen = () => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
-      <Text
-        style={{
-          textAlign: 'center',
-          fontSize: '12px',
-          fontWeight: 'bold',
-        }}
-      >
-        Get CRM Valuation on the go!
-      </Text>
-      <TextInput
-				value={id}
-				onChangeText={(value) => setId(value)}
-				placeholder="Enter Value"
-        onSubmit={value => setId(value)}
-      />
-      <Button title='Click Me' onPress={getCrmValuation} />
-      <Text
-        style={{
-          textAlign: 'center',
-          fontSize: '24px',
-          fontWeight: 'bold',
-        }}
-      >{`$${crmEstimate}`}</Text>
-			<Button title='Sign Out' onPress={handleLogout} />
+    <View style={{ flex: 1, marginTop: 50 }}>
+			<Card type="elevation" elevation={3}>
+				<Card.Title title="Get CRM Valuation on the go!" subtitle="Get accurate crm valuations." />
+				<Card.Content>
+					<TextInput
+						value={id}
+						onChangeText={(value) => setId(value)}
+						placeholder="Enter Value"
+						onSubmit={value => setId(value)}
+					/>
+					<Text
+						style={{
+							textAlign: 'center',
+							fontSize: '24px',
+							fontWeight: 'bold',
+						}}
+					>{`$${crmEstimate}`}</Text>
+				</Card.Content>
+				<Card.Actions>
+					<Button type='outlined' onPress={getCrmValuation} buttonColor="white" textColor="black">
+						Get valuation
+					</Button>
+					<Button type='outlined' onPress={handleLogout} buttonColor="white" textColor="black">
+						Sign Out
+					</Button>
+				</Card.Actions>
+			</Card>
     </View>
   );
 };
