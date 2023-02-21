@@ -43,7 +43,7 @@ export const HomeScreen = () => {
 					<TextInput
 						value={id}
 						onChangeText={(value) => setId(value)}
-						placeholder="Enter Value"
+						placeholder="Enter address you are interested in"
 						onSubmit={value => setId(value)}
 					/>
 					<Text
