@@ -19,3 +19,11 @@ export const passwordResetSchema = Yup.object().shape({
     .label('Email')
     .email('Enter a valid email')
 });
+
+export const numberWithCommas = (num) => {
+	num = num.toString();
+	var pattern = /(-?\d+)(\d{3})/;
+	while (pattern.test(num))
+			num = num.replace(pattern, "$1,$2");
+	return num;
+}

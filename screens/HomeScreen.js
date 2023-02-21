@@ -5,11 +5,10 @@ import {
 } from 'react-native';
 import { TextInput } from '../components'
 import { Card, Button } from 'react-native-paper';
-
-//data test
 import axios from 'axios';
 import { signOut } from 'firebase/auth';
 import { auth } from '../config';
+import { numberWithCommas } from '../utils';
 
 export const HomeScreen = () => {
   const [id, setId] = useState();
@@ -49,11 +48,11 @@ export const HomeScreen = () => {
 					/>
 					<Text
 						style={{
-							textAlign: 'center',
+							textAlign: 'left',
 							fontSize: '24px',
 							fontWeight: 'bold',
 						}}
-					>{`$${crmEstimate}`}</Text>
+					>{`Cost of address $${numberWithCommas(crmEstimate)}`}</Text>
 				</Card.Content>
 				<Card.Actions>
 					<Button type='outlined' onPress={getCrmValuation} buttonColor="white" textColor="black">
