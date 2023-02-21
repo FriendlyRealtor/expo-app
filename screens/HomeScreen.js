@@ -18,11 +18,12 @@ export const HomeScreen = () => {
   const getCrmValuation = useCallback(() => {
     axios({
       method: 'get',
-      url: `http://localhost:5000/crm?param=${id}`,
+      url: `http://localhost:5001/crm?param=${id}`,
     })
       .then(response => {
         if (response.data) {
           const {value} = response.data;
+					console.log("value", value)
           setCrmEstimate(value);
         }
       })
