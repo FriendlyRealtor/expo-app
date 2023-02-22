@@ -5,6 +5,16 @@ export const loginValidationSchema = Yup.object().shape({
   password: Yup.string().required().min(6).label('Password')
 });
 
+export const locationValidationSchema = Yup.object().shape({
+	location: Yup.string().trim().matches(/^[a-zA-Z0-9\s,'-]*$/ , 'Is not in correct format').required()
+	.test('test-location', 'Address returns no positive value.',
+	function(value) {
+		if (value < 1){
+			return true;
+		}
+	})
+});
+
 export const signupValidationSchema = Yup.object().shape({
   email: Yup.string().required().email().label('Email'),
   password: Yup.string().required().min(6).label('Password'),
@@ -21,9 +31,13 @@ export const passwordResetSchema = Yup.object().shape({
 });
 
 export const numberWithCommas = (num) => {
-	num = num.toString();
-	var pattern = /(-?\d+)(\d{3})/;
-	while (pattern.test(num))
-			num = num.replace(pattern, "$1,$2");
-	return num;
+	if (num) {
+		num = num.toString();
+		var pattern = /(-?\d+)(\d{3})/;
+		while (pattern.test(num))
+				num = num.replace(pattern, "$1,$2");
+		return num;
+	}
+
+	return 0;
 }
