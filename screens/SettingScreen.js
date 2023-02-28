@@ -12,7 +12,7 @@ import { numberWithCommas } from '../utils';
 import { Formik, useFormik } from 'formik';
 import { locationValidationSchema } from '../utils';
 
-export const HomeScreen = () => {
+export const SettingScreen = () => {
   const [crmEstimate, setCrmEstimate] = useState(0);
   const { errors, setFieldValue, touched, values, handleBlur, handleSubmit } = useFormik({
 		initialValues: {
