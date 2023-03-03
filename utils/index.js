@@ -1,5 +1,13 @@
 import * as Yup from 'yup';
 
+export const continueEducationCourse = [{
+url: 'https://www.youtube.com/watch?v=tE5FGuhltBU'
+}, {
+	url: 'https://www.youtube.com/watch?v=4b013QoA4so'
+}, {
+	url: 'https://www.youtube.com/watch?v=6eppXFPVaHE'
+}]
+
 export const loginValidationSchema = Yup.object().shape({
   email: Yup.string().required().email().label('Email'),
   password: Yup.string().required().min(6).label('Password')

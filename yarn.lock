@@ -4924,6 +4924,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-av@npm:~12.0.4":
+  version: 12.0.4
+  resolution: "expo-av@npm:12.0.4"
+  dependencies:
+    "@expo/config-plugins": ~5.0.0
+  peerDependencies:
+    expo: "*"
+  checksum: 5d985ab18159f45e1a2857af8b671285d940c457797eef489888c019fb1a760e1dcc01ea7eaff6f06cd80d4d9b17f2573568cd4c01799e6f054df76f89e312ec
+  languageName: node
+  linkType: hard
+
 "expo-constants@npm:~13.2.2, expo-constants@npm:~13.2.3, expo-constants@npm:~13.2.4":
   version: 13.2.4
   resolution: "expo-constants@npm:13.2.4"
@@ -4999,6 +5010,13 @@ __metadata:
     compare-versions: ^3.4.0
     invariant: ^2.2.4
   checksum: b4e86c536f7eb1aa7bdbbc40d7ee28397a2de944acf09c5d4bbdbfd397293e5118aedb53a8f2a7e0c8e355822500e5ead1064c8bd0897ece8667fa9b6d21258c
+  languageName: node
+  linkType: hard
+
+"expo-status-bar@npm:^1.4.4":
+  version: 1.4.4
+  resolution: "expo-status-bar@npm:1.4.4"
+  checksum: 8d36b821ff2804aed3158f339cc396f0525f365763913881b9b11e6e85e83f21ddbc3a2ede660ae8ce6d6df1a6cda825ad996c3c45f195cbc89091da7605f7e0
   languageName: node
   linkType: hard
 
@@ -8696,6 +8714,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-uuid@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "react-native-uuid@npm:2.0.1"
+  checksum: 2fae6e2ee6cef108a31ae9d5be661a1947a86f4c6a812c7386b57d970861b364dc887bc4fe3225227aeea7925ccdc24d4478ff30193305abc283eb4a30ee2138
+  languageName: node
+  linkType: hard
+
 "react-native-vector-icons@npm:^9.2.0":
   version: 9.2.0
   resolution: "react-native-vector-icons@npm:9.2.0"
@@ -9153,7 +9178,9 @@ __metadata:
     babel-preset-expo: ~9.2.0
     dotenv: ^10.0.0
     expo: ^46.0.0
+    expo-av: ~12.0.4
     expo-constants: ~13.2.3
+    expo-status-bar: ^1.4.4
     firebase: 9.6.11
     formik: 2.1.4
     lodash: ^4.17.21
@@ -9166,6 +9193,7 @@ __metadata:
     react-native-reanimated: ~2.9.1
     react-native-safe-area-context: 4.3.1
     react-native-screens: ~3.15.0
+    react-native-uuid: ^2.0.1
     react-native-vector-icons: ^9.2.0
     react-native-web: ~0.18.7
     yup: 0.27.0

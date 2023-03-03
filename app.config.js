@@ -28,6 +28,14 @@ export default {
       storageBucket: "real-estate-app-9a719.appspot.com",
       messagingSenderId:  "154068447777",
       appId: "1:154068447777:web:881b49a540dae817b76960"
-    }
+    },
+		plugins: [
+			[
+				"expo-av",
+				{
+					microphonePermission: "Allow $(PRODUCT_NAME) to access your microphone."
+				}
+			]
+		]
   }
 };
