@@ -63,7 +63,6 @@ export const SettingScreen = () => {
 					{title: 'Name', data: ['Test']},
 					{title: 'Email', data: userEmail},
 					{title: 'Email Verified', data: verifiedEmail},
-					{title: 'Billing Info', data: verifiedEmail},
 				]}
 				renderItem={({item}) => <Text style={styles.item}>{item}</Text>}
 				renderSectionHeader={({section}) => (
