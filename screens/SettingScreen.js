@@ -4,8 +4,10 @@ import {
 	SectionList,
 	StyleSheet
 } from 'react-native';
-import { Text } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { signOut } from 'firebase/auth';
+import { auth } from '../config';
 
 export const SettingScreen = () => {
 	const styles = StyleSheet.create({
@@ -33,10 +35,10 @@ export const SettingScreen = () => {
 	const [verifiedEmail, setVerifiedEmail] = useState([false])
 	const [userEmail, setUserEmail] = useState([])
 
-	const auth = getAuth();
+	const userAuth = getAuth();
 
 	useEffect(() => {
-		onAuthStateChanged(auth, (user) => {
+		onAuthStateChanged(userAuth, (user) => {
 			if (user) {
 				// User is signed in, see docs for a list of available properties
 				// https://firebase.google.com/docs/reference/js/firebase.User
@@ -49,6 +51,10 @@ export const SettingScreen = () => {
 			}
 		});
 	}, [])
+
+	const handleLogout = () => {
+    signOut(auth).catch(error => console.log('Error logging out: ', error));
+  };
 
   return (
 		<View style={styles.container}>
@@ -65,6 +71,9 @@ export const SettingScreen = () => {
 				)}
 				keyExtractor={item => `basicListEntry-${item}`}
 			/>
+			<Button type='outlined' compact buttonColor='#f57c00' textColor="black" onPress={handleLogout}>
+				Sign Out
+			</Button>
 		</View>
   );
 };

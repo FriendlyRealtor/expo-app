@@ -6,15 +6,13 @@ import {
 import { TextInput, FormErrorMessage } from '../components'
 import { Card, Button } from 'react-native-paper';
 import axios from 'axios';
-import { signOut } from 'firebase/auth';
-import { auth } from '../config';
 import { numberWithCommas } from '../utils';
 import { Formik, useFormik } from 'formik';
 import { locationValidationSchema } from '../utils';
 
 export const HomeScreen = () => {
   const [crmEstimate, setCrmEstimate] = useState(0);
-  const { errors, setFieldValue, touched, values, handleBlur, handleSubmit } = useFormik({
+  const { errors, setFieldValue, touched, values, handleBlur } = useFormik({
 		initialValues: {
 			location: ''
 		}
@@ -36,10 +34,6 @@ export const HomeScreen = () => {
         console.log('receiving', error);
       });
   }, [location]);
-
-	const handleLogout = () => {
-    signOut(auth).catch(error => console.log('Error logging out: ', error));
-  };
 
   return (
     <View style={{ flex: 1, marginTop: 50 }}>
@@ -69,9 +63,6 @@ export const HomeScreen = () => {
 						<Card.Actions>
 							<Button type='outlined' compact buttonColor='#039be5' textColor="black" onPress={getCrmValuation}>
 								Get valuation
-							</Button>
-							<Button type='outlined' compact buttonColor='#f57c00' textColor="black" onPress={handleLogout} buttonColor="white" textColor="black">
-								Sign Out
 							</Button>
 						</Card.Actions>
 					</View>
