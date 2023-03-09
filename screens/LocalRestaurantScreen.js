@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
 	Image,
-	ScrollView,
 	View,
 	FlatList,
 	StyleSheet,
@@ -34,11 +33,6 @@ export const LocalRestaurantScreen = () => {
 
 	const [restaurantList, setRestaurantList] = useState([])
 	const numColumns = 3;
-	const data = [
-		{ key: 'A' }, { key: 'B' }, { key: 'C' }, { key: 'D' }, { key: 'E' }, { key: 'F' }, { key: 'G' }, { key: 'H' }, { key: 'I' }, { key: 'J' },
-		// { key: 'K' },
-		// { key: 'L' },
-	];
 
 	useEffect(() => {
 		axios({
@@ -56,16 +50,21 @@ export const LocalRestaurantScreen = () => {
 	}, [])
 
 	renderItem = ({ item, index }) => {
-    if (item.empty === true) {
-      return <View style={[styles.item, styles.itemInvisible]} />;
-    }
-    return (
-      <View
-        style={styles.item}
-      >
-        <Text style={styles.itemText}>{item.key}</Text>
-      </View>
-    );
+		const { name, icon, reference, rating, opening_hours } = item
+		if (!opening_hours?.open_now) {
+			return false
+		}
+
+		return (
+			<Surface key={reference} elevation={4}>
+				<Image style={{ width: 66, height: 58 }}
+				source={{
+					uri: icon,
+				}} />
+				<Text>{name}</Text>
+				<Text>{rating}</Text>
+			</Surface>
+		)
   };
 
 	formatData = (data, numColumns) => {
@@ -79,25 +78,8 @@ export const LocalRestaurantScreen = () => {
 	};
 
   return (
-    <ScrollView style={{ flex: 1, marginTop: 50 }}>
-			<FlatList data={formatData(data, numColumns)} renderItem={renderItem} numColumns={numColumns} />
-			{restaurantList.length > 0 && restaurantList.map((restaurant) => {
-				const { name, icon, reference, rating, opening_hours } = restaurant
-				if (!opening_hours?.open_now) {
-					return false
-				}
-
-				return (
-					<Surface key={reference} elevation={4}>
-						<Image style={{ width: 66, height: 58 }}
-						source={{
-							uri: icon,
-						}} />
-						<Text>{name}</Text>
-						<Text>{rating}</Text>
-					</Surface>
-				)
-			})}
-    </ScrollView>
+    <View style={{ flex: 1, marginTop: 50 }}>
+			<FlatList data={formatData(restaurantList, numColumns)} renderItem={renderItem} numColumns={numColumns} />
+    </View>
   );
 };

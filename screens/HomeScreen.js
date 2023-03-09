@@ -58,7 +58,21 @@ export const HomeScreen = () => {
 									fontSize: '24px',
 									fontWeight: 'bold',
 								}}
-							>{`Cost of address $${numberWithCommas(crmEstimate)}`}</Text>
+							>{`Place offer for $${numberWithCommas(crmEstimate.price)}`}</Text>
+							<Text
+							style={{
+								textAlign: 'left',
+								fontSize: '24px',
+								fontWeight: 'bold',
+							}}
+						>{`Price Low $${numberWithCommas(crmEstimate.priceRangeLow)}`}</Text>
+						<Text
+						style={{
+							textAlign: 'left',
+							fontSize: '24px',
+							fontWeight: 'bold',
+						}}
+					>{`Price High $${numberWithCommas(crmEstimate.priceRangeHigh)}`}</Text>
 						</Card.Content>
 						<Card.Actions>
 							<Button type='outlined' compact buttonColor='#039be5' textColor="black" onPress={getCrmValuation}>
