@@ -11,7 +11,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { signOut } from 'firebase/auth';
 import { auth } from '../config';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import moment from 'moment';
+
 import {
   ANDROID_MODE,
   DAY_OF_WEEK,

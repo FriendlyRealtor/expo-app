@@ -4,7 +4,9 @@ import {
 	View,
 	FlatList,
 	StyleSheet,
-	Dimensions
+	Linking,
+	Dimensions,
+	TouchableOpacity
 } from 'react-native';
 import { Surface, Text } from 'react-native-paper';
 import axios from 'axios';
@@ -49,21 +51,38 @@ export const LocalRestaurantScreen = () => {
       });
 	}, [])
 
-	renderItem = ({ item, index }) => {
-		const { name, icon, reference, rating, opening_hours } = item
-		if (!opening_hours?.open_now) {
+	const openMap = (lng, lat) => {
+		const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
+		const latLng = `${lat},${lng}`;
+		const label = 'Custom Label';
+		const url = Platform.select({
+			ios: `${scheme}${label}@${latLng}`,
+			android: `${scheme}${latLng}(${label})`
+		});
+		Linking.openURL(url);
+	}
+
+	const renderItem = ({ item, index }) => {
+		const { name, icon, reference, rating, opening_hours, geometry } = item
+
+		if (!opening_hours?.open_now && !geometry) {
 			return false
 		}
 
+		const { location } = geometry;
+		const { lng, lat } = location;
+
 		return (
-			<Surface key={reference} elevation={4}>
-				<Image style={{ width: 66, height: 58 }}
-				source={{
-					uri: icon,
-				}} />
-				<Text>{name}</Text>
-				<Text>{rating}</Text>
-			</Surface>
+			<TouchableOpacity onPress={() => openMap(lng, lat)}>
+				<Surface key={reference} elevation={4}>
+					<Image style={{ width: 66, height: 58 }}
+					source={{
+						uri: icon,
+					}} />
+					<Text>{name}</Text>
+					<Text>{rating}</Text>
+				</Surface>
+			</TouchableOpacity>
 		)
   };
 
