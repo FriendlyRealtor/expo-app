@@ -2942,6 +2942,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-community/datetimepicker@npm:6.2.0":
+  version: 6.2.0
+  resolution: "@react-native-community/datetimepicker@npm:6.2.0"
+  dependencies:
+    invariant: ^2.2.4
+  checksum: 5afda05288ff10c4d346cb7070c411e38dfbe54b375766d3c71c90da5f02731bcf0d37ea72134af1cee29e82b4bf60242e15781a2b50fccb2d8b8c0e82f2a77f
+  languageName: node
+  linkType: hard
+
 "@react-native-masked-view/masked-view@npm:0.2.7":
   version: 0.2.7
   resolution: "@react-native-masked-view/masked-view@npm:0.2.7"
@@ -7642,6 +7651,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"moment@npm:^2.29.4":
+  version: 2.29.4
+  resolution: "moment@npm:2.29.4"
+  checksum: 0ec3f9c2bcba38dc2451b1daed5daded747f17610b92427bebe1d08d48d8b7bdd8d9197500b072d14e326dd0ccf3e326b9e3d07c5895d3d49e39b6803b76e80e
+  languageName: node
+  linkType: hard
+
 "ms@npm:2.0.0":
   version: 2.0.0
   resolution: "ms@npm:2.0.0"
@@ -9226,6 +9242,7 @@ __metadata:
     "@babel/core": ^7.18.6
     "@babel/runtime": ^7.9.0
     "@react-native-async-storage/async-storage": ~1.17.3
+    "@react-native-community/datetimepicker": 6.2.0
     "@react-native-masked-view/masked-view": 0.2.7
     "@react-navigation/bottom-tabs": ^6.5.7
     "@react-navigation/native": ^6.0.11
@@ -9241,6 +9258,7 @@ __metadata:
     firebase: 9.6.11
     formik: 2.1.4
     lodash: ^4.17.21
+    moment: ^2.29.4
     react: 18.0.0
     react-dom: 18.0.0
     react-native: 0.69.4

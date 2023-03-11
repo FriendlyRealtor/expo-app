@@ -1,11 +1,7 @@
 import * as Yup from 'yup';
 
 export const continueEducationCourse = [{
-url: 'https://www.youtube.com/watch?v=tE5FGuhltBU'
-}, {
-	url: 'https://www.youtube.com/watch?v=4b013QoA4so'
-}, {
-	url: 'https://www.youtube.com/watch?v=6eppXFPVaHE'
+url: '"http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4"'
 }]
 
 export const loginValidationSchema = Yup.object().shape({
