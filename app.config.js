@@ -34,7 +34,13 @@ export default {
 				"expo-av",
 				{
 					microphonePermission: "Allow $(PRODUCT_NAME) to access your microphone."
-				}
+				},
+			],
+			[
+				"expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+        },
 			]
 		]
   }

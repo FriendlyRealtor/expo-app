@@ -5006,6 +5006,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-location@npm:~14.3.0":
+  version: 14.3.0
+  resolution: "expo-location@npm:14.3.0"
+  dependencies:
+    "@expo/config-plugins": ~5.0.0
+  peerDependencies:
+    expo: "*"
+  checksum: 0433f22aa3ef794997538c1d8d577858ae3e442a62f296c801c43cfe4f5909e6a3f27357b8a4de757cffe84968f5dca2be9e5dbe20e064e73a7206d6768ab6ea
+  languageName: node
+  linkType: hard
+
 "expo-modules-autolinking@npm:0.10.3":
   version: 0.10.3
   resolution: "expo-modules-autolinking@npm:0.10.3"
@@ -9253,6 +9264,7 @@ __metadata:
     expo: ^46.0.0
     expo-av: ~12.0.4
     expo-constants: ~13.2.3
+    expo-location: ~14.3.0
     expo-status-bar: ^1.4.4
     expo-web-browser: ~11.0.0
     firebase: 9.6.11

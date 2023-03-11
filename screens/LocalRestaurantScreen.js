@@ -3,32 +3,49 @@ import {
 	Image,
 	View,
 	FlatList,
-	StyleSheet,
 	Linking,
-	Dimensions,
 	TouchableOpacity
 } from 'react-native';
 import { Surface, Text } from 'react-native-paper';
 import axios from 'axios';
 import _ from 'lodash';
+import * as Location from 'expo-location';
 
 export const LocalRestaurantScreen = () => {
 	const [restaurantList, setRestaurantList] = useState([])
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
 
 	useEffect(() => {
-		axios({
-      method: 'get',
-      url: `http://localhost:5001/local-restaurants`,
-			params: { location: '38.79371,-77.061651' }
-    })
-      .then(response => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      const location = await Location.getCurrentPositionAsync({});
+      setLocation(location.coords);
+    })();
+  }, []);
+
+	useEffect(() => {
+		if (location) {
+			const { latitude, longitude } = location
+			axios({
+				method: 'get',
+				url: `http://localhost:5001/local-restaurants`,
+				params: { location: `${latitude},${longitude}` }
+			})
+			.then(response => {
 				const { data } = response
 				setRestaurantList(data)
-      })
-      .catch(error => {
-        console.log('receiving', error);
-      });
-	}, [])
+			})
+			.catch(error => {
+				console.log('receiving', error);
+			});
+		}
+	}, [location])
 
 	const openMap = (lng, lat) => {
 		const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
