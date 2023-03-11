@@ -10,31 +10,10 @@ import {
 } from 'react-native';
 import { Surface, Text } from 'react-native-paper';
 import axios from 'axios';
+import _ from 'lodash';
 
 export const LocalRestaurantScreen = () => {
-	const styles = StyleSheet.create({
-		container: {
-			flex: 1,
-			marginVertical: 20,
-		},
-		item: {
-			backgroundColor: '#4D243D',
-			alignItems: 'center',
-			justifyContent: 'center',
-			flex: 1,
-			margin: 1,
-			height: Dimensions.get('window').width/3, // approximate a square
-		},
-		itemInvisible: {
-			backgroundColor: 'transparent',
-		},
-		itemText: {
-			color: '#fff',
-		},
-	});
-
 	const [restaurantList, setRestaurantList] = useState([])
-	const numColumns = 3;
 
 	useEffect(() => {
 		axios({
@@ -63,8 +42,7 @@ export const LocalRestaurantScreen = () => {
 	}
 
 	const renderItem = ({ item, index }) => {
-		const { name, icon, reference, rating, opening_hours, geometry } = item
-
+		const { name, icon, reference, rating, opening_hours, geometry, photos } = item
 		if (!opening_hours?.open_now && !geometry) {
 			return false
 		}
@@ -74,31 +52,21 @@ export const LocalRestaurantScreen = () => {
 
 		return (
 			<TouchableOpacity onPress={() => openMap(lng, lat)}>
-				<Surface key={reference} elevation={4}>
-					<Image style={{ width: 66, height: 58 }}
+				<Surface key={reference} elevation={4} style={{ backgroundColor: 'white', marginTop: 8, marginBottom: 8, marginLeft: 16, marginRight: 16, height: 100, padding: 8, alignItems: 'center', justifyContent: 'center' }}>
+					<Image
 					source={{
 						uri: icon,
 					}} />
 					<Text>{name}</Text>
-					<Text>{rating}</Text>
+					<Text style={{ padding: 2, backgroundColor: 'grey' }}>{rating}</Text>
 				</Surface>
 			</TouchableOpacity>
 		)
   };
 
-	formatData = (data, numColumns) => {
-		const numberOfFullRows = Math.floor(data.length / numColumns);
-		let numberOfElementsLastRow = data.length - (numberOfFullRows * numColumns);
-		while (numberOfElementsLastRow !== numColumns && numberOfElementsLastRow !== 0) {
-			data.push({ key: `blank-${numberOfElementsLastRow}`, empty: true });
-			numberOfElementsLastRow++;
-		}
-		return data;
-	};
-
   return (
     <View style={{ flex: 1, marginTop: 50 }}>
-			<FlatList data={formatData(restaurantList, numColumns)} renderItem={renderItem} numColumns={numColumns} />
+			<FlatList data={restaurantList} renderItem={renderItem} />
     </View>
   );
 };
