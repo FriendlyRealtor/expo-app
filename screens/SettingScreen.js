@@ -15,7 +15,7 @@ import {
 	Text,
 	Divider
 } from '@ui-kitten/components';
-import {Container, NavigationAction } from '../components';
+import {Container } from '../components';
 import Animated, {
   Extrapolate,
   interpolate,
@@ -47,7 +47,7 @@ export const SettingScreen = () => {
 	});
 	const MINUTE_INTERVALS = [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30];
 
-	const [name, setName] = useState([])
+	const [name, setName] = useState(["Test Name"])
 	const [verifiedEmail, setVerifiedEmail] = useState([false])
 	const [userEmail, setUserEmail] = useState([])
 	const [renewalDate, setRenewalDate] = useState(["dklsdd"])
@@ -66,7 +66,9 @@ export const SettingScreen = () => {
 			if (user) {
 				// User is signed in, see docs for a list of available properties
 				// https://firebase.google.com/docs/reference/js/firebase.User
-				setName([user.displayName])
+				if (user.displayName) {
+					setName([user.displayName])
+				}
 				setUserEmail([user.email])
 				setVerifiedEmail([user.emailVerified.toString()])
 				// ...
@@ -110,11 +112,7 @@ export const SettingScreen = () => {
 
   return (
 		<Container style={styles.container}>
-			<Layout level="5" style={styles.top}>
-				<View style={[{paddingTop: top}, styles.flexRow]}>
-					<NavigationAction marginLeft={4} />
-					<NavigationAction icon="edit-outline" marginLeft={4} />
-				</View>
+			<Layout level="4" style={styles.top}>
 				<Animated.View style={scaleAvatar}>
 					<Avatar
 						source={Images.avatar.avatar10}
@@ -123,25 +121,21 @@ export const SettingScreen = () => {
 							width: 96,
 							height: 96,
 							zIndex: 100,
+							marginBottom: 32,
+							marginTop:32
 						}}
 					/>
 				</Animated.View>
-				<Animated.View>
-					<Text category='h1'>
-						MyName
-					</Text>
-        </Animated.View>
 			</Layout>
 			<Animated.ScrollView  scrollEventThrottle={16}
 			onScroll={scrollHandler}
 			showsVerticalScrollIndicator={false}
+			style={{ marginTop: 50}}
 			>
-				<Text category='h4'>Test H4</Text>
-				<Text>+84 123456790</Text>
-				<Layout level="2" style={styles.layout}>
+				<Layout level="4" style={styles.layout}>
 					<View style={styles.flexRow}>
-						<Text category="label" marginTop={16}>Name</Text>
-						<Text category="p1" marginTop={16}>{name}</Text>
+						<Text category="label" style={{ marginTop: 16 }}>Name</Text>
+						<Text category="p1" style={{ marginTop: 16 }}>{name}</Text>
 					</View>
 					<Divider style={styles.divider} />
 					<View style={styles.flexRow}>
@@ -151,20 +145,18 @@ export const SettingScreen = () => {
 					<Divider style={styles.divider} />
 					<View style={styles.flexRow}>
 						<Text category="label">Email Verified</Text>
-						<Text category="p1" marginBottom={24}>{verifiedEmail}</Text>
+						<Text category="p1">{verifiedEmail}</Text>
 					</View>
 					<Divider style={styles.divider} />
 					<View style={styles.flexRow}>
 						<Text category="label">Renew Education License</Text>
-						<Text category="p1" marginBottom={24}>
-							<DateTimePicker
-								testID="dateTimePicker"
-								value={date}
-								mode={'date'}
-								onChange={onChange}
-								display="default"
-							/>
-						</Text>
+						<DateTimePicker
+							testID="dateTimePicker"
+							value={date}
+							mode={'date'}
+							onChange={onChange}
+							display="default"
+						/>
 					</View>
 				</Layout>
 			</Animated.ScrollView>

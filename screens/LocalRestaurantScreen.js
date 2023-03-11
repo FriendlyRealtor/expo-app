@@ -4,14 +4,29 @@ import {
 	View,
 	FlatList,
 	Linking,
-	TouchableOpacity
+	TouchableOpacity,
+	StyleSheet
 } from 'react-native';
-import { Surface, Text } from 'react-native-paper';
+import {
+  Layout,
+	Text,
+} from '@ui-kitten/components';
+
 import axios from 'axios';
 import _ from 'lodash';
 import * as Location from 'expo-location';
 
 export const LocalRestaurantScreen = () => {
+	const styles = StyleSheet.create({
+		layout: {
+			paddingHorizontal: 16,
+			paddingVertical: 16,
+			borderRadius: 12,
+			marginHorizontal: 24,
+			marginVertical: 16
+		},
+	});
+
 	const [restaurantList, setRestaurantList] = useState([])
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
@@ -69,21 +84,22 @@ export const LocalRestaurantScreen = () => {
 
 		return (
 			<TouchableOpacity onPress={() => openMap(lng, lat)}>
-				<Surface key={reference} elevation={4} style={{ backgroundColor: 'white', marginTop: 8, marginBottom: 8, marginLeft: 16, marginRight: 16, height: 100, padding: 8, alignItems: 'center', justifyContent: 'center' }}>
+				<Layout key={reference} level="4" style={styles.layout}>
 					<Image
 					source={{
 						uri: icon,
 					}} />
 					<Text>{name}</Text>
-					<Text style={{ padding: 2, backgroundColor: 'grey' }}>{rating}</Text>
-				</Surface>
+					<Text>{rating}</Text>
+				</Layout>
 			</TouchableOpacity>
 		)
   };
 
   return (
-    <View style={{ flex: 1, marginTop: 50 }}>
+    <Layout style={{ flex: 1, marginTop: 50 }}>
+			<Text category='h6' status="info" style={{ padding: 16 }}>Fuel your body with goodness, and greatness will follow.</Text>
 			<FlatList data={restaurantList} renderItem={renderItem} />
-    </View>
+    </Layout>
   );
 };

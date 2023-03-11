@@ -4,10 +4,13 @@ import {
 	StyleSheet,
 	SafeAreaView,
 	StatusBar,
+	ScrollView
 } from 'react-native';
 import _ from 'lodash';
-import uuid from 'react-native-uuid';
 import { Video } from 'expo-av';
+import {
+	Text,
+} from '@ui-kitten/components';
 
 export const ContinueEducationScreen = () => {
 	const styles = StyleSheet.create({
@@ -15,87 +18,50 @@ export const ContinueEducationScreen = () => {
 			flex: 1,
 			marginTop: StatusBar.currentHeight || 0,
 		},
-		video: {
-			flex: 1,
-			alignSelf: 'stretch'
-		},
 		buttons: {
 			margin: 16
 		}
 	});
 
 	const video = useRef(null);
-  const secondVideo = useRef(null);
 	const [text, setText] = useState('');
   const [status, setStatus] = useState({});
 
   return (
-    <View style={{ flex: 1, marginTop: 50, padding: 10 }}>
-			<SafeAreaView style={styles.container}>
+    <ScrollView style={{ flex: 1, padding: 10, ...styles.container }}>
+				<SafeAreaView style={{ marginVertical: 18 }}>
+					<Video
+						ref={video}
+						source={{uri: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4"}}
+						useNativeControls
+						isLooping
+						onPlaybackStatusUpdate={setStatus}
+						style={{ width: '100%', height: 300, marginBottom: 8 }}
+					/>
+					<Text category="h6" status="info">{`By: ${false ? '' : 'Agent LifeStyle'}`}</Text>
+			</SafeAreaView>
+			<SafeAreaView  style={{ marginVertical: 18 }}>
 				<Video
 					ref={video}
-					style={styles.video}
 					source={{uri: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4"}}
 					useNativeControls
-					resizeMode="contain"
 					isLooping
 					onPlaybackStatusUpdate={setStatus}
+					style={{ width: '100%', height: 300 }}
 				/>
+				<Text category="h6" status="info">{`By: ${false ? '' : 'Agent LifeStyle'}`}</Text>
+		</SafeAreaView>
+		<SafeAreaView  style={{ marginVertical: 18 }}>
 				<Video
-				ref={video}
-				style={styles.video}
-				source={{uri: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4"}}
-				useNativeControls
-				resizeMode="contain"
-				isLooping
-				onPlaybackStatusUpdate={setStatus}
-			/>
-			<Video
-				ref={video}
-				style={styles.video}
-				source={{uri: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4"}}
-				useNativeControls
-				resizeMode="contain"
-				isLooping
-				onPlaybackStatusUpdate={setStatus}
+					ref={video}
+					source={{uri: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4"}}
+					useNativeControls
+					isLooping
+					onPlaybackStatusUpdate={setStatus}
+					style={{ width: '100%', height: 300 }}
 				/>
-				<Video
-				ref={video}
-				style={styles.video}
-				source={{uri: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4"}}
-				useNativeControls
-				resizeMode="contain"
-				isLooping
-				onPlaybackStatusUpdate={setStatus}
-			/>
-			<Video
-				ref={video}
-				style={styles.video}
-				source={{uri: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4"}}
-				useNativeControls
-				resizeMode="contain"
-				isLooping
-				onPlaybackStatusUpdate={setStatus}
-				/>
-				<Video
-				ref={video}
-				style={styles.video}
-				source={{uri: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4"}}
-				useNativeControls
-				resizeMode="contain"
-				isLooping
-				onPlaybackStatusUpdate={setStatus}
-			/>
-			<Video
-				ref={video}
-				style={styles.video}
-				source={{uri: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4"}}
-				useNativeControls
-				resizeMode="contain"
-				isLooping
-				onPlaybackStatusUpdate={setStatus}
-				/>
-			</SafeAreaView>
-    </View>
+				<Text category="h6" status="info">{`By: ${false ? '' : 'Agent LifeStyle'}`}</Text>
+		</SafeAreaView>
+    </ScrollView>
   );
 };
