@@ -1,13 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import {
   View,
-	SectionList,
-	TextInput,
-	TouchableOpacity,
-	StyleSheet,
 	Platform
 } from 'react-native';
-import { Button } from 'react-native-paper';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { signOut } from 'firebase/auth';
 import { auth } from '../config';
@@ -18,7 +13,7 @@ import {
   useStyleSheet,
   Avatar,
 	Text,
-  Toggle,
+	Divider
 } from '@ui-kitten/components';
 import {Container, NavigationAction } from '../components';
 import Animated, {
@@ -33,7 +28,6 @@ import { Images }  from '../assets/images';
 
 import {
   ANDROID_MODE,
-  DAY_OF_WEEK,
   IOS_MODE,
   ANDROID_DISPLAY,
   IOS_DISPLAY,
@@ -144,37 +138,36 @@ export const SettingScreen = () => {
 			>
 				<Text category='h4'>Test H4</Text>
 				<Text>+84 123456790</Text>
+				<Layout level="2" style={styles.layout}>
+					<View style={styles.flexRow}>
+						<Text category="label" marginTop={16}>Name</Text>
+						<Text category="p1" marginTop={16}>{name}</Text>
+					</View>
+					<Divider style={styles.divider} />
+					<View style={styles.flexRow}>
+						<Text category="label">Email</Text>
+						<Text category="p1">{userEmail}</Text>
+					</View>
+					<Divider style={styles.divider} />
+					<View style={styles.flexRow}>
+						<Text category="label">Email Verified</Text>
+						<Text category="p1" marginBottom={24}>{verifiedEmail}</Text>
+					</View>
+					<Divider style={styles.divider} />
+					<View style={styles.flexRow}>
+						<Text category="label">Renew Education License</Text>
+						<Text category="p1" marginBottom={24}>
+							<DateTimePicker
+								testID="dateTimePicker"
+								value={date}
+								mode={'date'}
+								onChange={onChange}
+								display="default"
+							/>
+						</Text>
+					</View>
+				</Layout>
 			</Animated.ScrollView>
-			<SectionList
-				sections={[
-					{title: 'Name', data: name},
-					{title: 'Email', data: userEmail},
-					{title: 'Email Verified', data: verifiedEmail},
-					{title: 'Renew Education License', data: renewalDate }
-				]}
-				renderItem={({ section, item }) => {
-				switch (section.title) {
-					case 'Name':
-						return <TextInput
-							onChangeText={setName}
-							value={name}
-					/>
-					case 'Renew Education License':
-						return <DateTimePicker
-										testID="dateTimePicker"
-										value={date}
-										mode={'date'}
-										onChange={onChange}
-										display="default"
-									/>
-					default:
-					 return <Text>{item}</Text> }}
-				}
-				renderSectionHeader={({section}) => (
-					<Text>{section.title}</Text>
-				)}
-				keyExtractor={item => `basicListEntry-${item}`}
-			/>
 			<Text status="danger" onPress={() => handleLogout()} style={{ textAlign: 'center' }}>
 				LOG OUT
 			</Text>
@@ -212,6 +205,10 @@ const themedStyles = StyleService.create({
     paddingRight: 16,
     marginHorizontal: 24,
   },
+	divider: {
+		backgroundColor: 'background-basic-color-3',
+    marginVertical: 12,
+	},
   iconFb: {
     tintColor: 'text-white-color',
     height: 24,
