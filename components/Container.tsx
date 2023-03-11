@@ -1,0 +1,30 @@
+import * as React from 'react';
+import {Layout, LayoutProps} from '@ui-kitten/components';
+import { useLayout } from '../hooks';
+
+interface ContainerProps extends LayoutProps {
+  useSafeArea?: boolean;
+  level?: '1' | '2' | '3' | '4' | string;
+}
+
+export const Container: React.FC<ContainerProps> = ({
+  children,
+  style,
+  useSafeArea = true,
+  level = '1',
+  ...props
+}) => {
+  const {top, bottom} = useLayout();
+  return (
+    <Layout
+      {...props}
+      level={level}
+      style={[
+        {flex: 1},
+        useSafeArea && {paddingTop: top, paddingBottom: bottom},
+        style,
+      ]}>
+      {children}
+    </Layout>
+  );
+};

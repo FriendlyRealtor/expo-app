@@ -75,7 +75,7 @@ export const HomeScreen = () => {
 					>{`Price High $${numberWithCommas(crmEstimate.priceRangeHigh)}`}</Text>
 						</Card.Content>
 						<Card.Actions>
-							<Button type='outlined' compact buttonColor='#039be5' textColor="black" onPress={getCrmValuation}>
+							<Button compact buttonColor='blue' textColor="white" onPress={getCrmValuation}>
 								Get valuation
 							</Button>
 						</Card.Actions>

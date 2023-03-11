@@ -28,7 +28,6 @@ export const ContinueEducationScreen = () => {
   const secondVideo = useRef(null);
 	const [text, setText] = useState('');
   const [status, setStatus] = useState({});
-  const [statusSecondVideo, setStatusSecondVideo] = useState({});
 
   return (
     <View style={{ flex: 1, marginTop: 50, padding: 10 }}>

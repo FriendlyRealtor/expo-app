@@ -3,14 +3,33 @@ import {
   View,
 	SectionList,
 	TextInput,
+	TouchableOpacity,
 	StyleSheet,
 	Platform
 } from 'react-native';
-import { Button, Text } from 'react-native-paper';
+import { Button } from 'react-native-paper';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { signOut } from 'firebase/auth';
 import { auth } from '../config';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import {
+  Layout,
+  StyleService,
+  useStyleSheet,
+  Avatar,
+  Icon,
+  Toggle,
+} from '@ui-kitten/components';
+import {Container, Text, NavigationAction } from '../components';
+import Animated, {
+  Extrapolate,
+  interpolate,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated';
+import { useLayout } from '../hooks';
+import { Images }  from '../assets/images';
 
 import {
   ANDROID_MODE,
@@ -21,33 +40,7 @@ import {
 } from '../constants';
 
 export const SettingScreen = () => {
-	const styles = StyleSheet.create({
-		container: {
-			flex: 1,
-			paddingTop: 22,
-		},
-		sectionHeader: {
-			paddingTop: 2,
-			paddingLeft: 10,
-			paddingRight: 10,
-			paddingBottom: 2,
-			fontSize: 14,
-			fontWeight: 'bold',
-			backgroundColor: 'rgba(247,247,247,1.0)',
-		},
-		item: {
-			padding: 10,
-			fontSize: 18,
-			height: 44,
-		},
-		input: {
-			height: 40,
-			margin: 12,
-			borderWidth: 1,
-			padding: 10,
-		},
-	});
-
+  const styles = useStyleSheet(themedStyles);
 	const MODE_VALUES = Platform.select({
 		ios: Object.values(IOS_MODE),
 		android: Object.values(ANDROID_MODE),
@@ -65,6 +58,9 @@ export const SettingScreen = () => {
 	const [userEmail, setUserEmail] = useState([])
 	const [renewalDate, setRenewalDate] = useState(["dklsdd"])
 	const userAuth = getAuth();
+  const {height, width, top, bottom} = useLayout();
+  const translateY = useSharedValue(0);
+  const input = [0, height * 0.082, height * 0.087, height * 0.09];
 
 	const [date, setDate] = useState(new Date());
 	const [mode, setMode] = useState('date');
@@ -101,8 +97,39 @@ export const SettingScreen = () => {
 		setText(fDate)
 	}
 
+	const scaleAvatar = useAnimatedStyle(() => {
+    const scale = interpolate(translateY.value, input, [1, 1, 0.6, 0.6]);
+    const transY = interpolate(
+      translateY.value,
+      input,
+      [0, -40, -88, -88],
+      Extrapolate.CLAMP,
+    );
+    return {
+      transform: [{scale: scale}, {translateY: transY}],
+    };
+  }, []);
+
   return (
-		<View style={styles.container}>
+		<Container style={styles.container}>
+			<Layout level="5" style={styles.top}>
+				<View style={[{paddingTop: top}, styles.flexRow]}>
+					<NavigationAction marginLeft={4} />
+					<NavigationAction icon="edit-outline" marginLeft={4} />
+				</View>
+				<Animated.View style={scaleAvatar}>
+					<Avatar
+						source={Images.avatar.avatar10}
+						style={{
+							alignSelf: 'center',
+							marginBottom: -48,
+							width: 96,
+							height: 96,
+							zIndex: 100,
+						}}
+					/>
+				</Animated.View>
+			</Layout>
 			<SectionList
 				sections={[
 					{title: 'Name', data: name},
@@ -114,7 +141,6 @@ export const SettingScreen = () => {
 				switch (section.title) {
 					case 'Name':
 						return <TextInput
-							style={styles.input}
 							onChangeText={setName}
 							value={name}
 					/>
@@ -127,16 +153,71 @@ export const SettingScreen = () => {
 										display="default"
 									/>
 					default:
-					 return <Text style={styles.item}>{item}</Text> }}
+					 return <Text>{item}</Text> }}
 				}
 				renderSectionHeader={({section}) => (
-					<Text style={styles.sectionHeader}>{section.title}</Text>
+					<Text>{section.title}</Text>
 				)}
 				keyExtractor={item => `basicListEntry-${item}`}
 			/>
 			<Button type='outlined' compact buttonColor='#f57c00' textColor="black" onPress={handleLogout}>
 				Sign Out
 			</Button>
-		</View>
+		</Container>
   );
 };
+
+const themedStyles = StyleService.create({
+  container: {
+    flex: 1,
+    paddingTop: 0,
+  },
+  flexRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  top: {
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
+  },
+  textView: {
+    justifyContent: 'center',
+  },
+  layout: {
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    marginHorizontal: 24,
+  },
+  item: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 16,
+    marginTop: 24,
+    justifyContent: 'space-between',
+    paddingRight: 16,
+    marginHorizontal: 24,
+  },
+  iconFb: {
+    tintColor: 'text-white-color',
+    height: 24,
+    width: 11,
+  },
+  iconGG: {
+    tintColor: 'text-white-color',
+    width: 20.5,
+    height: 21,
+  },
+  fb: {
+    borderRadius: 50,
+    margin: 10,
+    backgroundColor: '#6979F8',
+    paddingHorizontal: 18,
+    paddingVertical: 11,
+  },
+  gg: {
+    borderRadius: 50,
+    margin: 10,
+    backgroundColor: '#FF647C',
+    padding: 14,
+  },
+});

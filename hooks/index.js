@@ -1,3 +1,4 @@
 import { useTogglePasswordVisibility } from './useTogglePasswordVisibility';
+import { useLayout } from './useLayout';
 
-export { useTogglePasswordVisibility };
+export { useLayout, useTogglePasswordVisibility };
