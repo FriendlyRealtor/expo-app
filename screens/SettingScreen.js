@@ -17,10 +17,10 @@ import {
   StyleService,
   useStyleSheet,
   Avatar,
-  Icon,
+	Text,
   Toggle,
 } from '@ui-kitten/components';
-import {Container, Text, NavigationAction } from '../components';
+import {Container, NavigationAction } from '../components';
 import Animated, {
   Extrapolate,
   interpolate,
@@ -110,6 +110,10 @@ export const SettingScreen = () => {
     };
   }, []);
 
+	const scrollHandler = useAnimatedScrollHandler(event => {
+    translateY.value = event.contentOffset.y;
+  });
+
   return (
 		<Container style={styles.container}>
 			<Layout level="5" style={styles.top}>
@@ -122,14 +126,25 @@ export const SettingScreen = () => {
 						source={Images.avatar.avatar10}
 						style={{
 							alignSelf: 'center',
-							marginBottom: -48,
 							width: 96,
 							height: 96,
 							zIndex: 100,
 						}}
 					/>
 				</Animated.View>
+				<Animated.View>
+					<Text category='h1'>
+						MyName
+					</Text>
+        </Animated.View>
 			</Layout>
+			<Animated.ScrollView  scrollEventThrottle={16}
+			onScroll={scrollHandler}
+			showsVerticalScrollIndicator={false}
+			>
+				<Text category='h4'>Test H4</Text>
+				<Text>+84 123456790</Text>
+			</Animated.ScrollView>
 			<SectionList
 				sections={[
 					{title: 'Name', data: name},
@@ -160,9 +175,9 @@ export const SettingScreen = () => {
 				)}
 				keyExtractor={item => `basicListEntry-${item}`}
 			/>
-			<Button type='outlined' compact buttonColor='#f57c00' textColor="black" onPress={handleLogout}>
-				Sign Out
-			</Button>
+			<Text status="danger" onPress={() => handleLogout()} style={{ textAlign: 'center' }}>
+				LOG OUT
+			</Text>
 		</Container>
   );
 };
