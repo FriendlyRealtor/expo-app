@@ -12,11 +12,11 @@ const App = () => {
   return (
     <AuthenticatedUserProvider>
       <SafeAreaProvider>
-			<PaperProvider theme={theme}>
-				<IconRegistry icons={EvaIconsPack} />
-				<ApplicationProvider {...eva} theme={eva.light}>
-						<RootNavigator />
-				</ApplicationProvider>
+				<PaperProvider theme={theme}>
+					<IconRegistry icons={EvaIconsPack} />
+					<ApplicationProvider {...eva} theme={eva.light}>
+							<RootNavigator />
+					</ApplicationProvider>
 				</PaperProvider>
       </SafeAreaProvider>
     </AuthenticatedUserProvider>

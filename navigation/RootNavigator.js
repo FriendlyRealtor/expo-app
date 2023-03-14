@@ -5,7 +5,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { AuthStack } from './AuthStack';
 import { AppTabs } from './AppTabs';
 import { AuthenticatedUserContext } from '../providers';
-import { LoadingIndicator } from '../components';
+import { SplashScreen } from '../screens'
 import { auth } from '../config';
 
 export const RootNavigator = () => {
@@ -27,7 +27,7 @@ export const RootNavigator = () => {
   }, [user]);
 
   if (isLoading) {
-    return <LoadingIndicator />;
+    return <SplashScreen />
   }
 
   return (

@@ -8,12 +8,7 @@ export default {
     platforms: ['ios', 'android'],
     version: '0.15.0',
     orientation: 'portrait',
-    icon: './assets/flame.png',
-    splash: {
-      image: './assets/splash.png',
-      resizeMode: 'cover',
-      backgroundColor: '#F57C00'
-    },
+    icon: './assets/icon.png',
     updates: {
       fallbackToCacheTimeout: 0
     },
