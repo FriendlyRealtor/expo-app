@@ -58,10 +58,10 @@ export const SettingScreen = ({navigation}) => {
   const handleLogout = () => {
     signOut(auth).catch(error => console.log('Error logging out: ', error));
 
-		if (!auth.currentUser) {
-			console.log("call this")
-			navigation.navigate('Login');
-		}
+    if (!auth.currentUser) {
+      console.log('call this');
+      navigation.navigate('Login');
+    }
   };
 
   const pickImage = useCallback(async () => {

@@ -2,10 +2,10 @@ import 'dotenv/config';
 
 export default {
   expo: {
-    name: 'Expo Firebase Starter',
+    name: 'Friendly Realtor',
     slug: 'expo-firebase',
     privacy: 'public',
-    platforms: ['ios', 'android'],
+    platforms: ['ios'],
     version: '0.15.0',
     orientation: 'portrait',
     icon: './assets/icon.png',

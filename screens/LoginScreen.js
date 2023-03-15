@@ -55,7 +55,8 @@ export const LoginScreen = ({navigation}) => {
               password: '',
             }}
             validationSchema={loginValidationSchema}
-            onSubmit={values => handleLogin(values)}>
+            onSubmit={values => handleLogin(values)}
+          >
             {({
               values,
               touched,

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, Image} from 'react-native';
+import {StyleSheet, Image, TouchableOpacity, Linking} from 'react-native';
 import {Formik} from 'formik';
 import {
   createUserWithEmailAndPassword,
@@ -7,8 +7,8 @@ import {
 } from 'firebase/auth';
 import {doc, setDoc} from 'firebase/firestore';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {Text, Button} from '@ui-kitten/components';
-import {View, TextInput, FormErrorMessage} from '../components';
+import {Text} from '@ui-kitten/components';
+import {View, TextInput, Button, FormErrorMessage} from '../components';
 import {Colors, auth, db} from '../config';
 import {useTogglePasswordVisibility} from '../hooks';
 import {signupValidationSchema} from '../utils';
@@ -64,7 +64,8 @@ export const SignupScreen = ({navigation}) => {
             confirmPassword: '',
           }}
           validationSchema={signupValidationSchema}
-          onSubmit={values => handleSignup(values)}>
+          onSubmit={values => handleSignup(values)}
+        >
           {({
             values,
             touched,
@@ -155,9 +156,32 @@ export const SignupScreen = ({navigation}) => {
               <Text
                 category="label"
                 appearance="hint"
-                style={{marginBottom: 6}}>
+                style={{marginBottom: 6}}
+              >
                 By clicking Sign Up, you are agreeing to JubileeInvestmentLLC's
-                Terms of Service and are acknowledging our Privacy Notice
+                <TouchableOpacity
+                  onPress={() =>
+                    Linking.openURL(
+                      'https://app.termly.io/document/terms-and-conditions/22db5147-f672-4e1a-8ce9-0568d1c88332',
+                    )
+                  }
+                >
+                  <Text category="label" appearance="hint" status="info" style= {{ marginTop: 22 }}>
+                    Terms of Service
+                  </Text>
+                </TouchableOpacity>
+                <Text category="label" appearance="hint">and are acknowledging our{' '}</Text>
+                <TouchableOpacity
+                  onPress={() =>
+                    Linking.openURL(
+                      'https://app.termly.io/document/privacy-policy/73841773-0c89-4160-9269-9bc3ba0a4dbd',
+                    )
+                  }
+                >
+                  <Text category="label" appearance="hint" status="info" style= {{ marginTop: 22 }}>
+                    Privacy Notice
+                  </Text>
+                </TouchableOpacity>
                 applies.
               </Text>
               {/* Signup button */}
@@ -210,7 +234,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   borderlessButtonContainer: {
-    marginTop: 16,
     alignItems: 'center',
     justifyContent: 'center',
   },
