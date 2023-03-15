@@ -52,7 +52,7 @@ export const SignupScreen = ({navigation}) => {
             source={require('../assets/icon.png')}
             style={{width: 250, height: 250}}
           />
-          <Text style={styles.screenTitle}>Create a new account!</Text>
+          <Text style={styles.screenTitle}>Create Account!</Text>
         </View>
         {/* Formik Wrapper */}
         <Formik

@@ -111,11 +111,11 @@ export const LoginScreen = ({navigation}) => {
               </>
             )}
           </Formik>
-          {/* Button to navigate to SignupScreen to create a new account */}
+          {/* Button to navigate to SignupScreen to Create Account */}
           <Button
             style={styles.borderlessButtonContainer}
             borderless
-            title={'Create a new account?'}
+            title={'Create Account?'}
             onPress={() => navigation.navigate('Signup')}
           />
           <Button
