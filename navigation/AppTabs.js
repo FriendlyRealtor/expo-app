@@ -14,7 +14,7 @@ export const AppTabs = () => {
 			<Tab.Navigator>
 				<Tab.Screen name="CMA Tool" component={HomeScreen} options={{ tabBarIcon: () => <Icon name="home" size={30} color="#02FDAA" /> }} />
 				<Tab.Screen name="Learning" component={ContinueEducationScreen} options={{ tabBarIcon: () => <Icon name="book" size={30} color="#02FDAA" /> }} />
-				<Tab.Screen name="Local Restaurants" component={LocalRestaurantScreen} options={{ tabBarIcon: () => <Icon name="delicious" size={30} color="#02FDAA" /> }} />
+				<Tab.Screen name="Restaurants" component={LocalRestaurantScreen} options={{ tabBarIcon: () => <Icon name="delicious" size={30} color="#02FDAA" /> }} />
 				<Tab.Screen name="Settings" component={SettingScreen}  options={{ tabBarIcon: () => <Icon name="gear" size={30} color="#02FDAA" /> }} />
 			</Tab.Navigator>
   );
