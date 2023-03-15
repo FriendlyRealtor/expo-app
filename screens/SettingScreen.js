@@ -8,7 +8,6 @@ import {
   Layout,
   StyleService,
   useStyleSheet,
-  Avatar,
   Text,
   Divider,
 } from '@ui-kitten/components';

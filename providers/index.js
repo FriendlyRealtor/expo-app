@@ -1,6 +1,6 @@
 import {
   AuthenticatedUserContext,
-  AuthenticatedUserProvider
+  AuthenticatedUserProvider,
 } from './AuthenticatedUserProvider';
 
-export { AuthenticatedUserContext, AuthenticatedUserProvider };
+export {AuthenticatedUserContext, AuthenticatedUserProvider};
