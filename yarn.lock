@@ -5175,6 +5175,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-image-loader@npm:~3.2.0":
+  version: 3.2.0
+  resolution: "expo-image-loader@npm:3.2.0"
+  peerDependencies:
+    expo: "*"
+  checksum: 0d24716c7c2dd194cbc0d360765b822ca2b53eaafab6d9cb8dcc84f088dedce68d13d6d3a6eba998e24944333ba8856dbb11a0dceb367ac30b2ae488b1339626
+  languageName: node
+  linkType: hard
+
+"expo-image-picker@npm:~13.3.1":
+  version: 13.3.1
+  resolution: "expo-image-picker@npm:13.3.1"
+  dependencies:
+    "@expo/config-plugins": ~5.0.0
+    expo-image-loader: ~3.2.0
+    uuid: 7.0.2
+  peerDependencies:
+    expo: "*"
+  checksum: 9cad4fb7563af0e3a3f95a65f94a6c0cbd988ffc4dc2e6f5e427f90964ab1b4a09fbb8dcd66d2a3baf1034a3a7bef8395767678543daa24b9c7ba9ff56eead20
+  languageName: node
+  linkType: hard
+
 "expo-keep-awake@npm:~10.2.0":
   version: 10.2.1
   resolution: "expo-keep-awake@npm:10.2.1"
@@ -9525,6 +9547,7 @@ __metadata:
     expo: ^46.0.0
     expo-av: ~12.0.4
     expo-constants: ~13.2.3
+    expo-image-picker: ~13.3.1
     expo-location: ~14.3.0
     expo-status-bar: ^1.4.4
     expo-web-browser: ~11.0.0
@@ -10851,6 +10874,15 @@ __metadata:
   version: 1.0.1
   resolution: "utils-merge@npm:1.0.1"
   checksum: c81095493225ecfc28add49c106ca4f09cdf56bc66731aa8dabc2edbbccb1e1bfe2de6a115e5c6a380d3ea166d1636410b62ef216bb07b3feb1cfde1d95d5080
+  languageName: node
+  linkType: hard
+
+"uuid@npm:7.0.2":
+  version: 7.0.2
+  resolution: "uuid@npm:7.0.2"
+  bin:
+    uuid: dist/bin/uuid
+  checksum: f80af114b67e1f66020c70897be9ba889b1996fbfde8fc46eb7405e95d3448908a793bab36d16d11a082a16ca7e1d27ab5203e505dd3c1bab7efbb647bd94823
   languageName: node
   linkType: hard
 

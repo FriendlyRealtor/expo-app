@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useCallback, useContext } from 'react';
 import {
-  View
+  View, TouchableOpacity,Image
 } from 'react-native';
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-import { doc, getDoc, updateDoc, Timestamp } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { auth, db } from '../config';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {
@@ -23,9 +23,8 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 import { useLayout } from '../hooks';
-import { Images }  from '../assets/images';
 import { AuthenticatedUserContext } from '../providers';
-import moment from 'moment';
+import * as ImagePicker from 'expo-image-picker';
 
 export const SettingScreen = () => {
   const styles = useStyleSheet(themedStyles);
@@ -59,6 +58,28 @@ export const SettingScreen = () => {
 	const handleLogout = () => {
     signOut(auth).catch(error => console.log('Error logging out: ', error));
   };
+
+	const pickImage = useCallback(async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (result.uri && userAuth.currentUser) {
+			const { uid } = userAuth.currentUser
+			const docRef = await doc(db, "users", uid)
+			const data = { photo: result.uri }
+			if (docRef) {
+				await updateDoc(docRef, data)
+			} else {
+				console.log("No such document!");
+			}
+    }
+
+	}, [])
 
 	const onChange = async (event, selectedDate) => {
 		setDate(selectedDate || date)
@@ -95,17 +116,16 @@ export const SettingScreen = () => {
 		<Container style={styles.container}>
 			<Layout level="4" style={styles.top}>
 				<Animated.View style={scaleAvatar}>
-					<Avatar
-						source={Images.avatar.avatar}
-						style={{
+					<TouchableOpacity onPress={pickImage}>
+						{user.photo && <Image source={{ uri: user.photo }} style={{
 							alignSelf: 'center',
 							width: 96,
 							height: 96,
 							zIndex: 100,
-							marginBottom: 32,
-							marginTop:32
-						}}
-					/>
+							marginTop:32,
+							borderRadius: 9999
+						}} />}
+					</TouchableOpacity>
 				</Animated.View>
 			</Layout>
 			<Animated.ScrollView  scrollEventThrottle={16}

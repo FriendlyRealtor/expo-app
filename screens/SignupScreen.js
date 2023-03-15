@@ -30,6 +30,7 @@ export const SignupScreen = ({ navigation }) => {
 				const { uid } = user
 				await setDoc(doc(db, "users", uid), {
 					name: `${firstName} ${lastName}`,
+					photo: 'https://firebasestorage.googleapis.com/v0/b/real-estate-app-9a719.appspot.com/o/default_photo%2Fimg_avatar.png?alt=media&token=ca7c1413-f7ea-4511-915a-699283568edc'
 				});
 			})
 		}).catch(error =>

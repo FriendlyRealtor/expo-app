@@ -36,7 +36,14 @@ export default {
         {
           "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
         },
-			]
+			],
+			[
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to accesses your photos to let you share them with your friends.",
+					"cameraPermission": "Allow $(PRODUCT_NAME) to accesses your camera to let you share them with your friends.",
+        }
+      ]
 		]
   }
 };
