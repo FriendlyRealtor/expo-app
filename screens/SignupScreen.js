@@ -34,9 +34,11 @@ export const SignupScreen = ({navigation}) => {
           const {uid} = user;
           await setDoc(doc(db, 'users', uid), {
             name: `${firstName} ${lastName}`,
+            ceRenewalDate: new Date(),
             photo:
               'https://firebasestorage.googleapis.com/v0/b/real-estate-app-9a719.appspot.com/o/default_photo%2Fimg_avatar.png?alt=media&token=ca7c1413-f7ea-4511-915a-699283568edc',
           });
+          navigation.navigate('Login');
         });
       })
       .catch(error => setErrorState(error.message));
@@ -62,8 +64,7 @@ export const SignupScreen = ({navigation}) => {
             confirmPassword: '',
           }}
           validationSchema={signupValidationSchema}
-          onSubmit={values => handleSignup(values)}
-        >
+          onSubmit={values => handleSignup(values)}>
           {({
             values,
             touched,
@@ -190,9 +191,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 8,
-    backgroundColor: Colors.orange,
     padding: 10,
     borderRadius: 8,
+    backgroundColor: '#02FDAA',
+    borderColor: '#02FDAA',
   },
   buttonText: {
     fontSize: 20,

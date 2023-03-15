@@ -23,7 +23,7 @@ import {useLayout} from '../hooks';
 import {AuthenticatedUserContext} from '../providers';
 import * as ImagePicker from 'expo-image-picker';
 
-export const SettingScreen = () => {
+export const SettingScreen = ({navigation}) => {
   const styles = useStyleSheet(themedStyles);
   const {user} = useContext(AuthenticatedUserContext);
 
@@ -57,6 +57,11 @@ export const SettingScreen = () => {
 
   const handleLogout = () => {
     signOut(auth).catch(error => console.log('Error logging out: ', error));
+
+		if (!auth.currentUser) {
+			console.log("call this")
+			navigation.navigate('Login');
+		}
   };
 
   const pickImage = useCallback(async () => {
@@ -75,7 +80,7 @@ export const SettingScreen = () => {
       if (docRef) {
         await updateDoc(docRef, data);
       } else {
-        console.log('No such document!');
+        console.log('Not able to retrieve user photo!');
       }
     }
   }, []);
@@ -89,7 +94,7 @@ export const SettingScreen = () => {
       if (docRef) {
         await updateDoc(docRef, data);
       } else {
-        console.log('No such document!');
+        console.log('Not able to retrieve user renewal date');
       }
     }
   };

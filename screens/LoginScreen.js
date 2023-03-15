@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
-import {Text, StyleSheet} from 'react-native';
+import {Text, StyleSheet, Image} from 'react-native';
 import {Formik} from 'formik';
 import {signInWithEmailAndPassword} from 'firebase/auth';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
-import {View, TextInput, Logo, Button, FormErrorMessage} from '../components';
-import {Images, Colors, auth} from '../config';
+import {View, TextInput, Button, FormErrorMessage} from '../components';
+import {Colors, auth} from '../config';
 import {useTogglePasswordVisibility} from '../hooks';
 import {loginValidationSchema} from '../utils';
 
@@ -16,9 +16,26 @@ export const LoginScreen = ({navigation}) => {
 
   const handleLogin = values => {
     const {email, password} = values;
-    signInWithEmailAndPassword(auth, email, password).catch(error =>
-      setErrorState(error.message),
-    );
+    signInWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        if (auth.currentUser && !auth.currentUser.emailVerified) {
+          setErrorState('Head to your email and verify your account!');
+        }
+      })
+      .catch(error => {
+        switch (error.message) {
+          case 'Firebase: Error (auth/wrong-password).':
+            setErrorState('Wrong password!');
+            break;
+          case 'Firebase: Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later. (auth/too-many-requests).':
+            setErrorState(
+              'Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later',
+            );
+            break;
+          default:
+            setErrorState('Error signing in! Contact support');
+        }
+      });
   };
   return (
     <>
@@ -26,7 +43,11 @@ export const LoginScreen = ({navigation}) => {
         <KeyboardAwareScrollView enableOnAndroid={true}>
           {/* LogoContainer: consits app logo and screen title */}
           <View style={styles.logoContainer}>
-            <Text style={styles.screenTitle}>Welcome Back!</Text>
+            <Image
+              source={require('../assets/icon.png')}
+              style={{width: 250, height: 250}}
+            />
+            <Text style={styles.screenTitle}>Agent Lifestyle</Text>
           </View>
           <Formik
             initialValues={{
@@ -34,8 +55,7 @@ export const LoginScreen = ({navigation}) => {
               password: '',
             }}
             validationSchema={loginValidationSchema}
-            onSubmit={values => handleLogin(values)}
-          >
+            onSubmit={values => handleLogin(values)}>
             {({
               values,
               touched,
@@ -141,9 +161,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 8,
-    backgroundColor: Colors.orange,
     padding: 10,
     borderRadius: 8,
+    backgroundColor: '#02FDAA',
+    borderColor: '#02FDAA',
   },
   buttonText: {
     fontSize: 20,

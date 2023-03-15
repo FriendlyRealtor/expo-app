@@ -20,12 +20,8 @@ export const RootNavigator = () => {
         if (authenticatedUser) {
           const {uid} = authenticatedUser;
           const docSnap = await getDoc(doc(db, 'users', uid));
-
           if (docSnap.exists()) {
             setUser(docSnap.data());
-          } else {
-            // doc.data() will be undefined in this case
-            console.log('No such document!');
           }
         }
         setIsLoading(false);
@@ -41,7 +37,7 @@ export const RootNavigator = () => {
 
   return (
     <NavigationContainer>
-      {user ? <AppTabs /> : <AuthStack />}
+      {user && auth.currentUser && auth.currentUser.emailVerified ? <AppTabs /> : <AuthStack />}
     </NavigationContainer>
   );
 };

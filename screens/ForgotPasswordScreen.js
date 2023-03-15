@@ -15,7 +15,6 @@ export const ForgotPasswordScreen = ({navigation}) => {
 
     sendPasswordResetEmail(auth, email)
       .then(() => {
-        console.log('Success: Password Reset Email sent.');
         navigation.navigate('Login');
       })
       .catch(error => setErrorState(error.message));
@@ -95,9 +94,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 8,
-    backgroundColor: Colors.orange,
     padding: 10,
     borderRadius: 8,
+		backgroundColor: '#02FDAA',
+    borderColor: '#02FDAA',
   },
   buttonText: {
     fontSize: 20,
