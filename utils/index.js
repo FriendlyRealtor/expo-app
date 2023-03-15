@@ -31,7 +31,13 @@ export const signupValidationSchema = Yup.object().shape({
   firstName: Yup.string().max(255).required('First name is required'),
   lastName: Yup.string().max(255).required('Last name is required'),
   email: Yup.string().required().email().label('Email'),
-  password: Yup.string().required().min(6).label('Password'),
+  password: Yup.string()
+    .required()
+    .min(8)
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+      'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character',
+    ),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref('password')], 'Confirm Password must match password.')
     .required('Confirm Password is required.'),
@@ -48,7 +54,9 @@ export const numberWithCommas = num => {
   if (num) {
     num = num.toString();
     var pattern = /(-?\d+)(\d{3})/;
-    while (pattern.test(num)) num = num.replace(pattern, '$1,$2');
+    while (pattern.test(num)) {
+      num = num.replace(pattern, '$1,$2');
+    }
     return num;
   }
 
