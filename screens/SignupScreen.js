@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Text, StyleSheet, Image} from 'react-native';
+import {StyleSheet, Image} from 'react-native';
 import {Formik} from 'formik';
 import {
   createUserWithEmailAndPassword,
@@ -7,8 +7,8 @@ import {
 } from 'firebase/auth';
 import {doc, setDoc} from 'firebase/firestore';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-
-import {View, TextInput, Button, FormErrorMessage} from '../components';
+import {Text, Button} from '@ui-kitten/components';
+import {View, TextInput, FormErrorMessage} from '../components';
 import {Colors, auth, db} from '../config';
 import {useTogglePasswordVisibility} from '../hooks';
 import {signupValidationSchema} from '../utils';
@@ -152,6 +152,14 @@ export const SignupScreen = ({navigation}) => {
               {errorState !== '' ? (
                 <FormErrorMessage error={errorState} visible={true} />
               ) : null}
+              <Text
+                category="label"
+                appearance="hint"
+                style={{marginBottom: 6}}>
+                By clicking Sign Up, you are agreeing to JubileeInvestmentLLC's
+                Terms of Service and are acknowledging our Privacy Notice
+                applies.
+              </Text>
               {/* Signup button */}
               <Button style={styles.button} onPress={handleSubmit}>
                 <Text style={styles.buttonText}>Signup</Text>
