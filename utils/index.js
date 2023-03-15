@@ -20,6 +20,8 @@ export const locationValidationSchema = Yup.object().shape({
 });
 
 export const signupValidationSchema = Yup.object().shape({
+	firstName: Yup.string().max(255).required('First name is required'),
+	lastName: Yup.string().max(255).required('Last name is required'),
   email: Yup.string().required().email().label('Email'),
   password: Yup.string().required().min(6).label('Password'),
   confirmPassword: Yup.string()

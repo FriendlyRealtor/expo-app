@@ -106,13 +106,6 @@ export const LoginScreen = ({ navigation }) => {
           />
         </KeyboardAwareScrollView>
       </View>
-
-      {/* App info footer */}
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>
-          Expo Firebase Starter App (based on managed workflow)
-        </Text>
-      </View>
     </>
   );
 };

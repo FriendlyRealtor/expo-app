@@ -6,23 +6,32 @@ import { AuthStack } from './AuthStack';
 import { AppTabs } from './AppTabs';
 import { AuthenticatedUserContext } from '../providers';
 import { SplashScreen } from '../screens'
-import { auth } from '../config';
+import { auth, db } from '../config';
+import { doc, getDoc } from "firebase/firestore";
 
 export const RootNavigator = () => {
   const { user, setUser } = useContext(AuthenticatedUserContext);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // onAuthStateChanged returns an unsubscriber
     const unsubscribeAuthStateChanged = onAuthStateChanged(
       auth,
-      authenticatedUser => {
-        authenticatedUser ? setUser(authenticatedUser) : setUser(null);
+      async authenticatedUser => {
+				if (authenticatedUser) {
+					const { uid } = authenticatedUser
+					const docSnap = await getDoc(doc(db, "users", uid))
+
+					if (docSnap.exists()) {
+						setUser(docSnap.data())
+					} else {
+						// doc.data() will be undefined in this case
+						console.log("No such document!");
+					}
+				}
         setIsLoading(false);
       }
     );
 
-    // unsubscribe auth listener on unmount
     return unsubscribeAuthStateChanged;
   }, [user]);
 

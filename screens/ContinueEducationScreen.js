@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   View,
 	StyleSheet,
@@ -8,9 +8,9 @@ import {
 } from 'react-native';
 import _ from 'lodash';
 import { Video } from 'expo-av';
-import {
-	Text,
-} from '@ui-kitten/components';
+import { ref, getDownloadURL, listAll } from "firebase/storage";
+import { storage } from "../config"
+import uuid from 'react-native-uuid';
 
 export const ContinueEducationScreen = () => {
 	const styles = StyleSheet.create({
@@ -24,44 +24,49 @@ export const ContinueEducationScreen = () => {
 	});
 
 	const video = useRef(null);
-	const [text, setText] = useState('');
-  const [status, setStatus] = useState({});
+	const [courses, setCourses] = useState([]);
+
+	useEffect(() => {
+		// Create a reference to the file we want to download
+		const videoRef = ref(storage, 'courses/');
+
+		listAll(videoRef).then((res) => {
+			res.items.forEach((itemRef) => {
+				// All the items under listRef.
+				getDownloadURL(ref(storage, itemRef.fullPath))
+					.then((url) => {
+						console.log(url)
+						setCourses([
+						...courses,
+						url
+					])
+					})
+					.catch((error) => {
+						// Handle any errors
+					});
+			})
+		}).catch((error) => {
+				// Uh-oh, an error occurred!
+		})
+	}, [video])
 
   return (
     <ScrollView style={{ flex: 1, padding: 10, ...styles.container }}>
 				<SafeAreaView style={{ marginVertical: 18 }}>
-					<Video
-						ref={video}
-						source={{uri: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4"}}
-						useNativeControls
-						isLooping
-						onPlaybackStatusUpdate={setStatus}
-						style={{ width: '100%', height: 300, marginBottom: 8 }}
-					/>
-					<Text category="h6" status="info">{`By: ${false ? '' : 'Agent LifeStyle'}`}</Text>
+					{courses.map((res) => {
+						return (
+							<Video
+								ref={video}
+								source={{uri: res}}
+								key={uuid.v4()}
+								useNativeControls
+								isLooping
+								style={{ width: '100%', height: 300, marginBottom: 8 }}
+							/>
+						)
+					}
+				)}
 			</SafeAreaView>
-			<SafeAreaView  style={{ marginVertical: 18 }}>
-				<Video
-					ref={video}
-					source={{uri: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4"}}
-					useNativeControls
-					isLooping
-					onPlaybackStatusUpdate={setStatus}
-					style={{ width: '100%', height: 300 }}
-				/>
-				<Text category="h6" status="info">{`By: ${false ? '' : 'Agent LifeStyle'}`}</Text>
-		</SafeAreaView>
-		<SafeAreaView  style={{ marginVertical: 18 }}>
-				<Video
-					ref={video}
-					source={{uri: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4"}}
-					useNativeControls
-					isLooping
-					onPlaybackStatusUpdate={setStatus}
-					style={{ width: '100%', height: 300 }}
-				/>
-				<Text category="h6" status="info">{`By: ${false ? '' : 'Agent LifeStyle'}`}</Text>
-		</SafeAreaView>
     </ScrollView>
   );
 };

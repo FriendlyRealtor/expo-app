@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet, Image } from 'react-native';
 import { Formik } from 'formik';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import { doc, setDoc } from "firebase/firestore";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import { View, TextInput, Logo, Button, FormErrorMessage } from '../components';
-import { Colors, auth } from '../config';
+import { View, TextInput, Button, FormErrorMessage } from '../components';
+import { Colors, auth, db } from '../config';
 import { useTogglePasswordVisibility } from '../hooks';
 import { signupValidationSchema } from '../utils';
 
@@ -22,9 +23,16 @@ export const SignupScreen = ({ navigation }) => {
   } = useTogglePasswordVisibility();
 
   const handleSignup = async values => {
-    const { email, password } = values;
-
-    createUserWithEmailAndPassword(auth, email, password).catch(error =>
+    const { email, password, firstName, lastName } = values;
+    createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
+			const user = userCredential.user;
+			sendEmailVerification(user).then(async () => {
+				const { uid } = user
+				await setDoc(doc(db, "users", uid), {
+					name: `${firstName} ${lastName}`,
+				});
+			})
+		}).catch(error =>
       setErrorState(error.message)
     );
   };
@@ -32,14 +40,15 @@ export const SignupScreen = ({ navigation }) => {
   return (
     <View isSafe style={styles.container}>
       <KeyboardAwareScrollView enableOnAndroid={true}>
-        {/* LogoContainer: consits app logo and screen title */}
         <View style={styles.logoContainer}>
-          <Logo uri="../assets/icon.png" />
+					<Image source={require('../assets/icon.png')} style={{ width: 250, height: 250 }} />
           <Text style={styles.screenTitle}>Create a new account!</Text>
         </View>
         {/* Formik Wrapper */}
         <Formik
           initialValues={{
+						firstName: '',
+						lastName: '',
             email: '',
             password: '',
             confirmPassword: ''
@@ -57,14 +66,32 @@ export const SignupScreen = ({ navigation }) => {
           }) => (
             <>
               {/* Input fields */}
+								<TextInput
+									name='firstName'
+									placeholder='First Name'
+									autoCapitalize='none'
+									autoFocus={true}
+									value={values.firstName}
+									onChangeText={handleChange('firstName')}
+									onBlur={handleBlur('firstName')}
+								/>
+								<FormErrorMessage error={errors.firstName} visible={touched.firstName} />
+							<TextInput
+								name='lastName'
+								placeholder='Last Name'
+								autoCapitalize='none'
+								value={values.lastName}
+								onChangeText={handleChange('lastName')}
+								onBlur={handleBlur('lastName')}
+							/>
+							<FormErrorMessage error={errors.lastName} visible={touched.lastName} />
               <TextInput
                 name='email'
                 leftIconName='email'
-                placeholder='Enter email'
+                placeholder='Email'
                 autoCapitalize='none'
                 keyboardType='email-address'
                 textContentType='emailAddress'
-                autoFocus={true}
                 value={values.email}
                 onChangeText={handleChange('email')}
                 onBlur={handleBlur('email')}
@@ -73,7 +100,7 @@ export const SignupScreen = ({ navigation }) => {
               <TextInput
                 name='password'
                 leftIconName='key-variant'
-                placeholder='Enter password'
+                placeholder='Password'
                 autoCapitalize='none'
                 autoCorrect={false}
                 secureTextEntry={passwordVisibility}
@@ -91,7 +118,7 @@ export const SignupScreen = ({ navigation }) => {
               <TextInput
                 name='confirmPassword'
                 leftIconName='key-variant'
-                placeholder='Enter password'
+                placeholder='Confirm password'
                 autoCapitalize='none'
                 autoCorrect={false}
                 secureTextEntry={confirmPasswordVisibility}

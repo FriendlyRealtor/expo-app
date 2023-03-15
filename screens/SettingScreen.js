@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import {
-  View,
-	Platform
+  View
 } from 'react-native';
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { signOut } from 'firebase/auth';
-import { auth } from '../config';
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { doc, getDoc, updateDoc, Timestamp } from "firebase/firestore";
+import { auth, db } from '../config';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {
   Layout,
@@ -25,50 +24,28 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useLayout } from '../hooks';
 import { Images }  from '../assets/images';
-
-import {
-  ANDROID_MODE,
-  IOS_MODE,
-  ANDROID_DISPLAY,
-  IOS_DISPLAY,
-} from '../constants';
+import { AuthenticatedUserContext } from '../providers';
+import moment from 'moment';
 
 export const SettingScreen = () => {
   const styles = useStyleSheet(themedStyles);
-	const MODE_VALUES = Platform.select({
-		ios: Object.values(IOS_MODE),
-		android: Object.values(ANDROID_MODE),
-		windows: [],
-	});
-	const DISPLAY_VALUES = Platform.select({
-		ios: Object.values(IOS_DISPLAY),
-		android: Object.values(ANDROID_DISPLAY),
-		windows: [],
-	});
-	const MINUTE_INTERVALS = [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30];
+  const { user } = useContext(AuthenticatedUserContext);
 
-	const [name, setName] = useState(["Test Name"])
 	const [verifiedEmail, setVerifiedEmail] = useState([false])
 	const [userEmail, setUserEmail] = useState([])
-	const [renewalDate, setRenewalDate] = useState(["dklsdd"])
 	const userAuth = getAuth();
-  const {height, width, top, bottom} = useLayout();
+  const {height} = useLayout();
   const translateY = useSharedValue(0);
   const input = [0, height * 0.082, height * 0.087, height * 0.09];
 
-	const [date, setDate] = useState(new Date());
-	const [mode, setMode] = useState('date');
-	const [show, setShow] = useState(false);
-	const [text, setText] = useState('Empty');
+	const defaultDate = user && user.ceRenewalDate && user.ceRenewalDate.seconds ? new Date(user.ceRenewalDate.seconds * 1000) : new Date();
+	const [date, setDate] = useState(defaultDate);
 
 	useEffect(() => {
 		onAuthStateChanged(userAuth, (user) => {
 			if (user) {
 				// User is signed in, see docs for a list of available properties
 				// https://firebase.google.com/docs/reference/js/firebase.User
-				if (user.displayName) {
-					setName([user.displayName])
-				}
 				setUserEmail([user.email])
 				setVerifiedEmail([user.emailVerified.toString()])
 				// ...
@@ -83,14 +60,18 @@ export const SettingScreen = () => {
     signOut(auth).catch(error => console.log('Error logging out: ', error));
   };
 
-	const onChange = (event, selectedDate) => {
-		const currentDate = selectedDate || date
-		setShow(Platform.OS === 'ios')
-		setDate(currentDate)
-
-		let tempDate = new Date(currentDate)
-		let fDate = tempDate.getDate()
-		setText(fDate)
+	const onChange = async (event, selectedDate) => {
+		setDate(selectedDate || date)
+		if (date && userAuth.currentUser) {
+			const { uid } = userAuth.currentUser
+			const docRef = await doc(db, "users", uid)
+			const data = { ceRenewalDate: date }
+			if (docRef) {
+				await updateDoc(docRef, data)
+			} else {
+				console.log("No such document!");
+			}
+		}
 	}
 
 	const scaleAvatar = useAnimatedStyle(() => {
@@ -115,7 +96,7 @@ export const SettingScreen = () => {
 			<Layout level="4" style={styles.top}>
 				<Animated.View style={scaleAvatar}>
 					<Avatar
-						source={Images.avatar.avatar10}
+						source={Images.avatar.avatar}
 						style={{
 							alignSelf: 'center',
 							width: 96,
@@ -135,7 +116,7 @@ export const SettingScreen = () => {
 				<Layout level="4" style={styles.layout}>
 					<View style={styles.flexRow}>
 						<Text category="label" style={{ marginTop: 16 }}>Name</Text>
-						<Text category="p1" style={{ marginTop: 16 }}>{name}</Text>
+						<Text category="p1" style={{ marginTop: 16 }}>{user.name || ""}</Text>
 					</View>
 					<Divider style={styles.divider} />
 					<View style={styles.flexRow}>
@@ -149,13 +130,15 @@ export const SettingScreen = () => {
 					</View>
 					<Divider style={styles.divider} />
 					<View style={styles.flexRow}>
-						<Text category="label">Renew Education License</Text>
+						<Text category="label">Renew Edu License</Text>
 						<DateTimePicker
 							testID="dateTimePicker"
 							value={date}
 							mode={'date'}
 							onChange={onChange}
+							minimumDate={new Date()}
 							display="default"
+							style={{ width: 150, marginRight: 0, marginBottom: 16 }}
 						/>
 					</View>
 				</Layout>
