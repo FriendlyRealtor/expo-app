@@ -94,8 +94,8 @@ const NavigationAction = memo(
           return themes['background-button-color'];
         case 'primary':
           return 'transparent';
-          case 'black':
-            return 'transparent';
+        case 'black':
+          return 'transparent';
         case 'white':
           return themes['text-white-color'];
         case 'placeholder':
@@ -142,7 +142,8 @@ const NavigationAction = memo(
       <TouchableOpacity
         disabled={disabled}
         activeOpacity={0.7}
-        onPress={_onPress}>
+        onPress={_onPress}
+      >
         <Text category="body" status={titleStatus}>
           {title}
         </Text>
@@ -169,12 +170,7 @@ const NavigationAction = memo(
           },
           style,
         ]}
-        icon={props => (
-            <Icon
-            {...props}
-            name={icon}
-          />
-				)}
+        icon={props => <Icon {...props} name={icon} />}
       />
     );
   },

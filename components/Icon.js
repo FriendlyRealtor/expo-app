@@ -1,7 +1,7 @@
 import React from 'react';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import {MaterialCommunityIcons} from '@expo/vector-icons';
 
-export const Icon = ({ name, size, color, style }) => {
+export const Icon = ({name, size, color, style}) => {
   return (
     <MaterialCommunityIcons
       name={name}

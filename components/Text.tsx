@@ -177,7 +177,8 @@ export default React.forwardRef(
             fontStyle: fontStyle,
           },
           style,
-        ]}>
+        ]}
+      >
         {children}
       </Text>
     );

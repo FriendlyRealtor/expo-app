@@ -1,9 +1,9 @@
 import React from 'react';
-import { StyleSheet, Text } from 'react-native';
+import {StyleSheet, Text} from 'react-native';
 
-import { Colors } from '../config';
+import {Colors} from '../config';
 
-export const FormErrorMessage = ({ error, visible }) => {
+export const FormErrorMessage = ({error, visible}) => {
   if (!error || !visible) {
     return null;
   }
@@ -17,6 +17,6 @@ const styles = StyleSheet.create({
     color: Colors.red,
     fontSize: 16,
     marginVertical: 8,
-    fontWeight: '600'
-  }
+    fontWeight: '600',
+  },
 });

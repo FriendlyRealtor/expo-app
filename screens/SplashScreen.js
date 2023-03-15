@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, {useRef, useEffect} from 'react';
+import {StyleSheet, View} from 'react-native';
 import LottieView from 'lottie-react-native';
 
 export const SplashScreen = () => {
@@ -13,8 +13,8 @@ export const SplashScreen = () => {
     <View style={styles.animationContainer}>
       <LottieView
         autoPlay
-				loop
-				speed={0.5}
+        loop
+        speed={0.5}
         ref={animation}
         style={{
           width: 200,
@@ -25,7 +25,7 @@ export const SplashScreen = () => {
       />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   animationContainer: {

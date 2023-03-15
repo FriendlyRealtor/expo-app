@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
-import { Text, StyleSheet, Image } from 'react-native';
-import { Formik } from 'formik';
-import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
-import { doc, setDoc } from "firebase/firestore";
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import React, {useState} from 'react';
+import {Text, StyleSheet, Image} from 'react-native';
+import {Formik} from 'formik';
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from 'firebase/auth';
+import {doc, setDoc} from 'firebase/firestore';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
-import { View, TextInput, Button, FormErrorMessage } from '../components';
-import { Colors, auth, db } from '../config';
-import { useTogglePasswordVisibility } from '../hooks';
-import { signupValidationSchema } from '../utils';
+import {View, TextInput, Button, FormErrorMessage} from '../components';
+import {Colors, auth, db} from '../config';
+import {useTogglePasswordVisibility} from '../hooks';
+import {signupValidationSchema} from '../utils';
 
-export const SignupScreen = ({ navigation }) => {
+export const SignupScreen = ({navigation}) => {
   const [errorState, setErrorState] = useState('');
 
   const {
@@ -19,40 +22,44 @@ export const SignupScreen = ({ navigation }) => {
     rightIcon,
     handleConfirmPasswordVisibility,
     confirmPasswordIcon,
-    confirmPasswordVisibility
+    confirmPasswordVisibility,
   } = useTogglePasswordVisibility();
 
   const handleSignup = async values => {
-    const { email, password, firstName, lastName } = values;
-    createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
-			const user = userCredential.user;
-			sendEmailVerification(user).then(async () => {
-				const { uid } = user
-				await setDoc(doc(db, "users", uid), {
-					name: `${firstName} ${lastName}`,
-					photo: 'https://firebasestorage.googleapis.com/v0/b/real-estate-app-9a719.appspot.com/o/default_photo%2Fimg_avatar.png?alt=media&token=ca7c1413-f7ea-4511-915a-699283568edc'
-				});
-			})
-		}).catch(error =>
-      setErrorState(error.message)
-    );
+    const {email, password, firstName, lastName} = values;
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(userCredential => {
+        const user = userCredential.user;
+        sendEmailVerification(user).then(async () => {
+          const {uid} = user;
+          await setDoc(doc(db, 'users', uid), {
+            name: `${firstName} ${lastName}`,
+            photo:
+              'https://firebasestorage.googleapis.com/v0/b/real-estate-app-9a719.appspot.com/o/default_photo%2Fimg_avatar.png?alt=media&token=ca7c1413-f7ea-4511-915a-699283568edc',
+          });
+        });
+      })
+      .catch(error => setErrorState(error.message));
   };
 
   return (
     <View isSafe style={styles.container}>
       <KeyboardAwareScrollView enableOnAndroid={true}>
         <View style={styles.logoContainer}>
-					<Image source={require('../assets/icon.png')} style={{ width: 250, height: 250 }} />
+          <Image
+            source={require('../assets/icon.png')}
+            style={{width: 250, height: 250}}
+          />
           <Text style={styles.screenTitle}>Create a new account!</Text>
         </View>
         {/* Formik Wrapper */}
         <Formik
           initialValues={{
-						firstName: '',
-						lastName: '',
+            firstName: '',
+            lastName: '',
             email: '',
             password: '',
-            confirmPassword: ''
+            confirmPassword: '',
           }}
           validationSchema={signupValidationSchema}
           onSubmit={values => handleSignup(values)}
@@ -63,49 +70,55 @@ export const SignupScreen = ({ navigation }) => {
             errors,
             handleChange,
             handleSubmit,
-            handleBlur
+            handleBlur,
           }) => (
             <>
               {/* Input fields */}
-								<TextInput
-									name='firstName'
-									placeholder='First Name'
-									autoCapitalize='none'
-									autoFocus={true}
-									value={values.firstName}
-									onChangeText={handleChange('firstName')}
-									onBlur={handleBlur('firstName')}
-								/>
-								<FormErrorMessage error={errors.firstName} visible={touched.firstName} />
-							<TextInput
-								name='lastName'
-								placeholder='Last Name'
-								autoCapitalize='none'
-								value={values.lastName}
-								onChangeText={handleChange('lastName')}
-								onBlur={handleBlur('lastName')}
-							/>
-							<FormErrorMessage error={errors.lastName} visible={touched.lastName} />
               <TextInput
-                name='email'
-                leftIconName='email'
-                placeholder='Email'
-                autoCapitalize='none'
-                keyboardType='email-address'
-                textContentType='emailAddress'
+                name="firstName"
+                placeholder="First Name"
+                autoCapitalize="none"
+                autoFocus={true}
+                value={values.firstName}
+                onChangeText={handleChange('firstName')}
+                onBlur={handleBlur('firstName')}
+              />
+              <FormErrorMessage
+                error={errors.firstName}
+                visible={touched.firstName}
+              />
+              <TextInput
+                name="lastName"
+                placeholder="Last Name"
+                autoCapitalize="none"
+                value={values.lastName}
+                onChangeText={handleChange('lastName')}
+                onBlur={handleBlur('lastName')}
+              />
+              <FormErrorMessage
+                error={errors.lastName}
+                visible={touched.lastName}
+              />
+              <TextInput
+                name="email"
+                leftIconName="email"
+                placeholder="Email"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                textContentType="emailAddress"
                 value={values.email}
                 onChangeText={handleChange('email')}
                 onBlur={handleBlur('email')}
               />
               <FormErrorMessage error={errors.email} visible={touched.email} />
               <TextInput
-                name='password'
-                leftIconName='key-variant'
-                placeholder='Password'
-                autoCapitalize='none'
+                name="password"
+                leftIconName="key-variant"
+                placeholder="Password"
+                autoCapitalize="none"
                 autoCorrect={false}
                 secureTextEntry={passwordVisibility}
-                textContentType='newPassword'
+                textContentType="newPassword"
                 rightIcon={rightIcon}
                 handlePasswordVisibility={handlePasswordVisibility}
                 value={values.password}
@@ -117,13 +130,13 @@ export const SignupScreen = ({ navigation }) => {
                 visible={touched.password}
               />
               <TextInput
-                name='confirmPassword'
-                leftIconName='key-variant'
-                placeholder='Confirm password'
-                autoCapitalize='none'
+                name="confirmPassword"
+                leftIconName="key-variant"
+                placeholder="Confirm password"
+                autoCapitalize="none"
                 autoCorrect={false}
                 secureTextEntry={confirmPasswordVisibility}
-                textContentType='password'
+                textContentType="password"
                 rightIcon={confirmPasswordIcon}
                 handlePasswordVisibility={handleConfirmPasswordVisibility}
                 value={values.confirmPassword}
@@ -161,16 +174,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.white,
-    paddingHorizontal: 12
+    paddingHorizontal: 12,
   },
   logoContainer: {
-    alignItems: 'center'
+    alignItems: 'center',
   },
   screenTitle: {
     fontSize: 32,
     fontWeight: '700',
     color: Colors.black,
-    paddingTop: 20
+    paddingTop: 20,
   },
   button: {
     width: '100%',
@@ -179,16 +192,16 @@ const styles = StyleSheet.create({
     marginTop: 8,
     backgroundColor: Colors.orange,
     padding: 10,
-    borderRadius: 8
+    borderRadius: 8,
   },
   buttonText: {
     fontSize: 20,
     color: Colors.white,
-    fontWeight: '700'
+    fontWeight: '700',
   },
   borderlessButtonContainer: {
     marginTop: 16,
     alignItems: 'center',
-    justifyContent: 'center'
-  }
+    justifyContent: 'center',
+  },
 });

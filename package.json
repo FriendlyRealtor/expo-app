@@ -5,6 +5,7 @@
     "android": "expo start --android",
     "eject": "expo eject",
     "ios": "expo start --ios",
+    "prettier": "prettier --write 'components/**/*.{ts,tsx,js,jsx}' 'config/**/*.{ts,tsx,js,jsx}' 'hooks/**/*.{ts,tsx,js,jsx}' 'navigation/**/*.{ts,tsx,js,jsx}' 'providers/**/*.{ts,tsx,js,jsx}', 'screens/**/*.{ts,tsx,js,jsx}' 'utils/**/*.{ts,tsx,js,jsx}' ",
     "start": "expo start",
     "web": "expo start --web"
   },
@@ -34,6 +35,7 @@
     "lodash": "^4.17.21",
     "lottie-react-native": "5.1.3",
     "moment": "^2.29.4",
+    "prettier": "^2.8.4",
     "react": "18.0.0",
     "react-dom": "18.0.0",
     "react-native": "0.69.4",
