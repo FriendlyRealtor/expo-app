@@ -97,7 +97,7 @@ export const LocalRestaurantScreen = () => {
 
   return (
     <Layout style={{ flex: 1, marginTop: 50 }}>
-			<Text category='h6' status="info" style={{ padding: 16 }}>Fuel your body with goodness, and greatness will follow.</Text>
+			<Text category='h6' status="info" style={{ padding: 16, color: '#02FDAA' }}>Fuel your body with goodness, and greatness will follow.</Text>
 			<FlatList data={restaurantList} renderItem={renderItem} />
     </Layout>
   );

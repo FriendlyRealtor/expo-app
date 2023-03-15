@@ -32,6 +32,8 @@ export const HomeScreen = () => {
 		},
 		footerControl: {
 			marginHorizontal: 2,
+			backgroundColor: '#02FDAA',
+			borderColor: '#02FDAA'
 		},
 		layout: {
 			paddingHorizontal: 16,
@@ -72,7 +74,7 @@ export const HomeScreen = () => {
 	const Header = (props) => (
 		<View {...props}>
 			<Text category='h6'>Get CRM Valuation on the go!</Text>
-			<Text category='s1' status='info'>Search for property by address.</Text>
+			<Text category='s1' status='info' style={{ color: '#02FDAA' }}>Search for property by address.</Text>
 		</View>
 	);
 
