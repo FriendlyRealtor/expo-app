@@ -47,7 +47,7 @@ export const LoginScreen = ({navigation}) => {
               source={require('../assets/icon.png')}
               style={{width: 250, height: 250}}
             />
-            <Text style={styles.screenTitle}>Agent Lifestyle</Text>
+            <Text style={styles.screenTitle}>Friendly Realtor</Text>
           </View>
           <Formik
             initialValues={{
