@@ -22,12 +22,12 @@ import Animated, {
 import {useLayout} from '../hooks';
 import {AuthenticatedUserContext} from '../providers';
 import * as ImagePicker from 'expo-image-picker';
+import moment from 'moment';
 
 export const SettingScreen = ({navigation}) => {
   const styles = useStyleSheet(themedStyles);
   const {user} = useContext(AuthenticatedUserContext);
 
-  const [verifiedEmail, setVerifiedEmail] = useState([false]);
   const [userEmail, setUserEmail] = useState([]);
   const userAuth = getAuth();
   const {height} = useLayout();
@@ -43,14 +43,7 @@ export const SettingScreen = ({navigation}) => {
   useEffect(() => {
     onAuthStateChanged(userAuth, user => {
       if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/firebase.User
         setUserEmail([user.email]);
-        setVerifiedEmail([user.emailVerified.toString()]);
-        // ...
-      } else {
-        // User is signed out
-        // ...
       }
     });
   }, []);
@@ -59,7 +52,6 @@ export const SettingScreen = ({navigation}) => {
     signOut(auth).catch(error => console.log('Error logging out: ', error));
 
     if (!auth.currentUser) {
-      console.log('call this');
       navigation.navigate('Login');
     }
   };
@@ -85,11 +77,11 @@ export const SettingScreen = ({navigation}) => {
   }, []);
 
   const onChange = async (event, selectedDate) => {
-    setDate(selectedDate || date);
-    if (date && userAuth.currentUser) {
+    if (selectedDate && userAuth.currentUser) {
+			setDate(selectedDate);
       const {uid} = userAuth.currentUser;
       const docRef = await doc(db, 'users', uid);
-      const data = {ceRenewalDate: date};
+      const data = {ceRenewalDate: selectedDate};
       if (docRef) {
         await updateDoc(docRef, data);
       } else {
@@ -115,7 +107,11 @@ export const SettingScreen = ({navigation}) => {
     translateY.value = event.contentOffset.y;
   });
 
-  return (
+	const year = moment().year()
+	const month = moment().month()
+	const day = moment().format('D')
+
+	return (
     <Container style={styles.container}>
       <Layout level="4" style={styles.top}>
         <Animated.View style={scaleAvatar}>
@@ -157,10 +153,6 @@ export const SettingScreen = ({navigation}) => {
             <Text category="p1">{userEmail}</Text>
           </View>
           <Divider style={styles.divider} />
-          <View style={styles.flexRow}>
-            <Text category="label">Email Verified</Text>
-            <Text category="p1">{verifiedEmail}</Text>
-          </View>
           <Divider style={styles.divider} />
           <View style={styles.flexRow}>
             <Text category="label">Renew Edu License</Text>
@@ -169,9 +161,9 @@ export const SettingScreen = ({navigation}) => {
               value={date}
               mode={'date'}
               onChange={onChange}
-              minimumDate={new Date()}
               display="default"
-              style={{width: 150, marginRight: 0, marginBottom: 16}}
+							minimumDate={new Date(year, month, day)}
+							style={{width: 150, marginRight: 0, marginBottom: 16}}
             />
           </View>
         </Layout>

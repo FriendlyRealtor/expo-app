@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {
   Image,
   FlatList,
+  View,
   Linking,
   TouchableOpacity,
   StyleSheet,
@@ -98,7 +99,13 @@ export const LocalRestaurantScreen = props => {
       <Text category="h6" status="info" style={{padding: 16, color: '#02FDAA'}}>
         Fuel your body with goodness, and greatness will follow.
       </Text>
-      <FlatList data={restaurantList} renderItem={renderItem} />
+      {restaurantList && _.size(restaurantList) ? (
+        <FlatList data={restaurantList} renderItem={renderItem} />
+      ) : (
+        <View style={{display: 'flex', alignItems: 'center', marginTop: 80}}>
+          <Text category="h1">No Results Found!</Text>
+        </View>
+      )}
     </Layout>
   );
 };

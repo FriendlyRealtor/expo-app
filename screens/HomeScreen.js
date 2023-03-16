@@ -108,7 +108,6 @@ export const HomeScreen = () => {
                 name="location"
                 value={location}
                 type="text"
-                autoFocus={true}
                 onChangeText={value => setFieldValue('location', value)}
                 onBlur={handleBlur('location')}
                 placeholder="Enter address you are interested in"
