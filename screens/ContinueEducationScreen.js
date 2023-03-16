@@ -11,8 +11,11 @@ import {Video} from 'expo-av';
 import {ref, getDownloadURL, listAll} from 'firebase/storage';
 import {storage} from '../config';
 import uuid from 'react-native-uuid';
+import {useIsFocused} from '@react-navigation/native';
 
 export const ContinueEducationScreen = () => {
+	const isFocused = useIsFocused();
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -25,6 +28,10 @@ export const ContinueEducationScreen = () => {
 
   const video = useRef(null);
   const [courses, setCourses] = useState([]);
+
+	useEffect(() => {
+
+	}, [isFocused])
 
   useEffect(() => {
     // Create a reference to the file we want to download

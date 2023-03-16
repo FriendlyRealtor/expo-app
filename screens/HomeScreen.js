@@ -1,5 +1,6 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
+import {useIsFocused} from '@react-navigation/native';
 import {TextInput, FormErrorMessage} from '../components';
 import axios from 'axios';
 import {numberWithCommas} from '../utils';
@@ -10,6 +11,8 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Colors} from '../config';
 
 export const HomeScreen = () => {
+  const isFocused = useIsFocused();
+
   const styles = StyleSheet.create({
     topContainer: {
       flexDirection: 'row',
@@ -54,7 +57,7 @@ export const HomeScreen = () => {
 
   const getCrmValuation = useCallback(
     location => {
-			const regex = /[,#-\/\s\!\@\$.....]/gi; // regex to test if valid street address
+      const regex = /[,#-\/\s\!\@\$.....]/gi; // regex to test if valid street address
 
       if (regex.test(location)) {
         axios({
@@ -71,21 +74,32 @@ export const HomeScreen = () => {
             setErrorState(error.message);
           });
       } else {
-				setErrorState("Invalid Street Address, Please Try Again.")
-			}
+        setErrorState('Invalid Street Address, Please Try Again.');
+      }
     },
     [location],
   );
 
   const [crmEstimate, setCrmEstimate] = useState(0);
-  const {handleChange, values, handleBlur, handleSubmit} = useFormik({
-    initialValues: {
-      location: '',
+  const {handleChange, values, handleBlur, handleSubmit, resetForm} = useFormik(
+    {
+      initialValues: {
+        location: '',
+      },
+      onSubmit: values => {
+        getCrmValuation(values.location);
+      },
     },
-    onSubmit: values => {
-      getCrmValuation(values.location);
-    },
-  });
+  );
+
+  useEffect(() => {
+    resetForm({
+      values: {
+        location: '',
+      },
+    });
+  }, [isFocused]);
+
   const {location} = values;
 
   return (

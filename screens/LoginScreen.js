@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {Text, StyleSheet, Image} from 'react-native';
 import {Formik, useFormik} from 'formik';
 import {signInWithEmailAndPassword} from 'firebase/auth';
