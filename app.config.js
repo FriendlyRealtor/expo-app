@@ -3,47 +3,51 @@ import 'dotenv/config';
 export default {
   expo: {
     name: 'Friendly Realtor',
-    slug: 'expo-firebase',
-    privacy: 'public',
+    slug: 'friendlyrealtor',
+    privacy: 'unlisted',
     platforms: ['ios'],
     version: '0.15.0',
     orientation: 'portrait',
+    owner: 'jubileeinvestments',
     icon: './assets/icon.png',
     updates: {
-      fallbackToCacheTimeout: 0
+      fallbackToCacheTimeout: 0,
     },
     assetBundlePatterns: ['**/*'],
     ios: {
-      supportsTablet: true
+      supportsTablet: true,
+      bundleIdentifier: 'jubileeinvestments.Real-Estate-App',
+      buildNumber: '2',
     },
     extra: {
-      apiKey: "AIzaSyCI0IoNQbXn3a0_QAyhPOXwpKM6Wqk1hnQ",
-      authDomain: "real-estate-app-9a719.firebaseapp.com",
-      projectId:"real-estate-app-9a719",
-      storageBucket: "real-estate-app-9a719.appspot.com",
-      messagingSenderId:  "154068447777",
-      appId: "1:154068447777:web:881b49a540dae817b76960"
+      eas: {
+        projectId: '367e8c43-826e-4fbb-9a0c-fdb79080a072',
+      },
     },
-		plugins: [
-			[
-				"expo-av",
-				{
-					microphonePermission: "Allow $(PRODUCT_NAME) to access your microphone."
-				},
-			],
-			[
-				"expo-location",
+    plugins: [
+      [
+        'expo-av',
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+          microphonePermission:
+            'Allow $(PRODUCT_NAME) to access your microphone.',
         },
-			],
-			[
-        "expo-image-picker",
+      ],
+      [
+        'expo-location',
         {
-          "photosPermission": "Allow $(PRODUCT_NAME) to accesses your photos to let you share them with your friends.",
-					"cameraPermission": "Allow $(PRODUCT_NAME) to accesses your camera to let you share them with your friends.",
-        }
-      ]
-		]
-  }
+          locationAlwaysAndWhenInUsePermission:
+            'Allow $(PRODUCT_NAME) to use your location.',
+        },
+      ],
+      [
+        'expo-image-picker',
+        {
+          photosPermission:
+            'Allow $(PRODUCT_NAME) to accesses your photos to let you share them with your friends.',
+          cameraPermission:
+            'Allow $(PRODUCT_NAME) to accesses your camera to let you share them with your friends.',
+        },
+      ],
+    ],
+  },
 };

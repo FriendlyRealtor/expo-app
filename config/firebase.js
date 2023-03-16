@@ -1,23 +1,29 @@
-import {initializeApp} from 'firebase/app';
+import {initializeApp, getApps, getApp} from 'firebase/app';
 import {initializeAuth, getReactNativePersistence} from 'firebase/auth';
 import {getFirestore} from 'firebase/firestore';
-import {getStorage, ref} from 'firebase/storage';
-
-import Constants from 'expo-constants';
+import {getStorage} from 'firebase/storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  FIREBASE_API_KEY,
+  FIREBASE_AUTH_DOMAIN,
+  FIREBASE_PROJECT_ID,
+  FIREBASE_STORAGE_BUCKET,
+  FIREBASE_MESSAGING_SENDER_ID,
+  FIREBASE_APP_ID,
+} from '@env';
 
 // add firebase config
 const firebaseConfig = {
-  apiKey: Constants.manifest.extra.apiKey,
-  authDomain: Constants.manifest.extra.authDomain,
-  projectId: Constants.manifest.extra.projectId,
-  storageBucket: Constants.manifest.extra.storageBucket,
-  messagingSenderId: Constants.manifest.extra.messagingSenderId,
-  appId: Constants.manifest.extra.appId,
+  apiKey: FIREBASE_API_KEY,
+  authDomain: FIREBASE_AUTH_DOMAIN,
+  projectId: FIREBASE_PROJECT_ID,
+  storageBucket: FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
+  appId: FIREBASE_APP_ID,
 };
 
 // initialize firebase
-const app = initializeApp(firebaseConfig);
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
 // initialize auth
 const auth = initializeAuth(app, {
