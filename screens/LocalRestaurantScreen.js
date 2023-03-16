@@ -12,7 +12,7 @@ import axios from 'axios';
 import _ from 'lodash';
 import * as Location from 'expo-location';
 
-export const LocalRestaurantScreen = () => {
+export const LocalRestaurantScreen = props => {
   const styles = StyleSheet.create({
     layout: {
       paddingHorizontal: 16,
@@ -23,29 +23,28 @@ export const LocalRestaurantScreen = () => {
     },
   });
 
+  const {locationStatus} = props;
+
   const [restaurantList, setRestaurantList] = useState([]);
   const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
 
   useEffect(() => {
     (async () => {
-      let {status} = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
+      if (locationStatus !== 'granted') {
         return;
       }
 
-      const location = await Location.getCurrentPositionAsync({});
-      setLocation(location.coords);
+      const res = await Location.getCurrentPositionAsync({});
+      setLocation(res.coords);
     })();
-  }, []);
+  }, [locationStatus]);
 
   useEffect(() => {
     if (location) {
       const {latitude, longitude} = location;
       axios({
         method: 'get',
-        url: `http://localhost:5001/local-restaurants`,
+        url: 'http://localhost:5001/local-restaurants',
         params: {location: `${latitude},${longitude}`},
       })
         .then(response => {

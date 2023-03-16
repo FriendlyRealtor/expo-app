@@ -6,10 +6,13 @@ import {ContinueEducationScreen} from '../screens';
 import {LocalRestaurantScreen} from '../screens';
 import {SettingScreen} from '../screens';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {usePermissions} from '../hooks';
 
 const Tab = createBottomTabNavigator();
 
-export const AppTabs = () => {
+export const AppTabs = props => {
+  const {locationStatus} = usePermissions(props.currentUser);
+
   return (
     <Tab.Navigator>
       <Tab.Screen
@@ -28,11 +31,11 @@ export const AppTabs = () => {
       />
       <Tab.Screen
         name="Restaurants"
-        component={LocalRestaurantScreen}
         options={{
           tabBarIcon: () => <Icon name="delicious" size={30} color="#02FDAA" />,
-        }}
-      />
+        }}>
+        {() => <LocalRestaurantScreen locationStatus={locationStatus} />}
+      </Tab.Screen>
       <Tab.Screen
         name="Settings"
         component={SettingScreen}

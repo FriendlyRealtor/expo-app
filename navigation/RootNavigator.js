@@ -37,8 +37,8 @@ export const RootNavigator = () => {
 
   return (
     <NavigationContainer>
-      {user && auth.currentUser && auth.currentUser.emailVerified ? (
-        <AppTabs />
+      {(user && auth.currentUser && auth.currentUser.emailVerified) || true ? (
+        <AppTabs currentUser={auth.currentUser} />
       ) : (
         <AuthStack />
       )}
