@@ -91,11 +91,9 @@ export const LoginScreen = ({navigation}) => {
                 error={errors.password}
                 visible={touched.password}
               />
-              {/* Display Screen Error Mesages */}
               {errorState !== '' ? (
                 <FormErrorMessage error={errorState} visible={true} />
               ) : null}
-              {/* Login button */}
               <Button style={styles.button} onPress={handleSubmit}>
                 <Text style={styles.buttonText}>Login</Text>
               </Button>

@@ -45,7 +45,7 @@ export const LocalRestaurantScreen = props => {
       const {latitude, longitude} = location;
       axios({
         method: 'get',
-        url: 'http://localhost:5001/local-restaurants',
+        url: `${process.env.SERVER_URL}/local-restaurants`,
         params: {location: `${latitude},${longitude}`},
       })
         .then(response => {

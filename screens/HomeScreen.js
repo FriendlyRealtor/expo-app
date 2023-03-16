@@ -5,8 +5,9 @@ import axios from 'axios';
 import {numberWithCommas} from '../utils';
 import {Formik, useFormik} from 'formik';
 import {locationValidationSchema} from '../utils';
-import {Layout, Text, Button, Card, Divider} from '@ui-kitten/components';
+import {Layout, Text, Button, Divider} from '@ui-kitten/components';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {Colors} from '../config';
 
 export const HomeScreen = () => {
   const styles = StyleSheet.create({
@@ -22,10 +23,20 @@ export const HomeScreen = () => {
       flexDirection: 'flex',
       justifyContent: 'flex-end',
     },
-    footerControl: {
-      marginHorizontal: 2,
+    button: {
+      width: '100%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: 8,
+      padding: 10,
+      borderRadius: 8,
       backgroundColor: '#02FDAA',
       borderColor: '#02FDAA',
+    },
+    buttonText: {
+      fontSize: 20,
+      color: Colors.white,
+      fontWeight: '700',
     },
     layout: {
       paddingHorizontal: 16,
@@ -39,63 +50,58 @@ export const HomeScreen = () => {
     },
   });
 
+  const [errorState, setErrorState] = useState('');
+
+  const getCrmValuation = useCallback(
+    location => {
+			const regex = /[,#-\/\s\!\@\$.....]/gi; // regex to test if valid street address
+
+      if (regex.test(location)) {
+        axios({
+          method: 'get',
+          url: `${process.env.SERVER_URL}/crm?location=${location}`,
+        })
+          .then(response => {
+            if (response.data) {
+              const {value} = response.data;
+              setCrmEstimate(value);
+            }
+          })
+          .catch(error => {
+            setErrorState(error.message);
+          });
+      } else {
+				setErrorState("Invalid Street Address, Please Try Again.")
+			}
+    },
+    [location],
+  );
+
   const [crmEstimate, setCrmEstimate] = useState(0);
-  const {errors, setFieldValue, touched, values, handleBlur} = useFormik({
+  const {handleChange, values, handleBlur, handleSubmit} = useFormik({
     initialValues: {
       location: '',
+    },
+    onSubmit: values => {
+      getCrmValuation(values.location);
     },
   });
   const {location} = values;
 
-  const getCrmValuation = useCallback(() => {
-    axios({
-      method: 'get',
-      url: `http://localhost:5001/crm?location=${location}`,
-    })
-      .then(response => {
-        if (response.data) {
-          const {value} = response.data;
-          setCrmEstimate(value);
-        }
-      })
-      .catch(error => {
-        console.log('receiving', error);
-      });
-  }, [location]);
-
-  const Header = props => (
-    <View {...props} style={{ marginTop: 16 }}>
-      <Text category="h6">Get CRM Valuation on the go!</Text>
-      <Text category="s1" status="info" style={{color: '#02FDAA'}}>
-        Search for property by address.
-      </Text>
-    </View>
-  );
-
-  const Footer = props => (
-    <View {...props} style={[props.style, styles.footerContainer]}>
-      <Divider />
-      <Button
-        style={styles.footerControl}
-        onPress={props.getCrmValuation}
-        size="small">
-        Get Valuation
-      </Button>
-      <Text style={{margin: 2}} appearance="hint">
-        Valuation is calculated by default 10 properties in the area.
-      </Text>
-    </View>
-  );
-
   return (
-    <Layout style={{flex: 1, marginTop: 50, paddingHorizontal: 16 }}>
+    <Layout style={{flex: 1, marginTop: 50, paddingHorizontal: 16}}>
       <KeyboardAwareScrollView>
         <Formik
           initialValues={{location: ''}}
           validationSchema={locationValidationSchema}>
           <View style={styles.card}>
-            <Header />
-            <View style={{ marginVertical: 40 }}>
+            <View style={{marginTop: 16}}>
+              <Text category="h6">Get CRM Valuation on the go!</Text>
+              <Text category="s1" status="info" style={{color: '#02FDAA'}}>
+                Search for property by address.
+              </Text>
+            </View>
+            <View style={{marginVertical: 40}}>
               <Text>
                 A Comparative Market Analysis (CMA) is a crucial tool for real
                 estate agents to accurately price and sell properties. The
@@ -106,16 +112,18 @@ export const HomeScreen = () => {
               </Text>
               <TextInput
                 name="location"
-                value={location}
+                value={values.location}
+                autoCapitalize="none"
+                inputMode="search"
                 type="text"
-                onChangeText={value => setFieldValue('location', value)}
+                onChangeText={handleChange('location')}
                 onBlur={handleBlur('location')}
+                textContentType="addressCityAndState"
                 placeholder="Enter address you are interested in"
               />
-              <FormErrorMessage
-                error={errors.location}
-                visible={touched.location}
-              />
+              {errorState !== '' ? (
+                <FormErrorMessage error={errorState} visible={true} />
+              ) : null}
               <Layout level="4" style={styles.layout}>
                 <Text
                   style={{
@@ -148,7 +156,15 @@ export const HomeScreen = () => {
                 )}`}</Text>
               </Layout>
             </View>
-            <Footer getCrmValuation={getCrmValuation} />
+            <View style={styles.footerContainer}>
+              <Divider />
+              <Button style={styles.button} onPress={handleSubmit}>
+                <Text style={styles.buttonText}>Get Valuation</Text>
+              </Button>
+              <Text style={{margin: 2}} appearance="hint">
+                Valuation is calculated by default 10 properties in the area.
+              </Text>
+            </View>
           </View>
         </Formik>
       </KeyboardAwareScrollView>
