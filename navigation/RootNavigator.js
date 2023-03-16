@@ -29,6 +29,7 @@ export const RootNavigator = () => {
     );
 
     return unsubscribeAuthStateChanged;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   if (isLoading) {
@@ -37,7 +38,7 @@ export const RootNavigator = () => {
 
   return (
     <NavigationContainer>
-      {(user && auth.currentUser && auth.currentUser.emailVerified) || true ? (
+      {user && auth.currentUser && auth.currentUser.emailVerified ? (
         <AppTabs currentUser={auth.currentUser} />
       ) : (
         <AuthStack />

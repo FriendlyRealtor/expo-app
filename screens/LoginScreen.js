@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text, StyleSheet, Image} from 'react-native';
-import {Formik} from 'formik';
+import {Formik, useFormik} from 'formik';
 import {signInWithEmailAndPassword} from 'firebase/auth';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
@@ -10,6 +10,17 @@ import {useTogglePasswordVisibility} from '../hooks';
 import {loginValidationSchema} from '../utils';
 
 export const LoginScreen = ({navigation}) => {
+  const {values, touched, errors, handleChange, handleSubmit, resetForm} =
+    useFormik({
+      initialValues: {
+        email: '',
+        password: '',
+      },
+      onSubmit: submitValues => {
+        handleLogin(submitValues);
+      },
+    });
+
   const [errorState, setErrorState] = useState('');
   const {passwordVisibility, handlePasswordVisibility, rightIcon} =
     useTogglePasswordVisibility();
@@ -37,6 +48,7 @@ export const LoginScreen = ({navigation}) => {
         }
       });
   };
+
   return (
     <View isSafe style={styles.container}>
       <KeyboardAwareScrollView>
@@ -47,23 +59,9 @@ export const LoginScreen = ({navigation}) => {
           />
           <Text style={styles.screenTitle}>Friendly Realtor</Text>
         </View>
-        <Formik
-          initialValues={{
-            email: '',
-            password: '',
-          }}
-          validationSchema={loginValidationSchema}
-          onSubmit={values => handleLogin(values)}>
-          {({
-            values,
-            touched,
-            errors,
-            handleChange,
-            handleSubmit,
-            handleBlur,
-          }) => (
+        <Formik validationSchema={loginValidationSchema}>
+          {() => (
             <>
-              {/* Input fields */}
               <TextInput
                 name="email"
                 leftIconName="email"
@@ -74,7 +72,6 @@ export const LoginScreen = ({navigation}) => {
                 autoFocus={true}
                 value={values.email}
                 onChangeText={handleChange('email')}
-                onBlur={handleBlur('email')}
               />
               <FormErrorMessage error={errors.email} visible={touched.email} />
               <TextInput
@@ -89,7 +86,6 @@ export const LoginScreen = ({navigation}) => {
                 handlePasswordVisibility={handlePasswordVisibility}
                 value={values.password}
                 onChangeText={handleChange('password')}
-                onBlur={handleBlur('password')}
               />
               <FormErrorMessage
                 error={errors.password}
@@ -111,13 +107,29 @@ export const LoginScreen = ({navigation}) => {
           style={styles.borderlessButtonContainer}
           borderless
           title={'Create Account?'}
-          onPress={() => navigation.navigate('Signup')}
+          onPress={() => {
+            resetForm({
+              values: {
+                email: '',
+                password: '',
+              },
+            });
+            navigation.navigate('Signup');
+          }}
         />
         <Button
           style={styles.borderlessButtonContainer}
           borderless
           title={'Forgot Password'}
-          onPress={() => navigation.navigate('ForgotPassword')}
+          onPress={() => {
+            resetForm({
+              values: {
+                email: '',
+                password: '',
+              },
+            });
+            navigation.navigate('ForgotPassword');
+          }}
         />
       </KeyboardAwareScrollView>
     </View>
