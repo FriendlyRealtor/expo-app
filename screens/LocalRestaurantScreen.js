@@ -8,6 +8,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import {Layout, Text} from '@ui-kitten/components';
+import {Shimmer} from '../components';
 
 import axios from 'axios';
 import _ from 'lodash';
@@ -28,6 +29,7 @@ export const LocalRestaurantScreen = props => {
 
   const [restaurantList, setRestaurantList] = useState([]);
   const [location, setLocation] = useState(null);
+  const [loading, setLoading] = useState(false);;
 
   useEffect(() => {
     (async () => {
@@ -42,6 +44,7 @@ export const LocalRestaurantScreen = props => {
 
   useEffect(() => {
     if (location) {
+      setLoading(true);;
       const {latitude, longitude} = location;
       axios({
         method: 'get',
@@ -51,6 +54,7 @@ export const LocalRestaurantScreen = props => {
         .then(response => {
           const {data} = response;
           setRestaurantList(data);
+          setLoading(false);;
         })
         .catch(error => {
           console.log('receiving', error);
@@ -78,6 +82,21 @@ export const LocalRestaurantScreen = props => {
 
     const {location} = geometry;
     const {lng, lat} = location;
+
+    if (loading) {
+      return (
+        <View
+          style={{
+            paddingHorizontal: 16,
+            paddingVertical: 16,
+            borderRadius: 12,
+            marginHorizontal: 24,
+            marginVertical: 16,
+          }}>
+          <Shimmer width={300} height={200} />
+        </View>
+      );
+    }
 
     return (
       <TouchableOpacity onPress={() => openMap(lng, lat)}>

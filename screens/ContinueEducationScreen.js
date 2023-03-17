@@ -5,7 +5,6 @@ import {
   SafeAreaView,
   StatusBar,
   ScrollView,
-  Dimensions,
 } from 'react-native';
 import _ from 'lodash';
 import {Video} from 'expo-av';
