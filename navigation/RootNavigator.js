@@ -30,7 +30,7 @@ export const RootNavigator = () => {
 
     return unsubscribeAuthStateChanged;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  }, []);
 
   if (isLoading) {
     return <SplashScreen />;

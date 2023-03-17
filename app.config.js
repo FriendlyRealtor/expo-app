@@ -6,7 +6,7 @@ export default {
     slug: 'friendlyrealtor',
     privacy: 'unlisted',
     platforms: ['ios'],
-    version: '0.15.0',
+    version: '0.15.2',
     orientation: 'portrait',
     owner: 'jubileeinvestments',
     icon: './assets/icon.png',
@@ -17,14 +17,20 @@ export default {
     ios: {
       supportsTablet: true,
       bundleIdentifier: 'jubileeinvestments.Real-Estate-App',
-      buildNumber: '2',
+      buildNumber: '4',
       config: {
         usesNonExemptEncryption: false,
       },
     },
     extra: {
+      apiKey: process.env.FIREBASE_API_KEY,
+      authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+      messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+      appId: process.env.FIREBASE_APP_ID,
       eas: {
-        projectId: '367e8c43-826e-4fbb-9a0c-fdb79080a072',
+        projectId: process.env.EAS_PROJECT_ID,
       },
     },
     plugins: [
