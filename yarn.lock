@@ -9955,7 +9955,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"promise@npm:^8.0.3":
+"promise@npm:^8.2.0":
   version: 8.3.0
   resolution: "promise@npm:8.3.0"
   dependencies:
@@ -10205,7 +10205,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-codegen@npm:^0.69.1":
+"react-native-codegen@npm:^0.69.2":
   version: 0.69.2
   resolution: "react-native-codegen@npm:0.69.2"
   dependencies:
@@ -10403,9 +10403,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native@npm:0.69.4":
-  version: 0.69.4
-  resolution: "react-native@npm:0.69.4"
+"react-native@npm:0.69.6":
+  version: 0.69.6
+  resolution: "react-native@npm:0.69.6"
   dependencies:
     "@jest/create-cache-key-function": ^27.0.1
     "@react-native-community/cli": ^8.0.4
@@ -10428,9 +10428,9 @@ __metadata:
     mkdirp: ^0.5.1
     nullthrows: ^1.1.1
     pretty-format: ^26.5.2
-    promise: ^8.0.3
+    promise: ^8.2.0
     react-devtools-core: 4.24.0
-    react-native-codegen: ^0.69.1
+    react-native-codegen: ^0.69.2
     react-native-gradle-plugin: ^0.0.7
     react-refresh: ^0.4.0
     react-shallow-renderer: 16.15.0
@@ -10444,7 +10444,7 @@ __metadata:
     react: 18.0.0
   bin:
     react-native: cli.js
-  checksum: dcc520f9aebf709b2fd5e4b4b73136347d7d99d8bdcd10f9b1bfd57ffa1e31e3acdccf22ff7ad7395ec6f74d941bdd1a43954cad2121cc9c0d29ca800bc506fe
+  checksum: d050b9f0389362368cd1286c02dd46cd84def9fcbf4774dcedd5cbc3aa9ad594de48f22c5458ec257c07646d79722256bc837b25205c3a52752d5c5b6a7873f4
   languageName: node
   linkType: hard
 
@@ -10898,7 +10898,7 @@ __metadata:
     prettier: ^2.8.4
     react: 18.0.0
     react-dom: 18.0.0
-    react-native: 0.69.4
+    react-native: 0.69.6
     react-native-dotenv: ^3.4.8
     react-native-gesture-handler: ~2.5.0
     react-native-keyboard-aware-scroll-view: ^0.9.4
