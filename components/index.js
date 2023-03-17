@@ -6,6 +6,7 @@ import {Button} from './Button';
 import {FormErrorMessage} from './FormErrorMessage';
 import {LoadingIndicator} from './LoadingIndicator';
 import {Container} from './Container';
+import {Shimmer} from './Shimmer';
 import Text from './Text';
 import NavigationAction from './NavigationAction';
 
@@ -14,6 +15,7 @@ export {
   TextInput,
   Container,
   Text,
+  Shimmer,
   Logo,
   Icon,
   Button,

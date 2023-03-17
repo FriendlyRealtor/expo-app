@@ -5977,6 +5977,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-linear-gradient@npm:~11.4.0":
+  version: 11.4.0
+  resolution: "expo-linear-gradient@npm:11.4.0"
+  peerDependencies:
+    expo: "*"
+  checksum: cfa4909bb1885771d80b155b9b07fc761952a3a0d274caeddd984f089a03f79bcd0832360535e566321b6133f215563583495ed0d05e461758e48eeb37a690cd
+  languageName: node
+  linkType: hard
+
 "expo-location@npm:~14.3.0":
   version: 14.3.0
   resolution: "expo-location@npm:14.3.0"
@@ -10877,6 +10886,7 @@ __metadata:
     expo-av: ~12.0.4
     expo-constants: ~13.2.3
     expo-image-picker: ~13.3.1
+    expo-linear-gradient: ~11.4.0
     expo-location: ~14.3.0
     expo-status-bar: ^1.4.4
     expo-web-browser: ~11.0.0
