@@ -29,22 +29,24 @@ export const LocalRestaurantScreen = props => {
 
   const [restaurantList, setRestaurantList] = useState([]);
   const [location, setLocation] = useState(null);
-  const [loading, setLoading] = useState(false);;
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    (async () => {
+    const getLocation = async () => {
       if (locationStatus !== 'granted') {
         return;
       }
 
       const res = await Location.getCurrentPositionAsync({});
       setLocation(res.coords);
-    })();
+    };
+
+    getLocation();
   }, [locationStatus]);
 
   useEffect(() => {
     if (location) {
-      setLoading(true);;
+      setLoading(true);
       const {latitude, longitude} = location;
       axios({
         method: 'get',
@@ -54,10 +56,10 @@ export const LocalRestaurantScreen = props => {
         .then(response => {
           const {data} = response;
           setRestaurantList(data);
-          setLoading(false);;
+          setLoading(false);
         })
         .catch(error => {
-          console.log('receiving', error);
+          console.log('receiving', JSON.stringify(error));
         });
     }
   }, [location]);

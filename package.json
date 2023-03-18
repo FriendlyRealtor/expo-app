@@ -3,12 +3,12 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "android": "expo start --android",
-    "build-secrets": "eas secret:push --scope project --env-file .env.production",
     "build:ios": "eas build --platform ios",
     "eject": "expo eject",
     "ios": "expo start --ios",
     "lint": "eslint 'components/**/*.{ts,tsx,js,jsx}' 'config/**/*.{ts,tsx,js,jsx}' 'hooks/**/*.{ts,tsx,js,jsx}' 'navigation/**/*.{ts,tsx,js,jsx}' 'providers/**/*.{ts,tsx,js,jsx}' 'screens/**/*.{ts,tsx,js,jsx}' 'utils/**/*.{ts,tsx,js,jsx}' --fix",
     "prettier": "prettier --write 'components/**/*.{ts,tsx,js,jsx}' 'config/**/*.{ts,tsx,js,jsx}' 'hooks/**/*.{ts,tsx,js,jsx}' 'navigation/**/*.{ts,tsx,js,jsx}' 'providers/**/*.{ts,tsx,js,jsx}' 'screens/**/*.{ts,tsx,js,jsx}' 'utils/**/*.{ts,tsx,js,jsx}' ",
+    "prod:build-secrets": "eas secret:push --scope project --env-file .env.production",
     "start": "expo start",
     "web": "expo start --web"
   },
