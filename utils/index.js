@@ -13,18 +13,9 @@ export const loginValidationSchema = Yup.object().shape({
 
 export const locationValidationSchema = Yup.object().shape({
   location: Yup.string()
-    .trim()
-    .matches(/^[a-zA-Z0-9\s,'-]*$/, 'Is not in correct format')
-    .required()
-    .test(
-      'test-location',
-      'Address returns no positive value.',
-      function (value) {
-        if (value < 1) {
-          return true;
-        }
-      },
-    ),
+    .min(2, 'Too Short!')
+    .max(50, 'Too Long!')
+    .required('Required'),
 });
 
 export const signupValidationSchema = Yup.object().shape({

@@ -4092,6 +4092,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"babel-plugin-transform-inline-environment-variables@npm:^0.4.4":
+  version: 0.4.4
+  resolution: "babel-plugin-transform-inline-environment-variables@npm:0.4.4"
+  checksum: fa361287411301237fd8ce332aff4f8e8ccb8db30e87a2ddc7224c8bf7cd792eda47aca24dc2e09e70bce4c027bc8cbe22f4999056be37a25d2472945df21ef5
+  languageName: node
+  linkType: hard
+
 "babel-preset-expo@npm:~9.2.0":
   version: 9.2.2
   resolution: "babel-preset-expo@npm:9.2.2"
@@ -5325,6 +5332,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dotenv@npm:^16.0.3":
+  version: 16.0.3
+  resolution: "dotenv@npm:16.0.3"
+  checksum: afcf03f373d7a6d62c7e9afea6328e62851d627a4e73f2e12d0a8deae1cd375892004f3021883f8aec85932cd2834b091f568ced92b4774625b321db83b827f8
+  languageName: node
+  linkType: hard
+
 "ee-first@npm:1.1.1":
   version: 1.1.1
   resolution: "ee-first@npm:1.1.1"
@@ -5967,6 +5981,15 @@ __metadata:
   peerDependencies:
     expo: "*"
   checksum: 83b400ccb68c6947c53426a9a30d5cfa384a8baf7797064ee2e9d5ecc121c302ac252b37ffaf618a262b8a9aa0bdfb45d204c66113569760989283785f087814
+  languageName: node
+  linkType: hard
+
+"expo-linear-gradient@npm:~11.4.0":
+  version: 11.4.0
+  resolution: "expo-linear-gradient@npm:11.4.0"
+  peerDependencies:
+    expo: "*"
+  checksum: cfa4909bb1885771d80b155b9b07fc761952a3a0d274caeddd984f089a03f79bcd0832360535e566321b6133f215563583495ed0d05e461758e48eeb37a690cd
   languageName: node
   linkType: hard
 
@@ -9939,7 +9962,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"promise@npm:^8.0.3":
+"promise@npm:^8.2.0":
   version: 8.3.0
   resolution: "promise@npm:8.3.0"
   dependencies:
@@ -10189,7 +10212,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-codegen@npm:^0.69.1":
+"react-native-codegen@npm:^0.69.2":
   version: 0.69.2
   resolution: "react-native-codegen@npm:0.69.2"
   dependencies:
@@ -10198,6 +10221,17 @@ __metadata:
     jscodeshift: ^0.13.1
     nullthrows: ^1.1.1
   checksum: 73dc9464a90fde727a19ad4f002f3bc4ec948a948cd95b5f3bfbef24ff7cf2ca7282830fd99e6b1772804c1e0f172e64097190021b3a00ba27a1f9777e58cf77
+  languageName: node
+  linkType: hard
+
+"react-native-dotenv@npm:^3.4.8":
+  version: 3.4.8
+  resolution: "react-native-dotenv@npm:3.4.8"
+  dependencies:
+    dotenv: ^16.0.3
+  peerDependencies:
+    "@babel/runtime": ^7.20.6
+  checksum: 8443cec44862d3e110f236b1120d8a1f829cb4545a85c8462e6c01935aa216f50b05eb659661db29939d4d293ce7de6212bf877963e3b37f6c900629f6546d67
   languageName: node
   linkType: hard
 
@@ -10376,9 +10410,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native@npm:0.69.4":
-  version: 0.69.4
-  resolution: "react-native@npm:0.69.4"
+"react-native@npm:0.69.6":
+  version: 0.69.6
+  resolution: "react-native@npm:0.69.6"
   dependencies:
     "@jest/create-cache-key-function": ^27.0.1
     "@react-native-community/cli": ^8.0.4
@@ -10401,9 +10435,9 @@ __metadata:
     mkdirp: ^0.5.1
     nullthrows: ^1.1.1
     pretty-format: ^26.5.2
-    promise: ^8.0.3
+    promise: ^8.2.0
     react-devtools-core: 4.24.0
-    react-native-codegen: ^0.69.1
+    react-native-codegen: ^0.69.2
     react-native-gradle-plugin: ^0.0.7
     react-refresh: ^0.4.0
     react-shallow-renderer: 16.15.0
@@ -10417,7 +10451,7 @@ __metadata:
     react: 18.0.0
   bin:
     react-native: cli.js
-  checksum: dcc520f9aebf709b2fd5e4b4b73136347d7d99d8bdcd10f9b1bfd57ffa1e31e3acdccf22ff7ad7395ec6f74d941bdd1a43954cad2121cc9c0d29ca800bc506fe
+  checksum: d050b9f0389362368cd1286c02dd46cd84def9fcbf4774dcedd5cbc3aa9ad594de48f22c5458ec257c07646d79722256bc837b25205c3a52752d5c5b6a7873f4
   languageName: node
   linkType: hard
 
@@ -10850,6 +10884,7 @@ __metadata:
     "@ui-kitten/components": ^5.1.2
     "@ui-kitten/eva-icons": ^5.1.2
     axios: ^1.3.3
+    babel-plugin-transform-inline-environment-variables: ^0.4.4
     babel-preset-expo: ~9.2.0
     dotenv: ^10.0.0
     eslint: ^8.36.0
@@ -10859,6 +10894,7 @@ __metadata:
     expo-av: ~12.0.4
     expo-constants: ~13.2.3
     expo-image-picker: ~13.3.1
+    expo-linear-gradient: ~11.4.0
     expo-location: ~14.3.0
     expo-status-bar: ^1.4.4
     expo-web-browser: ~11.0.0
@@ -10870,7 +10906,8 @@ __metadata:
     prettier: ^2.8.4
     react: 18.0.0
     react-dom: 18.0.0
-    react-native: 0.69.4
+    react-native: 0.69.6
+    react-native-dotenv: ^3.4.8
     react-native-gesture-handler: ~2.5.0
     react-native-keyboard-aware-scroll-view: ^0.9.4
     react-native-paper: ^5.2.0

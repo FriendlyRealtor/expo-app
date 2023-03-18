@@ -29,7 +29,8 @@ export const RootNavigator = () => {
     );
 
     return unsubscribeAuthStateChanged;
-  }, [user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auth.currentUser]);
 
   if (isLoading) {
     return <SplashScreen />;
@@ -38,7 +39,7 @@ export const RootNavigator = () => {
   return (
     <NavigationContainer>
       {user && auth.currentUser && auth.currentUser.emailVerified ? (
-        <AppTabs />
+        <AppTabs currentUser={auth.currentUser} />
       ) : (
         <AuthStack />
       )}

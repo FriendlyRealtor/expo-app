@@ -2,17 +2,19 @@ import React, {useEffect, useState} from 'react';
 import {
   Image,
   FlatList,
+  View,
   Linking,
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
 import {Layout, Text} from '@ui-kitten/components';
+import {Shimmer} from '../components';
 
 import axios from 'axios';
 import _ from 'lodash';
 import * as Location from 'expo-location';
 
-export const LocalRestaurantScreen = () => {
+export const LocalRestaurantScreen = props => {
   const styles = StyleSheet.create({
     layout: {
       paddingHorizontal: 16,
@@ -23,40 +25,45 @@ export const LocalRestaurantScreen = () => {
     },
   });
 
+  const {locationStatus} = props;
+
   const [restaurantList, setRestaurantList] = useState([]);
   const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    (async () => {
-      let {status} = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
+    const getLocation = async () => {
+      if (locationStatus !== 'granted') {
         return;
       }
 
-      const location = await Location.getCurrentPositionAsync({});
-      setLocation(location.coords);
-    })();
-  }, []);
+      const res = await Location.getCurrentPositionAsync({});
+      setLocation(res.coords);
+    };
+
+    getLocation();
+  }, [locationStatus]);
 
   useEffect(() => {
     if (location) {
+      setLoading(true);
       const {latitude, longitude} = location;
       axios({
         method: 'get',
-        url: `http://localhost:5001/local-restaurants`,
+        url: `${process.env.SERVER_URL}/local-restaurants`,
         params: {location: `${latitude},${longitude}`},
       })
         .then(response => {
           const {data} = response;
           setRestaurantList(data);
+          setLoading(false);
         })
         .catch(error => {
-          console.log('receiving', error);
+          console.log('receiving', JSON.stringify(error));
         });
     }
-  }, [location]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location, process.env.SERVER_URL]);
 
   const openMap = (lng, lat) => {
     const scheme = Platform.select({ios: 'maps:0,0?q=', android: 'geo:0,0?q='});
@@ -79,6 +86,21 @@ export const LocalRestaurantScreen = () => {
     const {location} = geometry;
     const {lng, lat} = location;
 
+    if (loading) {
+      return (
+        <View
+          style={{
+            paddingHorizontal: 16,
+            paddingVertical: 16,
+            borderRadius: 12,
+            marginHorizontal: 24,
+            marginVertical: 16,
+          }}>
+          <Shimmer width={300} height={200} />
+        </View>
+      );
+    }
+
     return (
       <TouchableOpacity onPress={() => openMap(lng, lat)}>
         <Layout key={reference} level="4" style={styles.layout}>
@@ -99,7 +121,13 @@ export const LocalRestaurantScreen = () => {
       <Text category="h6" status="info" style={{padding: 16, color: '#02FDAA'}}>
         Fuel your body with goodness, and greatness will follow.
       </Text>
-      <FlatList data={restaurantList} renderItem={renderItem} />
+      {restaurantList && _.size(restaurantList) ? (
+        <FlatList data={restaurantList} renderItem={renderItem} />
+      ) : (
+        <View style={{display: 'flex', alignItems: 'center', marginTop: 80}}>
+          <Text category="h1">No Results Found!</Text>
+        </View>
+      )}
     </Layout>
   );
 };

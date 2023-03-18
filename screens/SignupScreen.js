@@ -75,7 +75,6 @@ export const SignupScreen = ({navigation}) => {
             handleBlur,
           }) => (
             <>
-              {/* Input fields */}
               <TextInput
                 name="firstName"
                 placeholder="First Name"
