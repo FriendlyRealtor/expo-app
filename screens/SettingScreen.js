@@ -24,16 +24,15 @@ import {AuthenticatedUserContext} from '../providers';
 import * as ImagePicker from 'expo-image-picker';
 import moment from 'moment';
 
-export const SettingScreen = ({navigation}) => {
+export const SettingScreen = ({navigation: { reset }}) => {
   const styles = useStyleSheet(themedStyles);
-  const {user} = useContext(AuthenticatedUserContext);
+  const {user, setUser} = useContext(AuthenticatedUserContext);
 
   const [userEmail, setUserEmail] = useState([]);
   const userAuth = getAuth();
   const {height} = useLayout();
   const translateY = useSharedValue(0);
   const input = [0, height * 0.082, height * 0.087, height * 0.09];
-
   const defaultDate =
     user && user.ceRenewalDate && user.ceRenewalDate.seconds
       ? new Date(user.ceRenewalDate.seconds * 1000)
@@ -48,13 +47,12 @@ export const SettingScreen = ({navigation}) => {
     });
   }, []);
 
-  const handleLogout = () => {
-    signOut(auth).catch(error => console.log('Error logging out: ', error));
+	const handleLogout = useCallback(() => {
+		signOut(auth).then(() => {
+			setUser(null)
+		}).catch(error => console.log('Error logging out: ', error));
 
-    if (!auth.currentUser) {
-      navigation.navigate('Login');
-    }
-  };
+	}, [auth.currentUser])
 
   const pickImage = useCallback(async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
