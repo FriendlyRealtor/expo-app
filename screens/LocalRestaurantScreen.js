@@ -62,7 +62,8 @@ export const LocalRestaurantScreen = props => {
           console.log('receiving', JSON.stringify(error));
         });
     }
-  }, [location]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location, process.env.SERVER_URL]);
 
   const openMap = (lng, lat) => {
     const scheme = Platform.select({ios: 'maps:0,0?q=', android: 'geo:0,0?q='});

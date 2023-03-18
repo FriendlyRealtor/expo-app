@@ -77,7 +77,8 @@ export const HomeScreen = () => {
         setErrorState('Invalid Street Address, Please Try Again.');
       }
     },
-    [location],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [location, process.env.SERVER_URL],
   );
 
   const [crmEstimate, setCrmEstimate] = useState(0);
