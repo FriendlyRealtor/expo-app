@@ -165,11 +165,18 @@ export const SignupScreen = ({navigation}) => {
                     )
                   }
                 >
-                  <Text category="label" appearance="hint" status="info" style= {{ marginTop: 22 }}>
+                  <Text
+                    category="label"
+                    appearance="hint"
+                    status="info"
+                    style={{marginTop: 22}}
+                  >
                     Terms of Service
                   </Text>
                 </TouchableOpacity>
-                <Text category="label" appearance="hint">and are acknowledging our{' '}</Text>
+                <Text category="label" appearance="hint">
+                  and are acknowledging our{' '}
+                </Text>
                 <TouchableOpacity
                   onPress={() =>
                     Linking.openURL(
@@ -177,7 +184,12 @@ export const SignupScreen = ({navigation}) => {
                     )
                   }
                 >
-                  <Text category="label" appearance="hint" status="info" style= {{ marginTop: 22 }}>
+                  <Text
+                    category="label"
+                    appearance="hint"
+                    status="info"
+                    style={{marginTop: 22}}
+                  >
                     Privacy Notice
                   </Text>
                 </TouchableOpacity>

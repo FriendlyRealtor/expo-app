@@ -13,6 +13,7 @@ import {storage} from '../config';
 import uuid from 'react-native-uuid';
 import {useIsFocused} from '@react-navigation/native';
 import {Shimmer} from '../components';
+import {Text} from '@ui-kitten/components';
 
 export const ContinueEducationScreen = () => {
   const isFocused = useIsFocused();
@@ -61,6 +62,14 @@ export const ContinueEducationScreen = () => {
   return (
     <ScrollView style={{flex: 1, padding: 10, ...styles.container}}>
       <SafeAreaView style={{marginVertical: 18}}>
+        <View style={{marginVertical: 16}}>
+          <Text category="h6">
+            Never stop learning: always curious, always growing.
+          </Text>
+          <Text category="s1" status="info" style={{color: '#02FDAA'}}>
+            Search for courses below.
+          </Text>
+        </View>
         {courses.map(res => {
           const key = uuid.v4();
           if (loading) {

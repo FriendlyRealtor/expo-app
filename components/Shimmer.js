@@ -47,14 +47,16 @@ export const Shimmer = ({width, height}) => {
             setPositionX(pageX);
           });
         }
-      }}>
+      }}
+    >
       {positionX !== null && (
         <Animated.View
           style={{
             flex: 1,
             left: -positionX,
             transform: [{translateX: linear}],
-          }}>
+          }}
+        >
           <LinearGradient
             style={{flex: 1, width: SCREEN_WIDTH}}
             start={{x: 0, y: 0}}

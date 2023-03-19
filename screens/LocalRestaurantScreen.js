@@ -95,7 +95,8 @@ export const LocalRestaurantScreen = props => {
             borderRadius: 12,
             marginHorizontal: 24,
             marginVertical: 16,
-          }}>
+          }}
+        >
           <Shimmer width={300} height={200} />
         </View>
       );
@@ -117,7 +118,7 @@ export const LocalRestaurantScreen = props => {
   };
 
   return (
-    <Layout style={{flex: 1, marginTop: 50}}>
+    <Layout style={{flex: 1}}>
       <Text category="h6" status="info" style={{padding: 16, color: '#02FDAA'}}>
         Fuel your body with goodness, and greatness will follow.
       </Text>
