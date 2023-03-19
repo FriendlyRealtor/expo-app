@@ -77,7 +77,7 @@ export const LocalRestaurantScreen = props => {
   };
 
   const renderItem = ({item, index}) => {
-    const {name, icon, reference, rating, opening_hours, geometry, photos} =
+    const {name, icon, reference, rating, opening_hours, geometry} =
       item;
     if (!opening_hours?.open_now && !geometry) {
       return false;
