@@ -83,7 +83,6 @@ export const SettingScreen = () => {
                 // Handle successful uploads on complete
                 // For instance, get the download URL: https://firebasestorage.googleapis.com/...
                 getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-                  console.log('File available at', downloadURL);
 									const docRef = await doc(db, 'users', uid);
       						const data = {photo: downloadURL};
 
@@ -141,7 +140,6 @@ export const SettingScreen = () => {
   const month = moment().month();
   const day = moment().format('D');
 
-	console.log(photoShow)
   return (
     <Container style={styles.container}>
       <Layout level="4" style={styles.top}>
