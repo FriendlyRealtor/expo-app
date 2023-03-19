@@ -9,6 +9,7 @@ import {locationValidationSchema} from '../utils';
 import {Layout, Text, Button, Divider} from '@ui-kitten/components';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Colors} from '../config';
+import Constants from 'expo-constants';
 
 export const HomeScreen = () => {
   const isFocused = useIsFocused();
@@ -62,7 +63,7 @@ export const HomeScreen = () => {
       if (regex.test(location)) {
         axios({
           method: 'get',
-          url: `${process.env.SERVER_URL}/crm?location=${location}`,
+          url: `${Constants.manifest.extra.serverUrl}/crm?location=${location}`,
         })
           .then(response => {
             if (response.data) {
@@ -78,7 +79,7 @@ export const HomeScreen = () => {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [location, process.env.SERVER_URL],
+    [location, Constants.manifest.extra.serverUrl],
   );
 
   const [crmEstimate, setCrmEstimate] = useState(0);

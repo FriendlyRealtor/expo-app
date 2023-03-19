@@ -5,10 +5,12 @@ import {
   View,
   Linking,
   TouchableOpacity,
+  Platform,
   StyleSheet,
 } from 'react-native';
 import {Layout, Text} from '@ui-kitten/components';
 import {Shimmer} from '../components';
+import Constants from 'expo-constants';
 
 import axios from 'axios';
 import _ from 'lodash';
@@ -50,7 +52,7 @@ export const LocalRestaurantScreen = props => {
       const {latitude, longitude} = location;
       axios({
         method: 'get',
-        url: `${process.env.SERVER_URL}/local-restaurants`,
+        url: `${Constants.manifest.extra.serverUrl}/local-restaurants`,
         params: {location: `${latitude},${longitude}`},
       })
         .then(response => {
@@ -63,7 +65,7 @@ export const LocalRestaurantScreen = props => {
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location, process.env.SERVER_URL]);
+  }, [location, Constants.manifest.extra.serverUrl]);
 
   const openMap = (lng, lat) => {
     const scheme = Platform.select({ios: 'maps:0,0?q=', android: 'geo:0,0?q='});
@@ -77,8 +79,7 @@ export const LocalRestaurantScreen = props => {
   };
 
   const renderItem = ({item, index}) => {
-    const {name, icon, reference, rating, opening_hours, geometry} =
-      item;
+    const {name, icon, reference, rating, opening_hours, geometry} = item;
     if (!opening_hours?.open_now && !geometry) {
       return false;
     }

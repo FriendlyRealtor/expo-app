@@ -19,7 +19,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
-import { ProgressBar, Colors } from 'react-native-paper';
+import {ProgressBar, Colors} from 'react-native-paper';
 import {useLayout} from '../hooks';
 import {AuthenticatedUserContext} from '../providers';
 import * as ImagePicker from 'expo-image-picker';
@@ -67,30 +67,32 @@ export const SettingScreen = () => {
         try {
           const blob = await response.blob();
           try {
-						const uploadTask = uploadBytesResumable(storageRef, blob);
+            const uploadTask = uploadBytesResumable(storageRef, blob);
 
             uploadTask.on(
               'state_changed',
               snapshot => {
                 const progress =
-                  (snapshot.bytesTransferred / snapshot.totalBytes);
-								setPhotoProgress(progress)
+                  snapshot.bytesTransferred / snapshot.totalBytes;
+                setPhotoProgress(progress);
               },
               error => {
-								console.log('error uploading image: ', error)
+                console.log('error uploading image: ', error);
               },
               () => {
                 // Handle successful uploads on complete
                 // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-                getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-									const docRef = await doc(db, 'users', uid);
-      						const data = {photo: downloadURL};
+                getDownloadURL(uploadTask.snapshot.ref).then(
+                  async downloadURL => {
+                    const docRef = await doc(db, 'users', uid);
+                    const data = {photo: downloadURL};
 
-									if (docRef) {
-										await updateDoc(docRef, data);
-										setPhotoShow(null);
-									}
-                });
+                    if (docRef) {
+                      await updateDoc(docRef, data);
+                      setPhotoShow(null);
+                    }
+                  },
+                );
               },
             );
           } catch (err) {
@@ -211,7 +213,13 @@ export const SettingScreen = () => {
           </View>
         </Layout>
       </Animated.ScrollView>
-			{photoShow && <ProgressBar style={{marginBottom: 10}}progress={photoProgress} color="#02FDAA" />}
+      {photoShow && (
+        <ProgressBar
+          style={{marginBottom: 10}}
+          progress={photoProgress}
+          color="#02FDAA"
+        />
+      )}
       <Text
         status="danger"
         onPress={() => handleLogout()}
