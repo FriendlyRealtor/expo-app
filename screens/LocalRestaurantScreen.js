@@ -8,7 +8,7 @@ import {
   Platform,
   StyleSheet,
 } from 'react-native';
-import {Layout, Text} from '@ui-kitten/components';
+import {Layout, Text, Icon} from '@ui-kitten/components';
 import {Shimmer} from '../components';
 import Constants from 'expo-constants';
 
@@ -24,6 +24,11 @@ export const LocalRestaurantScreen = props => {
       borderRadius: 12,
       marginHorizontal: 24,
       marginVertical: 16,
+    },
+    icon: {
+      width: 20,
+      height: 20,
+      marginRight: 8,
     },
   });
 
@@ -67,13 +72,12 @@ export const LocalRestaurantScreen = props => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location, Constants.manifest.extra.serverUrl]);
 
-  const openMap = (lng, lat) => {
+  const openMap = (lng, lat, name) => {
     const scheme = Platform.select({ios: 'maps:0,0?q=', android: 'geo:0,0?q='});
     const latLng = `${lat},${lng}`;
-    const label = 'Custom Label';
     const url = Platform.select({
-      ios: `${scheme}${label}@${latLng}`,
-      android: `${scheme}${latLng}(${label})`,
+      ios: `${scheme}${name}@${latLng}`,
+      android: `${scheme}${latLng}(${name})`,
     });
     Linking.openURL(url);
   };
@@ -86,7 +90,6 @@ export const LocalRestaurantScreen = props => {
 
     const {location} = geometry;
     const {lng, lat} = location;
-
     if (loading) {
       return (
         <View
@@ -96,23 +99,30 @@ export const LocalRestaurantScreen = props => {
             borderRadius: 12,
             marginHorizontal: 24,
             marginVertical: 16,
-          }}
-        >
+          }}>
           <Shimmer width={300} height={200} />
         </View>
       );
     }
 
     return (
-      <TouchableOpacity onPress={() => openMap(lng, lat)}>
+      <TouchableOpacity onPress={() => openMap(lng, lat, name)}>
         <Layout key={reference} level="4" style={styles.layout}>
           <Image
             source={{
               uri: icon,
             }}
           />
-          <Text>{name}</Text>
-          <Text>{rating}</Text>
+          <Text category="h5">{name}</Text>
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <Icon style={styles.icon} fill="#FFE234" name="star" />
+            <Text>{rating}</Text>
+          </View>
         </Layout>
       </TouchableOpacity>
     );

@@ -195,14 +195,12 @@ export const SignupScreen = ({navigation}) => {
                 </TouchableOpacity>
                 applies.
               </Text>
-              {/* Signup button */}
               <Button style={styles.button} onPress={handleSubmit}>
                 <Text style={styles.buttonText}>Signup</Text>
               </Button>
             </>
           )}
         </Formik>
-        {/* Button to navigate to Login screen */}
         <Button
           style={styles.borderlessButtonContainer}
           borderless

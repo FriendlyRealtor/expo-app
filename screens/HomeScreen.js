@@ -6,10 +6,13 @@ import axios from 'axios';
 import {numberWithCommas} from '../utils';
 import {Formik, useFormik} from 'formik';
 import {locationValidationSchema} from '../utils';
-import {Layout, Text, Button, Divider} from '@ui-kitten/components';
+import {Layout, Text, Divider} from '@ui-kitten/components';
+import {Button} from '../components';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Colors} from '../config';
 import Constants from 'expo-constants';
+import _ from 'lodash';
+import uuid from 'react-native-uuid';
 
 export const HomeScreen = () => {
   const isFocused = useIsFocused();
@@ -31,7 +34,6 @@ export const HomeScreen = () => {
       width: '100%',
       justifyContent: 'center',
       alignItems: 'center',
-      marginTop: 8,
       padding: 10,
       borderRadius: 8,
       backgroundColor: '#02FDAA',
@@ -44,9 +46,8 @@ export const HomeScreen = () => {
     },
     layout: {
       paddingHorizontal: 16,
-      paddingVertical: 16,
+      paddingVertical: 32,
       borderRadius: 12,
-      marginHorizontal: 24,
     },
     divider: {
       backgroundColor: 'background-basic-color-3',
@@ -109,8 +110,7 @@ export const HomeScreen = () => {
       <KeyboardAwareScrollView style={{paddingHorizontal: 16}}>
         <Formik
           initialValues={{location: ''}}
-          validationSchema={locationValidationSchema}
-        >
+          validationSchema={locationValidationSchema}>
           <View style={styles.card}>
             <View style={{marginTop: 16}}>
               <Text category="h6">Get CRM Valuation on the go!</Text>
@@ -118,7 +118,7 @@ export const HomeScreen = () => {
                 Search for property by address.
               </Text>
             </View>
-            <View style={{marginVertical: 40}}>
+            <View style={{marginVertical: 15}}>
               <Text>
                 A Comparative Market Analysis (CMA) is a crucial tool for real
                 estate agents to accurately price and sell properties. The
@@ -141,40 +141,6 @@ export const HomeScreen = () => {
               {errorState !== '' ? (
                 <FormErrorMessage error={errorState} visible={true} />
               ) : null}
-              <Layout level="4" style={styles.layout}>
-                <Text
-                  style={{
-                    textAlign: 'left',
-                    fontWeight: 'bold',
-                    padding: 8,
-                  }}
-                  category="h6"
-                >{`Estimated CMA value $${numberWithCommas(
-                  crmEstimate.price,
-                )}`}</Text>
-                <Divider style={styles.divider} />
-                <Text
-                  style={{
-                    textAlign: 'left',
-                    fontWeight: 'bold',
-                    padding: 8,
-                  }}
-                  category="h6"
-                >{`CMA Price Low $${numberWithCommas(
-                  crmEstimate.priceRangeLow,
-                )}`}</Text>
-                <Divider style={styles.divider} />
-                <Text
-                  style={{
-                    textAlign: 'left',
-                    fontWeight: 'bold',
-                    padding: 8,
-                  }}
-                  category="h6"
-                >{`CMA Price High $${numberWithCommas(
-                  crmEstimate.priceRangeHigh,
-                )}`}</Text>
-              </Layout>
             </View>
             <View style={styles.footerContainer}>
               <Divider />
@@ -185,6 +151,76 @@ export const HomeScreen = () => {
                 Valuation is calculated by default 10 properties in the area.
               </Text>
             </View>
+            <Layout level="4" style={styles.layout}>
+              <Text
+                style={{
+                  textAlign: 'left',
+                  fontWeight: 'bold',
+                  padding: 8,
+                }}
+                category="h6">{`Estimated CMA value $${numberWithCommas(
+                crmEstimate.price,
+              )}`}</Text>
+              <Divider style={styles.divider} />
+              <Text
+                style={{
+                  textAlign: 'left',
+                  fontWeight: 'bold',
+                  padding: 8,
+                }}
+                category="h6">{`CMA Price Low $${numberWithCommas(
+                crmEstimate.priceRangeLow,
+              )}`}</Text>
+              <Divider style={styles.divider} />
+              <Text
+                style={{
+                  textAlign: 'left',
+                  fontWeight: 'bold',
+                  padding: 8,
+                }}
+                category="h6">{`CMA Price High $${numberWithCommas(
+                crmEstimate.priceRangeHigh,
+              )}`}</Text>
+            </Layout>
+
+            {crmEstimate &&
+            crmEstimate.listings &&
+            _.size(crmEstimate.listings) ? (
+              <Layout level="4" style={{...styles.layout, marginTop: 20}}>
+                <Text style={{textAlign: 'center'}} category="h6">
+                  10 Comparables
+                </Text>
+                {crmEstimate.listings.map((listing, idx) => {
+                  const key = uuid.v4();
+                  return (
+                    <View key={key}>
+                      <Text
+                        style={{
+                          textAlign: 'left',
+                          fontWeight: 'bold',
+                          paddingHorizontal: 8,
+                        }}
+                        category="h6">
+                        {`${idx + 1}.) ${listing.formattedAddress}`}
+                      </Text>
+                      <Divider style={styles.divider} />
+                      <Text
+                        style={{
+                          textAlign: 'left',
+                          fontWeight: 'bold',
+                          paddingHorizontal: 8,
+                        }}
+                        appearance="hint"
+												status="info"
+                        category="h6">{`Price $${numberWithCommas(
+                        listing.price,
+                      )}`}</Text>
+                      <Divider style={styles.divider} />
+                    </View>
+                  );
+                })}
+              </Layout>
+            ) : null}
           </View>
         </Formik>
       </KeyboardAwareScrollView>
