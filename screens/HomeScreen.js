@@ -13,6 +13,7 @@ import {Colors} from '../config';
 import Constants from 'expo-constants';
 import _ from 'lodash';
 import uuid from 'react-native-uuid';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export const HomeScreen = () => {
   const isFocused = useIsFocused();
@@ -48,6 +49,10 @@ export const HomeScreen = () => {
       paddingHorizontal: 16,
       paddingVertical: 32,
       borderRadius: 12,
+    },
+    icon: {
+      width: 20,
+      height: 20,
     },
     divider: {
       backgroundColor: 'background-basic-color-3',
@@ -204,17 +209,55 @@ export const HomeScreen = () => {
                         {`${idx + 1}.) ${listing.formattedAddress}`}
                       </Text>
                       <Divider style={styles.divider} />
-                      <Text
+                      <View
                         style={{
-                          textAlign: 'left',
-                          fontWeight: 'bold',
-                          paddingHorizontal: 8,
-                        }}
-                        appearance="hint"
-												status="info"
-                        category="h6">{`Price $${numberWithCommas(
-                        listing.price,
-                      )}`}</Text>
+                          display: 'flex',
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                        }}>
+                        <Text
+                          style={{
+                            textAlign: 'left',
+                            fontWeight: 'bold',
+                            paddingHorizontal: 8,
+                          }}
+                          appearance="hint"
+                          status="info"
+                          category="h6">{`Price $${numberWithCommas(
+                          listing.price,
+                        )}`}</Text>
+                        <View
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                          }}>
+                          <Icon
+                            style={{marginRight: 8}}
+                            name="bed"
+														size={24}
+                          />
+                          <Text status="info" appearance="hint">
+                            {listing.bedrooms}
+                          </Text>
+                        </View>
+                        <View
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                          }}>
+                          <Icon
+                            style={{marginRight: 8}}
+                            name="bath"
+														size={24}
+                          />
+                          <Text status="info" appearance="hint">
+                            {listing.bathrooms}
+                          </Text>
+                        </View>
+                      </View>
                       <Divider style={styles.divider} />
                     </View>
                   );
