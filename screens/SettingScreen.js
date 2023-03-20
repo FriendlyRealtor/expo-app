@@ -145,7 +145,7 @@ export const SettingScreen = () => {
   return (
     <Container style={styles.container}>
       <Layout level="4" style={styles.top}>
-        <Animated.View style={scaleAvatar}>
+        {/*<Animated.View style={scaleAvatar}>
           <TouchableOpacity onPress={pickImage}>
             {user.photo && !photoShow && (
               <Image
@@ -174,7 +174,7 @@ export const SettingScreen = () => {
               />
             )}
           </TouchableOpacity>
-        </Animated.View>
+				</Animated.View>*/}
       </Layout>
       <Animated.ScrollView
         scrollEventThrottle={16}

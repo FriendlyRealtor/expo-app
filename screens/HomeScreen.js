@@ -115,7 +115,8 @@ export const HomeScreen = () => {
       <KeyboardAwareScrollView style={{paddingHorizontal: 16}}>
         <Formik
           initialValues={{location: ''}}
-          validationSchema={locationValidationSchema}>
+          validationSchema={locationValidationSchema}
+        >
           <View style={styles.card}>
             <View style={{marginTop: 16}}>
               <Text category="h6">Get CRM Valuation on the go!</Text>
@@ -163,7 +164,8 @@ export const HomeScreen = () => {
                   fontWeight: 'bold',
                   padding: 8,
                 }}
-                category="h6">{`Estimated CMA value $${numberWithCommas(
+                category="h6"
+              >{`Estimated CMA value $${numberWithCommas(
                 crmEstimate.price,
               )}`}</Text>
               <Divider style={styles.divider} />
@@ -173,7 +175,8 @@ export const HomeScreen = () => {
                   fontWeight: 'bold',
                   padding: 8,
                 }}
-                category="h6">{`CMA Price Low $${numberWithCommas(
+                category="h6"
+              >{`CMA Price Low $${numberWithCommas(
                 crmEstimate.priceRangeLow,
               )}`}</Text>
               <Divider style={styles.divider} />
@@ -183,7 +186,8 @@ export const HomeScreen = () => {
                   fontWeight: 'bold',
                   padding: 8,
                 }}
-                category="h6">{`CMA Price High $${numberWithCommas(
+                category="h6"
+              >{`CMA Price High $${numberWithCommas(
                 crmEstimate.priceRangeHigh,
               )}`}</Text>
             </Layout>
@@ -205,7 +209,8 @@ export const HomeScreen = () => {
                           fontWeight: 'bold',
                           paddingHorizontal: 8,
                         }}
-                        category="h6">
+                        category="h6"
+                      >
                         {`${idx + 1}.) ${listing.formattedAddress}`}
                       </Text>
                       <Divider style={styles.divider} />
@@ -215,7 +220,8 @@ export const HomeScreen = () => {
                           flexDirection: 'row',
                           justifyContent: 'space-between',
                           alignItems: 'center',
-                        }}>
+                        }}
+                      >
                         <Text
                           style={{
                             textAlign: 'left',
@@ -224,20 +230,16 @@ export const HomeScreen = () => {
                           }}
                           appearance="hint"
                           status="info"
-                          category="h6">{`Price $${numberWithCommas(
-                          listing.price,
-                        )}`}</Text>
+                          category="h6"
+                        >{`Price $${numberWithCommas(listing.price)}`}</Text>
                         <View
                           style={{
                             display: 'flex',
                             flexDirection: 'row',
                             alignItems: 'center',
-                          }}>
-                          <Icon
-                            style={{marginRight: 8}}
-                            name="bed"
-														size={24}
-                          />
+                          }}
+                        >
+                          <Icon style={{marginRight: 8}} name="bed" size={24} />
                           <Text status="info" appearance="hint">
                             {listing.bedrooms}
                           </Text>
@@ -247,11 +249,12 @@ export const HomeScreen = () => {
                             display: 'flex',
                             flexDirection: 'row',
                             alignItems: 'center',
-                          }}>
+                          }}
+                        >
                           <Icon
                             style={{marginRight: 8}}
                             name="bath"
-														size={24}
+                            size={24}
                           />
                           <Text status="info" appearance="hint">
                             {listing.bathrooms}

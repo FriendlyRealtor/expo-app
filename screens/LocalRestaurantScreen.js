@@ -99,7 +99,8 @@ export const LocalRestaurantScreen = props => {
             borderRadius: 12,
             marginHorizontal: 24,
             marginVertical: 16,
-          }}>
+          }}
+        >
           <Shimmer width={300} height={200} />
         </View>
       );
@@ -119,7 +120,8 @@ export const LocalRestaurantScreen = props => {
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'center',
-            }}>
+            }}
+          >
             <Icon style={styles.icon} fill="#FFE234" name="star" />
             <Text>{rating}</Text>
           </View>
