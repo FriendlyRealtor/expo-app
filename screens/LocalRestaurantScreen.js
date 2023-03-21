@@ -8,10 +8,9 @@ import {
   Platform,
   StyleSheet,
 } from 'react-native';
-import {Layout, Text, Icon} from '@ui-kitten/components';
-import {Shimmer} from '../components';
+import {Layout, Text, Icon, Spinner} from '@ui-kitten/components';
 import Constants from 'expo-constants';
-
+import {Loading} from '../components';
 import axios from 'axios';
 import _ from 'lodash';
 import * as Location from 'expo-location';
@@ -29,6 +28,15 @@ export const LocalRestaurantScreen = props => {
       width: 20,
       height: 20,
       marginRight: 8,
+    },
+    container: {
+      position: 'absolute' /* or absolute */,
+      top: '50%',
+      display: 'flex',
+      flexDirection: 'row',
+      width: '100%',
+      justifyContent: 'center',
+      backgroundColor: 'transparent',
     },
   });
 
@@ -90,21 +98,6 @@ export const LocalRestaurantScreen = props => {
 
     const {location} = geometry;
     const {lng, lat} = location;
-    if (loading) {
-      return (
-        <View
-          style={{
-            paddingHorizontal: 16,
-            paddingVertical: 16,
-            borderRadius: 12,
-            marginHorizontal: 24,
-            marginVertical: 16,
-          }}
-        >
-          <Shimmer width={300} height={200} />
-        </View>
-      );
-    }
 
     return (
       <TouchableOpacity onPress={() => openMap(lng, lat, name)}>
@@ -120,8 +113,7 @@ export const LocalRestaurantScreen = props => {
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'center',
-            }}
-          >
+            }}>
             <Icon style={styles.icon} fill="#FFE234" name="star" />
             <Text>{rating}</Text>
           </View>
@@ -130,9 +122,13 @@ export const LocalRestaurantScreen = props => {
     );
   };
 
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
     <Layout style={{flex: 1}}>
-      <Text category="h6" status="info" style={{padding: 16, color: '#02FDAA'}}>
+      <Text category="h6" style={{padding: 16, color: '#02FDAA'}}>
         Fuel your body with goodness, and greatness will follow.
       </Text>
       {restaurantList && _.size(restaurantList) ? (
