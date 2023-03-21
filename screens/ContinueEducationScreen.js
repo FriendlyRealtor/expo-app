@@ -11,13 +11,10 @@ import {Video} from 'expo-av';
 import {ref, getDownloadURL, listAll} from 'firebase/storage';
 import {storage} from '../config';
 import uuid from 'react-native-uuid';
-import {useIsFocused} from '@react-navigation/native';
-import {Shimmer} from '../components';
+import {Loading} from '../components';
 import {Text} from '@ui-kitten/components';
 
 export const ContinueEducationScreen = () => {
-  const isFocused = useIsFocused();
-
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -32,8 +29,6 @@ export const ContinueEducationScreen = () => {
   const video = useRef(null);
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {}, [isFocused]);
 
   useEffect(() => {
     // Create a reference to the file we want to download
@@ -59,6 +54,10 @@ export const ContinueEducationScreen = () => {
       });
   }, []);
 
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
     <ScrollView style={{flex: 1, padding: 10, ...styles.container}}>
       <SafeAreaView style={{marginVertical: 18}}>
@@ -72,13 +71,6 @@ export const ContinueEducationScreen = () => {
         </View>
         {courses.map(res => {
           const key = uuid.v4();
-          if (loading) {
-            return (
-              <View style={{marginBottom: 8}} key={key}>
-                <Shimmer width="100%" height={300} />
-              </View>
-            );
-          }
           return (
             <Video
               ref={video}

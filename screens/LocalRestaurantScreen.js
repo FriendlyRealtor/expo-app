@@ -8,7 +8,7 @@ import {
   Platform,
   StyleSheet,
 } from 'react-native';
-import {Layout, Text, Icon, Spinner} from '@ui-kitten/components';
+import {Layout, Text, Icon} from '@ui-kitten/components';
 import Constants from 'expo-constants';
 import {Loading} from '../components';
 import axios from 'axios';
