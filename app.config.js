@@ -9,7 +9,7 @@ export default {
     version: '0.15.2',
     orientation: 'portrait',
     owner: 'jubileeinvestments',
-    icon: './assets/icon.png',
+    icon: './assets/logo.png',
     updates: {
       fallbackToCacheTimeout: 0,
     },
