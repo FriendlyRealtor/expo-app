@@ -7,10 +7,12 @@ import {FormErrorMessage} from './FormErrorMessage';
 import {LoadingIndicator} from './LoadingIndicator';
 import {Container} from './Container';
 import {Shimmer} from './Shimmer';
+import {Loading} from './Loading';
 import Text from './Text';
 import NavigationAction from './NavigationAction';
 
 export {
+  Loading,
   View,
   TextInput,
   Container,

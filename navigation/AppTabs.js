@@ -33,7 +33,8 @@ export const AppTabs = props => {
         name="Restaurants"
         options={{
           tabBarIcon: () => <Icon name="delicious" size={30} color="#02FDAA" />,
-        }}>
+        }}
+      >
         {() => <LocalRestaurantScreen locationStatus={locationStatus} />}
       </Tab.Screen>
       <Tab.Screen

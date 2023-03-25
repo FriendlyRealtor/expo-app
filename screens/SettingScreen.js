@@ -1,8 +1,8 @@
-import React, {useEffect, useState, useCallback, useContext} from 'react';
+import React, {useState, useCallback, useContext} from 'react';
 import {View, TouchableOpacity, Image} from 'react-native';
-import {getAuth, onAuthStateChanged, signOut} from 'firebase/auth';
+import {getAuth, signOut} from 'firebase/auth';
 import {doc, updateDoc} from 'firebase/firestore';
-import {auth, db} from '../config';
+import {auth, db, storage} from '../config';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {
   Layout,
@@ -19,16 +19,19 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
+import {ProgressBar, Colors} from 'react-native-paper';
 import {useLayout} from '../hooks';
 import {AuthenticatedUserContext} from '../providers';
 import * as ImagePicker from 'expo-image-picker';
 import moment from 'moment';
+import {ref, uploadBytesResumable, getDownloadURL} from 'firebase/storage';
 
-export const SettingScreen = ({navigation: { reset }}) => {
+export const SettingScreen = () => {
   const styles = useStyleSheet(themedStyles);
   const {user, setUser} = useContext(AuthenticatedUserContext);
+  const [photoShow, setPhotoShow] = useState(null);
+  const [photoProgress, setPhotoProgress] = React.useState(0);
 
-  const [userEmail, setUserEmail] = useState([]);
   const userAuth = getAuth();
   const {height} = useLayout();
   const translateY = useSharedValue(0);
@@ -39,44 +42,74 @@ export const SettingScreen = ({navigation: { reset }}) => {
       : new Date();
   const [date, setDate] = useState(defaultDate);
 
-  useEffect(() => {
-    onAuthStateChanged(userAuth, user => {
-      if (user) {
-        setUserEmail([user.email]);
-      }
-    });
-  }, []);
-
-	const handleLogout = useCallback(() => {
-		signOut(auth).then(() => {
-			setUser(null)
-		}).catch(error => console.log('Error logging out: ', error));
-
-	}, [auth.currentUser])
+  const handleLogout = useCallback(() => {
+    signOut(auth)
+      .then(() => {
+        setUser(null);
+      })
+      .catch(error => console.log('Error logging out: ', error));
+  }, [auth.currentUser]);
 
   const pickImage = useCallback(async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+    try {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
 
-    if (result.uri && userAuth.currentUser) {
-      const {uid} = userAuth.currentUser;
-      const docRef = await doc(db, 'users', uid);
-      const data = {photo: result.uri};
-      if (docRef) {
-        await updateDoc(docRef, data);
-      } else {
-        console.log('Not able to retrieve user photo!');
+      if (!result.cancelled) {
+        setPhotoShow(result.uri);
+        const {uid} = userAuth.currentUser;
+        const storageRef = ref(storage, uid);
+        const response = await fetch(result.uri);
+        try {
+          const blob = await response.blob();
+          try {
+            const uploadTask = uploadBytesResumable(storageRef, blob);
+
+            uploadTask.on(
+              'state_changed',
+              snapshot => {
+                const progress =
+                  snapshot.bytesTransferred / snapshot.totalBytes;
+                setPhotoProgress(progress);
+              },
+              error => {
+                console.log('error uploading image: ', error);
+              },
+              () => {
+                // Handle successful uploads on complete
+                // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+                getDownloadURL(uploadTask.snapshot.ref).then(
+                  async downloadURL => {
+                    const docRef = await doc(db, 'users', uid);
+                    const data = {photo: downloadURL};
+
+                    if (docRef) {
+                      await updateDoc(docRef, data);
+                      setPhotoShow(null);
+                    }
+                  },
+                );
+              },
+            );
+          } catch (err) {
+            console.log('error storing image', err);
+          }
+        } catch (err) {
+          console.log('error uploading image', err);
+        }
       }
+    } catch (err) {
+      console.log('error selecting image from camera', err);
     }
   }, []);
 
   const onChange = async (event, selectedDate) => {
     if (selectedDate && userAuth.currentUser) {
-			setDate(selectedDate);
+      setDate(selectedDate);
       const {uid} = userAuth.currentUser;
       const docRef = await doc(db, 'users', uid);
       const data = {ceRenewalDate: selectedDate};
@@ -105,16 +138,16 @@ export const SettingScreen = ({navigation: { reset }}) => {
     translateY.value = event.contentOffset.y;
   });
 
-	const year = moment().year()
-	const month = moment().month()
-	const day = moment().format('D')
+  const year = moment().year();
+  const month = moment().month();
+  const day = moment().format('D');
 
-	return (
+  return (
     <Container style={styles.container}>
       <Layout level="4" style={styles.top}>
-        <Animated.View style={scaleAvatar}>
+        {/*<Animated.View style={scaleAvatar}>
           <TouchableOpacity onPress={pickImage}>
-            {user.photo && (
+            {user.photo && !photoShow && (
               <Image
                 source={{uri: user.photo}}
                 style={{
@@ -127,8 +160,21 @@ export const SettingScreen = ({navigation: { reset }}) => {
                 }}
               />
             )}
+            {photoShow && (
+              <Image
+                source={{uri: photoShow}}
+                style={{
+                  alignSelf: 'center',
+                  width: 96,
+                  height: 96,
+                  zIndex: 100,
+                  marginTop: 32,
+                  borderRadius: 9999,
+                }}
+              />
+            )}
           </TouchableOpacity>
-        </Animated.View>
+				</Animated.View>*/}
       </Layout>
       <Animated.ScrollView
         scrollEventThrottle={16}
@@ -148,24 +194,32 @@ export const SettingScreen = ({navigation: { reset }}) => {
           <Divider style={styles.divider} />
           <View style={styles.flexRow}>
             <Text category="label">Email</Text>
-            <Text category="p1">{userEmail}</Text>
+            {userAuth.currentUser && userAuth.currentUser.email && (
+              <Text category="p1">{userAuth.currentUser.email}</Text>
+            )}
           </View>
           <Divider style={styles.divider} />
-          <Divider style={styles.divider} />
           <View style={styles.flexRow}>
-            <Text category="label">Renew Edu License</Text>
+            <Text category="label">Renew Education License</Text>
             <DateTimePicker
               testID="dateTimePicker"
               value={date}
               mode={'date'}
               onChange={onChange}
               display="default"
-							minimumDate={new Date(year, month, day)}
-							style={{width: 150, marginRight: 0, marginBottom: 16}}
+              minimumDate={new Date(year, month, day)}
+              style={{width: 150, marginRight: 0, marginBottom: 16}}
             />
           </View>
         </Layout>
       </Animated.ScrollView>
+      {photoShow && (
+        <ProgressBar
+          style={{marginBottom: 10}}
+          progress={photoProgress}
+          color="#02FDAA"
+        />
+      )}
       <Text
         status="danger"
         onPress={() => handleLogout()}

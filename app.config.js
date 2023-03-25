@@ -9,7 +9,7 @@ export default {
     version: '0.15.2',
     orientation: 'portrait',
     owner: 'jubileeinvestments',
-    icon: './assets/icon.png',
+    icon: './assets/logo.png',
     updates: {
       fallbackToCacheTimeout: 0,
     },
@@ -17,7 +17,7 @@ export default {
     ios: {
       supportsTablet: true,
       bundleIdentifier: 'jubileeinvestments.Real-Estate-App',
-      buildNumber: '5',
+      buildNumber: '11',
       config: {
         usesNonExemptEncryption: false,
       },
@@ -29,6 +29,7 @@ export default {
       storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
       messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
       appId: process.env.FIREBASE_APP_ID,
+      serverUrl: process.env.SERVER_URL,
       eas: {
         projectId: process.env.EAS_PROJECT_ID,
       },
