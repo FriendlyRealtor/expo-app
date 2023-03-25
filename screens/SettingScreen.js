@@ -10,6 +10,8 @@ import {
   useStyleSheet,
   Text,
   Divider,
+  List,
+  ListItem,
 } from '@ui-kitten/components';
 import {Container} from '../components';
 import Animated, {
@@ -19,12 +21,17 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
-import {ProgressBar, Colors} from 'react-native-paper';
+import {ProgressBar} from 'react-native-paper';
 import {useLayout} from '../hooks';
 import {AuthenticatedUserContext} from '../providers';
 import * as ImagePicker from 'expo-image-picker';
 import moment from 'moment';
 import {ref, uploadBytesResumable, getDownloadURL} from 'firebase/storage';
+
+const data = new Array(8).fill({
+  title: 'Item',
+  description: 'Description for Item',
+});
 
 export const SettingScreen = () => {
   const styles = useStyleSheet(themedStyles);
@@ -138,6 +145,13 @@ export const SettingScreen = () => {
     translateY.value = event.contentOffset.y;
   });
 
+  const renderItem = ({item, index}) => (
+    <ListItem
+      title={`${item.title} ${index + 1}`}
+      description={`Estimated Value $${item.description} ${index + 1}`}
+    />
+  );
+
   const year = moment().year();
   const month = moment().month();
   const day = moment().format('D');
@@ -212,7 +226,16 @@ export const SettingScreen = () => {
             />
           </View>
         </Layout>
+        <Text category="h6" style={{marginTop: 12, textAlign: 'center'}}>
+          CMA History
+        </Text>
+        <List
+          data={data}
+          ItemSeparatorComponent={Divider}
+          renderItem={renderItem}
+        />
       </Animated.ScrollView>
+      <View></View>
       {photoShow && (
         <ProgressBar
           style={{marginBottom: 10}}

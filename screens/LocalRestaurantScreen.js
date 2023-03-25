@@ -113,7 +113,8 @@ export const LocalRestaurantScreen = props => {
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'center',
-            }}>
+            }}
+          >
             <Icon style={styles.icon} fill="#FFE234" name="star" />
             <Text>{rating}</Text>
           </View>
