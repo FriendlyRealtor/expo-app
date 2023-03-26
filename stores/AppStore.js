@@ -21,12 +21,9 @@ export class AppStore {
   deleteCMAItem = async (userAuth, user, index) => {
     const {uid} = userAuth.currentUser;
     const docRef = doc(db, 'users', uid);
-    const updatedItems = user.cmaEvaluations.filter(
-      (item, idx) => idx !== index,
-    );
-
-    this.cmaRows = updatedItems;
-    const data = {cmaEvaluations: updatedItems};
+    user.cmaEvaluations.splice(index, 1);
+    this.cmaRows = user.cmaEvaluations;
+    const data = {cmaEvaluations: user.cmaEvaluations};
     if (docRef) {
       await updateDoc(docRef, data);
     }
