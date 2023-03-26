@@ -54,7 +54,7 @@ export const LoginScreen = ({navigation}) => {
       <KeyboardAwareScrollView>
         <View style={styles.logoContainer}>
           <Image
-            source={require('../assets/icon.png')}
+            source={require('../../assets/icon.png')}
             style={{width: 250, height: 250}}
           />
           <Text style={styles.screenTitle}>Friendly Realtor</Text>

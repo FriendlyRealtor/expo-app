@@ -21,7 +21,7 @@ export const SplashScreen = () => {
           height: 200,
           backgroundColor: '#FFFFFF',
         }}
-        source={require('../assets/splash.json')}
+        source={require('../../assets/splash.json')}
       />
     </View>
   );
