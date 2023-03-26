@@ -161,7 +161,7 @@ export const SettingScreen = () => {
   const handleDeleteItem = async index => {
     try {
       await store.deleteCMAItem(userAuth, user, index);
-			setLocalCmaRows(store.cmaRows);
+      setLocalCmaRows(store.cmaRows);
     } catch (error) {
       setErrorState('error deleting item');
     }
