@@ -1,19 +1,16 @@
-import React, {useState} from 'react';
-import {StyleSheet, Image, TouchableOpacity, Linking} from 'react-native';
-import {Formik} from 'formik';
-import {
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
-} from 'firebase/auth';
-import {doc, setDoc} from 'firebase/firestore';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {Text} from '@ui-kitten/components';
-import {View, TextInput, Button, FormErrorMessage} from '../components';
-import {Colors, auth, db} from '../config';
-import {useTogglePasswordVisibility} from '../hooks';
-import {signupValidationSchema} from '../utils';
+import React, { useState } from 'react';
+import { StyleSheet, Image, TouchableOpacity, Linking } from 'react-native';
+import { Formik } from 'formik';
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { Text } from '@ui-kitten/components';
+import { View, TextInput, Button, FormErrorMessage } from '../components';
+import { Colors, auth, db } from '../config';
+import { useTogglePasswordVisibility } from '../hooks';
+import { signupValidationSchema } from '../utils';
 
-export const SignupScreen = ({navigation}) => {
+export const SignupScreen = ({ navigation }) => {
   const [errorState, setErrorState] = useState('');
 
   const {
@@ -25,13 +22,13 @@ export const SignupScreen = ({navigation}) => {
     confirmPasswordVisibility,
   } = useTogglePasswordVisibility();
 
-  const handleSignup = async values => {
-    const {email, password, firstName, lastName} = values;
+  const handleSignup = async (values) => {
+    const { email, password, firstName, lastName } = values;
     createUserWithEmailAndPassword(auth, email, password)
-      .then(userCredential => {
+      .then((userCredential) => {
         const user = userCredential.user;
         sendEmailVerification(user).then(async () => {
-          const {uid} = user;
+          const { uid } = user;
           await setDoc(doc(db, 'users', uid), {
             name: `${firstName} ${lastName}`,
             ceRenewalDate: new Date(),
@@ -41,17 +38,14 @@ export const SignupScreen = ({navigation}) => {
           navigation.navigate('Login');
         });
       })
-      .catch(error => setErrorState(error.message));
+      .catch((error) => setErrorState(error.message));
   };
 
   return (
     <View isSafe style={styles.container}>
       <KeyboardAwareScrollView enableOnAndroid={true}>
         <View style={styles.logoContainer}>
-          <Image
-            source={require('../../assets/icon.png')}
-            style={{width: 250, height: 250}}
-          />
+          <Image source={require('../../assets/icon.png')} style={{ width: 250, height: 250 }} />
           <Text style={styles.screenTitle}>Create Account!</Text>
         </View>
         {/* Formik Wrapper */}
@@ -64,16 +58,9 @@ export const SignupScreen = ({navigation}) => {
             confirmPassword: '',
           }}
           validationSchema={signupValidationSchema}
-          onSubmit={values => handleSignup(values)}
+          onSubmit={(values) => handleSignup(values)}
         >
-          {({
-            values,
-            touched,
-            errors,
-            handleChange,
-            handleSubmit,
-            handleBlur,
-          }) => (
+          {({ values, touched, errors, handleChange, handleSubmit, handleBlur }) => (
             <>
               <TextInput
                 name="firstName"
@@ -84,10 +71,7 @@ export const SignupScreen = ({navigation}) => {
                 onChangeText={handleChange('firstName')}
                 onBlur={handleBlur('firstName')}
               />
-              <FormErrorMessage
-                error={errors.firstName}
-                visible={touched.firstName}
-              />
+              <FormErrorMessage error={errors.firstName} visible={touched.firstName} />
               <TextInput
                 name="lastName"
                 placeholder="Last Name"
@@ -96,10 +80,7 @@ export const SignupScreen = ({navigation}) => {
                 onChangeText={handleChange('lastName')}
                 onBlur={handleBlur('lastName')}
               />
-              <FormErrorMessage
-                error={errors.lastName}
-                visible={touched.lastName}
-              />
+              <FormErrorMessage error={errors.lastName} visible={touched.lastName} />
               <TextInput
                 name="email"
                 leftIconName="email"
@@ -126,10 +107,7 @@ export const SignupScreen = ({navigation}) => {
                 onChangeText={handleChange('password')}
                 onBlur={handleBlur('password')}
               />
-              <FormErrorMessage
-                error={errors.password}
-                visible={touched.password}
-              />
+              <FormErrorMessage error={errors.password} visible={touched.password} />
               <TextInput
                 name="confirmPassword"
                 leftIconName="key-variant"
@@ -144,19 +122,10 @@ export const SignupScreen = ({navigation}) => {
                 onChangeText={handleChange('confirmPassword')}
                 onBlur={handleBlur('confirmPassword')}
               />
-              <FormErrorMessage
-                error={errors.confirmPassword}
-                visible={touched.confirmPassword}
-              />
+              <FormErrorMessage error={errors.confirmPassword} visible={touched.confirmPassword} />
               {/* Display Screen Error Mesages */}
-              {errorState !== '' ? (
-                <FormErrorMessage error={errorState} visible={true} />
-              ) : null}
-              <Text
-                category="label"
-                appearance="hint"
-                style={{marginBottom: 6}}
-              >
+              {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
+              <Text category="label" appearance="hint" style={{ marginBottom: 6 }}>
                 By clicking Sign Up, you are agreeing to JubileeInvestmentLLC's
                 <TouchableOpacity
                   onPress={() =>
@@ -165,12 +134,7 @@ export const SignupScreen = ({navigation}) => {
                     )
                   }
                 >
-                  <Text
-                    category="label"
-                    appearance="hint"
-                    status="info"
-                    style={{marginTop: 22}}
-                  >
+                  <Text category="label" appearance="hint" status="info" style={{ marginTop: 22 }}>
                     Terms of Service
                   </Text>
                 </TouchableOpacity>
@@ -184,12 +148,7 @@ export const SignupScreen = ({navigation}) => {
                     )
                   }
                 >
-                  <Text
-                    category="label"
-                    appearance="hint"
-                    status="info"
-                    style={{marginTop: 22}}
-                  >
+                  <Text category="label" appearance="hint" status="info" style={{ marginTop: 22 }}>
                     Privacy Notice
                   </Text>
                 </TouchableOpacity>

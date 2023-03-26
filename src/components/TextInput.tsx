@@ -1,10 +1,10 @@
 import React from 'react';
-import {TextInput as RNTextInput} from 'react-native';
+import { TextInput as RNTextInput } from 'react-native';
 
-import {View} from './View';
-import {Icon} from './Icon';
-import {Button} from './Button';
-import {Colors} from '../config';
+import { View } from './View';
+import { Icon } from './Icon';
+import { Button } from './Button';
+import { Colors } from '../config';
 
 export const TextInput = ({
   width = '100%',
@@ -27,12 +27,7 @@ export const TextInput = ({
       }}
     >
       {leftIconName ? (
-        <Icon
-          name={leftIconName}
-          size={22}
-          color={Colors.mediumGray}
-          style={{marginRight: 10}}
-        />
+        <Icon name={leftIconName} size={22} color={Colors.mediumGray} style={{ marginRight: 10 }} />
       ) : null}
       <RNTextInput
         style={{
@@ -46,12 +41,7 @@ export const TextInput = ({
       />
       {rightIcon ? (
         <Button onPress={handlePasswordVisibility}>
-          <Icon
-            name={rightIcon}
-            size={22}
-            color={Colors.mediumGray}
-            style={{marginRight: 10}}
-          />
+          <Icon name={rightIcon} size={22} color={Colors.mediumGray} style={{ marginRight: 10 }} />
         </Button>
       ) : null}
     </View>

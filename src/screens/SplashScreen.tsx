@@ -1,7 +1,7 @@
-import React, {useRef} from 'react';
-import {View} from 'react-native';
+import React, { useRef } from 'react';
+import { View } from 'react-native';
 import LottieView from 'lottie-react-native';
-import {SplashScreenStyles} from '../../styles';
+import { SplashScreenStyles } from '../../styles';
 
 export const SplashScreen = () => {
   const styles = SplashScreenStyles;

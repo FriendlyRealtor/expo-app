@@ -1,17 +1,17 @@
 import * as React from 'react';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import {HomeScreen} from '../screens';
-import {ContinueEducationScreen} from '../screens';
-import {LocalRestaurantScreen} from '../screens';
-import {SettingScreen} from '../screens';
+import { HomeScreen } from '../screens';
+import { ContinueEducationScreen } from '../screens';
+import { LocalRestaurantScreen } from '../screens';
+import { SettingScreen } from '../screens';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {usePermissions} from '../hooks';
+import { usePermissions } from '../hooks';
 
 const Tab = createBottomTabNavigator();
 
-export const AppTabs = props => {
-  const {locationStatus} = usePermissions(props.currentUser);
+export const AppTabs = (props) => {
+  const { locationStatus } = usePermissions(props.currentUser);
 
   return (
     <Tab.Navigator>

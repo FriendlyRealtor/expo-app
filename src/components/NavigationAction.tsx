@@ -1,17 +1,11 @@
-import React, {memo} from 'react';
-import {
-  ColorValue,
-  StyleProp,
-  StyleSheet,
-  TouchableOpacity,
-  ViewStyle,
-} from 'react-native';
-import {useTheme, Icon, TopNavigationAction} from '@ui-kitten/components';
-import {useNavigation} from '@react-navigation/native';
+import React, { memo } from 'react';
+import { ColorValue, StyleProp, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
+import { useTheme, Icon, TopNavigationAction } from '@ui-kitten/components';
+import { useNavigation } from '@react-navigation/native';
 
 import Text from './Text';
 
-import {EvaStatus} from '@ui-kitten/components/devsupport';
+import { EvaStatus } from '@ui-kitten/components/devsupport';
 
 interface NavigationActionProps {
   icon?: string;
@@ -57,7 +51,7 @@ const NavigationAction = memo(
   }: NavigationActionProps) => {
     const themes = useTheme();
 
-    const {goBack} = useNavigation();
+    const { goBack } = useNavigation();
     const _onPress = React.useCallback(() => {
       if (onPress) {
         onPress && onPress();
@@ -108,9 +102,7 @@ const NavigationAction = memo(
           return themes['text-basic-color'];
       }
     }, [status]);
-    const getSizeIcon = (
-      size: 'giant' | 'large' | 'medium' | 'small',
-    ): number => {
+    const getSizeIcon = (size: 'giant' | 'large' | 'medium' | 'small'): number => {
       switch (size) {
         case 'giant':
           return 24;
@@ -139,11 +131,7 @@ const NavigationAction = memo(
       }
     };
     return title ? (
-      <TouchableOpacity
-        disabled={disabled}
-        activeOpacity={0.7}
-        onPress={_onPress}
-      >
+      <TouchableOpacity disabled={disabled} activeOpacity={0.7} onPress={_onPress}>
         <Text category="body" status={titleStatus}>
           {title}
         </Text>
@@ -161,16 +149,14 @@ const NavigationAction = memo(
             marginLeft: marginLeft,
             marginRight: marginRight,
             marginVertical: marginVertical,
-            backgroundColor: backgroundColor
-              ? backgroundColor
-              : getBackground(),
+            backgroundColor: backgroundColor ? backgroundColor : getBackground(),
             borderRadius: 99,
             height: getSize(size),
             width: getSize(size),
           },
           style,
         ]}
-        icon={props => <Icon {...props} name={icon} />}
+        icon={(props) => <Icon {...props} name={icon} />}
       />
     );
   },

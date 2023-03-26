@@ -1,13 +1,13 @@
-import {TextInput} from './TextInput';
-import {View} from './View';
-import {Logo} from './Logo';
-import {Icon} from './Icon';
-import {Button} from './Button';
-import {FormErrorMessage} from './FormErrorMessage';
-import {LoadingIndicator} from './LoadingIndicator';
-import {Container} from './Container';
-import {Shimmer} from './Shimmer';
-import {Loading} from './Loading';
+import { TextInput } from './TextInput';
+import { View } from './View';
+import { Logo } from './Logo';
+import { Icon } from './Icon';
+import { Button } from './Button';
+import { FormErrorMessage } from './FormErrorMessage';
+import { LoadingIndicator } from './LoadingIndicator';
+import { Container } from './Container';
+import { Shimmer } from './Shimmer';
+import { Loading } from './Loading';
 import Text from './Text';
 import NavigationAction from './NavigationAction';
 

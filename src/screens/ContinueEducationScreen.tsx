@@ -1,18 +1,12 @@
-import React, {useEffect, useState, useRef} from 'react';
-import {
-  View,
-  StyleSheet,
-  SafeAreaView,
-  StatusBar,
-  ScrollView,
-} from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, StyleSheet, SafeAreaView, StatusBar, ScrollView } from 'react-native';
 import _ from 'lodash';
-import {Video} from 'expo-av';
-import {ref, getDownloadURL, listAll} from 'firebase/storage';
-import {storage} from '../config';
+import { Video } from 'expo-av';
+import { ref, getDownloadURL, listAll } from 'firebase/storage';
+import { storage } from '../config';
 import uuid from 'react-native-uuid';
-import {Loading} from '../components';
-import {Text} from '@ui-kitten/components';
+import { Loading } from '../components';
+import { Text } from '@ui-kitten/components';
 
 export const ContinueEducationScreen = () => {
   const styles = StyleSheet.create({
@@ -36,20 +30,20 @@ export const ContinueEducationScreen = () => {
     setLoading(true);
 
     listAll(videoRef)
-      .then(res => {
-        res.items.forEach(itemRef => {
+      .then((res) => {
+        res.items.forEach((itemRef) => {
           // All the items under listRef.
           getDownloadURL(ref(storage, itemRef.fullPath))
-            .then(url => {
-              setCourses(prev => [...prev, url]);
+            .then((url) => {
+              setCourses((prev) => [...prev, url]);
               setLoading(false);
             })
-            .catch(error => {
+            .catch((error) => {
               // Handle any errors
             });
         });
       })
-      .catch(error => {
+      .catch((error) => {
         // Uh-oh, an error occurred!
       });
   }, []);
@@ -59,26 +53,24 @@ export const ContinueEducationScreen = () => {
   }
 
   return (
-    <ScrollView style={{flex: 1, padding: 10, ...styles.container}}>
-      <SafeAreaView style={{marginVertical: 18}}>
-        <View style={{marginVertical: 16}}>
-          <Text category="h6">
-            Never stop learning: always curious, always growing.
-          </Text>
-          <Text category="s1" status="info" style={{color: '#02FDAA'}}>
+    <ScrollView style={{ flex: 1, padding: 10, ...styles.container }}>
+      <SafeAreaView style={{ marginVertical: 18 }}>
+        <View style={{ marginVertical: 16 }}>
+          <Text category="h6">Never stop learning: always curious, always growing.</Text>
+          <Text category="s1" status="info" style={{ color: '#02FDAA' }}>
             Search for courses below.
           </Text>
         </View>
-        {courses.map(res => {
+        {courses.map((res) => {
           const key = uuid.v4();
           return (
             <Video
               ref={video}
-              source={{uri: res}}
+              source={{ uri: res }}
               key={key}
               useNativeControls
               isLooping
-              style={{width: '100%', height: 300, marginBottom: 8}}
+              style={{ width: '100%', height: 300, marginBottom: 8 }}
             />
           );
         })}

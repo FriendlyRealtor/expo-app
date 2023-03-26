@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
-import {Dimensions, StyleSheet, View, Animated, Easing} from 'react-native';
-import {LinearGradient} from 'expo-linear-gradient';
+import React, { useState } from 'react';
+import { Dimensions, StyleSheet, View, Animated, Easing } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const styles = StyleSheet.create({
   shimmer: {
@@ -34,13 +34,13 @@ const linear = ANIMATION.interpolate({
 
 runAnimation();
 
-export const Shimmer = ({width, height}) => {
+export const Shimmer = ({ width, height }) => {
   const [positionX, setPositionX] = useState(null);
   let viewRef = null;
   return (
     <View
-      style={[styles.shimmer, {width, height}]}
-      ref={ref => (viewRef = ref)}
+      style={[styles.shimmer, { width, height }]}
+      ref={(ref) => (viewRef = ref)}
       onLayout={() => {
         if (viewRef) {
           viewRef.measure((_x, _y, _width, _height, pageX, _pageY) => {
@@ -54,13 +54,13 @@ export const Shimmer = ({width, height}) => {
           style={{
             flex: 1,
             left: -positionX,
-            transform: [{translateX: linear}],
+            transform: [{ translateX: linear }],
           }}
         >
           <LinearGradient
-            style={{flex: 1, width: SCREEN_WIDTH}}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 0}}
+            style={{ flex: 1, width: SCREEN_WIDTH }}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
             locations={LOCATIONS}
             colors={COLORS}
           />

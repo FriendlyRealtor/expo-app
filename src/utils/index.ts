@@ -12,10 +12,7 @@ export const loginValidationSchema = Yup.object().shape({
 });
 
 export const locationValidationSchema = Yup.object().shape({
-  location: Yup.string()
-    .min(2, 'Too Short!')
-    .max(50, 'Too Long!')
-    .required('Required'),
+  location: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Required'),
 });
 
 export const signupValidationSchema = Yup.object().shape({
@@ -41,7 +38,7 @@ export const passwordResetSchema = Yup.object().shape({
     .email('Enter a valid email'),
 });
 
-export const numberWithCommas = num => {
+export const numberWithCommas = (num) => {
   if (num) {
     num = num.toString();
     var pattern = /(-?\d+)(\d{3})/;

@@ -1,23 +1,23 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
-import {useIsFocused} from '@react-navigation/native';
-import {TextInput, FormErrorMessage} from '../components';
+import React, { useCallback, useEffect, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
+import { TextInput, FormErrorMessage } from '../components';
 import axios from 'axios';
-import {numberWithCommas} from '../utils';
-import {Formik, useFormik} from 'formik';
-import {locationValidationSchema} from '../utils';
-import {Layout, Text, Divider} from '@ui-kitten/components';
-import {Button} from '../components';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {Colors} from '../config';
+import { numberWithCommas } from '../utils';
+import { Formik, useFormik } from 'formik';
+import { locationValidationSchema } from '../utils';
+import { Layout, Text, Divider } from '@ui-kitten/components';
+import { Button } from '../components';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { Colors } from '../config';
 import Constants from 'expo-constants';
 import _ from 'lodash';
 import uuid from 'react-native-uuid';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {doc, getDoc, updateDoc} from 'firebase/firestore';
-import {db} from '../config';
-import {getAuth} from 'firebase/auth';
-import {AppStore} from '../stores/AppStore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { db } from '../config';
+import { getAuth } from 'firebase/auth';
+import { AppStore } from '../stores/AppStore';
 
 export const HomeScreen = () => {
   const isFocused = useIsFocused();
@@ -69,7 +69,7 @@ export const HomeScreen = () => {
   const store = new AppStore();
 
   const getCrmValuation = useCallback(
-    location => {
+    (location) => {
       const regex = /[,#-\/\s\!\@\$.....]/gi; // regex to test if valid street address
 
       if (regex.test(location)) {
@@ -77,13 +77,13 @@ export const HomeScreen = () => {
           method: 'get',
           url: `${Constants.manifest.extra.serverUrl}/crm?location=${location}`,
         })
-          .then(async response => {
+          .then(async (response) => {
             if (response.data) {
-              const {value} = response.data;
+              const { value } = response.data;
               setCrmEstimate(value);
 
               if (value) {
-                const {uid} = userAuth.currentUser;
+                const { uid } = userAuth.currentUser;
                 const docRef = await doc(db, 'users', uid);
                 const docSnap = await getDoc(docRef);
 
@@ -109,7 +109,7 @@ export const HomeScreen = () => {
                   }
 
                   if (docRef) {
-                    await updateDoc(docRef, {cmaEvaluations: cmaEvaluations});
+                    await updateDoc(docRef, { cmaEvaluations: cmaEvaluations });
                     setErrorState('');
                   }
                 } else {
@@ -119,7 +119,7 @@ export const HomeScreen = () => {
               }
             }
           })
-          .catch(error => {
+          .catch((error) => {
             setErrorState(error.message);
           });
       } else {
@@ -131,16 +131,14 @@ export const HomeScreen = () => {
   );
 
   const [crmEstimate, setCrmEstimate] = useState(0);
-  const {handleChange, values, handleBlur, handleSubmit, resetForm} = useFormik(
-    {
-      initialValues: {
-        location: '',
-      },
-      onSubmit: values => {
-        getCrmValuation(values.location);
-      },
+  const { handleChange, values, handleBlur, handleSubmit, resetForm } = useFormik({
+    initialValues: {
+      location: '',
     },
-  );
+    onSubmit: (values) => {
+      getCrmValuation(values.location);
+    },
+  });
 
   useEffect(() => {
     resetForm({
@@ -150,30 +148,26 @@ export const HomeScreen = () => {
     });
   }, [isFocused]);
 
-  const {location} = values;
+  const { location } = values;
 
   return (
-    <Layout style={{flex: 1}}>
-      <KeyboardAwareScrollView style={{paddingHorizontal: 16}}>
-        <Formik
-          initialValues={{location: ''}}
-          validationSchema={locationValidationSchema}
-        >
+    <Layout style={{ flex: 1 }}>
+      <KeyboardAwareScrollView style={{ paddingHorizontal: 16 }}>
+        <Formik initialValues={{ location: '' }} validationSchema={locationValidationSchema}>
           <View style={styles.card}>
-            <View style={{marginTop: 16}}>
+            <View style={{ marginTop: 16 }}>
               <Text category="h6">Get CRM Valuation on the go!</Text>
-              <Text category="s1" status="info" style={{color: '#02FDAA'}}>
+              <Text category="s1" status="info" style={{ color: '#02FDAA' }}>
                 Search for property by address.
               </Text>
             </View>
-            <View style={{marginVertical: 15}}>
+            <View style={{ marginVertical: 15 }}>
               <Text>
-                A Comparative Market Analysis (CMA) is a crucial tool for real
-                estate agents to accurately price and sell properties. The
-                importance of a good CMA cannot be overstated, as it allows
-                agents to provide their clients with a comprehensive
-                understanding of the local real estate market and make informed
-                decisions about buying or selling a property
+                A Comparative Market Analysis (CMA) is a crucial tool for real estate agents to
+                accurately price and sell properties. The importance of a good CMA cannot be
+                overstated, as it allows agents to provide their clients with a comprehensive
+                understanding of the local real estate market and make informed decisions about
+                buying or selling a property
               </Text>
               <TextInput
                 name="location"
@@ -186,16 +180,14 @@ export const HomeScreen = () => {
                 textContentType="addressCityAndState"
                 placeholder="Enter address you are interested in"
               />
-              {errorState !== '' ? (
-                <FormErrorMessage error={errorState} visible={true} />
-              ) : null}
+              {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
             </View>
             <View style={styles.footerContainer}>
               <Divider />
               <Button style={styles.button} onPress={handleSubmit}>
                 <Text style={styles.buttonText}>Get Valuation</Text>
               </Button>
-              <Text style={{margin: 2}} appearance="hint">
+              <Text style={{ margin: 2 }} appearance="hint">
                 Valuation is calculated by default 10 properties in the area.
               </Text>
             </View>
@@ -207,9 +199,7 @@ export const HomeScreen = () => {
                   padding: 8,
                 }}
                 category="h6"
-              >{`Estimated CMA value $${numberWithCommas(
-                crmEstimate.price,
-              )}`}</Text>
+              >{`Estimated CMA value $${numberWithCommas(crmEstimate.price)}`}</Text>
               <Divider style={styles.divider} />
               <Text
                 style={{
@@ -218,9 +208,7 @@ export const HomeScreen = () => {
                   padding: 8,
                 }}
                 category="h6"
-              >{`CMA Price Low $${numberWithCommas(
-                crmEstimate.priceRangeLow,
-              )}`}</Text>
+              >{`CMA Price Low $${numberWithCommas(crmEstimate.priceRangeLow)}`}</Text>
               <Divider style={styles.divider} />
               <Text
                 style={{
@@ -229,16 +217,12 @@ export const HomeScreen = () => {
                   padding: 8,
                 }}
                 category="h6"
-              >{`CMA Price High $${numberWithCommas(
-                crmEstimate.priceRangeHigh,
-              )}`}</Text>
+              >{`CMA Price High $${numberWithCommas(crmEstimate.priceRangeHigh)}`}</Text>
             </Layout>
 
-            {crmEstimate &&
-            crmEstimate.listings &&
-            _.size(crmEstimate.listings) ? (
-              <Layout level="4" style={{...styles.layout, marginTop: 20}}>
-                <Text style={{textAlign: 'center'}} category="h6">
+            {crmEstimate && crmEstimate.listings && _.size(crmEstimate.listings) ? (
+              <Layout level="4" style={{ ...styles.layout, marginTop: 20 }}>
+                <Text style={{ textAlign: 'center' }} category="h6">
                   10 Comparables
                 </Text>
                 {crmEstimate.listings.map((listing, idx) => {
@@ -281,7 +265,7 @@ export const HomeScreen = () => {
                             alignItems: 'center',
                           }}
                         >
-                          <Icon style={{marginRight: 8}} name="bed" size={24} />
+                          <Icon style={{ marginRight: 8 }} name="bed" size={24} />
                           <Text status="info" appearance="hint">
                             {listing.bedrooms}
                           </Text>
@@ -293,11 +277,7 @@ export const HomeScreen = () => {
                             alignItems: 'center',
                           }}
                         >
-                          <Icon
-                            style={{marginRight: 8}}
-                            name="bath"
-                            size={24}
-                          />
+                          <Icon style={{ marginRight: 8 }} name="bath" size={24} />
                           <Text status="info" appearance="hint">
                             {listing.bathrooms}
                           </Text>

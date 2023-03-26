@@ -1,8 +1,8 @@
-import React, {useEffect, useState, useCallback, useContext} from 'react';
-import {View} from 'react-native';
-import {getAuth, signOut} from 'firebase/auth';
-import {doc, updateDoc} from 'firebase/firestore';
-import {auth, db, storage} from '../config';
+import React, { useEffect, useState, useCallback, useContext } from 'react';
+import { View } from 'react-native';
+import { getAuth, signOut } from 'firebase/auth';
+import { doc, updateDoc } from 'firebase/firestore';
+import { auth, db, storage } from '../config';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {
   Layout,
@@ -13,7 +13,7 @@ import {
   List,
   ListItem,
 } from '@ui-kitten/components';
-import {Button, Container, FormErrorMessage} from '../components';
+import { Button, Container, FormErrorMessage } from '../components';
 import Animated, {
   Extrapolate,
   interpolate,
@@ -21,26 +21,26 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
-import {ProgressBar} from 'react-native-paper';
-import {useLayout} from '../hooks';
-import {AuthenticatedUserContext} from '../providers';
+import { ProgressBar } from 'react-native-paper';
+import { useLayout } from '../hooks';
+import { AuthenticatedUserContext } from '../providers';
 import * as ImagePicker from 'expo-image-picker';
 import moment from 'moment';
-import {ref, uploadBytesResumable, getDownloadURL} from 'firebase/storage';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {AppStore} from '../stores/AppStore';
-import {useIsFocused} from '@react-navigation/native';
+import { AppStore } from '../stores/AppStore';
+import { useIsFocused } from '@react-navigation/native';
 import _ from 'lodash';
 
 export const SettingScreen = () => {
   const styles = useStyleSheet(themedStyles);
-  const {user, setUser} = useContext(AuthenticatedUserContext);
+  const { user, setUser } = useContext(AuthenticatedUserContext);
   const [photoShow, setPhotoShow] = useState(null);
   const [photoProgress, setPhotoProgress] = useState(0);
   const [errorState, setErrorState] = useState('');
 
   const userAuth = getAuth();
-  const {height} = useLayout();
+  const { height } = useLayout();
   const translateY = useSharedValue(0);
   const input = [0, height * 0.082, height * 0.087, height * 0.09];
   const defaultDate =
@@ -67,7 +67,7 @@ export const SettingScreen = () => {
       .then(() => {
         setUser(null);
       })
-      .catch(error => console.log('Error logging out: ', error));
+      .catch((error) => console.log('Error logging out: ', error));
   }, [auth.currentUser]);
 
   const pickImage = useCallback(async () => {
@@ -81,7 +81,7 @@ export const SettingScreen = () => {
 
       if (!result.cancelled) {
         setPhotoShow(result.uri);
-        const {uid} = userAuth.currentUser;
+        const { uid } = userAuth.currentUser;
         const storageRef = ref(storage, uid);
         const response = await fetch(result.uri);
         try {
@@ -91,28 +91,25 @@ export const SettingScreen = () => {
 
             uploadTask.on(
               'state_changed',
-              snapshot => {
-                const progress =
-                  snapshot.bytesTransferred / snapshot.totalBytes;
+              (snapshot) => {
+                const progress = snapshot.bytesTransferred / snapshot.totalBytes;
                 setPhotoProgress(progress);
               },
-              error => {
+              (error) => {
                 console.log('error uploading image: ', error);
               },
               () => {
                 // Handle successful uploads on complete
                 // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-                getDownloadURL(uploadTask.snapshot.ref).then(
-                  async downloadURL => {
-                    const docRef = await doc(db, 'users', uid);
-                    const data = {photo: downloadURL};
+                getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+                  const docRef = await doc(db, 'users', uid);
+                  const data = { photo: downloadURL };
 
-                    if (docRef) {
-                      await updateDoc(docRef, data);
-                      setPhotoShow(null);
-                    }
-                  },
-                );
+                  if (docRef) {
+                    await updateDoc(docRef, data);
+                    setPhotoShow(null);
+                  }
+                });
               },
             );
           } catch (err) {
@@ -130,9 +127,9 @@ export const SettingScreen = () => {
   const onChange = async (event, selectedDate) => {
     if (selectedDate && userAuth.currentUser) {
       setDate(selectedDate);
-      const {uid} = userAuth.currentUser;
+      const { uid } = userAuth.currentUser;
       const docRef = await doc(db, 'users', uid);
-      const data = {ceRenewalDate: selectedDate};
+      const data = { ceRenewalDate: selectedDate };
       if (docRef) {
         await updateDoc(docRef, data);
       } else {
@@ -143,22 +140,17 @@ export const SettingScreen = () => {
 
   const scaleAvatar = useAnimatedStyle(() => {
     const scale = interpolate(translateY.value, input, [1, 1, 0.6, 0.6]);
-    const transY = interpolate(
-      translateY.value,
-      input,
-      [0, -40, -88, -88],
-      Extrapolate.CLAMP,
-    );
+    const transY = interpolate(translateY.value, input, [0, -40, -88, -88], Extrapolate.CLAMP);
     return {
-      transform: [{scale: scale}, {translateY: transY}],
+      transform: [{ scale: scale }, { translateY: transY }],
     };
   }, []);
 
-  const scrollHandler = useAnimatedScrollHandler(event => {
+  const scrollHandler = useAnimatedScrollHandler((event) => {
     translateY.value = event.contentOffset.y;
   });
 
-  const handleDeleteItem = async index => {
+  const handleDeleteItem = async (index) => {
     try {
       await store.deleteCMAItem(userAuth, user, index);
       setLocalCmaRows(store.cmaRows);
@@ -167,16 +159,13 @@ export const SettingScreen = () => {
     }
   };
 
-  const RenderItemIcon = props => (
-    <Button
-      style={{padding: 0, margin: 0}}
-      onPress={() => handleDeleteItem(props.index)}
-    >
+  const RenderItemIcon = (props) => (
+    <Button style={{ padding: 0, margin: 0 }} onPress={() => handleDeleteItem(props.index)}>
       <Icon {...props} name="trash" color="red" size={20} />
     </Button>
   );
 
-  const renderItem = ({item, index}) => {
+  const renderItem = ({ item, index }) => {
     return (
       <ListItem
         title={`${index + 1}. ${item.location}`}
@@ -224,13 +213,13 @@ export const SettingScreen = () => {
           </TouchableOpacity>
 				</Animated.View>*/}
       </Layout>
-      <View style={{marginTop: 50}}>
+      <View style={{ marginTop: 50 }}>
         <Layout level="4" style={styles.layout}>
           <View style={styles.flexRow}>
-            <Text category="label" style={{marginTop: 16}}>
+            <Text category="label" style={{ marginTop: 16 }}>
               Name
             </Text>
-            <Text category="p1" style={{marginTop: 16}}>
+            <Text category="p1" style={{ marginTop: 16 }}>
               {user.name || ''}
             </Text>
           </View>
@@ -251,40 +240,26 @@ export const SettingScreen = () => {
               onChange={onChange}
               display="default"
               minimumDate={new Date(year, month, day)}
-              style={{width: 150, marginRight: 0, marginBottom: 16}}
+              style={{ width: 150, marginRight: 0, marginBottom: 16 }}
             />
           </View>
         </Layout>
         {localCmaRows && _.size(localCmaRows) > 0 ? (
           <View>
-            <Text category="h6" style={{marginTop: 24, textAlign: 'center'}}>
+            <Text category="h6" style={{ marginTop: 24, textAlign: 'center' }}>
               CMA History
             </Text>
-            <View style={{textAlign: 'center'}}>
-              <List
-                data={localCmaRows}
-                ItemSeparatorComponent={Divider}
-                renderItem={renderItem}
-              />
+            <View style={{ textAlign: 'center' }}>
+              <List data={localCmaRows} ItemSeparatorComponent={Divider} renderItem={renderItem} />
             </View>
           </View>
         ) : null}
       </View>
       {photoShow && (
-        <ProgressBar
-          style={{marginBottom: 10}}
-          progress={photoProgress}
-          color="#02FDAA"
-        />
+        <ProgressBar style={{ marginBottom: 10 }} progress={photoProgress} color="#02FDAA" />
       )}
-      {errorState !== '' ? (
-        <FormErrorMessage error={errorState} visible={true} />
-      ) : null}
-      <Text
-        status="danger"
-        onPress={() => handleLogout()}
-        style={{textAlign: 'center'}}
-      >
+      {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
+      <Text status="danger" onPress={() => handleLogout()} style={{ textAlign: 'center' }}>
         LOG OUT
       </Text>
     </Container>
