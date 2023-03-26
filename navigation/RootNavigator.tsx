@@ -33,7 +33,7 @@ export const RootNavigator = () => {
   }, [auth.currentUser]);
 
   if (isLoading) {
-    return (<SplashScreen />)
+    return <SplashScreen />;
   }
 
   return (
