@@ -1,7 +1,7 @@
 import React, {useState, useCallback, useContext} from 'react';
-import {View, TouchableOpacity, Image} from 'react-native';
+import {View} from 'react-native';
 import {getAuth, signOut} from 'firebase/auth';
-import {doc, updateDoc} from 'firebase/firestore';
+import {doc, getDoc, updateDoc} from 'firebase/firestore';
 import {auth, db, storage} from '../config';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {
@@ -13,7 +13,7 @@ import {
   List,
   ListItem,
 } from '@ui-kitten/components';
-import {Container} from '../components';
+import {Button, Container, FormErrorMessage} from '../components';
 import Animated, {
   Extrapolate,
   interpolate,
@@ -27,17 +27,16 @@ import {AuthenticatedUserContext} from '../providers';
 import * as ImagePicker from 'expo-image-picker';
 import moment from 'moment';
 import {ref, uploadBytesResumable, getDownloadURL} from 'firebase/storage';
-
-const data = new Array(8).fill({
-  title: 'Item',
-  description: 'Description for Item',
-});
+import Icon from 'react-native-vector-icons/FontAwesome';
+import _ from 'lodash';
 
 export const SettingScreen = () => {
   const styles = useStyleSheet(themedStyles);
   const {user, setUser} = useContext(AuthenticatedUserContext);
   const [photoShow, setPhotoShow] = useState(null);
-  const [photoProgress, setPhotoProgress] = React.useState(0);
+  const [photoProgress, setPhotoProgress] = useState(0);
+  const [cmaRows, setCmaRows] = useState(user.cmaEvaluations || []);
+  const [errorState, setErrorState] = useState('');
 
   const userAuth = getAuth();
   const {height} = useLayout();
@@ -145,12 +144,41 @@ export const SettingScreen = () => {
     translateY.value = event.contentOffset.y;
   });
 
-  const renderItem = ({item, index}) => (
-    <ListItem
-      title={`${item.title} ${index + 1}`}
-      description={`Estimated Value $${item.description} ${index + 1}`}
-    />
+  const handleDeleteItem = async index => {
+    try {
+      const {uid} = userAuth.currentUser;
+      const docRef = doc(db, 'users', uid);
+      const removeItem = user.cmaEvaluations.filter(
+        (item, idx) => idx !== index,
+      );
+      setCmaRows(removeItem);
+      const data = {cmaEvaluations: removeItem};
+      if (docRef) {
+        await updateDoc(docRef, data);
+      }
+    } catch (error) {
+      setErrorState('error deleting item');
+    }
+  };
+
+  const RenderItemIcon = props => (
+    <Button
+      style={{padding: 0, margin: 0}}
+      onPress={() => handleDeleteItem(props.index)}
+    >
+      <Icon {...props} name="trash" color="red" size={20} />
+    </Button>
   );
+
+  const renderItem = ({item, index}) => {
+    return (
+      <ListItem
+        title={`${index + 1}. ${item.location}`}
+        description={`Estimated Value $${item.price}`}
+        accessoryRight={<RenderItemIcon index={index} />}
+      />
+    );
+  };
 
   const year = moment().year();
   const month = moment().month();
@@ -190,12 +218,7 @@ export const SettingScreen = () => {
           </TouchableOpacity>
 				</Animated.View>*/}
       </Layout>
-      <Animated.ScrollView
-        scrollEventThrottle={16}
-        onScroll={scrollHandler}
-        showsVerticalScrollIndicator={false}
-        style={{marginTop: 50}}
-      >
+      <View style={{marginTop: 50}}>
         <Layout level="4" style={styles.layout}>
           <View style={styles.flexRow}>
             <Text category="label" style={{marginTop: 16}}>
@@ -226,16 +249,21 @@ export const SettingScreen = () => {
             />
           </View>
         </Layout>
-        <Text category="h6" style={{marginTop: 12, textAlign: 'center'}}>
-          CMA History
-        </Text>
-        <List
-          data={data}
-          ItemSeparatorComponent={Divider}
-          renderItem={renderItem}
-        />
-      </Animated.ScrollView>
-      <View></View>
+        {cmaRows && _.size(cmaRows) > 0 ? (
+          <View>
+            <Text category="h6" style={{marginTop: 24, textAlign: 'center'}}>
+              CMA History
+            </Text>
+            <View style={{textAlign: 'center'}}>
+              <List
+                data={cmaRows}
+                ItemSeparatorComponent={Divider}
+                renderItem={renderItem}
+              />
+            </View>
+          </View>
+        ) : null}
+      </View>
       {photoShow && (
         <ProgressBar
           style={{marginBottom: 10}}
@@ -243,6 +271,9 @@ export const SettingScreen = () => {
           color="#02FDAA"
         />
       )}
+      {errorState !== '' ? (
+        <FormErrorMessage error={errorState} visible={true} />
+      ) : null}
       <Text
         status="danger"
         onPress={() => handleLogout()}
