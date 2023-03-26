@@ -1,8 +1,8 @@
 import React from 'react';
-import {ActivityIndicator, StyleSheet} from 'react-native';
+import { ActivityIndicator, StyleSheet } from 'react-native';
 
-import {Colors} from '../config';
-import {View} from './View';
+import { Colors } from '../config';
+import { View } from './View';
 
 export const LoadingIndicator = () => {
   return (

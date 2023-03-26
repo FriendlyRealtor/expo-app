@@ -1,39 +1,37 @@
-import React, {useState} from 'react';
-import {Text, StyleSheet, Image} from 'react-native';
-import {Formik, useFormik} from 'formik';
-import {signInWithEmailAndPassword} from 'firebase/auth';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import React, { useState } from 'react';
+import { Text, StyleSheet, Image } from 'react-native';
+import { Formik, useFormik } from 'formik';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import {View, TextInput, Button, FormErrorMessage} from '../components';
-import {Colors, auth} from '../config';
-import {useTogglePasswordVisibility} from '../hooks';
-import {loginValidationSchema} from '../utils';
+import { View, TextInput, Button, FormErrorMessage } from '../components';
+import { Colors, auth } from '../config';
+import { useTogglePasswordVisibility } from '../hooks';
+import { loginValidationSchema } from '../utils';
 
-export const LoginScreen = ({navigation}) => {
-  const {values, touched, errors, handleChange, handleSubmit, resetForm} =
-    useFormik({
-      initialValues: {
-        email: '',
-        password: '',
-      },
-      onSubmit: submitValues => {
-        handleLogin(submitValues);
-      },
-    });
+export const LoginScreen = ({ navigation }) => {
+  const { values, touched, errors, handleChange, handleSubmit, resetForm } = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+    },
+    onSubmit: (submitValues) => {
+      handleLogin(submitValues);
+    },
+  });
 
   const [errorState, setErrorState] = useState('');
-  const {passwordVisibility, handlePasswordVisibility, rightIcon} =
-    useTogglePasswordVisibility();
+  const { passwordVisibility, handlePasswordVisibility, rightIcon } = useTogglePasswordVisibility();
 
-  const handleLogin = values => {
-    const {email, password} = values;
+  const handleLogin = (values) => {
+    const { email, password } = values;
     signInWithEmailAndPassword(auth, email, password)
       .then(() => {
         if (auth.currentUser && !auth.currentUser.emailVerified) {
           setErrorState('Head to your email and verify your account!');
         }
       })
-      .catch(error => {
+      .catch((error) => {
         switch (error.message) {
           case 'Firebase: Error (auth/wrong-password).':
             setErrorState('Wrong password!');
@@ -53,10 +51,7 @@ export const LoginScreen = ({navigation}) => {
     <View isSafe style={styles.container}>
       <KeyboardAwareScrollView>
         <View style={styles.logoContainer}>
-          <Image
-            source={require('../../assets/icon.png')}
-            style={{width: 250, height: 250}}
-          />
+          <Image source={require('../../assets/icon.png')} style={{ width: 250, height: 250 }} />
           <Text style={styles.screenTitle}>Friendly Realtor</Text>
         </View>
         <Formik validationSchema={loginValidationSchema}>
@@ -87,13 +82,8 @@ export const LoginScreen = ({navigation}) => {
                 value={values.password}
                 onChangeText={handleChange('password')}
               />
-              <FormErrorMessage
-                error={errors.password}
-                visible={touched.password}
-              />
-              {errorState !== '' ? (
-                <FormErrorMessage error={errorState} visible={true} />
-              ) : null}
+              <FormErrorMessage error={errors.password} visible={touched.password} />
+              {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
               <Button style={styles.button} onPress={handleSubmit}>
                 <Text style={styles.buttonText}>Login</Text>
               </Button>

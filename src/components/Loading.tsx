@@ -1,6 +1,6 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
-import {Layout, Text, Spinner} from '@ui-kitten/components';
+import { View, StyleSheet } from 'react-native';
+import { Layout, Text, Spinner } from '@ui-kitten/components';
 
 export const Loading = () => {
   const styles = StyleSheet.create({

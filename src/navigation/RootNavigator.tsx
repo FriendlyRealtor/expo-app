@@ -1,32 +1,29 @@
-import React, {useState, useContext, useEffect} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {onAuthStateChanged} from 'firebase/auth';
+import React, { useState, useContext, useEffect } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { onAuthStateChanged } from 'firebase/auth';
 
-import {AuthStack} from './AuthStack';
-import {AppTabs} from './AppTabs';
-import {AuthenticatedUserContext} from '../providers';
-import {SplashScreen} from '../screens';
-import {auth, db} from '../config';
-import {doc, getDoc} from 'firebase/firestore';
+import { AuthStack } from './AuthStack';
+import { AppTabs } from './AppTabs';
+import { AuthenticatedUserContext } from '../providers';
+import { SplashScreen } from '../screens';
+import { auth, db } from '../config';
+import { doc, getDoc } from 'firebase/firestore';
 
 export const RootNavigator = () => {
-  const {user, setUser} = useContext(AuthenticatedUserContext);
+  const { user, setUser } = useContext(AuthenticatedUserContext);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribeAuthStateChanged = onAuthStateChanged(
-      auth,
-      async authenticatedUser => {
-        if (authenticatedUser) {
-          const {uid} = authenticatedUser;
-          const docSnap = await getDoc(doc(db, 'users', uid));
-          if (docSnap.exists()) {
-            setUser(docSnap.data());
-          }
+    const unsubscribeAuthStateChanged = onAuthStateChanged(auth, async (authenticatedUser) => {
+      if (authenticatedUser) {
+        const { uid } = authenticatedUser;
+        const docSnap = await getDoc(doc(db, 'users', uid));
+        if (docSnap.exists()) {
+          setUser(docSnap.data());
         }
-        setIsLoading(false);
-      },
-    );
+      }
+      setIsLoading(false);
+    });
 
     return unsubscribeAuthStateChanged;
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,8 +1,8 @@
 export const Colors = {
-  orange: '#f57c00',
-  blue: '#039be5',
+  orange: '#F57C00',
+  blue: '#039BE5',
   black: '#222222',
-  white: '#ffffff',
-  mediumGray: '#6e6869',
-  red: '#fc5c65',
+  white: '#FFFFFF',
+  mediumGray: '#6E6869',
+  red: '#FC5C65',
 };

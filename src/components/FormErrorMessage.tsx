@@ -1,9 +1,9 @@
 import React from 'react';
-import {StyleSheet, Text} from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 
-import {Colors} from '../config';
+import { Colors } from '../config';
 
-export const FormErrorMessage = ({error, visible}) => {
+export const FormErrorMessage = ({ error, visible }) => {
   if (!error || !visible) {
     return null;
   }

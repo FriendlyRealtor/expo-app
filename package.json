@@ -7,8 +7,8 @@
     "buildCheck": "tsc --noEmit",
     "eject": "expo eject",
     "ios": "expo start --ios",
-    "lint": "eslint 'components/**/*.{ts,tsx,js,jsx}' 'config/**/*.{ts,tsx,js,jsx}' 'hooks/**/*.{ts,tsx,js,jsx}' 'navigation/**/*.{ts,tsx,js,jsx}' 'providers/**/*.{ts,tsx,js,jsx}' 'screens/**/*.{ts,tsx,js,jsx}' 'utils/**/*.{ts,tsx,js,jsx}' --fix",
-    "prettier": "prettier --write 'components/**/*.{ts,tsx,js,jsx}' 'config/**/*.{ts,tsx,js,jsx}' 'hooks/**/*.{ts,tsx,js,jsx}' 'navigation/**/*.{ts,tsx,js,jsx}' 'providers/**/*.{ts,tsx,js,jsx}' 'screens/**/*.{ts,tsx,js,jsx}' 'utils/**/*.{ts,tsx,js,jsx}' ",
+    "lint": "eslint 'src/components/**/*.{ts,tsx,js,jsx}' 'src/config/**/*.{ts,tsx,js,jsx}' 'src/hooks/**/*.{ts,tsx,js,jsx}' 'src/navigation/**/*.{ts,tsx,js,jsx}' 'src/providers/**/*.{ts,tsx,js,jsx}' 'src/screens/**/*.{ts,tsx,js,jsx}' 'src/utils/**/*.{ts,tsx,js,jsx}' --fix",
+    "prettier": "prettier --write 'src/components/**/*.{ts,tsx,js,jsx}' 'src/config/**/*.{ts,tsx,js,jsx}' 'src/hooks/**/*.{ts,tsx,js,jsx}' 'src/navigation/**/*.{ts,tsx,js,jsx}' 'src/providers/**/*.{ts,tsx,js,jsx}' 'src/screens/**/*.{ts,tsx,js,jsx}' 'src/utils/**/*.{ts,tsx,js,jsx}' ",
     "prod:build-secrets": "eas secret:push --scope project --env-file .env.production",
     "start": "expo start",
     "web": "expo start --web"

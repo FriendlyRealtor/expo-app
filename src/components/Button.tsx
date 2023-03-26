@@ -1,7 +1,7 @@
-import React, {useCallback} from 'react';
-import {Pressable, Text, StyleSheet} from 'react-native';
+import React, { useCallback } from 'react';
+import { Pressable, Text, StyleSheet } from 'react-native';
 
-import {Colors} from '../config';
+import { Colors } from '../config';
 
 export const Button = ({
   children,
@@ -11,10 +11,7 @@ export const Button = ({
   title,
   style,
 }) => {
-  const _style = useCallback(({pressed}) => [
-    style,
-    {opacity: pressed ? activeOpacity : 1},
-  ]);
+  const _style = useCallback(({ pressed }) => [style, { opacity: pressed ? activeOpacity : 1 }]);
 
   if (borderless) {
     return (

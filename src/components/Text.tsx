@@ -1,7 +1,7 @@
 import * as React from 'react';
-import {TextStyle} from 'react-native';
-import {Text, TextProps} from '@ui-kitten/components';
-import {EvaStatus} from '@ui-kitten/components/devsupport';
+import { TextStyle } from 'react-native';
+import { Text, TextProps } from '@ui-kitten/components';
+import { EvaStatus } from '@ui-kitten/components/devsupport';
 
 export interface MyTextProps extends TextProps {
   style?: TextStyle;
@@ -104,11 +104,7 @@ export default React.forwardRef(
       ? (textTransform = 'none')
       : (textTransform = 'none');
 
-    let textDecorationLine:
-      | 'none'
-      | 'underline'
-      | 'line-through'
-      | 'underline line-through';
+    let textDecorationLine: 'none' | 'underline' | 'line-through' | 'underline line-through';
     underline
       ? (textDecorationLine = 'underline')
       : line_through

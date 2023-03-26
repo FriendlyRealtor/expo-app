@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Image,
   FlatList,
@@ -8,14 +8,14 @@ import {
   Platform,
   StyleSheet,
 } from 'react-native';
-import {Layout, Text, Icon} from '@ui-kitten/components';
+import { Layout, Text, Icon } from '@ui-kitten/components';
 import Constants from 'expo-constants';
-import {Loading} from '../components';
+import { Loading } from '../components';
 import axios from 'axios';
 import _ from 'lodash';
 import * as Location from 'expo-location';
 
-export const LocalRestaurantScreen = props => {
+export const LocalRestaurantScreen = (props) => {
   const styles = StyleSheet.create({
     layout: {
       paddingHorizontal: 16,
@@ -40,7 +40,7 @@ export const LocalRestaurantScreen = props => {
     },
   });
 
-  const {locationStatus} = props;
+  const { locationStatus } = props;
 
   const [restaurantList, setRestaurantList] = useState([]);
   const [location, setLocation] = useState(null);
@@ -62,18 +62,18 @@ export const LocalRestaurantScreen = props => {
   useEffect(() => {
     if (location) {
       setLoading(true);
-      const {latitude, longitude} = location;
+      const { latitude, longitude } = location;
       axios({
         method: 'get',
         url: `${Constants.manifest.extra.serverUrl}/local-restaurants`,
-        params: {location: `${latitude},${longitude}`},
+        params: { location: `${latitude},${longitude}` },
       })
-        .then(response => {
-          const {data} = response;
+        .then((response) => {
+          const { data } = response;
           setRestaurantList(data);
           setLoading(false);
         })
-        .catch(error => {
+        .catch((error) => {
           console.log('receiving', JSON.stringify(error));
         });
     }
@@ -81,7 +81,7 @@ export const LocalRestaurantScreen = props => {
   }, [location, Constants.manifest.extra.serverUrl]);
 
   const openMap = (lng, lat, name) => {
-    const scheme = Platform.select({ios: 'maps:0,0?q=', android: 'geo:0,0?q='});
+    const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
     const latLng = `${lat},${lng}`;
     const url = Platform.select({
       ios: `${scheme}${name}@${latLng}`,
@@ -90,14 +90,14 @@ export const LocalRestaurantScreen = props => {
     Linking.openURL(url);
   };
 
-  const renderItem = ({item, index}) => {
-    const {name, icon, reference, rating, opening_hours, geometry} = item;
+  const renderItem = ({ item, index }) => {
+    const { name, icon, reference, rating, opening_hours, geometry } = item;
     if (!opening_hours?.open_now && !geometry) {
       return false;
     }
 
-    const {location} = geometry;
-    const {lng, lat} = location;
+    const { location } = geometry;
+    const { lng, lat } = location;
 
     return (
       <TouchableOpacity onPress={() => openMap(lng, lat, name)}>
@@ -128,14 +128,14 @@ export const LocalRestaurantScreen = props => {
   }
 
   return (
-    <Layout style={{flex: 1}}>
-      <Text category="h6" style={{padding: 16, color: '#02FDAA'}}>
+    <Layout style={{ flex: 1 }}>
+      <Text category="h6" style={{ padding: 16, color: '#02FDAA' }}>
         Fuel your body with goodness, and greatness will follow.
       </Text>
       {restaurantList && _.size(restaurantList) ? (
         <FlatList data={restaurantList} renderItem={renderItem} />
       ) : (
-        <View style={{display: 'flex', alignItems: 'center', marginTop: 80}}>
+        <View style={{ display: 'flex', alignItems: 'center', marginTop: 80 }}>
           <Text category="h1">No Results Found!</Text>
         </View>
       )}

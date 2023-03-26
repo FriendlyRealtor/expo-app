@@ -1,5 +1,5 @@
-import {useTogglePasswordVisibility} from './useTogglePasswordVisibility';
-import {useLayout} from './useLayout';
-import {usePermissions} from './usePermissions';
+import { useTogglePasswordVisibility } from './useTogglePasswordVisibility';
+import { useLayout } from './useLayout';
+import { usePermissions } from './usePermissions';
 
-export {useLayout, useTogglePasswordVisibility, usePermissions};
+export { useLayout, useTogglePasswordVisibility, usePermissions };

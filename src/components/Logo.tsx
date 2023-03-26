@@ -1,7 +1,7 @@
 import React from 'react';
-import {Image, StyleSheet} from 'react-native';
+import { Image, StyleSheet } from 'react-native';
 
-export const Logo = ({uri}) => {
+export const Logo = ({ uri }) => {
   return <Image source={uri} style={styles.image} />;
 };
 
