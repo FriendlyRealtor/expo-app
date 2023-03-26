@@ -17,6 +17,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {doc, getDoc, updateDoc} from 'firebase/firestore';
 import {db} from '../config';
 import {getAuth} from 'firebase/auth';
+import {AppStore} from '../stores/AppStore';
 
 export const HomeScreen = () => {
   const isFocused = useIsFocused();
@@ -65,6 +66,7 @@ export const HomeScreen = () => {
 
   const [errorState, setErrorState] = useState('');
   const userAuth = getAuth();
+  const store = new AppStore();
 
   const getCrmValuation = useCallback(
     location => {

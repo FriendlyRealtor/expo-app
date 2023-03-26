@@ -1,7 +1,7 @@
-import React, {useState, useCallback, useContext} from 'react';
+import React, {useEffect, useState, useCallback, useContext} from 'react';
 import {View} from 'react-native';
 import {getAuth, signOut} from 'firebase/auth';
-import {doc, getDoc, updateDoc} from 'firebase/firestore';
+import {doc, updateDoc} from 'firebase/firestore';
 import {auth, db, storage} from '../config';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {
@@ -28,6 +28,8 @@ import * as ImagePicker from 'expo-image-picker';
 import moment from 'moment';
 import {ref, uploadBytesResumable, getDownloadURL} from 'firebase/storage';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {AppStore} from '../stores/AppStore';
+import {useIsFocused} from '@react-navigation/native';
 import _ from 'lodash';
 
 export const SettingScreen = () => {
@@ -35,7 +37,6 @@ export const SettingScreen = () => {
   const {user, setUser} = useContext(AuthenticatedUserContext);
   const [photoShow, setPhotoShow] = useState(null);
   const [photoProgress, setPhotoProgress] = useState(0);
-  const [cmaRows, setCmaRows] = useState(user.cmaEvaluations || []);
   const [errorState, setErrorState] = useState('');
 
   const userAuth = getAuth();
@@ -47,6 +48,19 @@ export const SettingScreen = () => {
       ? new Date(user.ceRenewalDate.seconds * 1000)
       : new Date();
   const [date, setDate] = useState(defaultDate);
+  const [localCmaRows, setLocalCmaRows] = useState();
+  const store = new AppStore();
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    const retrieveRows = async () => {
+      if (user.cmaEvaluations) {
+        await store.cmaFromDatabase(userAuth);
+        setLocalCmaRows(store.cmaRows);
+      }
+    };
+    retrieveRows();
+  }, [isFocused]);
 
   const handleLogout = useCallback(() => {
     signOut(auth)
@@ -146,16 +160,7 @@ export const SettingScreen = () => {
 
   const handleDeleteItem = async index => {
     try {
-      const {uid} = userAuth.currentUser;
-      const docRef = doc(db, 'users', uid);
-      const removeItem = user.cmaEvaluations.filter(
-        (item, idx) => idx !== index,
-      );
-      setCmaRows(removeItem);
-      const data = {cmaEvaluations: removeItem};
-      if (docRef) {
-        await updateDoc(docRef, data);
-      }
+      await store.deleteCMAItem(userAuth, user, index);
     } catch (error) {
       setErrorState('error deleting item');
     }
@@ -249,14 +254,14 @@ export const SettingScreen = () => {
             />
           </View>
         </Layout>
-        {cmaRows && _.size(cmaRows) > 0 ? (
+        {localCmaRows && _.size(localCmaRows) > 0 ? (
           <View>
             <Text category="h6" style={{marginTop: 24, textAlign: 'center'}}>
               CMA History
             </Text>
             <View style={{textAlign: 'center'}}>
               <List
-                data={cmaRows}
+                data={localCmaRows}
                 ItemSeparatorComponent={Divider}
                 renderItem={renderItem}
               />
