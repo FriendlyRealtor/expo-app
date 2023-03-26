@@ -1,5 +1,5 @@
-import React, {useState, useCallback, useContext} from 'react';
-import {View, TouchableOpacity, Image} from 'react-native';
+import React, {useEffect, useState, useCallback, useContext} from 'react';
+import {View} from 'react-native';
 import {getAuth, signOut} from 'firebase/auth';
 import {doc, updateDoc} from 'firebase/firestore';
 import {auth, db, storage} from '../config';
@@ -10,8 +10,10 @@ import {
   useStyleSheet,
   Text,
   Divider,
+  List,
+  ListItem,
 } from '@ui-kitten/components';
-import {Container} from '../components';
+import {Button, Container, FormErrorMessage} from '../components';
 import Animated, {
   Extrapolate,
   interpolate,
@@ -19,18 +21,23 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
-import {ProgressBar, Colors} from 'react-native-paper';
+import {ProgressBar} from 'react-native-paper';
 import {useLayout} from '../hooks';
 import {AuthenticatedUserContext} from '../providers';
 import * as ImagePicker from 'expo-image-picker';
 import moment from 'moment';
 import {ref, uploadBytesResumable, getDownloadURL} from 'firebase/storage';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import {AppStore} from '../stores/AppStore';
+import {useIsFocused} from '@react-navigation/native';
+import _ from 'lodash';
 
 export const SettingScreen = () => {
   const styles = useStyleSheet(themedStyles);
   const {user, setUser} = useContext(AuthenticatedUserContext);
   const [photoShow, setPhotoShow] = useState(null);
-  const [photoProgress, setPhotoProgress] = React.useState(0);
+  const [photoProgress, setPhotoProgress] = useState(0);
+  const [errorState, setErrorState] = useState('');
 
   const userAuth = getAuth();
   const {height} = useLayout();
@@ -41,6 +48,19 @@ export const SettingScreen = () => {
       ? new Date(user.ceRenewalDate.seconds * 1000)
       : new Date();
   const [date, setDate] = useState(defaultDate);
+  const [localCmaRows, setLocalCmaRows] = useState();
+  const store = new AppStore();
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    const retrieveRows = async () => {
+      if (user.cmaEvaluations) {
+        await store.cmaFromDatabase(userAuth);
+        setLocalCmaRows(store.cmaRows);
+      }
+    };
+    retrieveRows();
+  }, [isFocused]);
 
   const handleLogout = useCallback(() => {
     signOut(auth)
@@ -138,6 +158,34 @@ export const SettingScreen = () => {
     translateY.value = event.contentOffset.y;
   });
 
+  const handleDeleteItem = async index => {
+    try {
+      await store.deleteCMAItem(userAuth, user, index);
+			setLocalCmaRows(store.cmaRows);
+    } catch (error) {
+      setErrorState('error deleting item');
+    }
+  };
+
+  const RenderItemIcon = props => (
+    <Button
+      style={{padding: 0, margin: 0}}
+      onPress={() => handleDeleteItem(props.index)}
+    >
+      <Icon {...props} name="trash" color="red" size={20} />
+    </Button>
+  );
+
+  const renderItem = ({item, index}) => {
+    return (
+      <ListItem
+        title={`${index + 1}. ${item.location}`}
+        description={`Estimated Value $${item.price}`}
+        accessoryRight={<RenderItemIcon index={index} />}
+      />
+    );
+  };
+
   const year = moment().year();
   const month = moment().month();
   const day = moment().format('D');
@@ -176,12 +224,7 @@ export const SettingScreen = () => {
           </TouchableOpacity>
 				</Animated.View>*/}
       </Layout>
-      <Animated.ScrollView
-        scrollEventThrottle={16}
-        onScroll={scrollHandler}
-        showsVerticalScrollIndicator={false}
-        style={{marginTop: 50}}
-      >
+      <View style={{marginTop: 50}}>
         <Layout level="4" style={styles.layout}>
           <View style={styles.flexRow}>
             <Text category="label" style={{marginTop: 16}}>
@@ -212,7 +255,21 @@ export const SettingScreen = () => {
             />
           </View>
         </Layout>
-      </Animated.ScrollView>
+        {localCmaRows && _.size(localCmaRows) > 0 ? (
+          <View>
+            <Text category="h6" style={{marginTop: 24, textAlign: 'center'}}>
+              CMA History
+            </Text>
+            <View style={{textAlign: 'center'}}>
+              <List
+                data={localCmaRows}
+                ItemSeparatorComponent={Divider}
+                renderItem={renderItem}
+              />
+            </View>
+          </View>
+        ) : null}
+      </View>
       {photoShow && (
         <ProgressBar
           style={{marginBottom: 10}}
@@ -220,6 +277,9 @@ export const SettingScreen = () => {
           color="#02FDAA"
         />
       )}
+      {errorState !== '' ? (
+        <FormErrorMessage error={errorState} visible={true} />
+      ) : null}
       <Text
         status="danger"
         onPress={() => handleLogout()}

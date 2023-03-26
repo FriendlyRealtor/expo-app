@@ -14,6 +14,10 @@ import Constants from 'expo-constants';
 import _ from 'lodash';
 import uuid from 'react-native-uuid';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {doc, getDoc, updateDoc} from 'firebase/firestore';
+import {db} from '../config';
+import {getAuth} from 'firebase/auth';
+import {AppStore} from '../stores/AppStore';
 
 export const HomeScreen = () => {
   const isFocused = useIsFocused();
@@ -61,6 +65,8 @@ export const HomeScreen = () => {
   });
 
   const [errorState, setErrorState] = useState('');
+  const userAuth = getAuth();
+  const store = new AppStore();
 
   const getCrmValuation = useCallback(
     location => {
@@ -71,10 +77,46 @@ export const HomeScreen = () => {
           method: 'get',
           url: `${Constants.manifest.extra.serverUrl}/crm?location=${location}`,
         })
-          .then(response => {
+          .then(async response => {
             if (response.data) {
               const {value} = response.data;
               setCrmEstimate(value);
+
+              if (value) {
+                const {uid} = userAuth.currentUser;
+                const docRef = await doc(db, 'users', uid);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                  const data = docSnap.data();
+                  let cmaEvaluations = [];
+                  if (data.cmaEvaluations && _.size(data.cmaEvaluations) > 0) {
+                    const concatEvalutions = data.cmaEvaluations.concat({
+                      location: location,
+                      price: value.price,
+                      priceRangeLow: value.priceRangeLow,
+                      priceRangeHigh: value.priceRangeHigh,
+                    });
+
+                    cmaEvaluations = _.uniqBy(concatEvalutions, 'location');
+                  } else {
+                    cmaEvaluations.push({
+                      location: location,
+                      price: value.price,
+                      priceRangeLow: value.priceRangeLow,
+                      priceRangeHigh: value.priceRangeHigh,
+                    });
+                  }
+
+                  if (docRef) {
+                    await updateDoc(docRef, {cmaEvaluations: cmaEvaluations});
+                    setErrorState('');
+                  }
+                } else {
+                  // doc.data() will be undefined in this case
+                  console.log('No such document!');
+                }
+              }
             }
           })
           .catch(error => {
