@@ -4,6 +4,7 @@
   "scripts": {
     "android": "expo start --android",
     "build:ios": "eas build --platform ios",
+    "buildCheck": "tsc --noEmit",
     "eject": "expo eject",
     "ios": "expo start --ios",
     "lint": "eslint 'components/**/*.{ts,tsx,js,jsx}' 'config/**/*.{ts,tsx,js,jsx}' 'hooks/**/*.{ts,tsx,js,jsx}' 'navigation/**/*.{ts,tsx,js,jsx}' 'providers/**/*.{ts,tsx,js,jsx}' 'screens/**/*.{ts,tsx,js,jsx}' 'utils/**/*.{ts,tsx,js,jsx}' --fix",
