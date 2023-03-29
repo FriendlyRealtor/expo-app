@@ -162,7 +162,7 @@ export const HomeScreen = () => {
               </Text>
             </View>
             <View style={{ marginVertical: 15 }}>
-              <Text>
+              <Text style={{ fontFamily: 'Ubuntu' }}>
                 A Comparative Market Analysis (CMA) is a crucial tool for real estate agents to
                 accurately price and sell properties. The importance of a good CMA cannot be
                 overstated, as it allows agents to provide their clients with a comprehensive
