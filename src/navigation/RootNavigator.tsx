@@ -8,10 +8,15 @@ import { AuthenticatedUserContext } from '../providers';
 import { SplashScreen } from '../screens';
 import { auth, db } from '../config';
 import { doc, getDoc } from 'firebase/firestore';
+import { useFonts } from 'expo-font';
 
 export const RootNavigator = () => {
   const { user, setUser } = useContext(AuthenticatedUserContext);
   const [isLoading, setIsLoading] = useState(true);
+
+		const [fontsLoaded] = useFonts({
+		Ubuntu: require('../../assets/fonts/Ubuntu/Ubuntu-Regular.ttf'),
+	});
 
   useEffect(() => {
     const unsubscribeAuthStateChanged = onAuthStateChanged(auth, async (authenticatedUser) => {
@@ -21,8 +26,11 @@ export const RootNavigator = () => {
         if (docSnap.exists()) {
           setUser(docSnap.data());
         }
+
+				if (fontsLoaded) {
+					setIsLoading(false);
+				}
       }
-      setIsLoading(false);
     });
 
     return unsubscribeAuthStateChanged;

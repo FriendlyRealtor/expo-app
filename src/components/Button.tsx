@@ -11,7 +11,7 @@ export const Button = ({
   title,
   style,
 }) => {
-  const _style = useCallback(({ pressed }) => [style, { opacity: pressed ? activeOpacity : 1 }]);
+  const _style = useCallback(({ pressed }) => [style, { opacity: pressed ? activeOpacity : 1, fontFamily: 'Ubuntu' }]);
 
   if (borderless) {
     return (

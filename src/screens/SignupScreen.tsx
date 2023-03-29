@@ -185,6 +185,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: Colors.black,
     paddingTop: 20,
+		fontFamily: 'Ubuntu'
   },
   button: {
     width: '100%',
@@ -200,6 +201,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: Colors.white,
     fontWeight: '700',
+		fontFamily: 'Ubuntu'
   },
   borderlessButtonContainer: {
     alignItems: 'center',

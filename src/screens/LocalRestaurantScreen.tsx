@@ -48,9 +48,9 @@ export const LocalRestaurantScreen = (props) => {
 
   useEffect(() => {
     const getLocation = async () => {
-			setLoading(true);
+      setLoading(true);
       if (locationStatus !== 'granted') {
-				setLoading(false);
+        setLoading(false);
         return;
       }
 
@@ -124,7 +124,7 @@ export const LocalRestaurantScreen = (props) => {
     );
   };
 
-	console.log("here", loading)
+  console.log('here', loading);
   if (loading) {
     return <Loading />;
   }
@@ -134,9 +134,11 @@ export const LocalRestaurantScreen = (props) => {
       <Text category="h6" style={{ padding: 16, color: '#02FDAA' }}>
         Fuel your body with goodness, and greatness will follow.
       </Text>
-			{restaurantList && _.size(restaurantList) === 0 ? <View style={{ display: 'flex', alignItems: 'center', marginTop: 80 }}>
+      {restaurantList && _.size(restaurantList) === 0 ? (
+        <View style={{ display: 'flex', alignItems: 'center', marginTop: 80 }}>
           <Text category="h1">No Results Found!</Text>
-        </View> : null}
+        </View>
+      ) : null}
       {restaurantList && _.size(restaurantList) > 0 ? (
         <FlatList data={restaurantList} renderItem={renderItem} />
       ) : null}

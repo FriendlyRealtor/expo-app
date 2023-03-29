@@ -137,18 +137,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: '700',
     color: Colors.black,
-    paddingTop: 20,
-  },
-  footer: {
-    backgroundColor: Colors.white,
-    paddingHorizontal: 12,
-    paddingBottom: 48,
-    alignItems: 'center',
-  },
-  footerText: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: Colors.orange,
+		fontFamily: 'Ubuntu',
   },
   button: {
     width: '100%',
@@ -164,6 +153,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: Colors.white,
     fontWeight: '700',
+		fontFamily: 'Ubuntu',
   },
   borderlessButtonContainer: {
     marginTop: 16,
