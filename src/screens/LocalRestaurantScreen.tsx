@@ -42,13 +42,15 @@ export const LocalRestaurantScreen = (props) => {
 
   const { locationStatus } = props;
 
-  const [restaurantList, setRestaurantList] = useState([]);
+  const [restaurantList, setRestaurantList] = useState(undefined);
   const [location, setLocation] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const getLocation = async () => {
+			setLoading(true);
       if (locationStatus !== 'granted') {
+				setLoading(false);
         return;
       }
 
@@ -61,7 +63,6 @@ export const LocalRestaurantScreen = (props) => {
 
   useEffect(() => {
     if (location) {
-      setLoading(true);
       const { latitude, longitude } = location;
       axios({
         method: 'get',
@@ -123,6 +124,7 @@ export const LocalRestaurantScreen = (props) => {
     );
   };
 
+	console.log("here", loading)
   if (loading) {
     return <Loading />;
   }
@@ -132,13 +134,12 @@ export const LocalRestaurantScreen = (props) => {
       <Text category="h6" style={{ padding: 16, color: '#02FDAA' }}>
         Fuel your body with goodness, and greatness will follow.
       </Text>
-      {restaurantList && _.size(restaurantList) ? (
-        <FlatList data={restaurantList} renderItem={renderItem} />
-      ) : (
-        <View style={{ display: 'flex', alignItems: 'center', marginTop: 80 }}>
+			{restaurantList && _.size(restaurantList) === 0 ? <View style={{ display: 'flex', alignItems: 'center', marginTop: 80 }}>
           <Text category="h1">No Results Found!</Text>
-        </View>
-      )}
+        </View> : null}
+      {restaurantList && _.size(restaurantList) > 0 ? (
+        <FlatList data={restaurantList} renderItem={renderItem} />
+      ) : null}
     </Layout>
   );
 };
