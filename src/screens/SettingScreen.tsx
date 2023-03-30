@@ -164,7 +164,7 @@ export const SettingScreen = () => {
 
   const RenderItemIcon = (props) => (
     <Button style={{ padding: 0, margin: 0 }} onPress={() => handleDeleteItem(props.index)}>
-      <Icon {...props} name="trash" color="red" size={20} />
+      <Icon name="trash" color="red" size={20} />
     </Button>
   );
 
