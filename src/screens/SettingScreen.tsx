@@ -12,6 +12,7 @@ import {
   Divider,
   List,
   ListItem,
+	Input
 } from '@ui-kitten/components';
 import { Button, Container, FormErrorMessage } from '../components';
 import Animated, {
@@ -24,6 +25,7 @@ import Animated, {
 import { ProgressBar } from 'react-native-paper';
 import { useLayout } from '../hooks';
 import { AuthenticatedUserContext } from '../providers';
+import { User } from '../providers/types';
 import * as ImagePicker from 'expo-image-picker';
 import moment from 'moment';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
@@ -34,7 +36,7 @@ import _ from 'lodash';
 
 export const SettingScreen = () => {
   const styles = useStyleSheet(themedStyles);
-  const { user, setUser } = useContext(AuthenticatedUserContext);
+  const { user, setUser } = useContext<User>(AuthenticatedUserContext);
   const [photoShow, setPhotoShow] = useState(null);
   const [photoProgress, setPhotoProgress] = useState(0);
   const [errorState, setErrorState] = useState('');
@@ -48,6 +50,7 @@ export const SettingScreen = () => {
       ? new Date(user.ceRenewalDate.seconds * 1000)
       : new Date();
   const [date, setDate] = useState(defaultDate);
+	const [value, setValue] = useState(user.referralLink || '');
   const [localCmaRows, setLocalCmaRows] = useState();
   const store = new AppStore();
   const isFocused = useIsFocused();
@@ -175,6 +178,16 @@ export const SettingScreen = () => {
     );
   };
 
+	const updateReferralLink = async () => {
+		const { uid } = userAuth.currentUser;
+		const docRef = await doc(db, 'users', uid);
+		const data = { referralLink: value };
+
+		if (docRef) {
+			await updateDoc(docRef, data);
+		}
+	}
+
   const year = moment().year();
   const month = moment().month();
   const day = moment().format('D');
@@ -219,7 +232,7 @@ export const SettingScreen = () => {
             <Text category="label" style={{ marginTop: 16 }}>
               Name
             </Text>
-            <Text category="p1" style={{ marginTop: 16 }}>
+            <Text category="p1" style={{ marginTop: 16, fontFamily: 'Ubuntu' }}>
               {user.name || ''}
             </Text>
           </View>
@@ -227,7 +240,7 @@ export const SettingScreen = () => {
           <View style={styles.flexRow}>
             <Text category="label">Email</Text>
             {userAuth.currentUser && userAuth.currentUser.email && (
-              <Text category="p1">{userAuth.currentUser.email}</Text>
+              <Text category="p1" style={{ fontFamily: 'Ubuntu' }}>{userAuth.currentUser.email}</Text>
             )}
           </View>
           <Divider style={styles.divider} />
@@ -242,6 +255,18 @@ export const SettingScreen = () => {
               minimumDate={new Date(year, month, day)}
               style={{ width: 150, marginRight: 0, marginBottom: 16 }}
             />
+          </View>
+					<Divider style={styles.divider} />
+          <View style={styles.flexRow}>
+            <Text category="label">Referral Link</Text>
+							<Input
+								placeholder='Place your Referral link'
+								value={value}
+								onChangeText={nextValue => setValue(nextValue)}
+								onBlur={() => updateReferralLink()}
+								size="small"
+								style={{ width: 200, marginBottom: 24 }}
+							/>
           </View>
         </Layout>
         {localCmaRows && _.size(localCmaRows) > 0 ? (
@@ -259,7 +284,7 @@ export const SettingScreen = () => {
         <ProgressBar style={{ marginBottom: 10 }} progress={photoProgress} color="#02FDAA" />
       )}
       {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
-      <Text status="danger" onPress={() => handleLogout()} style={{ textAlign: 'center' }}>
+      <Text status="danger" onPress={() => handleLogout()} style={{ textAlign: 'center', fontFamily: 'Ubuntu' }}>
         LOG OUT
       </Text>
     </Container>
@@ -299,28 +324,5 @@ const themedStyles = StyleService.create({
   divider: {
     backgroundColor: 'background-basic-color-3',
     marginVertical: 12,
-  },
-  iconFb: {
-    tintColor: 'text-white-color',
-    height: 24,
-    width: 11,
-  },
-  iconGG: {
-    tintColor: 'text-white-color',
-    width: 20.5,
-    height: 21,
-  },
-  fb: {
-    borderRadius: 50,
-    margin: 10,
-    backgroundColor: '#6979F8',
-    paddingHorizontal: 18,
-    paddingVertical: 11,
-  },
-  gg: {
-    borderRadius: 50,
-    margin: 10,
-    backgroundColor: '#FF647C',
-    padding: 14,
   },
 });
