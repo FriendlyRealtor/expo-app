@@ -51,6 +51,9 @@ export const SettingScreen = () => {
       : new Date();
   const [date, setDate] = useState(defaultDate);
 	const [value, setValue] = useState(user.referralLink || '');
+	const [bio, setBio] = useState(user.bio || '');
+	const [locations, setLocations] = useState(user.location || '');
+
   const [localCmaRows, setLocalCmaRows] = useState();
   const store = new AppStore();
   const isFocused = useIsFocused();
@@ -188,6 +191,26 @@ export const SettingScreen = () => {
 		}
 	}
 
+	const updateProfileBio = async () => {
+		const { uid } = userAuth.currentUser;
+		const docRef = await doc(db, 'users', uid);
+		const data = { referralLink: value };
+
+		if (docRef) {
+			await updateDoc(docRef, data);
+		}
+	}
+
+	const updateServiceLocation = async () => {
+		const { uid } = userAuth.currentUser;
+		const docRef = await doc(db, 'users', uid);
+		const data = { referralLink: value };
+
+		if (docRef) {
+			await updateDoc(docRef, data);
+		}
+	}
+
   const year = moment().year();
   const month = moment().month();
   const day = moment().format('D');
@@ -229,6 +252,13 @@ export const SettingScreen = () => {
       <View style={{ marginTop: 50 }}>
         <Layout level="4" style={styles.layout}>
           <View style={styles.flexRow}>
+            <Text category="label">Username</Text>
+						<Text category="p1" style={{ marginTop: 16, fontFamily: 'Ubuntu' }}>
+              {user.username || ''}
+            </Text>
+          </View>
+					<Divider style={styles.divider} />
+          <View style={styles.flexRow}>
             <Text category="label" style={{ marginTop: 16 }}>
               Name
             </Text>
@@ -242,6 +272,30 @@ export const SettingScreen = () => {
             {userAuth.currentUser && userAuth.currentUser.email && (
               <Text category="p1" style={{ fontFamily: 'Ubuntu' }}>{userAuth.currentUser.email}</Text>
             )}
+          </View>
+					<Divider style={styles.divider} />
+          <View style={styles.flexRow}>
+            <Text category="label">Bio</Text>
+							<Input
+								placeholder='Place enter bio'
+								value={bio}
+								onChangeText={nextValue => setBio(nextValue)}
+								onBlur={() => updateProfileBio()}
+								size="small"
+								style={{ width: 200, marginBottom: 24 }}
+							/>
+          </View>
+					<Divider style={styles.divider} />
+          <View style={styles.flexRow}>
+            <Text category="label">Service Areas</Text>
+							<Input
+								placeholder='Place your service areas'
+								value={locations}
+								onChangeText={nextValue => setLocations(nextValue)}
+								onBlur={() => updateServiceLocation()}
+								size="small"
+								style={{ width: 200, marginBottom: 24 }}
+							/>
           </View>
           <Divider style={styles.divider} />
           <View style={styles.flexRow}>

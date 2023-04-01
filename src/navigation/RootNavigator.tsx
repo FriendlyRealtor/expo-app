@@ -20,22 +20,22 @@ export const RootNavigator = () => {
 
   useEffect(() => {
     const unsubscribeAuthStateChanged = onAuthStateChanged(auth, async (authenticatedUser) => {
+			if (fontsLoaded) {
+				setIsLoading(false);
+			}
+
       if (authenticatedUser) {
         const { uid } = authenticatedUser;
         const docSnap = await getDoc(doc(db, 'users', uid));
         if (docSnap.exists()) {
           setUser(docSnap.data());
         }
-
-				if (fontsLoaded) {
-					setIsLoading(false);
-				}
       }
     });
 
     return unsubscribeAuthStateChanged;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [auth.currentUser]);
+  }, [auth.currentUser, fontsLoaded]);
 
   if (isLoading) {
     return <SplashScreen />;
