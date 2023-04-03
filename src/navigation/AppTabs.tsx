@@ -1,10 +1,6 @@
 import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
-import { HomeScreen } from '../screens';
-import { ContinueEducationScreen } from '../screens';
-import { LocalRestaurantScreen } from '../screens';
-import { SettingScreen } from '../screens';
+import { ContinueEducationScreen, HomeScreen, SettingScreen, LocalRestaurantScreen, TemplateScreen } from '../screens';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { usePermissions } from '../hooks';
 
@@ -20,6 +16,13 @@ export const AppTabs = (props) => {
         component={HomeScreen}
         options={{
           tabBarIcon: () => <Icon name="home" size={30} color="#02FDAA" />,
+        }}
+      />
+			<Tab.Screen
+        name="Templates"
+        component={TemplateScreen}
+        options={{
+          tabBarIcon: () => <Icon name="envelopes-bulk" size={30} color="#02FDAA" />,
         }}
       />
       <Tab.Screen

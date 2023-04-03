@@ -6,6 +6,7 @@ import { SettingScreen } from './SettingScreen';
 import { LocalRestaurantScreen } from './LocalRestaurantScreen';
 import { ContinueEducationScreen } from './ContinueEducationScreen';
 import { SplashScreen } from './SplashScreen';
+import { TemplateScreen } from './TemplateScreen';
 
 export {
   LoginScreen,
@@ -16,4 +17,5 @@ export {
   SettingScreen,
   LocalRestaurantScreen,
   ContinueEducationScreen,
+	TemplateScreen,
 };

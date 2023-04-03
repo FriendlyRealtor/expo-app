@@ -6,7 +6,7 @@ export default {
     slug: 'friendlyrealtor',
     privacy: 'unlisted',
     platforms: ['ios'],
-    version: '0.15.3',
+    version: '0.15.4',
     orientation: 'portrait',
     owner: 'jubileeinvestments',
     icon: './assets/logo.png',
@@ -29,6 +29,7 @@ export default {
       storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
       messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
       appId: process.env.FIREBASE_APP_ID,
+			purchaseApiKey: process.env.PURCHASE_API_KEY,
       serverUrl: process.env.SERVER_URL,
       eas: {
         projectId: process.env.EAS_PROJECT_ID,
