@@ -14,15 +14,11 @@ import _ from 'lodash';
 
 export const TemplateScreen = () => {
   const styles = TemplateScreenStyles;
-  const onlineSource = { uri: '../marketingTemplates/template_1.pdf', cache: true };
-
-  console.log(onlineSource);
   const userAuth = getAuth();
 
   const [monthlyOffer, setMonthlyOffer] = useState<PurchasesOffering>(null);
   const [annualOffer, setAnnualOffer] = useState<PurchasesOffering>(null);
   const [templateOffer, setTemplateOffer] = useState<PurchasesOffering>(null);
-  const [pdfSource, setPdfSource] = useState(onlineSource);
   const [remotePDF, setRemotePDF] = useState([]);
   const pdfRef = useRef();
 
@@ -75,65 +71,60 @@ export const TemplateScreen = () => {
     fetchOfferings();
   }, []);
 
-  const handleInAppPurchase = useCallback(() => {
+  const handleInAppPurchase = useCallback((pdf: any) => {
     const { uid } = userAuth.currentUser;
 
+		console.log('pdf', pdf)
     if (uid) {
-      Purchases.configure({ apiKey: Constants.manifest.extra.purchaseApiKey, appUserID: uid });
+      // Purchases.configure({ apiKey: Constants.manifest.extra.purchaseApiKey, appUserID: uid });
     }
   }, [userAuth.currentUser]);
 
   return (
     <Layout style={{ flex: 1 }}>
-      <Text>Going to be image</Text>
-      {templateOffer && templateOffer.product.priceString && (
-        <Text>{templateOffer.product.priceString}</Text>
-      )}
-      <Button onPress={() => setPdfSource(onlineSource)}>
-        <Text>Show Online PDF</Text>
-      </Button>
-      <Button
-        style={{
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-          padding: 10,
-          marginTop: 50,
-          borderRadius: 8,
-          backgroundColor: 'orange',
-          borderColor: '#02FDAA',
-        }}
-        onPress={handleInAppPurchase}
-      >
-        <Text>Purchase Marketing Template</Text>
-      </Button>
+      <Text category="h3" status="info">
+        Editable Marketing Templates
+      </Text>
       <ScrollView>
         <SafeAreaView>
           {remotePDF && _.size(remotePDF)
-            ? remotePDF.map((pdf) => (
-                <Pdf
-                  trustAllCerts={false}
-                  ref={pdfRef}
-                  source={{ uri: pdf, cache: true }}
-                  onLoadComplete={(numberOfPages, filePath) => {
-                    console.log(`Number of pages: ${numberOfPages}`);
-                  }}
-                  onPageChanged={(page, numberOfPages) => {
-                    console.log(`Current page: ${page}`);
-                  }}
-                  onError={(error) => {
-                    console.log(error);
-                  }}
-                  onPressLink={(uri) => {
-                    console.log(`Link pressed: ${uri}`);
-                  }}
-                  style={{
-                    flex: 1,
-                    alignSelf: 'stretch',
-                    padding: 16,
-                    height: 500,
-                  }}
-                />
+            ? remotePDF.map((pdf, index) => (
+                <View key={index} style={{ padding: 16 }}>
+                  <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                    {templateOffer && templateOffer.product.priceString && (
+                      <Text category="h4">{templateOffer.product.priceString}</Text>
+                    )}
+                    <Button
+                      style={{
+                        width: 250,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        padding: 10,
+                        borderRadius: 8,
+                        backgroundColor: '#02FDAA',
+                        borderColor: '#02FDAA',
+                      }}
+                      onPress={() => handleInAppPurchase(pdf)}
+                    >
+                      <Text>Purchase Marketing Template</Text>
+                    </Button>
+                  </View>
+
+                  <Pdf
+                    trustAllCerts={false}
+                    ref={pdfRef}
+                    source={{ uri: pdf, cache: true }}
+                    onError={(error) => {
+                      console.log(error);
+                    }}
+                    style={{
+                      flex: 1,
+                      alignSelf: 'stretch',
+                      height: 500,
+                      paddingTop: 8,
+                    }}
+                  />
+                </View>
               ))
             : null}
         </SafeAreaView>
