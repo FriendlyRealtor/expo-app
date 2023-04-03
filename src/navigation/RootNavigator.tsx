@@ -14,15 +14,15 @@ export const RootNavigator = () => {
   const { user, setUser } = useContext(AuthenticatedUserContext);
   const [isLoading, setIsLoading] = useState(true);
 
-		const [fontsLoaded] = useFonts({
-		Ubuntu: require('../../assets/fonts/Ubuntu/Ubuntu-Regular.ttf'),
-	});
+  const [fontsLoaded] = useFonts({
+    Ubuntu: require('../../assets/fonts/Ubuntu/Ubuntu-Regular.ttf'),
+  });
 
   useEffect(() => {
     const unsubscribeAuthStateChanged = onAuthStateChanged(auth, async (authenticatedUser) => {
-			if (fontsLoaded) {
-				setIsLoading(false);
-			}
+      if (fontsLoaded) {
+        setIsLoading(false);
+      }
 
       if (authenticatedUser) {
         const { uid } = authenticatedUser;

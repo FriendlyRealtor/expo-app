@@ -1,6 +1,12 @@
 import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { ContinueEducationScreen, HomeScreen, SettingScreen, LocalRestaurantScreen, TemplateScreen } from '../screens';
+import {
+  ContinueEducationScreen,
+  HomeScreen,
+  SettingScreen,
+  LocalRestaurantScreen,
+  TemplateScreen,
+} from '../screens';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { usePermissions } from '../hooks';
 
@@ -18,7 +24,7 @@ export const AppTabs = (props) => {
           tabBarIcon: () => <Icon name="home" size={30} color="#02FDAA" />,
         }}
       />
-			<Tab.Screen
+      <Tab.Screen
         name="Templates"
         component={TemplateScreen}
         options={{

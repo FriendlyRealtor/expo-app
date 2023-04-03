@@ -17,5 +17,5 @@ export {
   SettingScreen,
   LocalRestaurantScreen,
   ContinueEducationScreen,
-	TemplateScreen,
+  TemplateScreen,
 };

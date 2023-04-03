@@ -6,7 +6,7 @@ export default {
     slug: 'friendlyrealtor',
     privacy: 'unlisted',
     platforms: ['ios'],
-    version: '0.15.5',
+    version: '0.15.7',
     orientation: 'portrait',
     owner: 'jubileeinvestments',
     icon: './assets/logo.png',
@@ -59,6 +59,12 @@ export default {
             'Allow $(PRODUCT_NAME) to accesses your camera to let you share them with your friends.',
         },
       ],
+			[
+				'@config-plugins/react-native-pdf',
+			],
+			[
+				'@config-plugins/react-native-blob-util',
+			],
     ],
   },
 };

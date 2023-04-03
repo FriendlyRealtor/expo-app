@@ -11,16 +11,19 @@ import { useTogglePasswordVisibility } from '../hooks';
 import { signupValidationSchema } from '../utils';
 
 export const SignupScreen = ({ navigation }) => {
-	const { values, touched, errors, handleChange, handleSubmit, handleBlur, resetForm } = useFormik({
+  const { values, touched, errors, handleChange, handleSubmit, handleBlur, resetForm } = useFormik({
     initialValues: {
-			firstName: '',
-			lastName: '',
-			userName: '',
-			email: '',
-			password: '',
-			confirmPassword: '',
+      firstName: '',
+      lastName: '',
+      userName: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
     },
-    onSubmit: (values) => { handleSignup(values) }});
+    onSubmit: (values) => {
+      handleSignup(values);
+    },
+  });
 
   const [errorState, setErrorState] = useState('');
 
@@ -59,9 +62,7 @@ export const SignupScreen = ({ navigation }) => {
           <Image source={require('../../assets/icon.png')} style={{ width: 250, height: 250 }} />
           <Text style={styles.screenTitle}>Create Account!</Text>
         </View>
-        <Formik
-          validationSchema={signupValidationSchema}
-        >
+        <Formik validationSchema={signupValidationSchema}>
           {() => (
             <>
               <TextInput
@@ -83,7 +84,7 @@ export const SignupScreen = ({ navigation }) => {
                 onBlur={handleBlur('lastName')}
               />
               <FormErrorMessage error={errors.lastName} visible={touched.lastName} />
-							<TextInput
+              <TextInput
                 name="username"
                 placeholder="User Name"
                 autoCapitalize="none"
@@ -145,7 +146,12 @@ export const SignupScreen = ({ navigation }) => {
                     )
                   }
                 >
-                  <Text category="label" appearance="hint" status="info" style={{ marginHorizontal: 5, marginTop: 22 }}>
+                  <Text
+                    category="label"
+                    appearance="hint"
+                    status="info"
+                    style={{ marginHorizontal: 5, marginTop: 22 }}
+                  >
                     Terms of Service
                   </Text>
                 </TouchableOpacity>
@@ -195,7 +201,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: '700',
     color: Colors.black,
-		fontFamily: 'Ubuntu'
+    fontFamily: 'Ubuntu',
   },
   button: {
     width: '100%',
@@ -211,7 +217,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: Colors.white,
     fontWeight: '700',
-		fontFamily: 'Ubuntu'
+    fontFamily: 'Ubuntu',
   },
   borderlessButtonContainer: {
     alignItems: 'center',

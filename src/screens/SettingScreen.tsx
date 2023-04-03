@@ -12,10 +12,10 @@ import {
   Divider,
   List,
   ListItem,
-	Input
+  Input,
 } from '@ui-kitten/components';
 import { Button, Container, FormErrorMessage } from '../components';
-import Animated, {
+import {
   Extrapolate,
   interpolate,
   useAnimatedScrollHandler,
@@ -50,9 +50,9 @@ export const SettingScreen = () => {
       ? new Date(user.ceRenewalDate.seconds * 1000)
       : new Date();
   const [date, setDate] = useState(defaultDate);
-	const [value, setValue] = useState(user.referralLink || '');
-	const [bio, setBio] = useState(user.bio || '');
-	const [locations, setLocations] = useState(user.location || '');
+  const [value, setValue] = useState(user.referralLink || '');
+  const [bio, setBio] = useState(user.bio || '');
+  const [locations, setLocations] = useState(user.location || '');
 
   const [localCmaRows, setLocalCmaRows] = useState();
   const store = new AppStore();
@@ -166,7 +166,11 @@ export const SettingScreen = () => {
   };
 
   const RenderItemIcon = (props: { index: number }) => (
-    <Button title="" style={{ padding: 0, margin: 0 }} onPress={() => handleDeleteItem(props.index)}>
+    <Button
+      title=""
+      style={{ padding: 0, margin: 0 }}
+      onPress={() => handleDeleteItem(props.index)}
+    >
       <Icon name="trash" color="red" size={20} />
     </Button>
   );
@@ -181,35 +185,35 @@ export const SettingScreen = () => {
     );
   };
 
-	const updateReferralLink = async () => {
-		const { uid } = userAuth.currentUser;
-		const docRef = await doc(db, 'users', uid);
-		const data = { referralLink: value };
+  const updateReferralLink = async () => {
+    const { uid } = userAuth.currentUser;
+    const docRef = await doc(db, 'users', uid);
+    const data = { referralLink: value };
 
-		if (docRef) {
-			await updateDoc(docRef, data);
-		}
-	}
+    if (docRef) {
+      await updateDoc(docRef, data);
+    }
+  };
 
-	const updateProfileBio = async () => {
-		const { uid } = userAuth.currentUser;
-		const docRef = await doc(db, 'users', uid);
-		const data = { referralLink: value };
+  const updateProfileBio = async () => {
+    const { uid } = userAuth.currentUser;
+    const docRef = await doc(db, 'users', uid);
+    const data = { referralLink: value };
 
-		if (docRef) {
-			await updateDoc(docRef, data);
-		}
-	}
+    if (docRef) {
+      await updateDoc(docRef, data);
+    }
+  };
 
-	const updateServiceLocation = async () => {
-		const { uid } = userAuth.currentUser;
-		const docRef = await doc(db, 'users', uid);
-		const data = { referralLink: value };
+  const updateServiceLocation = async () => {
+    const { uid } = userAuth.currentUser;
+    const docRef = await doc(db, 'users', uid);
+    const data = { referralLink: value };
 
-		if (docRef) {
-			await updateDoc(docRef, data);
-		}
-	}
+    if (docRef) {
+      await updateDoc(docRef, data);
+    }
+  };
 
   const year = moment().year();
   const month = moment().month();
@@ -253,11 +257,11 @@ export const SettingScreen = () => {
         <Layout level="4" style={styles.layout}>
           <View style={styles.flexRow}>
             <Text category="label">Username</Text>
-						<Text category="p1" style={{ marginTop: 16, fontFamily: 'Ubuntu' }}>
+            <Text category="p1" style={{ marginTop: 16, fontFamily: 'Ubuntu' }}>
               {user.username || ''}
             </Text>
           </View>
-					<Divider style={styles.divider} />
+          <Divider style={styles.divider} />
           <View style={styles.flexRow}>
             <Text category="label" style={{ marginTop: 16 }}>
               Name
@@ -270,32 +274,34 @@ export const SettingScreen = () => {
           <View style={styles.flexRow}>
             <Text category="label">Email</Text>
             {userAuth.currentUser && userAuth.currentUser.email && (
-              <Text category="p1" style={{ fontFamily: 'Ubuntu' }}>{userAuth.currentUser.email}</Text>
+              <Text category="p1" style={{ fontFamily: 'Ubuntu' }}>
+                {userAuth.currentUser.email}
+              </Text>
             )}
           </View>
-					<Divider style={styles.divider} />
+          <Divider style={styles.divider} />
           <View style={styles.flexRow}>
             <Text category="label">Bio</Text>
-							<Input
-								placeholder='Place enter bio'
-								value={bio}
-								onChangeText={nextValue => setBio(nextValue)}
-								onBlur={() => updateProfileBio()}
-								size="small"
-								style={{ width: 200, marginBottom: 24 }}
-							/>
+            <Input
+              placeholder="Place enter bio"
+              value={bio}
+              onChangeText={(nextValue) => setBio(nextValue)}
+              onBlur={() => updateProfileBio()}
+              size="small"
+              style={{ width: 200, marginBottom: 24 }}
+            />
           </View>
-					<Divider style={styles.divider} />
+          <Divider style={styles.divider} />
           <View style={styles.flexRow}>
             <Text category="label">Service Areas</Text>
-							<Input
-								placeholder='Place your service areas'
-								value={locations}
-								onChangeText={nextValue => setLocations(nextValue)}
-								onBlur={() => updateServiceLocation()}
-								size="small"
-								style={{ width: 200, marginBottom: 24 }}
-							/>
+            <Input
+              placeholder="Place your service areas"
+              value={locations}
+              onChangeText={(nextValue) => setLocations(nextValue)}
+              onBlur={() => updateServiceLocation()}
+              size="small"
+              style={{ width: 200, marginBottom: 24 }}
+            />
           </View>
           <Divider style={styles.divider} />
           <View style={styles.flexRow}>
@@ -310,17 +316,17 @@ export const SettingScreen = () => {
               style={{ width: 150, marginRight: 0, marginBottom: 16 }}
             />
           </View>
-					<Divider style={styles.divider} />
+          <Divider style={styles.divider} />
           <View style={styles.flexRow}>
             <Text category="label">Referral Link</Text>
-							<Input
-								placeholder='Place your Referral link'
-								value={value}
-								onChangeText={nextValue => setValue(nextValue)}
-								onBlur={() => updateReferralLink()}
-								size="small"
-								style={{ width: 200, marginBottom: 24 }}
-							/>
+            <Input
+              placeholder="Place your Referral link"
+              value={value}
+              onChangeText={(nextValue) => setValue(nextValue)}
+              onBlur={() => updateReferralLink()}
+              size="small"
+              style={{ width: 200, marginBottom: 24 }}
+            />
           </View>
         </Layout>
         {localCmaRows && _.size(localCmaRows) > 0 ? (
@@ -338,7 +344,11 @@ export const SettingScreen = () => {
         <ProgressBar style={{ marginBottom: 10 }} progress={photoProgress} color="#02FDAA" />
       )}
       {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
-      <Text status="danger" onPress={() => handleLogout()} style={{ textAlign: 'center', fontFamily: 'Ubuntu' }}>
+      <Text
+        status="danger"
+        onPress={() => handleLogout()}
+        style={{ textAlign: 'center', fontFamily: 'Ubuntu' }}
+      >
         LOG OUT
       </Text>
     </Container>

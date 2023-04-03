@@ -19,7 +19,7 @@ export const signupValidationSchema = Yup.object().shape({
   firstName: Yup.string().max(255).required('First name is required'),
   lastName: Yup.string().max(255).required('Last name is required'),
   email: Yup.string().required().email().label('Email'),
-	userName: Yup.string().max(25).required('User name is required'),
+  userName: Yup.string().max(25).required('User name is required'),
   password: Yup.string()
     .required()
     .min(8)
