@@ -23,16 +23,12 @@ export const HomeScreen = () => {
   const isFocused = useIsFocused();
 
   const styles = StyleSheet.create({
-    topContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-    },
     card: {
       flex: 1,
       margin: 2,
     },
     footerContainer: {
-      flexDirection: 'flex',
+      flexDirection: 'column',
       justifyContent: 'flex-end',
     },
     button: {
