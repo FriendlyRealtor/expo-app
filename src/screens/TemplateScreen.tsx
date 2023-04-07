@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Layout, Text } from '@ui-kitten/components';
 import { Button } from '../components';
 import { getAuth } from 'firebase/auth';
-import Purchases, { PurchasesOffering } from 'react-native-purchases';
+// import Purchases, { PurchasesOffering, PurchasesPackage } from 'react-native-purchases';
 import Constants from 'expo-constants';
 import Pdf from 'react-native-pdf';
 import { StatusBar } from 'expo-status-bar';
@@ -16,9 +16,9 @@ export const TemplateScreen = () => {
   const styles = TemplateScreenStyles;
   const userAuth = getAuth();
 
-  const [monthlyOffer, setMonthlyOffer] = useState<PurchasesOffering>(null);
-  const [annualOffer, setAnnualOffer] = useState<PurchasesOffering>(null);
-  const [templateOffer, setTemplateOffer] = useState<PurchasesOffering>(null);
+  const [monthlyPkg, setMonthlyPkg] = useState<PurchasesPackage>(null);
+  const [annualPkg, setAnnualPkg] = useState<PurchasesPackage>(null);
+  const [templatePkg, setTemplatePkg] = useState<PurchasesPackage>(null);
   const [remotePDF, setRemotePDF] = useState([]);
   const pdfRef = useRef();
 
@@ -45,24 +45,23 @@ export const TemplateScreen = () => {
   useEffect(() => {
     const fetchOfferings = async () => {
       try {
-        await Purchases.configure({ apiKey: Constants.manifest.extra.purchaseApiKey });
+      /* await Purchases.configure({ apiKey: Constants.manifest.extra.purchaseApiKey });
         const offerings = await Purchases.getOfferings();
-
         if (offerings) {
           if (offerings.all.default_offering) {
             if (offerings.all.default_offering.monthly) {
-              setMonthlyOffer(offerings.all.default_offering.monthly);
+              setMonthlyPkg(offerings.all.default_offering.monthly);
             }
             if (offerings.all.default_offering.annual) {
-              setAnnualOffer(offerings.all.default_offering.annual);
+              setAnnualPkg(offerings.all.default_offering.annual);
             }
           }
           if (offerings.all.marketing_offering) {
             if (offerings.all.marketing_offering.lifetime) {
-              setTemplateOffer(offerings.all.marketing_offering.lifetime);
+              setTemplatePkg(offerings.all.marketing_offering.lifetime);
             }
           }
-        }
+        }*/
       } catch (err) {
         console.log('error', err);
       }
@@ -71,14 +70,24 @@ export const TemplateScreen = () => {
     fetchOfferings();
   }, []);
 
-  const handleInAppPurchase = useCallback((pdf: any) => {
-    const { uid } = userAuth.currentUser;
-
-		console.log('pdf', pdf)
-    if (uid) {
-      // Purchases.configure({ apiKey: Constants.manifest.extra.purchaseApiKey, appUserID: uid });
-    }
-  }, [userAuth.currentUser]);
+  const handleInAppPurchase = useCallback(async (pdf: any) => {
+		/*try {
+			if (templatePkg) {
+				const {purchaserInfo, productIdentifier} = await Purchases.purchasePackage(templatePkg);
+				console.log('here', purchaserInfo);
+				marketing_entitlement
+				if (purchaserInfo.entitlements.active.marketing_entitlement) {
+					console.log('puchase successl', pdf);
+				}
+			}
+		} catch (error) {
+			if (!error.userCancelled) {
+				console.log('cancel error', error);
+			} else {
+				console.log('error', error);
+			}
+		}*/
+  }, [templatePkg]);
 
   return (
     <Layout style={{ flex: 1 }}>
@@ -91,8 +100,8 @@ export const TemplateScreen = () => {
             ? remotePDF.map((pdf, index) => (
                 <View key={index} style={{ padding: 16 }}>
                   <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                    {templateOffer && templateOffer.product.priceString && (
-                      <Text category="h4">{templateOffer.product.priceString}</Text>
+                    {templatePkg && templatePkg.product.priceString && (
+                      <Text category="h4">{templatePkg.product.priceString}</Text>
                     )}
                     <Button
                       style={{
