@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Layout, Text } from '@ui-kitten/components';
 import { Button } from '../components';
 import { getAuth } from 'firebase/auth';
-// import Purchases, { PurchasesOffering, PurchasesPackage } from 'react-native-purchases';
+import Purchases, { PurchasesOffering, PurchasesPackage } from 'react-native-purchases';
 import Constants from 'expo-constants';
 import Pdf from 'react-native-pdf';
 import { StatusBar } from 'expo-status-bar';
@@ -45,7 +45,7 @@ export const TemplateScreen = () => {
   useEffect(() => {
     const fetchOfferings = async () => {
       try {
-      /* await Purchases.configure({ apiKey: Constants.manifest.extra.purchaseApiKey });
+       await Purchases.configure({ apiKey: Constants.manifest.extra.purchaseApiKey });
         const offerings = await Purchases.getOfferings();
         if (offerings) {
           if (offerings.all.default_offering) {
@@ -61,7 +61,7 @@ export const TemplateScreen = () => {
               setTemplatePkg(offerings.all.marketing_offering.lifetime);
             }
           }
-        }*/
+        }
       } catch (err) {
         console.log('error', err);
       }
@@ -71,7 +71,7 @@ export const TemplateScreen = () => {
   }, []);
 
   const handleInAppPurchase = useCallback(async (pdf: any) => {
-		/*try {
+		try {
 			if (templatePkg) {
 				const {purchaserInfo, productIdentifier} = await Purchases.purchasePackage(templatePkg);
 				console.log('here', purchaserInfo);
@@ -86,7 +86,7 @@ export const TemplateScreen = () => {
 			} else {
 				console.log('error', error);
 			}
-		}*/
+		}
   }, [templatePkg]);
 
   return (
