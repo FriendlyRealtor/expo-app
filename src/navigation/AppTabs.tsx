@@ -28,7 +28,7 @@ export const AppTabs = (props) => {
         name="Templates"
         component={TemplateScreen}
         options={{
-          tabBarIcon: () => <Icon name="envelopes-bulk" size={30} color="#02FDAA" />,
+          tabBarIcon: () => <Icon name="book" size={30} color="#02FDAA" />,
         }}
       />
       <Tab.Screen

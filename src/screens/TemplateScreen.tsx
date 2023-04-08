@@ -73,11 +73,9 @@ export const TemplateScreen = () => {
   const handleInAppPurchase = useCallback(async (pdf: any) => {
 		try {
 			if (templatePkg) {
-				const {purchaserInfo, productIdentifier} = await Purchases.purchasePackage(templatePkg);
-				console.log('here', purchaserInfo);
-				marketing_entitlement
-				if (purchaserInfo.entitlements.active.marketing_entitlement) {
-					console.log('puchase successl', pdf);
+				const {customerInfo, productIdentifier} = await Purchases.purchasePackage(templatePkg);
+				if (typeof customerInfo.entitlements.active.marketing_entitlement !== 'undefined') {
+					console.log('Send this PDF url', pdf);
 				}
 			}
 		} catch (error) {

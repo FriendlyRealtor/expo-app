@@ -7,7 +7,7 @@
     "buildCheck": "tsc --noEmit",
     "devBuild:ios": "eas build --profile development-simulator --platform ios",
     "eject": "expo eject",
-    "ios": "expo start --ios",
+    "ios": "expo run:ios --device",
     "lint": "eslint 'src/components/**/*.{ts,tsx,js,jsx}' 'src/config/**/*.{ts,tsx,js,jsx}' 'src/hooks/**/*.{ts,tsx,js,jsx}' 'src/navigation/**/*.{ts,tsx,js,jsx}' 'src/providers/**/*.{ts,tsx,js,jsx}' 'src/screens/**/*.{ts,tsx,js,jsx}' 'src/utils/**/*.{ts,tsx,js,jsx}' --fix",
     "prettier": "prettier --write 'src/components/**/*.{ts,tsx,js,jsx}' 'src/config/**/*.{ts,tsx,js,jsx}' 'src/hooks/**/*.{ts,tsx,js,jsx}' 'src/navigation/**/*.{ts,tsx,js,jsx}' 'src/providers/**/*.{ts,tsx,js,jsx}' 'src/screens/**/*.{ts,tsx,js,jsx}' 'src/utils/**/*.{ts,tsx,js,jsx}' ",
     "prod:build-secrets": "eas secret:push --scope project --env-file .env.production",
