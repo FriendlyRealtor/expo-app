@@ -62,7 +62,7 @@ export const AppTabs = (props) => {
           tabBarIcon: () => <Icon name="gear" size={30} color="#02FDAA" />,
         }}
       />
-			{activeSub && <Tab.Screen
+			{true && <Tab.Screen
         name="Clients"
         component={ClientScreen}
         options={{
