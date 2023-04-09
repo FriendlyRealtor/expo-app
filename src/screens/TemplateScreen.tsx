@@ -120,7 +120,7 @@ export const PayWallView = ({ modalVisible, setModalVisible, monthlyPkg, annualP
             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
               <Icon style={{ marginRight: 16 }} name="check" size={24} color="#02FDAA" />
               <Text category="h6" style={{ fontFamily: 'Ubuntu' }}>
-                Manage your clients feature
+                Manage your deals feature
               </Text>
             </View>
             <View style={{ display: 'flex', flexDirection: 'column', marginTop: 16 }}>

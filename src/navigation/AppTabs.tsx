@@ -63,7 +63,7 @@ export const AppTabs = (props) => {
         }}
       />
 			{true && <Tab.Screen
-        name="Clients"
+        name="Deals"
         component={ClientScreen}
         options={{
           tabBarIcon: () => <Icon name="user" size={30} color="#02FDAA" />,
