@@ -1,15 +1,5 @@
 import React, { useState } from 'react';
-import {
-  IndexPath,
-  Layout,
-  Text,
-  List,
-  ListItem,
-  Divider,
-  Card,
-  Select,
-  SelectItem,
-} from '@ui-kitten/components';
+import { Layout, Text, List, ListItem, Divider, Card, Input } from '@ui-kitten/components';
 import { View, Modal, Alert, StyleSheet, Pressable, ScrollView } from 'react-native';
 import * as Linking from 'expo-linking';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -76,9 +66,16 @@ export const AddDeal = ({ modalVisible, setModalVisible }) => {
     initialValues: {
       address: '',
       closingDate: '',
-      name: '',
-      phone: '',
-      type: '',
+      clientName: '',
+      clientPhone: '',
+      agentName: '',
+      agentPhone: '',
+      inspectorName: '',
+      inspectorPhone: '',
+      titleName: '',
+      titlePhone: '',
+      lenderName: '',
+      lenderPhone: '',
     },
     onSubmit: (submitValues) => {
       handleAddDeal(submitValues);
@@ -88,36 +85,10 @@ export const AddDeal = ({ modalVisible, setModalVisible }) => {
   const [errorState, setErrorState] = useState('');
   const defaultDate = new Date();
   const [date, setDate] = useState(defaultDate);
-  const [selectedIndex, setSelectedIndex] = React.useState(new IndexPath(0));
 
   const handleAddDeal = (data) => {
     console.log('values', data);
   };
-
-  const selectLabels = [
-    {
-      label: 'Client',
-      value: 'client',
-    },
-    {
-      label: 'Agent',
-      value: 'agent',
-    },
-    {
-      label: 'Lender',
-      value: 'lender',
-    },
-    {
-      label: 'Inspector',
-      value: 'inspector',
-    },
-    {
-      label: 'Title',
-      value: 'title',
-    },
-  ];
-
-  const displayValue = selectLabels[selectedIndex.row].label;
 
   return (
     <Modal
@@ -140,16 +111,17 @@ export const AddDeal = ({ modalVisible, setModalVisible }) => {
             onSubmit={(values) => handleAddDeal(values)}
           >
             {() => (
-              <ScrollView>
-                <TextInput
-                  name="address"
-                  placeholder="Enter Address"
-                  autoCapitalize="none"
-                  value={values.address}
-                  onChangeText={handleChange('address')}
-                  onBlur={handleBlur('address')}
-                />
-                <FormErrorMessage error={errors.address} visible={touched.address} />
+              <ScrollView style={{ width: '100%' }}>
+                <View style={{ marginBottom: 16 }}>
+									<Input
+										name="address"
+										placeholder="Enter Address"
+										label="Address"
+										value={values.address}
+										onChangeText={handleChange('address')}
+									/>
+									<FormErrorMessage error={errors.address} visible={touched.address} />
+								</View>
                 <View>
                   <Text>Closing Date:</Text>
                   <DateTimePicker
@@ -157,36 +129,105 @@ export const AddDeal = ({ modalVisible, setModalVisible }) => {
                     value={date}
                     mode={'date'}
                     display="default"
-                    style={{ width: 150, marginRight: 0, marginBottom: 16 }}
+                    style={{ width: '100%', marginBottom: 16 }}
                   />
                 </View>
-                <FormErrorMessage error={errors.email} visible={touched.email} />
-                <TextInput
-                  name="name"
-                  placeholder="Enter Full Name"
-                  value={values.name}
-                  onChangeTe9xt={handleChange('name')}
-                  onBlur={handleBlur('name')}
-                />
-                <FormErrorMessage error={errors.name} visible={touched.name} />
-                <TextInput
-                  name="phone"
-                  placeholder="Enter Phone Number"
-                  keyboardType="numeric"
-                  value={values.phone}
-                  onChangeText={handleChange('phone')}
-                  onBlur={handleBlur('phone')}
-                />
-                <FormErrorMessage error={errors.phone} visible={touched.phone} />
-                <Select
-                  selectedIndex={selectedIndex}
-                  value={displayValue}
-                  onSelect={(index) => setSelectedIndex(index)}
-                >
-                  {selectLabels.map((label) => {
-                    return <SelectItem title={label.label} />;
-                  })}
-                </Select>
+                <FormErrorMessage error={errors.closingDate} visible={touched.closingDate} />
+                <View style={{ marginBottom: 16 }}>
+                  <Input
+                    name="clientName"
+                    placeholder="Enter Full Name"
+                    label="Client"
+                    value={values.clientName}
+                    onChangeText={handleChange('clientName')}
+                  />
+                  <FormErrorMessage error={errors.clientName} visible={touched.clientName} />
+                  <Input
+                    name="clientPhone"
+                    placeholder="Enter Phone Number"
+                    keyboardType="numeric"
+                    value={values.clientPhone}
+                    onChangeText={handleChange('clientPhone')}
+                    style={{ marginTop: 8 }}
+                  />
+                  <FormErrorMessage error={errors.clientPhone} visible={touched.clientPhone} />
+                </View>
+                <View style={{ marginBottom: 16 }}>
+                  <Input
+                    name="agentName"
+                    label="Agent"
+                    placeholder="Enter Full Name"
+                    value={values.agentName}
+                    onChangeText={handleChange('agentName')}
+                  />
+                  <FormErrorMessage error={errors.agentName} visible={touched.agentName} />
+                  <Input
+                    name="agentPhone"
+                    placeholder="Enter Phone Number"
+                    keyboardType="numeric"
+                    value={values.agentPhone}
+                    onChangeText={handleChange('agentPhone')}
+                    style={{ marginTop: 8 }}
+                  />
+                  <FormErrorMessage error={errors.agentPhone} visible={touched.agentPhone} />
+                </View>
+                <View style={{ marginBottom: 16 }}>
+                  <Input
+                    name="inspectorName"
+                    label="Inspector"
+                    placeholder="Enter Full Name"
+                    value={values.inspectorName}
+                    onChangeText={handleChange('inspectorName')}
+                  />
+                  <FormErrorMessage error={errors.inspectorName} visible={touched.inspectorName} />
+                  <Input
+                    name="inspectorPhone"
+                    placeholder="Enter Phone Number"
+                    keyboardType="numeric"
+                    value={values.inspectorPhone}
+                    onChangeText={handleChange('inspectorPhone')}
+                    style={{ marginTop: 8 }}
+                  />
+                  <FormErrorMessage error={errors.inspectorPhone} visible={touched.inspectorPhone} />
+                </View>
+                <View style={{ marginBottom: 16 }}>
+                  <Input
+                    name="titleName"
+                    label="Title Company"
+                    placeholder="Enter Full Name"
+                    value={values.titleName}
+                    onChangeText={handleChange('titleName')}
+                  />
+                  <FormErrorMessage error={errors.titleName} visible={touched.titleName} />
+                  <Input
+                    name="titlePhone"
+                    placeholder="Enter Phone Number"
+                    keyboardType="numeric"
+                    value={values.titlePhone}
+                    onChangeText={handleChange('titlePhone')}
+                    style={{ marginTop: 8 }}
+                  />
+                  <FormErrorMessage error={errors.titlePhone} visible={touched.titlePhone} />
+                </View>
+                <View style={{ marginBottom: 16 }}>
+                  <Input
+                    name="lenderName"
+                    placeholder="Enter Full Name"
+                    label="Lender"
+                    value={values.lenderName}
+                    onChangeText={handleChange('lenderName')}
+                  />
+                  <FormErrorMessage error={errors.lenderName} visible={touched.lenderName} />
+                  <Input
+                    name="lenderPhone"
+                    placeholder="Enter Phone Number"
+                    keyboardType="numeric"
+                    value={values.lenderPhone}
+                    onChangeText={handleChange('lenderPhone')}
+                    style={{ marginTop: 8 }}
+                  />
+                  <FormErrorMessage error={errors.lenderPhone} visible={touched.lenderPhone} />
+                </View>
                 <Button
                   style={{
                     width: 250,
