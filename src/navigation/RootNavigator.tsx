@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { onAuthStateChanged } from 'firebase/auth';
-
+import Purchases from 'react-native-purchases';
 import { AuthStack } from './AuthStack';
 import { AppTabs } from './AppTabs';
 import { AuthenticatedUserContext } from '../providers';
@@ -9,6 +9,7 @@ import { SplashScreen } from '../screens';
 import { auth, db } from '../config';
 import { doc, getDoc } from 'firebase/firestore';
 import { useFonts } from 'expo-font';
+import Constants from 'expo-constants';
 
 export const RootNavigator = () => {
   const { user, setUser } = useContext(AuthenticatedUserContext);
@@ -29,6 +30,7 @@ export const RootNavigator = () => {
         const docSnap = await getDoc(doc(db, 'users', uid));
         if (docSnap.exists()) {
           setUser(docSnap.data());
+					await Purchases.configure({ apiKey: Constants.manifest?.extra?.purchaseApiKey, appUserID: uid });
         }
       }
     });

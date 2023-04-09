@@ -2,14 +2,14 @@ import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Layout, Text } from '@ui-kitten/components';
 import { Button } from '../components';
 import { getAuth } from 'firebase/auth';
-import Purchases, { PurchasesOffering, PurchasesPackage } from 'react-native-purchases';
-import Constants from 'expo-constants';
+import Purchases, { PurchasesPackage } from 'react-native-purchases';
 import Pdf from 'react-native-pdf';
 import { StatusBar } from 'expo-status-bar';
 import { storage } from '../config';
 import { ref, getDownloadURL, listAll } from 'firebase/storage';
 import { TemplateScreenStyles } from '../../styles';
 import { SafeAreaView, ScrollView, View } from 'react-native';
+import axios from 'axios';
 import _ from 'lodash';
 
 export const TemplateScreen = () => {
@@ -45,7 +45,6 @@ export const TemplateScreen = () => {
   useEffect(() => {
     const fetchOfferings = async () => {
       try {
-       await Purchases.configure({ apiKey: Constants.manifest.extra.purchaseApiKey });
         const offerings = await Purchases.getOfferings();
         if (offerings) {
           if (offerings.all.default_offering) {
@@ -70,34 +69,101 @@ export const TemplateScreen = () => {
     fetchOfferings();
   }, []);
 
-  const handleInAppPurchase = useCallback(async (pdf: any) => {
-		try {
-			if (templatePkg) {
-				const {customerInfo, productIdentifier} = await Purchases.purchasePackage(templatePkg);
-				if (typeof customerInfo.entitlements.active.marketing_entitlement !== 'undefined') {
-					console.log('Send this PDF url', pdf);
-				}
-			}
-		} catch (error) {
-			if (!error.userCancelled) {
-				console.log('cancel error', error);
-			} else {
-				console.log('error', error);
-			}
-		}
-  }, [templatePkg]);
+  const handleInAppPurchase = useCallback(
+    async (pdf: any) => {
+      try {
+        if (templatePkg) {
+					console.log(templatePkg);
+          // const { customerInfo } = await Purchases.purchasePackage(templatePkg);
+          if (typeof customerInfo.entitlements.active.marketing_entitlement !== 'undefined') {
+            axios({
+              method: 'get',
+              url: 'https://us-central1-real-estate-app-9a719.cloudfunctions.net/helloWorld',
+              params: { pdf, email: userAuth.currentUser?.email },
+            }).then((response) => {
+              console.log('Sending notification if success');
+            });
+          }
+        }
+      } catch (error) {
+        if (!error.userCancelled) {
+          console.log('cancel error', error);
+        } else {
+          console.log('error', error);
+        }
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [templatePkg],
+  );
+
+  const handleMonthlySubscription = useCallback(async () => {
+    try {
+      if (monthlyPkg) {
+        await Purchases.purchasePackage(monthlyPkg);
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+  }, [monthlyPkg]);
+
+  const handleAnnualSubscription = useCallback(async () => {
+    try {
+      if (annualPkg) {
+        await Purchases.purchasePackage(annualPkg);
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+  }, [annualPkg]);
 
   return (
     <Layout style={{ flex: 1 }}>
       <Text category="h3" status="info">
         Editable Marketing Templates
       </Text>
+      <Button
+        style={{
+          width: 250,
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: 10,
+          borderRadius: 8,
+          marginBottom: 8,
+          backgroundColor: 'red',
+          borderColor: 'red',
+        }}
+        onPress={handleMonthlySubscription}
+      >
+        <Text>Buying monthly subscription</Text>
+      </Button>
+      <Button
+        style={{
+          width: 250,
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: 10,
+          borderRadius: 8,
+          backgroundColor: 'purple',
+          borderColor: 'purple',
+        }}
+        onPress={handleAnnualSubscription}
+      >
+        <Text>Buying annual subscription</Text>
+      </Button>
       <ScrollView>
         <SafeAreaView>
           {remotePDF && _.size(remotePDF)
             ? remotePDF.map((pdf, index) => (
                 <View key={index} style={{ padding: 16 }}>
-                  <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <View
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}
+                  >
                     {templatePkg && templatePkg.product.priceString && (
                       <Text category="h4">{templatePkg.product.priceString}</Text>
                     )}
