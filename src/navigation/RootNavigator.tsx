@@ -30,7 +30,10 @@ export const RootNavigator = () => {
         const docSnap = await getDoc(doc(db, 'users', uid));
         if (docSnap.exists()) {
           setUser(docSnap.data());
-					await Purchases.configure({ apiKey: Constants.manifest?.extra?.purchaseApiKey, appUserID: uid });
+          await Purchases.configure({
+            apiKey: Constants.manifest?.extra?.purchaseApiKey,
+            appUserID: uid,
+          });
         }
       }
     });

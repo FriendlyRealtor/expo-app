@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { Layout, Text } from '@ui-kitten/components';
+import { Layout, Text, Card } from '@ui-kitten/components';
 import { Button } from '../components';
 import { getAuth } from 'firebase/auth';
 import Purchases, { PurchasesPackage } from 'react-native-purchases';
@@ -8,9 +8,170 @@ import { StatusBar } from 'expo-status-bar';
 import { storage } from '../config';
 import { ref, getDownloadURL, listAll } from 'firebase/storage';
 import { TemplateScreenStyles } from '../../styles';
-import { SafeAreaView, ScrollView, View } from 'react-native';
+import { SafeAreaView, ScrollView, View, Alert, Modal, Pressable, StyleSheet } from 'react-native';
 import axios from 'axios';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import _ from 'lodash';
+
+export const PayWallView = ({ modalVisible, setModalVisible, monthlyPkg, annualPkg }) => {
+  const styles = StyleSheet.create({
+    centeredView: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: 22,
+    },
+    modalView: {
+      height: 600,
+      backgroundColor: 'white',
+      borderRadius: 20,
+      padding: 35,
+      alignItems: 'center',
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 5,
+    },
+    button: {
+      borderRadius: 20,
+      padding: 10,
+      elevation: 2,
+    },
+    buttonOpen: {
+      backgroundColor: '#F194FF',
+    },
+    buttonClose: {
+      backgroundColor: '#2196F3',
+    },
+    textStyle: {
+      color: 'white',
+      fontWeight: 'bold',
+      textAlign: 'center',
+    },
+    modalText: {
+      marginBottom: 15,
+      textAlign: 'center',
+    },
+    close: {
+      position: 'absolute',
+      background: 'red',
+      color: 'white',
+      top: 10,
+      right: 10,
+    },
+  });
+
+  const handleMonthlySubscription = useCallback(async () => {
+    try {
+      if (monthlyPkg) {
+        await Purchases.purchasePackage(monthlyPkg);
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+  }, [monthlyPkg]);
+
+  const handleAnnualSubscription = useCallback(async () => {
+    try {
+      if (annualPkg) {
+        await Purchases.purchasePackage(annualPkg);
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+  }, [annualPkg]);
+
+  console.log(monthlyPkg);
+  return (
+    <View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Pressable onPress={() => setModalVisible(!modalVisible)} style={styles.close}>
+              <Icon style={{ marginRight: 8 }} name="close" size={24} />
+            </Pressable>
+            <Text
+              category="h5"
+              style={{
+                fontFamily: 'Ubuntu',
+                lineHeight: 90,
+								textAlign: "center",
+								backgroundColor: "#ededed",
+                width: 310,
+								marginBottom: 16,
+								borderWidth: 1,
+								borderColor: "black",
+								borderRadius: 2,
+              }}
+            >
+              Friendly Realtor Subscription
+            </Text>
+						<View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+							<Icon style={{ marginRight: 16 }} name="check" size={24} color="#02FDAA" />
+							<Text category="h6" style={{ fontFamily: 'Ubuntu' }}>
+							Manage your clients
+							</Text>
+						</View>
+            <View style={{ display: 'flex', flexDirection: 'column', marginTop: 16 }}>
+              <Card>
+                <Text category="h2" status="info" style={{ fontFamily: 'Ubuntu' }}>
+                  {monthlyPkg?.product.priceString}/month
+                </Text>
+                <Button
+                  style={{
+                    width: 250,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    padding: 10,
+                    borderRadius: 8,
+                    marginTop: 16,
+                    backgroundColor: '#02FDAA',
+                    fontFamily: 'Ubuntu',
+                  }}
+                  onPress={handleMonthlySubscription}
+                >
+                  <Text>Monthly</Text>
+                </Button>
+              </Card>
+              <Card style={{ marginTop: 64 }}>
+                <Text category="h2" status="info" style={{ fontFamily: 'Ubuntu' }}>
+                  {annualPkg?.product.priceString}/year
+                </Text>
+                <Button
+                  style={{
+                    width: 250,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    padding: 10,
+                    borderRadius: 8,
+                    marginTop: 16,
+                    backgroundColor: '#02FDAA',
+                    fontFamily: 'Ubuntu',
+                  }}
+                  onPress={handleAnnualSubscription}
+                >
+                  <Text>Annually</Text>
+                </Button>
+              </Card>
+            </View>
+          </View>
+        </View>
+      </Modal>
+    </View>
+  );
+};
 
 export const TemplateScreen = () => {
   const styles = TemplateScreenStyles;
@@ -20,6 +181,7 @@ export const TemplateScreen = () => {
   const [annualPkg, setAnnualPkg] = useState<PurchasesPackage>(null);
   const [templatePkg, setTemplatePkg] = useState<PurchasesPackage>(null);
   const [remotePDF, setRemotePDF] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
   const pdfRef = useRef();
 
   useEffect(() => {
@@ -73,7 +235,7 @@ export const TemplateScreen = () => {
     async (pdf: any) => {
       try {
         if (templatePkg) {
-					console.log(templatePkg);
+          console.log(templatePkg);
           // const { customerInfo } = await Purchases.purchasePackage(templatePkg);
           if (typeof customerInfo.entitlements.active.marketing_entitlement !== 'undefined') {
             axios({
@@ -97,28 +259,14 @@ export const TemplateScreen = () => {
     [templatePkg],
   );
 
-  const handleMonthlySubscription = useCallback(async () => {
-    try {
-      if (monthlyPkg) {
-        await Purchases.purchasePackage(monthlyPkg);
-      }
-    } catch (error) {
-      console.log('error', error);
-    }
-  }, [monthlyPkg]);
-
-  const handleAnnualSubscription = useCallback(async () => {
-    try {
-      if (annualPkg) {
-        await Purchases.purchasePackage(annualPkg);
-      }
-    } catch (error) {
-      console.log('error', error);
-    }
-  }, [annualPkg]);
-
   return (
     <Layout style={{ flex: 1 }}>
+      <PayWallView
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        monthlyPkg={monthlyPkg}
+        annualPkg={annualPkg}
+      />
       <Text category="h3" status="info">
         Editable Marketing Templates
       </Text>
@@ -130,26 +278,12 @@ export const TemplateScreen = () => {
           padding: 10,
           borderRadius: 8,
           marginBottom: 8,
-          backgroundColor: 'red',
-          borderColor: 'red',
+          backgroundColor: 'orange',
+          borderColor: 'orange',
         }}
-        onPress={handleMonthlySubscription}
+        onPress={() => setModalVisible(true)}
       >
-        <Text>Buying monthly subscription</Text>
-      </Button>
-      <Button
-        style={{
-          width: 250,
-          justifyContent: 'center',
-          alignItems: 'center',
-          padding: 10,
-          borderRadius: 8,
-          backgroundColor: 'purple',
-          borderColor: 'purple',
-        }}
-        onPress={handleAnnualSubscription}
-      >
-        <Text>Buying annual subscription</Text>
+        <Text>Upgrade Account</Text>
       </Button>
       <ScrollView>
         <SafeAreaView>
