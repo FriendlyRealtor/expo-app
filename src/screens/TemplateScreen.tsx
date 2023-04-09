@@ -107,23 +107,23 @@ export const PayWallView = ({ modalVisible, setModalVisible, monthlyPkg, annualP
               style={{
                 fontFamily: 'Ubuntu',
                 lineHeight: 90,
-								textAlign: "center",
-								backgroundColor: "#ededed",
+                textAlign: 'center',
+                backgroundColor: '#ededed',
                 width: 310,
-								marginBottom: 16,
-								borderWidth: 1,
-								borderColor: "black",
-								borderRadius: 2,
+                marginBottom: 16,
+                borderWidth: 1,
+                borderColor: 'black',
+                borderRadius: 2,
               }}
             >
               Friendly Realtor Subscription
             </Text>
-						<View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-							<Icon style={{ marginRight: 16 }} name="check" size={24} color="#02FDAA" />
-							<Text category="h6" style={{ fontFamily: 'Ubuntu' }}>
-							Manage your clients
-							</Text>
-						</View>
+            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+              <Icon style={{ marginRight: 16 }} name="check" size={24} color="#02FDAA" />
+              <Text category="h6" style={{ fontFamily: 'Ubuntu' }}>
+                Manage your clients feature
+              </Text>
+            </View>
             <View style={{ display: 'flex', flexDirection: 'column', marginTop: 16 }}>
               <Card>
                 <Text category="h2" status="info" style={{ fontFamily: 'Ubuntu' }}>
@@ -267,23 +267,30 @@ export const TemplateScreen = () => {
         monthlyPkg={monthlyPkg}
         annualPkg={annualPkg}
       />
-      <Text category="h3" status="info">
-        Editable Marketing Templates
+      <Text style={{ fontFamily: 'Ubuntu', padding: 8 }}>
+        They are an efficient way for businesses to create visually appealing marketing materials
+        without starting from scratch. With editable marketing templates, businesses can save time
+        and resources while ensuring that their marketing efforts are consistent and
+        professional-looking.
       </Text>
       <Button
         style={{
           width: 250,
+          display: 'flex',
+          flexDirection: 'row',
+          marginLeft: 16,
           justifyContent: 'center',
           alignItems: 'center',
           padding: 10,
           borderRadius: 8,
-          marginBottom: 8,
-          backgroundColor: 'orange',
-          borderColor: 'orange',
+          marginTop: 16,
+          marginBottom: 32,
+          fontFamily: 'Ubuntu',
+          backgroundColor: '#ededed',
         }}
         onPress={() => setModalVisible(true)}
       >
-        <Text>Upgrade Account</Text>
+        <Text>Upgrade</Text>
       </Button>
       <ScrollView>
         <SafeAreaView>
