@@ -12,7 +12,7 @@ import { ClientScreen } from './ClientScreen';
 export {
   LoginScreen,
   SignupScreen,
-	ClientScreen,
+  ClientScreen,
   HomeScreen,
   SplashScreen,
   ForgotPasswordScreen,

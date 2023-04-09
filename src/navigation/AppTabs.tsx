@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
-	ClientScreen,
+  ClientScreen,
   ContinueEducationScreen,
   HomeScreen,
   SettingScreen,
@@ -16,13 +16,17 @@ const Tab = createBottomTabNavigator();
 export const AppTabs = (props) => {
   const { locationStatus } = usePermissions(props.currentUser);
 
-	const [activeSub, setActiveSub] = useState(false);
+  const [activeSub, setActiveSub] = useState(false);
 
-	useEffect(() => {
-		if (props.user.customerInfo && props.user.customerInfo.activeSubscriptions && props.user.customerInfo.activeSubscriptions.length > 0) {
-			setActiveSub(true);
-		}
-	}, [props.user.customerInfo]);
+  useEffect(() => {
+    if (
+      props.user.customerInfo &&
+      props.user.customerInfo.activeSubscriptions &&
+      props.user.customerInfo.activeSubscriptions.length > 0
+    ) {
+      setActiveSub(true);
+    }
+  }, [props.user.customerInfo]);
 
   return (
     <Tab.Navigator>
@@ -62,13 +66,15 @@ export const AppTabs = (props) => {
           tabBarIcon: () => <Icon name="gear" size={30} color="#02FDAA" />,
         }}
       />
-			{true && <Tab.Screen
-        name="Deals"
-        component={ClientScreen}
-        options={{
-          tabBarIcon: () => <Icon name="user" size={30} color="#02FDAA" />,
-        }}
-      />}
+      {true && (
+        <Tab.Screen
+          name="Deals"
+          component={ClientScreen}
+          options={{
+            tabBarIcon: () => <Icon name="user" size={30} color="#02FDAA" />,
+          }}
+        />
+      )}
     </Tab.Navigator>
   );
 };

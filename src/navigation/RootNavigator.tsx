@@ -25,40 +25,39 @@ export const RootNavigator = () => {
         setIsLoading(false);
       }
 
-			try {
-				if (authenticatedUser) {
-					const { uid } = authenticatedUser;
-					const docSnap = await getDoc(doc(db, 'users', uid));
-					if (docSnap.exists()) {
-						setUser(docSnap.data());
-						await Purchases.configure({
-							apiKey: Constants.manifest?.extra?.purchaseApiKey,
-							appUserID: uid,
-						});
-					}
+      try {
+        if (authenticatedUser) {
+          const { uid } = authenticatedUser;
+          const docSnap = await getDoc(doc(db, 'users', uid));
+          if (docSnap.exists()) {
+            setUser(docSnap.data());
+            await Purchases.configure({
+              apiKey: Constants.manifest?.extra?.purchaseApiKey,
+              appUserID: uid,
+            });
+          }
 
-					if (user) {
-						const customerInfo = await Purchases.getCustomerInfo();
+          if (user) {
+            const customerInfo = await Purchases.getCustomerInfo();
 
-						if (customerInfo) {
-							setUser(prev => {
-								return {
-									...prev,
-									customerInfo,
-								};
-							});
-						}
-					}
-				}
-			} catch (error) {
-				console.log(error);
-			}
+            if (customerInfo) {
+              setUser((prev) => {
+                return {
+                  ...prev,
+                  customerInfo,
+                };
+              });
+            }
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
     });
 
     return unsubscribeAuthStateChanged;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth.currentUser, fontsLoaded]);
-
 
   if (isLoading) {
     return <SplashScreen />;
