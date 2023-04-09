@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
+	ClientScreen,
   ContinueEducationScreen,
   HomeScreen,
   SettingScreen,
@@ -21,7 +22,7 @@ export const AppTabs = (props) => {
 		if (props.user.customerInfo && props.user.customerInfo.activeSubscriptions && props.user.customerInfo.activeSubscriptions.length > 0) {
 			setActiveSub(true);
 		}
-	}, [props.user.customerInfo.activeSubscriptions]);
+	}, [props.user.customerInfo]);
 
   return (
     <Tab.Navigator>
@@ -63,7 +64,7 @@ export const AppTabs = (props) => {
       />
 			{activeSub && <Tab.Screen
         name="Clients"
-        component={SettingScreen}
+        component={ClientScreen}
         options={{
           tabBarIcon: () => <Icon name="user" size={30} color="#02FDAA" />,
         }}

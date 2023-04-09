@@ -1,7 +1,7 @@
 import React from 'react';
 import { Layout, Text, Icon } from '@ui-kitten/components';
 
-export const ClientsScreen = (props) => {
+export const ClientScreen = (props) => {
 
   return (
     <Layout style={{ flex: 1 }}>

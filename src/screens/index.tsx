@@ -7,10 +7,12 @@ import { LocalRestaurantScreen } from './LocalRestaurantScreen';
 import { ContinueEducationScreen } from './ContinueEducationScreen';
 import { SplashScreen } from './SplashScreen';
 import { TemplateScreen } from './TemplateScreen';
+import { ClientScreen } from './ClientScreen';
 
 export {
   LoginScreen,
   SignupScreen,
+	ClientScreen,
   HomeScreen,
   SplashScreen,
   ForgotPasswordScreen,
