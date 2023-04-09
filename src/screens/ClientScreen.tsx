@@ -3,9 +3,10 @@ import { Layout, Text, List, ListItem, Divider, Card } from '@ui-kitten/componen
 import { View, Modal, Alert, StyleSheet, Pressable } from 'react-native';
 import * as Linking from 'expo-linking';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { Button } from '../components';
 
 export const AddDeal = ({ modalVisible, setModalVisible }) => {
-	const styles = StyleSheet.create({
+  const styles = StyleSheet.create({
     centeredView: {
       flex: 1,
       justifyContent: 'center',
@@ -14,7 +15,7 @@ export const AddDeal = ({ modalVisible, setModalVisible }) => {
     },
     modalView: {
       height: 600,
-			width: "100%",
+      width: '100%',
       backgroundColor: 'white',
       borderRadius: 20,
       padding: 35,
@@ -57,29 +58,43 @@ export const AddDeal = ({ modalVisible, setModalVisible }) => {
     },
   });
 
-	return (
-	<Modal  animationType="slide"
-	transparent={true}
-	visible={modalVisible}
-	onRequestClose={() => {
-		Alert.alert('Modal has been closed.');
-		setModalVisible(!modalVisible);
-	}}
-	>
-		<View style={styles.centeredView}>
-			<View style={styles.modalView}>
-				<Pressable onPress={() => setModalVisible(!modalVisible)} style={styles.close}>
-					<Icon style={{ marginRight: 8 }} name="close" size={24} />
-				</Pressable>
-				<Text>Hello</Text>
-			</View>
-		</View>
-	</Modal>
-	);
-}
+  return (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={modalVisible}
+      onRequestClose={() => {
+        Alert.alert('Modal has been closed.');
+        setModalVisible(!modalVisible);
+      }}
+    >
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+          <Pressable onPress={() => setModalVisible(!modalVisible)} style={styles.close}>
+            <Icon style={{ marginRight: 8 }} name="close" size={24} />
+          </Pressable>
+          <Button
+            style={{
+              width: 250,
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: 10,
+              borderRadius: 8,
+              marginTop: 16,
+              backgroundColor: '#02FDAA',
+              fontFamily: 'Ubuntu',
+            }}
+          >
+            <Text>Save</Text>
+          </Button>
+        </View>
+      </View>
+    </Modal>
+  );
+};
 
 export const ClientScreen = (props) => {
-	const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const renderItemHeader = (headerProps, item) => (
     <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -166,12 +181,12 @@ export const ClientScreen = (props) => {
   return (
     <Layout style={{ flex: 1 }}>
       <View>
-				<AddDeal modalVisible={modalVisible} setModalVisible={setModalVisible} />
+        <AddDeal modalVisible={modalVisible} setModalVisible={setModalVisible} />
         <Icon
           name="plus-circle"
           size={24}
           onPress={() => {
-           setModalVisible(true);
+            setModalVisible(true);
           }}
           style={{ textAlign: 'right', marginRight: 16, padding: 8 }}
         />
