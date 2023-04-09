@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
   ContinueEducationScreen,
@@ -14,6 +14,14 @@ const Tab = createBottomTabNavigator();
 
 export const AppTabs = (props) => {
   const { locationStatus } = usePermissions(props.currentUser);
+
+	const [activeSub, setActiveSub] = useState(false);
+
+	useEffect(() => {
+		if (props.user.customerInfo && props.user.customerInfo.activeSubscriptions && props.user.customerInfo.activeSubscriptions.length > 0) {
+			setActiveSub(true);
+		}
+	}, [props.user.customerInfo.activeSubscriptions]);
 
   return (
     <Tab.Navigator>
@@ -53,6 +61,13 @@ export const AppTabs = (props) => {
           tabBarIcon: () => <Icon name="gear" size={30} color="#02FDAA" />,
         }}
       />
+			{activeSub && <Tab.Screen
+        name="Clients"
+        component={SettingScreen}
+        options={{
+          tabBarIcon: () => <Icon name="user" size={30} color="#02FDAA" />,
+        }}
+      />}
     </Tab.Navigator>
   );
 };
