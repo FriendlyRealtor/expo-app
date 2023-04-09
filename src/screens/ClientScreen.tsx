@@ -1,9 +1,23 @@
 import React, { useState } from 'react';
-import { Layout, Text, List, ListItem, Divider, Card } from '@ui-kitten/components';
-import { View, Modal, Alert, StyleSheet, Pressable } from 'react-native';
+import {
+  IndexPath,
+  Layout,
+  Text,
+  List,
+  ListItem,
+  Divider,
+  Card,
+  Select,
+  SelectItem,
+} from '@ui-kitten/components';
+import { View, Modal, Alert, StyleSheet, Pressable, ScrollView } from 'react-native';
 import * as Linking from 'expo-linking';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Button } from '../components';
+import { Formik, useFormik } from 'formik';
+import { passwordResetSchema } from '../utils';
+import { TextInput, FormErrorMessage } from '../components';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export const AddDeal = ({ modalVisible, setModalVisible }) => {
   const styles = StyleSheet.create({
@@ -58,6 +72,53 @@ export const AddDeal = ({ modalVisible, setModalVisible }) => {
     },
   });
 
+  const { values, touched, errors, handleChange, handleSubmit, handleBlur, resetForm } = useFormik({
+    initialValues: {
+      address: '',
+      closingDate: '',
+      name: '',
+      phone: '',
+      type: '',
+    },
+    onSubmit: (submitValues) => {
+      handleAddDeal(submitValues);
+    },
+  });
+
+  const [errorState, setErrorState] = useState('');
+  const defaultDate = new Date();
+  const [date, setDate] = useState(defaultDate);
+  const [selectedIndex, setSelectedIndex] = React.useState(new IndexPath(0));
+
+  const handleAddDeal = (data) => {
+    console.log('values', data);
+  };
+
+  const selectLabels = [
+    {
+      label: 'Client',
+      value: 'client',
+    },
+    {
+      label: 'Agent',
+      value: 'agent',
+    },
+    {
+      label: 'Lender',
+      value: 'lender',
+    },
+    {
+      label: 'Inspector',
+      value: 'inspector',
+    },
+    {
+      label: 'Title',
+      value: 'title',
+    },
+  ];
+
+  const displayValue = selectLabels[selectedIndex.row].label;
+
   return (
     <Modal
       animationType="slide"
@@ -73,20 +134,77 @@ export const AddDeal = ({ modalVisible, setModalVisible }) => {
           <Pressable onPress={() => setModalVisible(!modalVisible)} style={styles.close}>
             <Icon style={{ marginRight: 8 }} name="close" size={24} />
           </Pressable>
-          <Button
-            style={{
-              width: 250,
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: 10,
-              borderRadius: 8,
-              marginTop: 16,
-              backgroundColor: '#02FDAA',
-              fontFamily: 'Ubuntu',
-            }}
+          <Formik
+            initialValues={{ email: '' }}
+            validationSchema={passwordResetSchema}
+            onSubmit={(values) => handleAddDeal(values)}
           >
-            <Text>Save</Text>
-          </Button>
+            {() => (
+              <ScrollView>
+                <TextInput
+                  name="address"
+                  placeholder="Enter Address"
+                  autoCapitalize="none"
+                  value={values.address}
+                  onChangeText={handleChange('address')}
+                  onBlur={handleBlur('address')}
+                />
+                <FormErrorMessage error={errors.address} visible={touched.address} />
+                <View>
+                  <Text>Closing Date:</Text>
+                  <DateTimePicker
+                    testID="dateTimePicker"
+                    value={date}
+                    mode={'date'}
+                    display="default"
+                    style={{ width: 150, marginRight: 0, marginBottom: 16 }}
+                  />
+                </View>
+                <FormErrorMessage error={errors.email} visible={touched.email} />
+                <TextInput
+                  name="name"
+                  placeholder="Enter Full Name"
+                  value={values.name}
+                  onChangeTe9xt={handleChange('name')}
+                  onBlur={handleBlur('name')}
+                />
+                <FormErrorMessage error={errors.name} visible={touched.name} />
+                <TextInput
+                  name="phone"
+                  placeholder="Enter Phone Number"
+                  keyboardType="numeric"
+                  value={values.phone}
+                  onChangeText={handleChange('phone')}
+                  onBlur={handleBlur('phone')}
+                />
+                <FormErrorMessage error={errors.phone} visible={touched.phone} />
+                <Select
+                  selectedIndex={selectedIndex}
+                  value={displayValue}
+                  onSelect={(index) => setSelectedIndex(index)}
+                >
+                  {selectLabels.map((label) => {
+                    return <SelectItem title={label.label} />;
+                  })}
+                </Select>
+                <Button
+                  style={{
+                    width: 250,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    padding: 10,
+                    borderRadius: 8,
+                    marginTop: 16,
+                    backgroundColor: '#02FDAA',
+                    fontFamily: 'Ubuntu',
+                  }}
+                  onPress={handleSubmit}
+                >
+                  <Text>Save</Text>
+                </Button>
+              </ScrollView>
+            )}
+          </Formik>
         </View>
       </View>
     </Modal>
