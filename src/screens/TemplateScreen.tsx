@@ -85,7 +85,6 @@ export const PayWallView = ({ modalVisible, setModalVisible, monthlyPkg, annualP
     }
   }, [annualPkg]);
 
-  console.log(monthlyPkg);
   return (
     <View>
       <Modal
@@ -235,8 +234,7 @@ export const TemplateScreen = () => {
     async (pdf: any) => {
       try {
         if (templatePkg) {
-          console.log(templatePkg);
-          // const { customerInfo } = await Purchases.purchasePackage(templatePkg);
+          const { customerInfo } = await Purchases.purchasePackage(templatePkg);
           if (typeof customerInfo.entitlements.active.marketing_entitlement !== 'undefined') {
             axios({
               method: 'get',
