@@ -6,8 +6,11 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Button } from '../components';
 import { Formik, useFormik } from 'formik';
 import { passwordResetSchema } from '../utils';
-import { TextInput, FormErrorMessage } from '../components';
+import { FormErrorMessage } from '../components';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { doc, updateDoc } from 'firebase/firestore';
+import { auth, db, storage } from '../config';
+import { getAuth } from 'firebase/auth';
 
 export const AddDeal = ({ modalVisible, setModalVisible }) => {
   const styles = StyleSheet.create({
@@ -62,10 +65,12 @@ export const AddDeal = ({ modalVisible, setModalVisible }) => {
     },
   });
 
+	const userAuth = getAuth();
+
   const { values, touched, errors, handleChange, handleSubmit, handleBlur, resetForm } = useFormik({
     initialValues: {
       address: '',
-      closingDate: '',
+      closingDate: new Date(),
       clientName: '',
       clientPhone: '',
       agentName: '',
@@ -84,10 +89,15 @@ export const AddDeal = ({ modalVisible, setModalVisible }) => {
 
   const [errorState, setErrorState] = useState('');
   const defaultDate = new Date();
-  const [date, setDate] = useState(defaultDate);
 
-  const handleAddDeal = (data) => {
+  const handleAddDeal = async (data) => {
     console.log('values', data);
+		const { uid } = userAuth.currentUser;
+    const docRef = await doc(db, 'users', uid);
+
+		if (docRef) {
+			// await updateDoc(docRef, data);
+		}
   };
 
   return (
@@ -126,9 +136,12 @@ export const AddDeal = ({ modalVisible, setModalVisible }) => {
                   <Text>Closing Date:</Text>
                   <DateTimePicker
                     testID="dateTimePicker"
-                    value={date}
+                    value={values.closingDate}
                     mode={'date'}
                     display="default"
+										onChange={() => {
+											handleChange('closingDate');
+										}}
                     style={{ width: '100%', marginBottom: 16 }}
                   />
                 </View>
