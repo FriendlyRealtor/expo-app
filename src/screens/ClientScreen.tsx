@@ -8,9 +8,11 @@ import { Formik, useFormik } from 'formik';
 import { passwordResetSchema } from '../utils';
 import { FormErrorMessage } from '../components';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { doc, updateDoc } from 'firebase/firestore';
-import { auth, db, storage } from '../config';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { db } from '../config';
 import { getAuth } from 'firebase/auth';
+import _ from 'lodash';
+import uuid from 'react-native-uuid';
 
 export const AddDeal = ({ modalVisible, setModalVisible }) => {
   const styles = StyleSheet.create({
@@ -66,8 +68,7 @@ export const AddDeal = ({ modalVisible, setModalVisible }) => {
   });
 
 	const userAuth = getAuth();
-
-  const { values, touched, errors, handleChange, handleSubmit, handleBlur, resetForm } = useFormik({
+  const { values, touched, errors, setFieldValue, handleChange, handleSubmit, handleBlur, resetForm } = useFormik({
     initialValues: {
       address: '',
       closingDate: new Date(),
@@ -91,12 +92,29 @@ export const AddDeal = ({ modalVisible, setModalVisible }) => {
   const defaultDate = new Date();
 
   const handleAddDeal = async (data) => {
-    console.log('values', data);
 		const { uid } = userAuth.currentUser;
     const docRef = await doc(db, 'users', uid);
+		const docSnap = await getDoc(docRef);
 
-		if (docRef) {
-			// await updateDoc(docRef, data);
+		const uniqueId = uuid.v4();
+		data.id = uniqueId;
+
+		if (docSnap.exists()) {
+			const firebaseData = docSnap.data();
+			let deals: any[] = [];
+
+			if (firebaseData.deals && _.size(firebaseData.deals)) {
+				const concatDeals = firebaseData.deals.concat(data);
+				deals = deals.concat(concatDeals);
+			} else {
+				deals.push(data);
+			}
+
+			if (docRef) {
+				await updateDoc(docRef, { deals: deals });
+				resetForm();
+				setModalVisible(false);
+			}
 		}
   };
 
@@ -139,8 +157,8 @@ export const AddDeal = ({ modalVisible, setModalVisible }) => {
                     value={values.closingDate}
                     mode={'date'}
                     display="default"
-										onChange={() => {
-											handleChange('closingDate');
+										onChange={(event, value) => {
+											setFieldValue('closingDate', value);
 										}}
                     style={{ width: '100%', marginBottom: 16 }}
                   />
