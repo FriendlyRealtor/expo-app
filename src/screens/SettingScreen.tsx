@@ -321,14 +321,7 @@ export const SettingScreen = () => {
           <Divider style={styles.divider} />
           <View style={styles.flexRow}>
             <Text category="label">Referral Link</Text>
-            <Input
-              placeholder="Place your Referral link"
-              value={value}
-              onChangeText={(nextValue) => setValue(nextValue)}
-              onBlur={() => updateReferralLink()}
-              size="small"
-              style={{ width: 200, marginBottom: 24 }}
-            />
+            <Text style={{ fontSize: 10 }}>{`https://friendlyrealtor.app/profile/${user.username}`}</Text>
           </View>
 					<Divider style={styles.divider} />
 					<View style={styles.flexRow}>
