@@ -37,6 +37,15 @@ export const AppTabs = (props) => {
           tabBarIcon: () => <Icon name="home" size={30} color="#02FDAA" />,
         }}
       />
+      {true && (
+        <Tab.Screen
+          name="Deals"
+          component={ClientScreen}
+          options={{
+            tabBarIcon: () => <Icon name="user" size={30} color="#02FDAA" />,
+          }}
+        />
+      )}
       <Tab.Screen
         name="Templates"
         component={TemplateScreen}
@@ -66,15 +75,6 @@ export const AppTabs = (props) => {
           tabBarIcon: () => <Icon name="gear" size={30} color="#02FDAA" />,
         }}
       />
-      {true && (
-        <Tab.Screen
-          name="Deals"
-          component={ClientScreen}
-          options={{
-            tabBarIcon: () => <Icon name="user" size={30} color="#02FDAA" />,
-          }}
-        />
-      )}
     </Tab.Navigator>
   );
 };

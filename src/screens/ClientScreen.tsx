@@ -15,7 +15,7 @@ import _ from 'lodash';
 import uuid from 'react-native-uuid';
 import moment from 'moment';
 
-export const AddDeal = ({ modalVisible, setModalVisible }) => {
+export const AddDeal = ({ modalVisible, setModalVisible, formData }) => {
   const styles = StyleSheet.create({
     centeredView: {
       flex: 1,
@@ -68,57 +68,65 @@ export const AddDeal = ({ modalVisible, setModalVisible }) => {
     },
   });
 
-	const userAuth = getAuth();
-  const { values, touched, errors, setFieldValue, handleChange, handleSubmit, handleBlur, resetForm } = useFormik({
-    initialValues: {
-      address: '',
-      closingDate: new Date(),
-      clientName: '',
-      clientPhone: '',
-      agentName: '',
-      agentPhone: '',
-      inspectorName: '',
-      inspectorPhone: '',
-      titleName: '',
-      titlePhone: '',
-      lenderName: '',
-      lenderPhone: '',
-			status: 'active',
-    },
-    onSubmit: (submitValues) => {
-      handleAddDeal(submitValues);
-    },
-  });
+  const userAuth = getAuth();
+  const { values, touched, errors, setFieldValue, handleChange, handleSubmit, resetForm } =
+    useFormik({
+      onSubmit: (submitValues) => {
+        handleAddDeal(submitValues);
+      },
+    });
+
+  useEffect(() => {
+		if (formData && formData.closingDate) {
+		}
+    resetForm({
+      values: {
+        address: formData && formData.address ? formData.address : '',
+        closingDate: formData && formData.closingDate ? (moment.utc(formData.closingDate.seconds*1000)).toDate() : new Date(),
+        clientName: formData && formData.clientName ? formData.clientName : '',
+        clientPhone: formData && formData.clientPhone ? formData.clientPhone : '',
+        agentName: formData && formData.agentName ? formData.agentName : '',
+        agentPhone: formData && formData.agentPhone ? formData.agentPhone : '',
+        inspectorName: formData && formData.inspectorName ? formData.inspectorName : '',
+        inspectorPhone: formData && formData.inspectorPhone ? formData.inspectorPhone : '',
+        titleName: formData && formData.titleName ? formData.titleName : '',
+        titlePhone: formData && formData.titlePhone ? formData.titlePhone : '',
+        lenderName: formData && formData.lenderName ? formData.lenderName : '',
+        lenderPhone: formData && formData.lenderPhone ? formData.lenderPhone : '',
+        status: formData && formData.status ? formData.status : '',
+      },
+    });
+  }, [formData]);
 
   const [errorState, setErrorState] = useState('');
   const defaultDate = new Date();
 
   const handleAddDeal = async (data) => {
-		const { uid } = userAuth.currentUser;
+    const { uid } = userAuth.currentUser;
     const docRef = await doc(db, 'users', uid);
-		const docSnap = await getDoc(docRef);
+    const docSnap = await getDoc(docRef);
 
-		const uniqueId = uuid.v4();
-		data.id = uniqueId;
-		data.status = 'active';
+    const uniqueId = uuid.v4();
+    data.id = uniqueId;
+    data.status = 'active';
 
-		if (docSnap.exists()) {
-			const firebaseData = docSnap.data();
-			let deals: any[] = [];
+    if (docSnap.exists()) {
+      const firebaseData = docSnap.data();
+      let deals: any[] = [];
 
-			if (firebaseData.deals && _.size(firebaseData.deals)) {
-				const concatDeals = firebaseData.deals.concat(data);
-				deals = deals.concat(concatDeals);
-			} else {
-				deals.push(data);
-			}
+      if (firebaseData.deals && _.size(firebaseData.deals)) {
+        const concatDeals = firebaseData.deals.concat(data);
+        deals = deals.concat(concatDeals);
+      } else {
+        deals.push(data);
+      }
 
-			if (docRef) {
-				await updateDoc(docRef, { deals: deals });
-				resetForm();
-				setModalVisible(false);
-			}
-		}
+      if (docRef) {
+        await updateDoc(docRef, { deals: deals });
+        resetForm();
+        setModalVisible(false);
+      }
+    }
   };
 
   return (
@@ -144,15 +152,15 @@ export const AddDeal = ({ modalVisible, setModalVisible }) => {
             {() => (
               <ScrollView style={{ width: '100%' }}>
                 <View style={{ marginBottom: 16 }}>
-									<Input
-										name="address"
-										placeholder="Enter Address"
-										label="Address"
-										value={values.address}
-										onChangeText={handleChange('address')}
-									/>
-									<FormErrorMessage error={errors.address} visible={touched.address} />
-								</View>
+                  <Input
+                    name="address"
+                    placeholder="Enter Address"
+                    label="Address"
+                    value={values.address}
+                    onChangeText={handleChange('address')}
+                  />
+                  <FormErrorMessage error={errors.address} visible={touched.address} />
+                </View>
                 <View>
                   <Text>Closing Date:</Text>
                   <DateTimePicker
@@ -160,9 +168,9 @@ export const AddDeal = ({ modalVisible, setModalVisible }) => {
                     value={values.closingDate}
                     mode={'date'}
                     display="default"
-										onChange={(event, value) => {
-											setFieldValue('closingDate', value);
-										}}
+                    onChange={(event, value) => {
+                      setFieldValue('closingDate', value);
+                    }}
                     style={{ width: '100%', marginBottom: 16 }}
                   />
                 </View>
@@ -222,7 +230,10 @@ export const AddDeal = ({ modalVisible, setModalVisible }) => {
                     onChangeText={handleChange('inspectorPhone')}
                     style={{ marginTop: 8 }}
                   />
-                  <FormErrorMessage error={errors.inspectorPhone} visible={touched.inspectorPhone} />
+                  <FormErrorMessage
+                    error={errors.inspectorPhone}
+                    visible={touched.inspectorPhone}
+                  />
                 </View>
                 <View style={{ marginBottom: 16 }}>
                   <Input
@@ -288,61 +299,68 @@ export const AddDeal = ({ modalVisible, setModalVisible }) => {
 
 export const ClientScreen = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
-	const [userDeals, setUserDeals] = useState([]);
+  const [userDeals, setUserDeals] = useState([]);
+  const [formData, setFormData] = useState();
 
-	useEffect(() => {
-		const fetchDeals = async () => {
-			const userAuth = getAuth();
-			const { uid } = userAuth.currentUser;
+  useEffect(() => {
+    const fetchDeals = async () => {
+      const userAuth = getAuth();
+      const { uid } = userAuth.currentUser;
 
-			const docRef = await doc(db, 'users', uid);
-			const docSnap = await getDoc(docRef);
+      const docRef = await doc(db, 'users', uid);
+      const docSnap = await getDoc(docRef);
 
-			if (docSnap.exists()) {
-				const userDoc = docSnap.data();
+      if (docSnap.exists()) {
+        const userDoc = docSnap.data();
 
-				if (userDoc.deals) {
-					setUserDeals(userDoc.deals);
-				}
-			}
-		};
+        if (userDoc.deals) {
+          setUserDeals(userDoc.deals);
+        }
+      }
+    };
 
-		fetchDeals();
-	}, []);
+    fetchDeals();
+  }, []);
 
   const renderItemHeader = (headerProps, item) => {
-    return <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-      <Text category="h6" {...headerProps} status="info">
-        {item.address}
-      </Text>
-      <View style={{ display: 'flex', flexDirection: 'row' }}>
-        <Icon
-          {...headerProps}
-          name="pencil-square-o"
-          size={24}
-          onPress={() => {
-            console.log('edit item');
-          }}
-        />
-        <Icon
-          {...headerProps}
-          name="trash"
-          size={24}
-          color="red"
-          onPress={() => {
-            console.log('delete item');
-          }}
-        />
+    return (
+      <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+        <Text category="h6" {...headerProps} status="info">
+          {item.address}
+        </Text>
+        <View style={{ display: 'flex', flexDirection: 'row' }}>
+          <Icon
+            {...headerProps}
+            name="pencil-square-o"
+            size={24}
+            onPress={() => {
+              setFormData(item);
+              setModalVisible(true);
+            }}
+          />
+          <Icon
+            {...headerProps}
+            name="trash"
+            size={24}
+            color="red"
+            onPress={async () => {
+              const userAuth = getAuth();
+              const { uid } = userAuth.currentUser;
+              const docRef = await doc(db, 'users', uid);
+              const filterDeals = userDeals.filter((deal) => deal.id !== item.id);
+              await updateDoc(docRef, { deals: filterDeals });
+            }}
+          />
+        </View>
       </View>
-    </View>
-	};
+    );
+  };
 
   const renderItemFooter = (footerProps, item) => {
-		console.log("whats this", item);
-		const duration = moment.duration(item.closingDate.seconds, 'seconds');
-		const formattedDate = moment(duration).format('MM-DD-YYYY');
+    const duration = moment.duration(item.closingDate.seconds, 'seconds');
+    const formattedDate = moment(duration).format('MM-DD-YYYY');
 
-		return (
+    return (
       <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
         <Text {...footerProps}>Status: {item.status}</Text>
         <Text {...footerProps}>Closing: {formattedDate}</Text>
@@ -351,6 +369,9 @@ export const ClientScreen = (props) => {
   };
 
   const rightItem = (tel: string) => {
+    if (!tel) {
+      return null;
+    }
     return (
       <View style={{ display: 'flex', flexDirection: 'row' }}>
         <Icon
@@ -374,16 +395,6 @@ export const ClientScreen = (props) => {
     );
   };
 
-  const renderItem2 = ({ item, index }) => {
-    return (
-      <ListItem
-        title={item.clientName}
-        description={item.clientPhone}
-        accessoryRight={() => rightItem(item.clientPhone)}
-      />
-    );
-  };
-
   const renderItem = (item) => {
     return (
       <Card
@@ -391,7 +402,38 @@ export const ClientScreen = (props) => {
         header={(headerProps) => renderItemHeader(headerProps, item.item)}
         footer={(footerProps) => renderItemFooter(footerProps, item.item)}
       >
-				{/*<List data={item.item.data} ItemSeparatorComponent={Divider} renderItem={renderItem2} />*/}
+        <ListItem
+          title={item.item.clientName}
+          description="Client"
+          accessoryRight={() => rightItem(item.item.clientPhone)}
+        />
+        <Divider />
+        <ListItem
+          title={item.item.agentName}
+          description="Agent"
+          accessoryRight={() => rightItem(item.item.agentPhone)}
+        />
+        <Divider />
+
+        <ListItem
+          title={item.item.lenderName}
+          description="Lender"
+          accessoryRight={() => rightItem(item.item.lenderPhone)}
+        />
+        <Divider />
+
+        <ListItem
+          title={item.item.titleName}
+          description="Title"
+          accessoryRight={() => rightItem(item.item.titlePhone)}
+        />
+        <Divider />
+
+        <ListItem
+          title={item.item.inspectorName}
+          description="Inspector"
+          accessoryRight={() => rightItem(item.item.inspectorPhone)}
+        />
       </Card>
     );
   };
@@ -399,21 +441,24 @@ export const ClientScreen = (props) => {
   return (
     <Layout style={{ flex: 1 }}>
       <View>
-        <AddDeal modalVisible={modalVisible} setModalVisible={setModalVisible} />
+        <AddDeal
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          formData={formData}
+        />
         <Icon
           name="plus-circle"
           size={24}
           onPress={() => {
             setModalVisible(true);
+            setFormData(undefined);
           }}
           style={{ textAlign: 'right', marginRight: 16, padding: 8 }}
         />
       </View>
-      {userDeals && userDeals.length > 0 && <List
-        data={userDeals}
-        ItemSeparatorComponent={Divider}
-        renderItem={renderItem}
-      />}
+      {userDeals && userDeals.length > 0 && (
+        <List data={userDeals} ItemSeparatorComponent={Divider} renderItem={renderItem} />
+      )}
     </Layout>
   );
 };
