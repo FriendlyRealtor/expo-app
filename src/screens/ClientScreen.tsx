@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Layout, Text, List, ListItem, Divider, Card, Input } from '@ui-kitten/components';
 import { View, Modal, Alert, StyleSheet, Pressable, ScrollView } from 'react-native';
 import * as Linking from 'expo-linking';
@@ -13,6 +13,7 @@ import { db } from '../config';
 import { getAuth } from 'firebase/auth';
 import _ from 'lodash';
 import uuid from 'react-native-uuid';
+import moment from 'moment';
 
 export const AddDeal = ({ modalVisible, setModalVisible }) => {
   const styles = StyleSheet.create({
@@ -82,6 +83,7 @@ export const AddDeal = ({ modalVisible, setModalVisible }) => {
       titlePhone: '',
       lenderName: '',
       lenderPhone: '',
+			status: 'active',
     },
     onSubmit: (submitValues) => {
       handleAddDeal(submitValues);
@@ -98,6 +100,7 @@ export const AddDeal = ({ modalVisible, setModalVisible }) => {
 
 		const uniqueId = uuid.v4();
 		data.id = uniqueId;
+		data.status = 'active';
 
 		if (docSnap.exists()) {
 			const firebaseData = docSnap.data();
@@ -285,11 +288,32 @@ export const AddDeal = ({ modalVisible, setModalVisible }) => {
 
 export const ClientScreen = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
+	const [userDeals, setUserDeals] = useState([]);
 
-  const renderItemHeader = (headerProps, item) => (
-    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+	useEffect(() => {
+		const fetchDeals = async () => {
+			const userAuth = getAuth();
+			const { uid } = userAuth.currentUser;
+
+			const docRef = await doc(db, 'users', uid);
+			const docSnap = await getDoc(docRef);
+
+			if (docSnap.exists()) {
+				const userDoc = docSnap.data();
+
+				if (userDoc.deals) {
+					setUserDeals(userDoc.deals);
+				}
+			}
+		};
+
+		fetchDeals();
+	}, []);
+
+  const renderItemHeader = (headerProps, item) => {
+    return <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
       <Text category="h6" {...headerProps} status="info">
-        {item.item.address}
+        {item.address}
       </Text>
       <View style={{ display: 'flex', flexDirection: 'row' }}>
         <Icon
@@ -311,13 +335,17 @@ export const ClientScreen = (props) => {
         />
       </View>
     </View>
-  );
+	};
 
   const renderItemFooter = (footerProps, item) => {
-    return (
+		console.log("whats this", item);
+		const duration = moment.duration(item.closingDate.seconds, 'seconds');
+		const formattedDate = moment(duration).format('MM-DD-YYYY');
+
+		return (
       <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Text {...footerProps}>Status: {item.item.status}</Text>
-        <Text {...footerProps}>Closing: {item.item.closingDate}</Text>
+        <Text {...footerProps}>Status: {item.status}</Text>
+        <Text {...footerProps}>Closing: {formattedDate}</Text>
       </View>
     );
   };
@@ -349,9 +377,9 @@ export const ClientScreen = (props) => {
   const renderItem2 = ({ item, index }) => {
     return (
       <ListItem
-        title={item.name}
-        description={item.type}
-        accessoryRight={() => rightItem(item.tel)}
+        title={item.clientName}
+        description={item.clientPhone}
+        accessoryRight={() => rightItem(item.clientPhone)}
       />
     );
   };
@@ -360,10 +388,10 @@ export const ClientScreen = (props) => {
     return (
       <Card
         status="basic"
-        header={(headerProps) => renderItemHeader(headerProps, item)}
-        footer={(footerProps) => renderItemFooter(footerProps, item)}
+        header={(headerProps) => renderItemHeader(headerProps, item.item)}
+        footer={(footerProps) => renderItemFooter(footerProps, item.item)}
       >
-        <List data={item.item.data} ItemSeparatorComponent={Divider} renderItem={renderItem2} />
+				{/*<List data={item.item.data} ItemSeparatorComponent={Divider} renderItem={renderItem2} />*/}
       </Card>
     );
   };
@@ -381,108 +409,11 @@ export const ClientScreen = (props) => {
           style={{ textAlign: 'right', marginRight: 16, padding: 8 }}
         />
       </View>
-      <List
-        data={[
-          {
-            address: '123 main st',
-            closingDate: '10/19/2023',
-            status: 'active',
-            data: [
-              {
-                name: 'Montrell Jubilee',
-                tel: '2409064819',
-                type: 'client',
-              },
-              {
-                name: 'Lender 1',
-                tel: '2409064819',
-                type: 'lender',
-              },
-              {
-                name: 'Inspector 1',
-                tel: '2409064819',
-                type: 'inspector',
-              },
-              {
-                name: 'Title 1',
-                tel: '2409064819',
-                type: 'title',
-              },
-              {
-                name: 'Agent 1',
-                tel: '2409064819',
-                type: 'agent',
-              },
-            ],
-          },
-          {
-            address: '123 main st',
-            closingDate: '10/19/2023',
-            status: 'closed',
-            data: [
-              {
-                name: 'MOntrell Jubilee 2',
-                tel: '2409064819',
-                type: 'client',
-              },
-              {
-                name: 'Lender 2',
-                tel: '2409064819',
-                type: 'lender',
-              },
-              {
-                name: 'Inspector 2',
-                tel: '2409064819',
-                type: 'inspector',
-              },
-              {
-                name: 'Title 3',
-                tel: '2409064819',
-                type: 'title',
-              },
-              {
-                name: 'Agent 4',
-                tel: '2409064819',
-                type: 'agent',
-              },
-            ],
-          },
-          {
-            address: '12345 main st',
-            closingDate: '10/19/2023',
-            status: 'decline',
-            data: [
-              {
-                name: 'MOntrell Jubilee 3',
-                tel: '2409064819',
-                type: 'client',
-              },
-              {
-                name: 'Lender 3',
-                tel: '2409064819',
-                type: 'lender',
-              },
-              {
-                name: 'Inspector 3',
-                tel: '2409064819',
-                type: 'inspector',
-              },
-              {
-                name: 'Title 3',
-                tel: '2409064819',
-                type: 'title',
-              },
-              {
-                name: 'Agent 3',
-                tel: '2409064819',
-                type: 'agent',
-              },
-            ],
-          },
-        ]}
+      {userDeals && userDeals.length > 0 && <List
+        data={userDeals}
         ItemSeparatorComponent={Divider}
         renderItem={renderItem}
-      />
+      />}
     </Layout>
   );
 };
