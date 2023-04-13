@@ -33,6 +33,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { AppStore } from '../stores/AppStore';
 import { useIsFocused } from '@react-navigation/native';
 import _ from 'lodash';
+import Constants from "expo-constants"
+import * as Device from 'expo-device';
 
 export const SettingScreen = () => {
   const styles = useStyleSheet(themedStyles);
@@ -328,6 +330,16 @@ export const SettingScreen = () => {
               style={{ width: 200, marginBottom: 24 }}
             />
           </View>
+					<Divider style={styles.divider} />
+					<View style={styles.flexRow}>
+            <Text category="label">App Version</Text>
+						<Text>{Constants.manifest.version}</Text>
+          </View>
+					<Divider style={styles.divider} />
+					{Device.osVersion && <View style={styles.flexRow}>
+            <Text category="label">Ios Version</Text>
+            <Text>{Device.osVersion}</Text>
+          </View>}
         </Layout>
         {localCmaRows && _.size(localCmaRows) > 0 ? (
           <View>
