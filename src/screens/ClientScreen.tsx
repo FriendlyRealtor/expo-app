@@ -71,18 +71,40 @@ export const AddDeal = ({ modalVisible, setModalVisible, formData }) => {
   const userAuth = getAuth();
   const { values, touched, errors, setFieldValue, handleChange, handleSubmit, resetForm } =
     useFormik({
-      onSubmit: (submitValues) => {
-        handleAddDeal(submitValues);
+      onSubmit: async (submitValues) => {
+        if (formData && formData.id) {
+          const { uid } = userAuth.currentUser;
+          const docRef = await doc(db, 'users', uid);
+          const docSnap = await getDoc(docRef);
+
+          if (docSnap.exists()) {
+            const firebaseData = docSnap.data();
+            const docIndex = firebaseData.deals.findIndex((deal) => deal.id === formData.id);
+            const updatedDeals = firebaseData.deals.filter((deal) => deal.id !== formData.id);
+            updatedDeals.splice(1, docIndex, submitValues);
+            if (docRef) {
+              await updateDoc(docRef, { deals: updatedDeals });
+              resetForm();
+              setModalVisible(false);
+            }
+          }
+        } else {
+          handleAddDeal(submitValues);
+        }
       },
     });
 
   useEffect(() => {
-		if (formData && formData.closingDate) {
-		}
+    if (formData && formData.closingDate) {
+    }
     resetForm({
       values: {
+        id: formData && formData.id ? formData.id : uuid.v4(),
         address: formData && formData.address ? formData.address : '',
-        closingDate: formData && formData.closingDate ? (moment.utc(formData.closingDate.seconds*1000)).toDate() : new Date(),
+        closingDate:
+          formData && formData.closingDate
+            ? moment.utc(formData.closingDate.seconds * 1000).toDate()
+            : new Date(),
         clientName: formData && formData.clientName ? formData.clientName : '',
         clientPhone: formData && formData.clientPhone ? formData.clientPhone : '',
         agentName: formData && formData.agentName ? formData.agentName : '',
@@ -106,8 +128,6 @@ export const AddDeal = ({ modalVisible, setModalVisible, formData }) => {
     const docRef = await doc(db, 'users', uid);
     const docSnap = await getDoc(docRef);
 
-    const uniqueId = uuid.v4();
-    data.id = uniqueId;
     data.status = 'active';
 
     if (docSnap.exists()) {
@@ -144,11 +164,7 @@ export const AddDeal = ({ modalVisible, setModalVisible, formData }) => {
           <Pressable onPress={() => setModalVisible(!modalVisible)} style={styles.close}>
             <Icon style={{ marginRight: 8 }} name="close" size={24} />
           </Pressable>
-          <Formik
-            initialValues={{ email: '' }}
-            validationSchema={passwordResetSchema}
-            onSubmit={(values) => handleAddDeal(values)}
-          >
+          <Formik validationSchema={passwordResetSchema}>
             {() => (
               <ScrollView style={{ width: '100%' }}>
                 <View style={{ marginBottom: 16 }}>
