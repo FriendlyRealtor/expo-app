@@ -14,6 +14,7 @@ import { getAuth } from 'firebase/auth';
 import _ from 'lodash';
 import uuid from 'react-native-uuid';
 import moment from 'moment';
+import { useIsFocused } from '@react-navigation/native';
 
 export const AddDeal = ({ modalVisible, setModalVisible, formData }) => {
   const styles = StyleSheet.create({
@@ -317,26 +318,29 @@ export const ClientScreen = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [userDeals, setUserDeals] = useState([]);
   const [formData, setFormData] = useState();
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    const fetchDeals = async () => {
-      const userAuth = getAuth();
-      const { uid } = userAuth.currentUser;
+    if (isFocused) {
+      const fetchDeals = async () => {
+        const userAuth = getAuth();
+        const { uid } = userAuth.currentUser;
 
-      const docRef = await doc(db, 'users', uid);
-      const docSnap = await getDoc(docRef);
+        const docRef = await doc(db, 'users', uid);
+        const docSnap = await getDoc(docRef);
 
-      if (docSnap.exists()) {
-        const userDoc = docSnap.data();
+        if (docSnap.exists()) {
+          const userDoc = docSnap.data();
 
-        if (userDoc.deals) {
-          setUserDeals(userDoc.deals);
+          if (userDoc.deals) {
+            setUserDeals(userDoc.deals);
+          }
         }
-      }
-    };
+      };
 
-    fetchDeals();
-  }, []);
+      fetchDeals();
+    }
+  }, [isFocused]);
 
   const renderItemHeader = (headerProps, item) => {
     return (

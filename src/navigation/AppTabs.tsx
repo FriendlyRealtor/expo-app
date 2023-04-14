@@ -37,7 +37,7 @@ export const AppTabs = (props) => {
           tabBarIcon: () => <Icon name="home" size={30} color="#02FDAA" />,
         }}
       />
-      {true && (
+      {activeSub && (
         <Tab.Screen
           name="Deals"
           component={ClientScreen}
