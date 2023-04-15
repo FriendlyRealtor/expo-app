@@ -117,7 +117,7 @@ export const LocalRestaurantScreen = (props) => {
             }}
           >
             <Icon style={styles.icon} fill="#FFE234" name="star" />
-            <Text>{rating}</Text>
+            <Text>test{rating}</Text>
           </View>
         </Layout>
       </TouchableOpacity>
