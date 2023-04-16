@@ -4,10 +4,10 @@ import { Formik, useFormik } from 'formik';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { View, TextInput, Text, Button, FormErrorMessage } from '../components';
-import { Colors, auth, db } from '../config';
-import { useTogglePasswordVisibility } from '../hooks';
-import { signupValidationSchema } from '../utils';
+import { View, TextInput, Text, Button, FormErrorMessage } from '../../components';
+import { Colors, auth, db } from '../../config';
+import { useTogglePasswordVisibility } from '../../hooks';
+import { signupValidationSchema } from '../../utils';
 
 export const SignupScreen = ({ navigation }) => {
   const { values, touched, errors, handleChange, handleSubmit, handleBlur, resetForm } = useFormik({
@@ -58,7 +58,7 @@ export const SignupScreen = ({ navigation }) => {
     <View isSafe style={styles.container}>
       <KeyboardAwareScrollView enableOnAndroid={true}>
         <View style={styles.logoContainer}>
-          <Image source={require('../../assets/icon.png')} style={{ width: 250, height: 250 }} />
+          <Image source={require('../../../assets/icon.png')} style={{ width: 250, height: 250 }} />
           <Text style={styles.screenTitle}>Create Account!</Text>
         </View>
         <Formik validationSchema={signupValidationSchema}>

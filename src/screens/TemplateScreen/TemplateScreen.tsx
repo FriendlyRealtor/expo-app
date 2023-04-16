@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Layout, Card } from '@ui-kitten/components';
-import { Button, Text } from '../components';
+import { Button, Text } from '../../components';
 import { getAuth } from 'firebase/auth';
 import Purchases, { PurchasesPackage } from 'react-native-purchases';
 import Pdf from 'react-native-pdf';
 import { StatusBar } from 'expo-status-bar';
-import { storage } from '../config';
+import { storage } from '../../config';
 import { ref, getDownloadURL, listAll } from 'firebase/storage';
-import { TemplateScreenStyles } from './TemplateScreen/TemplateScreenStyles';
+import { TemplateScreenStyles } from './TemplateScreenStyles';
 import { SafeAreaView, ScrollView, View, Alert, Modal, Pressable, StyleSheet } from 'react-native';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/FontAwesome';

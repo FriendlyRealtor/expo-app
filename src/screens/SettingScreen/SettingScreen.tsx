@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback, useContext } from 'react';
 import { View } from 'react-native';
 import { getAuth, signOut } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
-import { auth, db, storage } from '../config';
+import { auth, db, storage } from '../../config';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {
   Layout,
@@ -13,7 +13,7 @@ import {
   ListItem,
   Input,
 } from '@ui-kitten/components';
-import { Button, Container, FormErrorMessage, Text } from '../components';
+import { Button, Container, FormErrorMessage, Text } from '../../components';
 import {
   Extrapolate,
   interpolate,
@@ -22,14 +22,14 @@ import {
   useSharedValue,
 } from 'react-native-reanimated';
 import { ProgressBar } from 'react-native-paper';
-import { useLayout } from '../hooks';
-import { AuthenticatedUserContext } from '../providers';
-import { User } from '../providers/types';
+import { useLayout } from '../../hooks';
+import { AuthenticatedUserContext } from '../../providers';
+import { User } from '../../providers/types';
 import * as ImagePicker from 'expo-image-picker';
 import moment from 'moment';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { AppStore } from '../stores/AppStore';
+import { AppStore } from '../../stores/AppStore';
 import { useIsFocused } from '@react-navigation/native';
 import _ from 'lodash';
 import Constants from 'expo-constants';

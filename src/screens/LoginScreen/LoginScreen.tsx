@@ -4,10 +4,10 @@ import { Formik, useFormik } from 'formik';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import { View, TextInput, Text, Button, FormErrorMessage } from '../components';
-import { Colors, auth } from '../config';
-import { useTogglePasswordVisibility } from '../hooks';
-import { loginValidationSchema } from '../utils';
+import { View, TextInput, Text, Button, FormErrorMessage } from '../../components';
+import { Colors, auth } from '../../config';
+import { useTogglePasswordVisibility } from '../../hooks';
+import { loginValidationSchema } from '../../utils';
 
 export const LoginScreen = ({ navigation }) => {
   const { values, touched, errors, handleChange, handleSubmit, resetForm } = useFormik({
@@ -51,7 +51,7 @@ export const LoginScreen = ({ navigation }) => {
     <View isSafe style={styles.container}>
       <KeyboardAwareScrollView>
         <View style={styles.logoContainer}>
-          <Image source={require('../../assets/icon.png')} style={{ width: 250, height: 250 }} />
+          <Image source={require('../../../assets/icon.png')} style={{ width: 250, height: 250 }} />
           <Text style={styles.screenTitle}>Friendly Realtor</Text>
         </View>
         <Formik validationSchema={loginValidationSchema}>
