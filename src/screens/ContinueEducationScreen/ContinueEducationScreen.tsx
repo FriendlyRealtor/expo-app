@@ -3,9 +3,9 @@ import { View, StyleSheet, SafeAreaView, StatusBar, ScrollView } from 'react-nat
 import _ from 'lodash';
 import { Video } from 'expo-av';
 import { ref, getDownloadURL, listAll } from 'firebase/storage';
-import { storage } from '../config';
+import { storage } from '../../config';
 import uuid from 'react-native-uuid';
-import { Loading, Text } from '../components';
+import { Loading, Text } from '../../components';
 
 export const ContinueEducationScreen = () => {
   const styles = StyleSheet.create({

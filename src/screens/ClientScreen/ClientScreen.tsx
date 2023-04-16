@@ -3,13 +3,13 @@ import { Layout, List, ListItem, Divider, Card, Input } from '@ui-kitten/compone
 import { View, Modal, Alert, StyleSheet, Pressable, ScrollView } from 'react-native';
 import * as Linking from 'expo-linking';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Button } from '../components';
+import { Button } from '../../components';
 import { Formik, useFormik } from 'formik';
-import { passwordResetSchema } from '../utils';
-import { FormErrorMessage, Text } from '../components';
+import { passwordResetSchema } from '../../utils';
+import { FormErrorMessage, Text } from '../../components';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { db } from '../config';
+import { db } from '../../config';
 import { getAuth } from 'firebase/auth';
 import _ from 'lodash';
 import uuid from 'react-native-uuid';

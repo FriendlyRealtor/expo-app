@@ -7,7 +7,7 @@ import Pdf from 'react-native-pdf';
 import { StatusBar } from 'expo-status-bar';
 import { storage } from '../config';
 import { ref, getDownloadURL, listAll } from 'firebase/storage';
-import { TemplateScreenStyles } from '../../styles';
+import { TemplateScreenStyles } from './TemplateScreen/TemplateScreenStyles';
 import { SafeAreaView, ScrollView, View, Alert, Modal, Pressable, StyleSheet } from 'react-native';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/FontAwesome';

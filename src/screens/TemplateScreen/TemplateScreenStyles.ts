@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {Colors} from '../src/config';
+import {Colors} from '../../config';
 
 export const TemplateScreenStyles = StyleSheet.create({
   animationContainer: {
