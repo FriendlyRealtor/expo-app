@@ -1,6 +1,6 @@
 import { LoginScreen } from './LoginScreen';
 import { SignupScreen } from './SignupScreen';
-import { HomeScreen } from './HomeScreen';
+import { HomeScreen } from './HomeScreen/HomeScreen';
 import { ForgotPasswordScreen } from './ForgotPasswordScreen';
 import { SettingScreen } from './SettingScreen';
 import { LocalRestaurantScreen } from './LocalRestaurantScreen';

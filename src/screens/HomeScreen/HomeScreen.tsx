@@ -1,22 +1,22 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
-import { TextInput, Text, FormErrorMessage } from '../components';
+import { TextInput, Text, FormErrorMessage } from '../../components';
 import axios from 'axios';
-import { numberWithCommas } from '../utils';
+import { numberWithCommas } from '../../utils';
 import { Formik, useFormik } from 'formik';
-import { locationValidationSchema } from '../utils';
+import { locationValidationSchema } from '../../utils';
 import { Layout, Divider } from '@ui-kitten/components';
-import { Button } from '../components';
+import { Button } from '../../components';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Constants from 'expo-constants';
 import _ from 'lodash';
 import uuid from 'react-native-uuid';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { db } from '../config';
+import { db } from '../../config';
 import { getAuth } from 'firebase/auth';
-import { HomeScreenStyles } from '../../styles';
+import { HomeScreenStyles } from './HomeScreenStyles';
 
 export const HomeScreen = () => {
   const isFocused = useIsFocused();
