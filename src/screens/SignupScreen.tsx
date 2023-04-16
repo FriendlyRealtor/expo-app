@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Image, TouchableOpacity, Linking } from 'react-native';
-import { Formik } from 'formik';
+import { Formik, useFormik } from 'formik';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -11,6 +11,20 @@ import { useTogglePasswordVisibility } from '../hooks';
 import { signupValidationSchema } from '../utils';
 
 export const SignupScreen = ({ navigation }) => {
+  const { values, touched, errors, handleChange, handleSubmit, handleBlur, resetForm } = useFormik({
+    initialValues: {
+      firstName: '',
+      lastName: '',
+      userName: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+    },
+    onSubmit: (values) => {
+      handleSignup(values);
+    },
+  });
+
   const [errorState, setErrorState] = useState('');
 
   const {
@@ -48,19 +62,8 @@ export const SignupScreen = ({ navigation }) => {
           <Image source={require('../../assets/icon.png')} style={{ width: 250, height: 250 }} />
           <Text style={styles.screenTitle}>Create Account!</Text>
         </View>
-        {/* Formik Wrapper */}
-        <Formik
-          initialValues={{
-            firstName: '',
-            lastName: '',
-            email: '',
-            password: '',
-            confirmPassword: '',
-          }}
-          validationSchema={signupValidationSchema}
-          onSubmit={(values) => handleSignup(values)}
-        >
-          {({ values, touched, errors, handleChange, handleSubmit, handleBlur }) => (
+        <Formik validationSchema={signupValidationSchema}>
+          {() => (
             <>
               <TextInput
                 name="firstName"
@@ -81,6 +84,15 @@ export const SignupScreen = ({ navigation }) => {
                 onBlur={handleBlur('lastName')}
               />
               <FormErrorMessage error={errors.lastName} visible={touched.lastName} />
+              <TextInput
+                name="username"
+                placeholder="User Name"
+                autoCapitalize="none"
+                value={values.userName}
+                onChangeText={handleChange('userName')}
+                onBlur={handleBlur('userName')}
+              />
+              <FormErrorMessage error={errors.userName} visible={touched.userName} />
               <TextInput
                 name="email"
                 leftIconName="email"
@@ -134,7 +146,12 @@ export const SignupScreen = ({ navigation }) => {
                     )
                   }
                 >
-                  <Text category="label" appearance="hint" status="info" style={{ marginTop: 22 }}>
+                  <Text
+                    category="label"
+                    appearance="hint"
+                    status="info"
+                    style={{ marginHorizontal: 5, marginTop: 22 }}
+                  >
                     Terms of Service
                   </Text>
                 </TouchableOpacity>
@@ -184,7 +201,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: '700',
     color: Colors.black,
-    paddingTop: 20,
+    fontFamily: 'Ubuntu',
   },
   button: {
     width: '100%',
@@ -200,6 +217,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: Colors.white,
     fontWeight: '700',
+    fontFamily: 'Ubuntu',
   },
   borderlessButtonContainer: {
     alignItems: 'center',

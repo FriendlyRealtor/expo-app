@@ -35,7 +35,8 @@ export const ContinueEducationScreen = () => {
           // All the items under listRef.
           getDownloadURL(ref(storage, itemRef.fullPath))
             .then((url) => {
-              setCourses((prev) => [...prev, url]);
+							const appendCourses = [...courses, url];
+              setCourses(appendCourses);
               setLoading(false);
             })
             .catch((error) => {
@@ -61,7 +62,7 @@ export const ContinueEducationScreen = () => {
             Search for courses below.
           </Text>
         </View>
-        {courses.map((res) => {
+        {!!courses.length && courses.map((res) => {
           const key = uuid.v4();
           return (
             <Video

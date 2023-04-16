@@ -9,6 +9,7 @@ import {ApplicationProvider, IconRegistry} from '@ui-kitten/components';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
 
 const App = () => {
+
   return (
     <AuthenticatedUserProvider>
       <SafeAreaProvider>

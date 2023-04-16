@@ -1,9 +1,10 @@
-import React, { useState, createContext } from 'react';
+import React, { ReactNode, useState, createContext } from 'react';
+import { User } from './types';
 
-export const AuthenticatedUserContext = createContext({});
+export const AuthenticatedUserContext = createContext<User | undefined>({});
 
-export const AuthenticatedUserProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+export const AuthenticatedUserProvider = ({ children }: { children: ReactNode }) => {
+  const [user, setUser] = useState<User | undefined>(undefined);
 
   return (
     <AuthenticatedUserContext.Provider value={{ user, setUser }}>

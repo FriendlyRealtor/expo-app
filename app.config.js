@@ -6,7 +6,7 @@ export default {
     slug: 'friendlyrealtor',
     privacy: 'unlisted',
     platforms: ['ios'],
-    version: '0.15.2',
+    version: '0.15.13',
     orientation: 'portrait',
     owner: 'jubileeinvestments',
     icon: './assets/logo.png',
@@ -17,7 +17,7 @@ export default {
     ios: {
       supportsTablet: true,
       bundleIdentifier: 'jubileeinvestments.Real-Estate-App',
-      buildNumber: '12',
+      buildNumber: '2',
       config: {
         usesNonExemptEncryption: false,
       },
@@ -29,6 +29,7 @@ export default {
       storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
       messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
       appId: process.env.FIREBASE_APP_ID,
+			purchaseApiKey: process.env.PURCHASE_API_KEY,
       serverUrl: process.env.SERVER_URL,
       eas: {
         projectId: process.env.EAS_PROJECT_ID,
@@ -58,6 +59,12 @@ export default {
             'Allow $(PRODUCT_NAME) to accesses your camera to let you share them with your friends.',
         },
       ],
+			[
+				'@config-plugins/react-native-pdf',
+			],
+			[
+				'@config-plugins/react-native-blob-util',
+			],
     ],
   },
 };
