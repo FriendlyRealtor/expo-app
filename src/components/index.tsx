@@ -15,7 +15,7 @@ import NavigationAction from './NavigationAction';
 export {
   Loading,
   View,
-	Divider,
+  Divider,
   TextInput,
   Container,
   Text,

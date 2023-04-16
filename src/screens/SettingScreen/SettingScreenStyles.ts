@@ -7,10 +7,15 @@ export const SettingScreenStyles = StyleSheet.create({
     paddingTop: 0,
   },
   flexRow: {
+    display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-		paddingVertical: 8,
+    alignItems: 'center',
+    paddingVertical: 8,
   },
+	input: {
+		width: 200,
+	},
   top: {
     borderBottomLeftRadius: 24,
     borderBottomRightRadius: 24,
@@ -22,7 +27,7 @@ export const SettingScreenStyles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 12,
     marginHorizontal: 24,
-		backgroundColor: Colors.lightGray,
+    backgroundColor: Colors.lightGray,
   },
   item: {
     flexDirection: 'row',

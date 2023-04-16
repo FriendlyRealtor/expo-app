@@ -4,14 +4,7 @@ import { getAuth, signOut } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
 import { auth, db, storage } from '../../config';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {
-  Layout,
-  StyleService,
-  useStyleSheet,
-  List,
-  ListItem,
-  Input,
-} from '@ui-kitten/components';
+import { Layout, StyleService, useStyleSheet, List, ListItem, Input } from '@ui-kitten/components';
 import { Button, Divider, Container, FormErrorMessage, Text } from '../../components';
 import {
   Extrapolate,
@@ -284,14 +277,14 @@ export const SettingScreen = () => {
           <Divider />
           <View style={styles.flexRow}>
             <Text category="label">Bio</Text>
-            <Input
-              placeholder="Place enter bio"
-              value={bio}
-              onChangeText={(nextValue) => setBio(nextValue)}
-              onBlur={() => updateProfileBio()}
-              size="small"
-              style={{ width: 200, marginBottom: 24 }}
-            />
+						<Input
+							placeholder="Place enter bio"
+							value={bio}
+							onChangeText={(nextValue) => setBio(nextValue)}
+							onBlur={() => updateProfileBio()}
+							size="small"
+							style={styles.input}
+						/>
           </View>
           <Divider />
           <View style={styles.flexRow}>
@@ -302,7 +295,7 @@ export const SettingScreen = () => {
               onChangeText={(nextValue) => setLocations(nextValue)}
               onBlur={() => updateServiceLocation()}
               size="small"
-              style={{ width: 200, marginBottom: 24 }}
+              style={styles.input}
             />
           </View>
           <Divider />
@@ -337,6 +330,7 @@ export const SettingScreen = () => {
               <Text>{Device.osVersion}</Text>
             </View>
           )}
+          {Device.osVersion && <Divider />}
           <View style={styles.flexRow}>
             <Text category="label">Delete Account</Text>
             <Button onPress={() => console.log('dete account')}>
