@@ -8,9 +8,9 @@ import {
   Platform,
   StyleSheet,
 } from 'react-native';
-import { Layout, Text, Icon } from '@ui-kitten/components';
+import { Layout, Icon } from '@ui-kitten/components';
 import Constants from 'expo-constants';
-import { Loading } from '../components';
+import { Loading, Text } from '../components';
 import axios from 'axios';
 import _ from 'lodash';
 import * as Location from 'expo-location';

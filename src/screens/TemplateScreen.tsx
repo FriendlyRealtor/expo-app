@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { Layout, Text, Card } from '@ui-kitten/components';
-import { Button } from '../components';
+import { Layout, Card } from '@ui-kitten/components';
+import { Button, Text } from '../components';
 import { getAuth } from 'firebase/auth';
 import Purchases, { PurchasesPackage } from 'react-native-purchases';
 import Pdf from 'react-native-pdf';

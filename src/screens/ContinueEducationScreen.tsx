@@ -5,8 +5,7 @@ import { Video } from 'expo-av';
 import { ref, getDownloadURL, listAll } from 'firebase/storage';
 import { storage } from '../config';
 import uuid from 'react-native-uuid';
-import { Loading } from '../components';
-import { Text } from '@ui-kitten/components';
+import { Loading, Text } from '../components';
 
 export const ContinueEducationScreen = () => {
   const styles = StyleSheet.create({

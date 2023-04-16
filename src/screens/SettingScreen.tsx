@@ -8,13 +8,12 @@ import {
   Layout,
   StyleService,
   useStyleSheet,
-  Text,
   Divider,
   List,
   ListItem,
   Input,
 } from '@ui-kitten/components';
-import { Button, Container, FormErrorMessage } from '../components';
+import { Button, Container, FormErrorMessage, Text } from '../components';
 import {
   Extrapolate,
   interpolate,

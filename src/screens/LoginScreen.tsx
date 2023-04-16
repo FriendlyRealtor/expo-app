@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Text, StyleSheet, Image } from 'react-native';
+import { StyleSheet, Image } from 'react-native';
 import { Formik, useFormik } from 'formik';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import { View, TextInput, Button, FormErrorMessage } from '../components';
+import { View, TextInput, Text, Button, FormErrorMessage } from '../components';
 import { Colors, auth } from '../config';
 import { useTogglePasswordVisibility } from '../hooks';
 import { loginValidationSchema } from '../utils';

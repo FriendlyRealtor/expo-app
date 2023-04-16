@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
-import { TextInput, FormErrorMessage } from '../components';
+import { TextInput, Text, FormErrorMessage } from '../components';
 import axios from 'axios';
 import { numberWithCommas } from '../utils';
 import { Formik, useFormik } from 'formik';
 import { locationValidationSchema } from '../utils';
-import { Layout, Text, Divider } from '@ui-kitten/components';
+import { Layout, Divider } from '@ui-kitten/components';
 import { Button } from '../components';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Colors } from '../config';

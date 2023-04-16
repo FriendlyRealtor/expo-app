@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Layout, Text, List, ListItem, Divider, Card, Input } from '@ui-kitten/components';
+import { Layout, List, ListItem, Divider, Card, Input } from '@ui-kitten/components';
 import { View, Modal, Alert, StyleSheet, Pressable, ScrollView } from 'react-native';
 import * as Linking from 'expo-linking';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Button } from '../components';
 import { Formik, useFormik } from 'formik';
 import { passwordResetSchema } from '../utils';
-import { FormErrorMessage } from '../components';
+import { FormErrorMessage, Text } from '../components';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../config';
