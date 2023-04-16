@@ -1,4 +1,5 @@
 import {SplashScreenStyles} from './SplashScreenStyles';
 import {TemplateScreenStyles} from './TemplateScreenStyles';
+import {HomeScreenStyles} from './HomeScreenStyles';
 
-export {SplashScreenStyles, TemplateScreenStyles};
+export {HomeScreenStyles, SplashScreenStyles, TemplateScreenStyles};

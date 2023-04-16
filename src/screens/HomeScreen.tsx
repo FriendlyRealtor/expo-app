@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { TextInput, Text, FormErrorMessage } from '../components';
 import axios from 'axios';
@@ -9,7 +9,6 @@ import { locationValidationSchema } from '../utils';
 import { Layout, Divider } from '@ui-kitten/components';
 import { Button } from '../components';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { Colors } from '../config';
 import Constants from 'expo-constants';
 import _ from 'lodash';
 import uuid from 'react-native-uuid';
@@ -17,61 +16,44 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../config';
 import { getAuth } from 'firebase/auth';
-import { AppStore } from '../stores/AppStore';
+import { HomeScreenStyles } from '../../styles';
 
 export const HomeScreen = () => {
   const isFocused = useIsFocused();
 
-  const styles = StyleSheet.create({
-    card: {
-      flex: 1,
-      margin: 2,
-    },
-    footerContainer: {
-      flexDirection: 'column',
-      justifyContent: 'flex-end',
-    },
-    button: {
-      width: '100%',
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: 10,
-      borderRadius: 8,
-      backgroundColor: '#02FDAA',
-      borderColor: '#02FDAA',
-    },
-    buttonText: {
-      fontSize: 20,
-      color: Colors.white,
-      fontWeight: '700',
-    },
-    layout: {
-      paddingHorizontal: 16,
-      paddingVertical: 32,
-      borderRadius: 12,
-    },
-    icon: {
-      width: 20,
-      height: 20,
-    },
-    divider: {
-      backgroundColor: 'background-basic-color-3',
-      marginVertical: 12,
-    },
-  });
+  const styles = HomeScreenStyles;
 
   const [errorState, setErrorState] = useState('');
   const userAuth = getAuth();
-  const store = new AppStore();
+  const [crmEstimate, setCrmEstimate] = useState(null);
+  const { handleChange, values, handleBlur, handleSubmit, resetForm } = useFormik({
+    initialValues: {
+      location: '',
+    },
+    onSubmit: () => {
+      getCrmValuation();
+    },
+  });
+
+  const { location } = values;
+
+  useEffect(() => {
+    resetForm({
+      values: {
+        location: '',
+      },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFocused]);
 
   const getCrmValuation = useCallback(
-    (location) => {
+    () => {
       const regex = /[,#-\/\s\!\@\$.....]/gi; // regex to test if valid street address
 
       if (regex.test(location)) {
         axios({
           method: 'get',
-          url: `${Constants.manifest.extra.serverUrl}/crm?location=${location}`,
+          url: `${Constants.manifest?.extra?.serverUrl}/crm?location=${location}`,
         })
           .then(async (response) => {
             if (response.data) {
@@ -123,42 +105,22 @@ export const HomeScreen = () => {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [location, Constants.manifest.extra.serverUrl],
+    [location, Constants.manifest?.extra?.serverUrl],
   );
 
-  const [crmEstimate, setCrmEstimate] = useState(0);
-  const { handleChange, values, handleBlur, handleSubmit, resetForm } = useFormik({
-    initialValues: {
-      location: '',
-    },
-    onSubmit: (values) => {
-      getCrmValuation(values.location);
-    },
-  });
-
-  useEffect(() => {
-    resetForm({
-      values: {
-        location: '',
-      },
-    });
-  }, [isFocused]);
-
-  const { location } = values;
-
   return (
-    <Layout style={{ flex: 1 }}>
-      <KeyboardAwareScrollView style={{ paddingHorizontal: 16 }}>
-        <Formik initialValues={{ location: '' }} validationSchema={locationValidationSchema}>
+    <Layout style={styles.layout}>
+      <KeyboardAwareScrollView style={styles.keyboard}>
+        <Formik validationSchema={locationValidationSchema}>
           <View style={styles.card}>
-            <View style={{ marginTop: 16 }}>
+            <View style={styles.crmHeader}>
               <Text category="h6">Get CRM Valuation on the go!</Text>
-              <Text category="s1" status="info" style={{ color: '#02FDAA' }}>
+              <Text category="s1" status="info" style={styles.search}>
                 Search for property by address.
               </Text>
             </View>
-            <View style={{ marginVertical: 15 }}>
-              <Text style={{ fontFamily: 'Ubuntu' }}>
+            <View style={styles.textArea}>
+              <Text>
                 A Comparative Market Analysis (CMA) is a crucial tool for real estate agents to
                 accurately price and sell properties. The importance of a good CMA cannot be
                 overstated, as it allows agents to provide their clients with a comprehensive
@@ -183,108 +145,68 @@ export const HomeScreen = () => {
               <Button style={styles.button} onPress={handleSubmit}>
                 <Text style={styles.buttonText}>Get Valuation</Text>
               </Button>
-              <Text style={{ margin: 2 }} appearance="hint">
+              <Text style={styles.hintText} appearance="hint">
                 Valuation is calculated by default 10 properties in the area.
               </Text>
             </View>
-            <Layout level="4" style={styles.layout}>
-              <Text
-                style={{
-                  textAlign: 'left',
-                  fontWeight: 'bold',
-                  padding: 8,
-                }}
-                category="h6"
-              >{`Estimated CMA value $${numberWithCommas(crmEstimate.price)}`}</Text>
-              <Divider style={styles.divider} />
-              <Text
-                style={{
-                  textAlign: 'left',
-                  fontWeight: 'bold',
-                  padding: 8,
-                }}
-                category="h6"
-              >{`CMA Price Low $${numberWithCommas(crmEstimate.priceRangeLow)}`}</Text>
-              <Divider style={styles.divider} />
-              <Text
-                style={{
-                  textAlign: 'left',
-                  fontWeight: 'bold',
-                  padding: 8,
-                }}
-                category="h6"
-              >{`CMA Price High $${numberWithCommas(crmEstimate.priceRangeHigh)}`}</Text>
-            </Layout>
+            {crmEstimate ? (
+              <Layout level="4" style={styles.layout}>
+                <Text
+                  style={styles.estimatedValue}
+                  category="h6"
+                >{`Estimated CMA value $${numberWithCommas(crmEstimate.price)}`}</Text>
+                <Divider />
+                <Text
+                  style={styles.estimatedValue}
+                  category="h6"
+                >{`CMA Price Low $${numberWithCommas(crmEstimate.priceRangeLow)}`}</Text>
+                <Divider />
+                <Text
+                  style={styles.estimatedValue}
+                  category="h6"
+                >{`CMA Price High $${numberWithCommas(crmEstimate.priceRangeHigh)}`}</Text>
+              </Layout>
+            ) : null}
 
-            {crmEstimate && crmEstimate.listings && _.size(crmEstimate.listings) ? (
-              <Layout level="4" style={{ ...styles.layout, marginTop: 20 }}>
-                <Text style={{ textAlign: 'center' }} category="h6">
+            {crmEstimate && crmEstimate.listings && _.size(crmEstimate.listings) && (
+              <Layout level="4" style={styles.layoutCrm}>
+                <Text style={styles.comparables} category="h6">
                   10 Comparables
                 </Text>
                 {crmEstimate.listings.map((listing, idx) => {
                   const key = uuid.v4();
                   return (
                     <View key={key}>
-                      <Text
-                        style={{
-                          textAlign: 'left',
-                          fontWeight: 'bold',
-                          paddingHorizontal: 8,
-                        }}
-                        category="h6"
-                      >
+                      <Text style={styles.formattedValue} category="h6">
                         {`${idx + 1}.) ${listing.formattedAddress}`}
                       </Text>
-                      <Divider style={styles.divider} />
-                      <View
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                        }}
-                      >
+                      <Divider />
+                      <View style={styles.estimateContainer}>
                         <Text
-                          style={{
-                            textAlign: 'left',
-                            fontWeight: 'bold',
-                            paddingHorizontal: 8,
-                          }}
+                          style={styles.estimatedValue}
                           appearance="hint"
                           status="info"
                           category="h6"
                         >{`Price $${numberWithCommas(listing.price)}`}</Text>
-                        <View
-                          style={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                          }}
-                        >
-                          <Icon style={{ marginRight: 8 }} name="bed" size={24} />
+                        <View style={styles.iconFlex}>
+                          <Icon style={styles.icon} name="bed" size={24} />
                           <Text status="info" appearance="hint">
                             {listing.bedrooms}
                           </Text>
                         </View>
-                        <View
-                          style={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                          }}
-                        >
-                          <Icon style={{ marginRight: 8 }} name="bath" size={24} />
+                        <View style={styles.iconFlex}>
+                          <Icon style={styles.icon} name="bath" size={24} />
                           <Text status="info" appearance="hint">
                             {listing.bathrooms}
                           </Text>
                         </View>
                       </View>
-                      <Divider style={styles.divider} />
+                      <Divider />
                     </View>
                   );
                 })}
               </Layout>
-            ) : null}
+            )}
           </View>
         </Formik>
       </KeyboardAwareScrollView>
