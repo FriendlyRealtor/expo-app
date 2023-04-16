@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-// import { Colors } from '../../config';
+import { Colors } from '../../config';
 
 export const SettingScreenStyles = StyleSheet.create({
   container: {
@@ -9,6 +9,7 @@ export const SettingScreenStyles = StyleSheet.create({
   flexRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+		paddingVertical: 8,
   },
   top: {
     borderBottomLeftRadius: 24,
@@ -21,6 +22,7 @@ export const SettingScreenStyles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 12,
     marginHorizontal: 24,
+		backgroundColor: Colors.lightGray,
   },
   item: {
     flexDirection: 'row',

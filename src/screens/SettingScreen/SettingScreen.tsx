@@ -255,8 +255,8 @@ export const SettingScreen = () => {
           </TouchableOpacity>
 				</Animated.View>*/}
       </Layout>
-      <View style={{ marginTop: 50 }}>
-        <Layout level="4" style={styles.layout}>
+      <Layout>
+        <View style={styles.layout}>
           <View style={styles.flexRow}>
             <Text category="label">Username</Text>
             <Text category="p1" style={{ marginTop: 16, fontFamily: 'Ubuntu' }}>
@@ -343,7 +343,7 @@ export const SettingScreen = () => {
               <Text>Delete</Text>
             </Button>
           </View>
-        </Layout>
+        </View>
         {localCmaRows && _.size(localCmaRows) > 0 ? (
           <View>
             <Text category="h6" style={{ marginTop: 24, textAlign: 'center' }}>
@@ -354,7 +354,7 @@ export const SettingScreen = () => {
             </View>
           </View>
         ) : null}
-      </View>
+      </Layout>
       {photoShow && (
         <ProgressBar style={{ marginBottom: 10 }} progress={photoProgress} color="#02FDAA" />
       )}
