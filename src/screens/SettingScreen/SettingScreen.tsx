@@ -34,9 +34,11 @@ import { useIsFocused } from '@react-navigation/native';
 import _ from 'lodash';
 import Constants from 'expo-constants';
 import * as Device from 'expo-device';
+import { SettingScreenStyles } from './SettingScreenStyles';
 
 export const SettingScreen = () => {
-  const styles = useStyleSheet(themedStyles);
+  const styles = SettingScreenStyles;
+
   const { user, setUser } = useContext<User>(AuthenticatedUserContext);
   const [photoShow, setPhotoShow] = useState(null);
   const [photoProgress, setPhotoProgress] = useState(0);
@@ -262,7 +264,7 @@ export const SettingScreen = () => {
               {user.username || ''}
             </Text>
           </View>
-          <Divider style={styles.divider} />
+          <Divider />
           <View style={styles.flexRow}>
             <Text category="label" style={{ marginTop: 16 }}>
               Name
@@ -271,7 +273,7 @@ export const SettingScreen = () => {
               {user.name || ''}
             </Text>
           </View>
-          <Divider style={styles.divider} />
+          <Divider />
           <View style={styles.flexRow}>
             <Text category="label">Email</Text>
             {userAuth.currentUser && userAuth.currentUser.email && (
@@ -280,7 +282,7 @@ export const SettingScreen = () => {
               </Text>
             )}
           </View>
-          <Divider style={styles.divider} />
+          <Divider />
           <View style={styles.flexRow}>
             <Text category="label">Bio</Text>
             <Input
@@ -292,7 +294,7 @@ export const SettingScreen = () => {
               style={{ width: 200, marginBottom: 24 }}
             />
           </View>
-          <Divider style={styles.divider} />
+          <Divider />
           <View style={styles.flexRow}>
             <Text category="label">Service Areas</Text>
             <Input
@@ -304,7 +306,7 @@ export const SettingScreen = () => {
               style={{ width: 200, marginBottom: 24 }}
             />
           </View>
-          <Divider style={styles.divider} />
+          <Divider />
           <View style={styles.flexRow}>
             <Text category="label">Renew Education License</Text>
             <DateTimePicker
@@ -317,19 +319,19 @@ export const SettingScreen = () => {
               style={{ width: 150, marginRight: 0, marginBottom: 16 }}
             />
           </View>
-          <Divider style={styles.divider} />
+          <Divider />
           <View style={styles.flexRow}>
             <Text category="label">Referral Link</Text>
             <Text
               style={{ fontSize: 10 }}
             >{`https://friendlyrealtor.app/profile/${user.username}`}</Text>
           </View>
-          <Divider style={styles.divider} />
+          <Divider />
           <View style={styles.flexRow}>
             <Text category="label">App Version</Text>
             <Text>{Constants.manifest.version}</Text>
           </View>
-          <Divider style={styles.divider} />
+          <Divider />
           {Device.osVersion && (
             <View style={styles.flexRow}>
               <Text category="label">Ios Version</Text>
@@ -368,39 +370,3 @@ export const SettingScreen = () => {
     </Container>
   );
 };
-
-const themedStyles = StyleService.create({
-  container: {
-    flex: 1,
-    paddingTop: 0,
-  },
-  flexRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  top: {
-    borderBottomLeftRadius: 24,
-    borderBottomRightRadius: 24,
-  },
-  textView: {
-    justifyContent: 'center',
-  },
-  layout: {
-    paddingHorizontal: 16,
-    borderRadius: 12,
-    marginHorizontal: 24,
-  },
-  item: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 16,
-    marginTop: 24,
-    justifyContent: 'space-between',
-    paddingRight: 16,
-    marginHorizontal: 24,
-  },
-  divider: {
-    backgroundColor: 'background-basic-color-3',
-    marginVertical: 12,
-  },
-});
