@@ -336,6 +336,12 @@ export const SettingScreen = () => {
               <Text>{Device.osVersion}</Text>
             </View>
           )}
+          <View style={styles.flexRow}>
+            <Text category="label">Delete Account</Text>
+            <Button onPress={() => console.log('dete account')}>
+              <Text>Delete</Text>
+            </Button>
+          </View>
         </Layout>
         {localCmaRows && _.size(localCmaRows) > 0 ? (
           <View>
