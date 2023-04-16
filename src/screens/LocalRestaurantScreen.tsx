@@ -124,7 +124,6 @@ export const LocalRestaurantScreen = (props) => {
     );
   };
 
-  console.log('here', loading);
   if (loading) {
     return <Loading />;
   }
