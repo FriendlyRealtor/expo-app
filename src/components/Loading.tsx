@@ -5,7 +5,7 @@ import { Layout, Text, Spinner } from '@ui-kitten/components';
 export const Loading = () => {
   const styles = StyleSheet.create({
     container: {
-      position: 'fixed',
+      position: 'relative',
       top: '50%',
       display: 'flex',
       flexDirection: 'row',
