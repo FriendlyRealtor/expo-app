@@ -42,7 +42,7 @@ export const LoginScreen = ({ navigation }) => {
             );
             break;
           default:
-            setErrorState('Error signing in! Contact support');
+            setErrorState(`Error signing in! Contact support ${error.message}`);
         }
       });
   };
