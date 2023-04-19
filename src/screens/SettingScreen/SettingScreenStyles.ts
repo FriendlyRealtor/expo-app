@@ -38,9 +38,9 @@ export const SettingScreenStyles = StyleSheet.create({
     borderRadius: 12,
     marginHorizontal: 24,
   },
-	listItem: {
-		maxHeight: 400,
-	},
+  listItem: {
+    maxHeight: 400,
+  },
   item: {
     flexDirection: 'row',
     alignItems: 'center',

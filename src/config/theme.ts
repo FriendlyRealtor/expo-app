@@ -8,6 +8,6 @@ export const Colors = {
   red: '#FC5C65',
   primary: '#02FDAA',
   transparent: 'transparent',
-	color1: '#F194FF',
-	color2: '#2196F3',
+  color1: '#F194FF',
+  color2: '#2196F3',
 };

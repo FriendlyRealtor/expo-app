@@ -176,7 +176,7 @@ export const SettingScreen = () => {
         title={`${index + 1}. ${item.location}`}
         description={`Estimated Value $${item.price}`}
         accessoryRight={<RenderItemIcon index={index} />}
-				style={styles.listItem}
+        style={styles.listItem}
       />
     );
   };
