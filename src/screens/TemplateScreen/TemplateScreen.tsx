@@ -189,7 +189,6 @@ export const TemplateScreen = () => {
           if (typeof customerInfo.entitlements.active.marketing_entitlement !== 'undefined') {
             const clouldUrl =
               'https://us-central1-real-estate-app-9a719.cloudfunctions.net/sendPdfEmail';
-						console.log("heer", pdf);
             const data = { pdf, email: userAuth.currentUser?.email };
             axios
               .post(clouldUrl, data)
