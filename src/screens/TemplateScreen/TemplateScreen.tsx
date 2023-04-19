@@ -8,7 +8,7 @@ import { StatusBar } from 'expo-status-bar';
 import { storage } from '../../config';
 import { ref, getDownloadURL, listAll } from 'firebase/storage';
 import { TemplateScreenStyles } from './TemplateScreenStyles';
-import { SafeAreaView, ScrollView, View, Alert, Modal, Pressable, StyleSheet } from 'react-native';
+import { SafeAreaView, ScrollView, View, Alert, Modal, Pressable } from 'react-native';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import _ from 'lodash';
