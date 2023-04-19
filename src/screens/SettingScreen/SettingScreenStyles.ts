@@ -13,9 +13,12 @@ export const SettingScreenStyles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 8,
   },
-	input: {
-		width: 200,
-	},
+  delete: {
+    color: Colors.red,
+  },
+  input: {
+    width: 200,
+  },
   top: {
     borderBottomLeftRadius: 24,
     borderBottomRightRadius: 24,
@@ -29,6 +32,15 @@ export const SettingScreenStyles = StyleSheet.create({
     marginHorizontal: 24,
     backgroundColor: Colors.lightGray,
   },
+  rows: {
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    marginHorizontal: 24,
+  },
+	listItem: {
+		maxHeight: 400,
+	},
   item: {
     flexDirection: 'row',
     alignItems: 'center',

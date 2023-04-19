@@ -1,44 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Image,
-  FlatList,
-  View,
-  Linking,
-  TouchableOpacity,
-  Platform,
-  StyleSheet,
-} from 'react-native';
+import { Image, FlatList, View, Linking, TouchableOpacity, Platform } from 'react-native';
 import { Layout, Icon } from '@ui-kitten/components';
 import Constants from 'expo-constants';
 import { Loading, Text } from '../../components';
 import axios from 'axios';
 import _ from 'lodash';
+import { LocalRestaurantScreenStyles } from './LocalRestaurantScreenStyles';
 import * as Location from 'expo-location';
 
 export const LocalRestaurantScreen = (props) => {
-  const styles = StyleSheet.create({
-    layout: {
-      paddingHorizontal: 16,
-      paddingVertical: 16,
-      borderRadius: 12,
-      marginHorizontal: 24,
-      marginVertical: 16,
-    },
-    icon: {
-      width: 20,
-      height: 20,
-      marginRight: 8,
-    },
-    container: {
-      position: 'absolute' /* or absolute */,
-      top: '50%',
-      display: 'flex',
-      flexDirection: 'row',
-      width: '100%',
-      justifyContent: 'center',
-      backgroundColor: 'transparent',
-    },
-  });
+  const styles = LocalRestaurantScreenStyles;
 
   const { locationStatus } = props;
 
@@ -130,17 +101,23 @@ export const LocalRestaurantScreen = (props) => {
 
   return (
     <Layout style={{ flex: 1 }}>
-      <Text category="h6" style={{ padding: 16, color: '#02FDAA' }}>
-        Fuel your body with goodness, and greatness will follow.
-      </Text>
-      {restaurantList && _.size(restaurantList) === 0 ? (
-        <View style={{ display: 'flex', alignItems: 'center', marginTop: 80 }}>
-          <Text category="h1">No Results Found!</Text>
-        </View>
-      ) : null}
-      {restaurantList && _.size(restaurantList) > 0 ? (
-        <FlatList data={restaurantList} renderItem={renderItem} />
-      ) : null}
+      {locationStatus !== 'denied' ? (
+        <Layout>
+          <Text category="h6" style={styles.text}>
+            Fuel your body with goodness, and greatness will follow.
+          </Text>
+          {restaurantList && _.size(restaurantList) === 0 ? (
+            <View style={styles.notFound}>
+              <Text category="h1">No Results Found!</Text>
+            </View>
+          ) : null}
+          {restaurantList && _.size(restaurantList) > 0 ? (
+            <FlatList data={restaurantList} renderItem={renderItem} />
+          ) : null}
+        </Layout>
+      ) : (
+        <Text>Head to your location services and allow.</Text>
+      )}
     </Layout>
   );
 };

@@ -176,6 +176,7 @@ export const SettingScreen = () => {
         title={`${index + 1}. ${item.location}`}
         description={`Estimated Value $${item.price}`}
         accessoryRight={<RenderItemIcon index={index} />}
+				style={styles.listItem}
       />
     );
   };
@@ -248,96 +249,95 @@ export const SettingScreen = () => {
           </TouchableOpacity>
 				</Animated.View>*/}
       </Layout>
-      <Layout>
-        <View style={styles.layout}>
-          <View style={styles.flexRow}>
-            <Text category="label">Username</Text>
-            <Text category="p1" style={{ marginTop: 16, fontFamily: 'Ubuntu' }}>
-              {user.username || ''}
-            </Text>
-          </View>
-          <Divider />
-          <View style={styles.flexRow}>
-            <Text category="label" style={{ marginTop: 16 }}>
-              Name
-            </Text>
-            <Text category="p1" style={{ marginTop: 16, fontFamily: 'Ubuntu' }}>
-              {user.name || ''}
-            </Text>
-          </View>
-          <Divider />
-          <View style={styles.flexRow}>
-            <Text category="label">Email</Text>
-            {userAuth.currentUser && userAuth.currentUser.email && (
-              <Text category="p1" style={{ fontFamily: 'Ubuntu' }}>
-                {userAuth.currentUser.email}
-              </Text>
-            )}
-          </View>
-          <Divider />
-          <View style={styles.flexRow}>
-            <Text category="label">Bio</Text>
-						<Input
-							placeholder="Place enter bio"
-							value={bio}
-							onChangeText={(nextValue) => setBio(nextValue)}
-							onBlur={() => updateProfileBio()}
-							size="small"
-							style={styles.input}
-						/>
-          </View>
-          <Divider />
-          <View style={styles.flexRow}>
-            <Text category="label">Service Areas</Text>
-            <Input
-              placeholder="Place your service areas"
-              value={locations}
-              onChangeText={(nextValue) => setLocations(nextValue)}
-              onBlur={() => updateServiceLocation()}
-              size="small"
-              style={styles.input}
-            />
-          </View>
-          <Divider />
-          <View style={styles.flexRow}>
-            <Text category="label">Renew Education License</Text>
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={date}
-              mode={'date'}
-              onChange={onChange}
-              display="default"
-              minimumDate={new Date(year, month, day)}
-              style={{ width: 150, marginRight: 0, marginBottom: 16 }}
-            />
-          </View>
-          <Divider />
-          <View style={styles.flexRow}>
-            <Text category="label">Referral Link</Text>
-            <Text
-              style={{ fontSize: 10 }}
-            >{`https://friendlyrealtor.app/profile/${user.username}`}</Text>
-          </View>
-          <Divider />
-          <View style={styles.flexRow}>
-            <Text category="label">App Version</Text>
-            <Text>{Constants.manifest.version}</Text>
-          </View>
-          <Divider />
-          {Device.osVersion && (
-            <View style={styles.flexRow}>
-              <Text category="label">Ios Version</Text>
-              <Text>{Device.osVersion}</Text>
-            </View>
-          )}
-          {Device.osVersion && <Divider />}
-          <View style={styles.flexRow}>
-            <Text category="label">Delete Account</Text>
-            <Button onPress={() => console.log('dete account')}>
-              <Text>Delete</Text>
-            </Button>
-          </View>
+      <View style={styles.layout}>
+        <View style={styles.flexRow}>
+          <Text category="label">Username</Text>
+          <Text category="p1" style={{ marginTop: 16, fontFamily: 'Ubuntu' }}>
+            {user.username || ''}
+          </Text>
         </View>
+        <Divider />
+        <View style={styles.flexRow}>
+          <Text category="label" style={{ marginTop: 16 }}>
+            Name
+          </Text>
+          <Text category="p1" style={{ marginTop: 16, fontFamily: 'Ubuntu' }}>
+            {user.name || ''}
+          </Text>
+        </View>
+        <Divider />
+        <View style={styles.flexRow}>
+          <Text category="label">Email</Text>
+          {userAuth.currentUser && userAuth.currentUser.email && (
+            <Text category="p1" style={{ fontFamily: 'Ubuntu' }}>
+              {userAuth.currentUser.email}
+            </Text>
+          )}
+        </View>
+        <Divider />
+        <View style={styles.flexRow}>
+          <Text category="label">Bio</Text>
+          <Input
+            placeholder="Place enter bio"
+            value={bio}
+            onChangeText={(nextValue) => setBio(nextValue)}
+            onBlur={() => updateProfileBio()}
+            size="small"
+            style={styles.input}
+          />
+        </View>
+        <Divider />
+        <View style={styles.flexRow}>
+          <Text category="label">Service Areas</Text>
+          <Input
+            placeholder="Place your service areas"
+            value={locations}
+            onChangeText={(nextValue) => setLocations(nextValue)}
+            onBlur={() => updateServiceLocation()}
+            size="small"
+            style={styles.input}
+          />
+        </View>
+        <Divider />
+        <View style={styles.flexRow}>
+          <Text category="label">Renew Education License</Text>
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={date}
+            mode={'date'}
+            onChange={onChange}
+            display="default"
+            minimumDate={new Date(year, month, day)}
+          />
+        </View>
+        <Divider />
+        <View style={styles.flexRow}>
+          <Text category="label">Referral Link</Text>
+          <Text
+            style={{ fontSize: 10, flexWrap: 'wrap' }}
+          >{`https://friendlyrealtor.app/profile/${user.username}`}</Text>
+        </View>
+        <Divider />
+        <View style={styles.flexRow}>
+          <Text category="label">App Version</Text>
+          <Text>{Constants.manifest.version}</Text>
+        </View>
+        <Divider />
+        {Device.osVersion && (
+          <View style={styles.flexRow}>
+            <Text category="label">Ios Version</Text>
+            <Text>{Device.osVersion}</Text>
+          </View>
+        )}
+        {Device.osVersion && <Divider />}
+        <View style={styles.flexRow}>
+          <Text category="label">Delete Account</Text>
+          <Button onPress={() => console.log('dete account')}>
+            <Text>Delete</Text>
+          </Button>
+        </View>
+      </View>
+      <View style={styles.rows}>
         {localCmaRows && _.size(localCmaRows) > 0 ? (
           <View>
             <Text category="h6" style={{ marginTop: 24, textAlign: 'center' }}>
@@ -348,18 +348,18 @@ export const SettingScreen = () => {
             </View>
           </View>
         ) : null}
-      </Layout>
-      {photoShow && (
-        <ProgressBar style={{ marginBottom: 10 }} progress={photoProgress} color="#02FDAA" />
-      )}
-      {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
-      <Text
-        status="danger"
-        onPress={() => handleLogout()}
-        style={{ textAlign: 'center', fontFamily: 'Ubuntu' }}
-      >
-        LOG OUT
-      </Text>
+        {photoShow && (
+          <ProgressBar style={{ marginBottom: 10 }} progress={photoProgress} color="#02FDAA" />
+        )}
+        {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
+        <Text
+          status="danger"
+          onPress={() => handleLogout()}
+          style={{ textAlign: 'center', fontFamily: 'Ubuntu' }}
+        >
+          LOG OUT
+        </Text>
+      </View>
     </Container>
   );
 };
