@@ -6,7 +6,7 @@ export default {
     slug: 'friendlyrealtor',
     privacy: 'unlisted',
     platforms: ['ios'],
-    version: '0.15.13',
+    version: '1.0.0',
     orientation: 'portrait',
     owner: 'jubileeinvestments',
     icon: './assets/logo.png',
