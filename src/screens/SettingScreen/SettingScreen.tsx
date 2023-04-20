@@ -219,14 +219,20 @@ export const SettingScreen = () => {
   return (
     <Container style={styles.container}>
       <StatusBar style="auto" />
-			<View style={{  display: 'flex', justifyContent: 'flex-end', width: '100%', flexDirection: 'row', paddingTop: 24, paddingRight: 32 }}>
-			<Text
-          status="danger"
-          onPress={() => handleLogout()}
-        >
+      <View
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          width: '100%',
+          flexDirection: 'row',
+          paddingTop: 24,
+          paddingRight: 32,
+        }}
+      >
+        <Text status="danger" onPress={() => handleLogout()}>
           LOG OUT
         </Text>
-			</View>
+      </View>
       <Layout level="4" style={styles.top}>
         {/*<Animated.View style={scaleAvatar}>
           <TouchableOpacity onPress={pickImage}>

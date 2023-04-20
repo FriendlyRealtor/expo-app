@@ -11,6 +11,7 @@ import { loginValidationSchema } from '../../utils';
 import { StatusBar } from 'expo-status-bar';
 
 export const LoginScreen = ({ navigation }) => {
+
   const { values, touched, errors, handleChange, handleSubmit, resetForm } = useFormik({
     initialValues: {
       email: '',
@@ -30,6 +31,8 @@ export const LoginScreen = ({ navigation }) => {
       .then(() => {
         if (auth.currentUser && !auth.currentUser.emailVerified) {
           setErrorState('Head to your email and verify your account!');
+        } else {
+          // store.retrieveLoggedInUser();
         }
       })
       .catch((error) => {

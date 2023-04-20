@@ -22,7 +22,7 @@ export const SettingScreenStyles = StyleSheet.create({
   top: {
     borderBottomLeftRadius: 24,
     borderBottomRightRadius: 24,
-		marginTop: 24,
+    marginTop: 24,
   },
   textView: {
     justifyContent: 'center',

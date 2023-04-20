@@ -6,12 +6,11 @@ export default React.forwardRef(({ style, children, ...rest }: TextProps, ref) =
   const styles = StyleSheet.create({
     text: {
       fontFamily: 'Ubuntu',
-      style,
     },
   });
 
   return (
-    <Text {...rest} ref={ref as any} style={styles.text}>
+    <Text {...rest} ref={ref as any} style={[style, { ...styles.text }]}>
       {children}
     </Text>
   );
