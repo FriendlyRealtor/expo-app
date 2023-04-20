@@ -337,7 +337,7 @@ export const SettingScreen = inject('appStore')(observer(({ appStore }) => {
         )}
         {Device.osVersion && <Divider />}
         <View style={styles.flexRow}>
-          <Text category="label">Delete Account</Text>
+          <Text category="label"  status="danger">Delete Account</Text>
           <Button onPress={() => {
 						try {
 							deleteUserAccount()
