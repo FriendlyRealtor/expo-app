@@ -9,8 +9,11 @@ import { Colors, auth } from '../../config';
 import { useTogglePasswordVisibility } from '../../hooks';
 import { loginValidationSchema } from '../../utils';
 import { StatusBar } from 'expo-status-bar';
+import { inject, observer } from 'mobx-react';
 
-export const LoginScreen = ({ navigation }) => {
+export const LoginScreen = inject('appStore')(observer(({ appStore, navigation }) => {
+
+	const { retrieveLoggedInUser } = appStore;
 
   const { values, touched, errors, handleChange, handleSubmit, resetForm } = useFormik({
     initialValues: {
@@ -32,7 +35,7 @@ export const LoginScreen = ({ navigation }) => {
         if (auth.currentUser && !auth.currentUser.emailVerified) {
           setErrorState('Head to your email and verify your account!');
         } else {
-          // store.retrieveLoggedInUser();
+          retrieveLoggedInUser();
         }
       })
       .catch((error) => {
@@ -127,7 +130,7 @@ export const LoginScreen = ({ navigation }) => {
       </KeyboardAwareScrollView>
     </View>
   );
-};
+}));
 
 const styles = StyleSheet.create({
   container: {
@@ -165,4 +168,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+
 });

@@ -15,7 +15,6 @@ import {
 } from 'react-native-reanimated';
 import { ProgressBar } from 'react-native-paper';
 import { useLayout } from '../../hooks';
-import { AuthenticatedUserContext } from '../../providers';
 import { User } from '../../providers/types';
 import * as ImagePicker from 'expo-image-picker';
 import moment from 'moment';
@@ -28,11 +27,12 @@ import Constants from 'expo-constants';
 import * as Device from 'expo-device';
 import { SettingScreenStyles } from './SettingScreenStyles';
 import { StatusBar } from 'expo-status-bar';
+import { inject, observer } from 'mobx-react';
 
-export const SettingScreen = () => {
+export const SettingScreen = inject('appStore')(observer(({ appStore }) => {
   const styles = SettingScreenStyles;
+	const { user, signOut, cmaRows, cmaFromDatabase, deleteCMAItem } = appStore;
 
-  const { user, setUser } = useContext<User>(AuthenticatedUserContext);
   const [photoShow, setPhotoShow] = useState(null);
   const [photoProgress, setPhotoProgress] = useState(0);
   const [errorState, setErrorState] = useState('');
@@ -51,26 +51,17 @@ export const SettingScreen = () => {
   const [locations, setLocations] = useState(user.location || '');
 
   const [localCmaRows, setLocalCmaRows] = useState();
-  const store = new AppStore();
   const isFocused = useIsFocused();
 
   useEffect(() => {
     const retrieveRows = async () => {
       if (user.cmaEvaluations) {
-        await store.cmaFromDatabase(userAuth);
-        setLocalCmaRows(store.cmaRows);
+        await cmaFromDatabase(userAuth);
+        setLocalCmaRows(cmaRows);
       }
     };
     retrieveRows();
   }, [isFocused]);
-
-  const handleLogout = useCallback(() => {
-    signOut(auth)
-      .then(() => {
-        setUser(null);
-      })
-      .catch((error) => console.log('Error logging out: ', error));
-  }, [auth.currentUser]);
 
   const pickImage = useCallback(async () => {
     try {
@@ -154,8 +145,8 @@ export const SettingScreen = () => {
 
   const handleDeleteItem = async (index) => {
     try {
-      await store.deleteCMAItem(userAuth, user, index);
-      setLocalCmaRows(store.cmaRows);
+      await deleteCMAItem(userAuth, user, index);
+      setLocalCmaRows(cmaRows);
     } catch (error) {
       setErrorState('error deleting item');
     }
@@ -229,7 +220,7 @@ export const SettingScreen = () => {
           paddingRight: 32,
         }}
       >
-        <Text status="danger" onPress={() => handleLogout()}>
+        <Text status="danger" onPress={() => signOut()}>
           LOG OUT
         </Text>
       </View>
@@ -269,7 +260,7 @@ export const SettingScreen = () => {
         <View style={styles.flexRow}>
           <Text category="label">Username</Text>
           <Text category="p1" style={{ marginTop: 16, fontFamily: 'Ubuntu' }}>
-            {user.username || ''}
+            {user.userName || ''}
           </Text>
         </View>
         <Divider />
@@ -331,7 +322,7 @@ export const SettingScreen = () => {
           <Text category="label">Referral Link</Text>
           <Text
             style={{ fontSize: 10, flexWrap: 'wrap' }}
-          >{`https://friendlyrealtor.app/profile/${user.username}`}</Text>
+          >{`https://friendlyrealtor.app/profile/${user.userName}`}</Text>
         </View>
         <Divider />
         <View style={styles.flexRow}>
@@ -341,7 +332,7 @@ export const SettingScreen = () => {
         <Divider />
         {Device.osVersion && (
           <View style={styles.flexRow}>
-            <Text category="label">Ios Version</Text>
+            <Text category="label">IOS Version</Text>
             <Text>{Device.osVersion}</Text>
           </View>
         )}
@@ -371,4 +362,4 @@ export const SettingScreen = () => {
       </View>
     </Container>
   );
-};
+}));

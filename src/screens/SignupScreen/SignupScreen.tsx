@@ -40,7 +40,7 @@ export const SignupScreen = ({ navigation }) => {
   } = useTogglePasswordVisibility();
 
   const handleSignup = async (values) => {
-    const { email, password, firstName, lastName } = values;
+    const { email, password, firstName, lastName, userName } = values;
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
@@ -49,6 +49,7 @@ export const SignupScreen = ({ navigation }) => {
           await setDoc(doc(db, 'users', uid), {
             name: `${firstName} ${lastName}`,
             ceRenewalDate: new Date(),
+						userName: userName,
             photo:
               'https://firebasestorage.googleapis.com/v0/b/real-estate-app-9a719.appspot.com/o/default_photo%2Fimg_avatar.png?alt=media&token=ca7c1413-f7ea-4511-915a-699283568edc',
           });

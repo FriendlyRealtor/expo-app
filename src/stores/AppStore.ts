@@ -3,7 +3,7 @@ import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../config';
 import Constants from 'expo-constants';
 import Purchases from 'react-native-purchases';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 
 class AppStore {
   cmaRows = [];
@@ -18,6 +18,7 @@ class AppStore {
       user: observable,
       setUser: action,
       getUser: action,
+			signOut: action,
       retrieveLoggedInUser: action,
     });
   }
@@ -91,6 +92,14 @@ class AppStore {
       console.log(error);
     }
   };
+
+	signOut = () => {
+		signOut(auth)
+		.then(() => {
+			this.setUser(null);
+		})
+		.catch((error) => console.log('Error logging out: ', error));
+	}
 }
 
 export default new AppStore();
