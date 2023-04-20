@@ -54,6 +54,7 @@ export const ContinueEducationScreen = () => {
 
   return (
     <ScrollView style={{ flex: 1, padding: 10, ...styles.container }}>
+      <StatusBar style="auto" />
       <SafeAreaView style={{ marginVertical: 18 }}>
         <View style={{ marginVertical: 16 }}>
           <Text category="h6">Never stop learning: always curious, always growing.</Text>

@@ -8,6 +8,7 @@ import { View, TextInput, Text, Button, FormErrorMessage } from '../../component
 import { Colors, auth, db } from '../../config';
 import { useTogglePasswordVisibility } from '../../hooks';
 import { signupValidationSchema } from '../../utils';
+import { StatusBar } from 'expo-status-bar';
 
 export const SignupScreen = ({ navigation }) => {
   const { values, touched, errors, handleChange, handleSubmit, handleBlur, resetForm } = useFormik({
@@ -56,6 +57,7 @@ export const SignupScreen = ({ navigation }) => {
 
   return (
     <View isSafe style={styles.container}>
+      <StatusBar style="auto" />
       <KeyboardAwareScrollView enableOnAndroid={true}>
         <View style={styles.logoContainer}>
           <Image source={require('../../../assets/icon.png')} style={{ width: 250, height: 250 }} />

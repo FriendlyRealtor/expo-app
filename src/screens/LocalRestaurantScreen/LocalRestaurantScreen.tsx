@@ -7,6 +7,7 @@ import axios from 'axios';
 import _ from 'lodash';
 import { LocalRestaurantScreenStyles } from './LocalRestaurantScreenStyles';
 import * as Location from 'expo-location';
+import { StatusBar } from 'expo-status-bar';
 
 export const LocalRestaurantScreen = (props) => {
   const styles = LocalRestaurantScreenStyles;
@@ -101,6 +102,7 @@ export const LocalRestaurantScreen = (props) => {
 
   return (
     <Layout style={{ flex: 1 }}>
+      <StatusBar style="auto" />
       {locationStatus !== 'denied' ? (
         <Layout>
           <Text category="h6" style={styles.text}>

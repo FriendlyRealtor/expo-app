@@ -15,6 +15,7 @@ import _ from 'lodash';
 import uuid from 'react-native-uuid';
 import moment from 'moment';
 import { useIsFocused } from '@react-navigation/native';
+import { StatusBar } from 'expo-status-bar';
 
 export const AddDeal = ({ modalVisible, setModalVisible, formData }) => {
   const styles = StyleSheet.create({
@@ -345,6 +346,7 @@ export const ClientScreen = (props) => {
   const renderItemHeader = (headerProps, item) => {
     return (
       <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+        <StatusBar style="auto" />
         <Text category="h6" {...headerProps} status="info">
           {item.address}
         </Text>

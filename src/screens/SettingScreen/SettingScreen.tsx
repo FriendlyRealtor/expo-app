@@ -27,6 +27,7 @@ import _ from 'lodash';
 import Constants from 'expo-constants';
 import * as Device from 'expo-device';
 import { SettingScreenStyles } from './SettingScreenStyles';
+import { StatusBar } from 'expo-status-bar';
 
 export const SettingScreen = () => {
   const styles = SettingScreenStyles;
@@ -217,6 +218,15 @@ export const SettingScreen = () => {
 
   return (
     <Container style={styles.container}>
+      <StatusBar style="auto" />
+			<View style={{  display: 'flex', justifyContent: 'flex-end', width: '100%', flexDirection: 'row', paddingTop: 24, paddingRight: 32 }}>
+			<Text
+          status="danger"
+          onPress={() => handleLogout()}
+        >
+          LOG OUT
+        </Text>
+			</View>
       <Layout level="4" style={styles.top}>
         {/*<Animated.View style={scaleAvatar}>
           <TouchableOpacity onPress={pickImage}>
@@ -352,13 +362,6 @@ export const SettingScreen = () => {
           <ProgressBar style={{ marginBottom: 10 }} progress={photoProgress} color="#02FDAA" />
         )}
         {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
-        <Text
-          status="danger"
-          onPress={() => handleLogout()}
-          style={{ textAlign: 'center', fontFamily: 'Ubuntu' }}
-        >
-          LOG OUT
-        </Text>
       </View>
     </Container>
   );

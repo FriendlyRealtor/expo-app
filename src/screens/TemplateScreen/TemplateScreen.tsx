@@ -196,7 +196,7 @@ export const TemplateScreen = () => {
                 console.log(response.data);
               })
               .catch((error) => {
-								console.log('error', error);
+                console.log('error', error);
               });
           }
         }
@@ -214,6 +214,7 @@ export const TemplateScreen = () => {
 
   return (
     <Layout style={{ flex: 1 }}>
+      <StatusBar style="auto" />
       <PayWallView
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
@@ -296,7 +297,6 @@ export const TemplateScreen = () => {
             : null}
         </SafeAreaView>
       </ScrollView>
-      <StatusBar style="auto" />
     </Layout>
   );
 };

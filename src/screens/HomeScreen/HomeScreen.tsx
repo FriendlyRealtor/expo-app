@@ -17,6 +17,7 @@ import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../config';
 import { getAuth } from 'firebase/auth';
 import { HomeScreenStyles } from './HomeScreenStyles';
+import { StatusBar } from 'expo-status-bar';
 
 export const HomeScreen = () => {
   const isFocused = useIsFocused();
@@ -110,6 +111,7 @@ export const HomeScreen = () => {
 
   return (
     <Layout style={styles.layout}>
+      <StatusBar style="auto" />
       <KeyboardAwareScrollView style={styles.keyboard}>
         <Formik validationSchema={locationValidationSchema}>
           <View style={styles.card}>

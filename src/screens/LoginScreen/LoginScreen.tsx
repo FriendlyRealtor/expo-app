@@ -8,6 +8,7 @@ import { View, TextInput, Text, Button, FormErrorMessage } from '../../component
 import { Colors, auth } from '../../config';
 import { useTogglePasswordVisibility } from '../../hooks';
 import { loginValidationSchema } from '../../utils';
+import { StatusBar } from 'expo-status-bar';
 
 export const LoginScreen = ({ navigation }) => {
   const { values, touched, errors, handleChange, handleSubmit, resetForm } = useFormik({
@@ -49,6 +50,7 @@ export const LoginScreen = ({ navigation }) => {
 
   return (
     <View isSafe style={styles.container}>
+      <StatusBar style="auto" />
       <KeyboardAwareScrollView>
         <View style={styles.logoContainer}>
           <Image source={require('../../../assets/icon.png')} style={{ width: 250, height: 250 }} />

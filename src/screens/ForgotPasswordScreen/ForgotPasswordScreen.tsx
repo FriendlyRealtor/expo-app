@@ -6,6 +6,7 @@ import { Text } from '../../components';
 import { passwordResetSchema } from '../../utils';
 import { Colors, auth } from '../../config';
 import { View, TextInput, Button, FormErrorMessage } from '../../components';
+import { StatusBar } from 'expo-status-bar';
 
 export const ForgotPasswordScreen = ({ navigation }) => {
   const [errorState, setErrorState] = useState('');
@@ -22,6 +23,7 @@ export const ForgotPasswordScreen = ({ navigation }) => {
 
   return (
     <View isSafe style={styles.container}>
+      <StatusBar style="auto" />
       <View style={styles.innerContainer}>
         <Text style={styles.screenTitle}>Reset your password</Text>
       </View>
