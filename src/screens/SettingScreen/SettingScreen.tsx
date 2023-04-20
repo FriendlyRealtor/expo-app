@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useContext } from 'react';
 import { View } from 'react-native';
-import { getAuth, signOut } from 'firebase/auth';
+import { getAuth } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
 import { auth, db, storage } from '../../config';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -20,7 +20,6 @@ import * as ImagePicker from 'expo-image-picker';
 import moment from 'moment';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { AppStore } from '../../stores/AppStore';
 import { useIsFocused } from '@react-navigation/native';
 import _ from 'lodash';
 import Constants from 'expo-constants';
@@ -31,7 +30,7 @@ import { inject, observer } from 'mobx-react';
 
 export const SettingScreen = inject('appStore')(observer(({ appStore }) => {
   const styles = SettingScreenStyles;
-	const { user, signOut, cmaRows, cmaFromDatabase, deleteCMAItem } = appStore;
+	const { user, signOut, cmaRows, cmaFromDatabase, deleteCMAItem, deleteUserAccount } = appStore;
 
   const [photoShow, setPhotoShow] = useState(null);
   const [photoProgress, setPhotoProgress] = useState(0);
@@ -339,7 +338,13 @@ export const SettingScreen = inject('appStore')(observer(({ appStore }) => {
         {Device.osVersion && <Divider />}
         <View style={styles.flexRow}>
           <Text category="label">Delete Account</Text>
-          <Button onPress={() => console.log('dete account')}>
+          <Button onPress={() => {
+						try {
+							deleteUserAccount()
+						} catch (error) {
+							console.log('error', error)
+						}
+					}}>
             <Text>Delete</Text>
           </Button>
         </View>

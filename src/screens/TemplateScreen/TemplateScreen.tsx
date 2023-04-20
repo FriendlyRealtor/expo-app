@@ -192,9 +192,6 @@ export const TemplateScreen = () => {
             const data = { pdf, email: userAuth.currentUser?.email };
             axios
               .post(clouldUrl, data)
-              .then((response) => {
-                console.log(response.data);
-              })
               .catch((error) => {
                 console.log('error', error);
               });

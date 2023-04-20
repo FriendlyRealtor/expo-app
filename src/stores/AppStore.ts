@@ -1,9 +1,9 @@
 import { observable, action, makeObservable } from 'mobx';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { auth, db } from '../config';
 import Constants from 'expo-constants';
 import Purchases from 'react-native-purchases';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { onAuthStateChanged, getAuth, signOut } from 'firebase/auth';
 
 class AppStore {
   cmaRows = [];
@@ -20,6 +20,7 @@ class AppStore {
       getUser: action,
 			signOut: action,
       retrieveLoggedInUser: action,
+			deleteUserAccount: action,
     });
   }
 
@@ -99,7 +100,17 @@ class AppStore {
 			this.setUser(null);
 		})
 		.catch((error) => console.log('Error logging out: ', error));
-	}
+	};
+
+	deleteUserAccount = async () => {
+		const userAuth = getAuth();
+
+		if (userAuth.currentUser && userAuth.currentUser.uid) {
+			await deleteDoc(doc(db, 'users', userAuth.currentUser.uid));
+			await userAuth.currentUser?.delete();
+			this.setUser(null);
+		}
+	};
 }
 
 export default new AppStore();
