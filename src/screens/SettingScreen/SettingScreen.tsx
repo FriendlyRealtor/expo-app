@@ -34,7 +34,7 @@ export const SettingScreen = inject('appStore')(
     const { user, signOut, cmaRows, cmaFromDatabase, deleteCMAItem, deleteUserAccount } = appStore;
 
     const [photoShow, setPhotoShow] = useState(null);
-    const [photoProgress, setPhotoProgress] = useState(0);
+    const [photoProgress, setPhotoProgress] = useState<number | undefined>(undefined);
     const [errorState, setErrorState] = useState('');
 
     const userAuth = getAuth();
@@ -52,6 +52,10 @@ export const SettingScreen = inject('appStore')(
 
     const [localCmaRows, setLocalCmaRows] = useState();
     const isFocused = useIsFocused();
+
+		useEffect(() => {
+			setPhotoShow(user.photo)
+		}, [user])
 
     useEffect(() => {
       const retrieveRows = async () => {
@@ -86,7 +90,10 @@ export const SettingScreen = inject('appStore')(
                 'state_changed',
                 (snapshot) => {
                   const progress = snapshot.bytesTransferred / snapshot.totalBytes;
-                  setPhotoProgress(progress);
+
+									if (progress) {
+										setPhotoProgress(progress);
+									}
                 },
                 (error) => {
                   console.log('error uploading image: ', error);
@@ -100,7 +107,7 @@ export const SettingScreen = inject('appStore')(
 
                     if (docRef) {
                       await updateDoc(docRef, data);
-                      setPhotoShow(null);
+                      setPhotoShow(downloadURL);
                     }
                   });
                 },
@@ -367,7 +374,7 @@ export const SettingScreen = inject('appStore')(
               </View>
             </View>
           ) : null}
-          {photoShow && (
+          {photoProgress && photoProgress !== 1 && (
             <ProgressBar style={{ marginBottom: 10 }} progress={photoProgress} color="#02FDAA" />
           )}
           {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
