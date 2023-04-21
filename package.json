@@ -9,8 +9,8 @@
     "eject": "expo eject",
     "expo:start": "npx expo start",
     "ios": "expo run:ios --device",
-    "lint": "eslint 'src/components/**/*.{ts,tsx,js,jsx}' 'src/config/**/*.{ts,tsx,js,jsx}' 'src/hooks/**/*.{ts,tsx,js,jsx}' 'src/navigation/**/*.{ts,tsx,js,jsx}' 'src/providers/**/*.{ts,tsx,js,jsx}' 'src/screens/**/*.{ts,tsx,js,jsx}' 'src/utils/**/*.{ts,tsx,js,jsx}' --fix",
-    "prettier": "prettier --write 'src/components/**/*.{ts,tsx,js,jsx}' 'src/config/**/*.{ts,tsx,js,jsx}' 'src/hooks/**/*.{ts,tsx,js,jsx}' 'src/navigation/**/*.{ts,tsx,js,jsx}' 'src/providers/**/*.{ts,tsx,js,jsx}' 'src/screens/**/*.{ts,tsx,js,jsx}' 'src/utils/**/*.{ts,tsx,js,jsx}' ",
+    "lint": "eslint 'src/components/**/*.{ts,tsx,js,jsx}' 'src/config/**/*.{ts,tsx,js,jsx}' 'src/hooks/**/*.{ts,tsx,js,jsx}' 'src/navigation/**/*.{ts,tsx,js,jsx}' 'src/providers/**/*.{ts,tsx,js,jsx}' 'src/screens/**/*.{ts,tsx,js,jsx}' 'src/utils/**/*.{ts,tsx,js,jsx}'  'src/stores/**/*.{ts,tsx,js,jsx}' --fix",
+    "prettier": "prettier --write 'src/components/**/*.{ts,tsx,js,jsx}' 'src/config/**/*.{ts,tsx,js,jsx}' 'src/hooks/**/*.{ts,tsx,js,jsx}' 'src/navigation/**/*.{ts,tsx,js,jsx}' 'src/providers/**/*.{ts,tsx,js,jsx}' 'src/screens/**/*.{ts,tsx,js,jsx}' 'src/utils/**/*.{ts,tsx,js,jsx}' 'src/stores/**/*.{ts,tsx,js,jsx}' ",
     "prod:build-secrets": "eas secret:push --scope project --env-file .env.production",
     "start": "npx expo start --dev-client",
     "web": "expo start --web"
@@ -55,6 +55,7 @@
     "lodash": "^4.17.21",
     "lottie-react-native": "5.1.4",
     "mobx": "^6.9.0",
+    "mobx-react": "^7.6.0",
     "moment": "^2.29.4",
     "prettier": "^2.8.4",
     "react": "18.1.0",

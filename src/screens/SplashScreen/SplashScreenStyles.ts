@@ -1,5 +1,5 @@
-import {StyleSheet} from 'react-native';
-import {Colors} from '../src/config';
+import { StyleSheet } from 'react-native';
+import { Colors } from '../../config';
 
 export const SplashScreenStyles = StyleSheet.create({
   animationContainer: {

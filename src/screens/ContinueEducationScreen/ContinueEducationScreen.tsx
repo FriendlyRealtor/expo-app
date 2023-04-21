@@ -3,10 +3,9 @@ import { View, StyleSheet, SafeAreaView, StatusBar, ScrollView } from 'react-nat
 import _ from 'lodash';
 import { Video } from 'expo-av';
 import { ref, getDownloadURL, listAll } from 'firebase/storage';
-import { storage } from '../config';
+import { storage } from '../../config';
 import uuid from 'react-native-uuid';
-import { Loading } from '../components';
-import { Text } from '@ui-kitten/components';
+import { Loading, Text } from '../../components';
 
 export const ContinueEducationScreen = () => {
   const styles = StyleSheet.create({
@@ -35,7 +34,7 @@ export const ContinueEducationScreen = () => {
           // All the items under listRef.
           getDownloadURL(ref(storage, itemRef.fullPath))
             .then((url) => {
-							const appendCourses = [...courses, url];
+              const appendCourses = [...courses, url];
               setCourses(appendCourses);
               setLoading(false);
             })
@@ -55,6 +54,7 @@ export const ContinueEducationScreen = () => {
 
   return (
     <ScrollView style={{ flex: 1, padding: 10, ...styles.container }}>
+      <StatusBar style="auto" />
       <SafeAreaView style={{ marginVertical: 18 }}>
         <View style={{ marginVertical: 16 }}>
           <Text category="h6">Never stop learning: always curious, always growing.</Text>
@@ -62,19 +62,20 @@ export const ContinueEducationScreen = () => {
             Search for courses below.
           </Text>
         </View>
-        {!!courses.length && courses.map((res) => {
-          const key = uuid.v4();
-          return (
-            <Video
-              ref={video}
-              source={{ uri: res }}
-              key={key}
-              useNativeControls
-              isLooping
-              style={{ width: '100%', height: 300, marginBottom: 8 }}
-            />
-          );
-        })}
+        {!!courses.length &&
+          courses.map((res) => {
+            const key = uuid.v4();
+            return (
+              <Video
+                ref={video}
+                source={{ uri: res }}
+                key={key}
+                useNativeControls
+                isLooping
+                style={{ width: '100%', height: 300, marginBottom: 8 }}
+              />
+            );
+          })}
       </SafeAreaView>
     </ScrollView>
   );

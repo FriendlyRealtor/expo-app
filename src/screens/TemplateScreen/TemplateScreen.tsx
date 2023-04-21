@@ -1,69 +1,21 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { Layout, Text, Card } from '@ui-kitten/components';
-import { Button } from '../components';
+import { Layout, Card } from '@ui-kitten/components';
+import { Button, Text } from '../../components';
 import { getAuth } from 'firebase/auth';
 import Purchases, { PurchasesPackage } from 'react-native-purchases';
 import Pdf from 'react-native-pdf';
 import { StatusBar } from 'expo-status-bar';
-import { storage } from '../config';
+import { storage } from '../../config';
 import { ref, getDownloadURL, listAll } from 'firebase/storage';
-import { TemplateScreenStyles } from '../../styles';
-import { SafeAreaView, ScrollView, View, Alert, Modal, Pressable, StyleSheet } from 'react-native';
+import { TemplateScreenStyles } from './TemplateScreenStyles';
+import { SafeAreaView, ScrollView, View, Alert, Modal, Pressable } from 'react-native';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import _ from 'lodash';
+import Constants from 'expo-constants';
 
 export const PayWallView = ({ modalVisible, setModalVisible, monthlyPkg, annualPkg }) => {
-  const styles = StyleSheet.create({
-    centeredView: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginTop: 22,
-    },
-    modalView: {
-      height: 600,
-      backgroundColor: 'white',
-      borderRadius: 20,
-      padding: 35,
-      alignItems: 'center',
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 4,
-      elevation: 5,
-    },
-    button: {
-      borderRadius: 20,
-      padding: 10,
-      elevation: 2,
-    },
-    buttonOpen: {
-      backgroundColor: '#F194FF',
-    },
-    buttonClose: {
-      backgroundColor: '#2196F3',
-    },
-    textStyle: {
-      color: 'white',
-      fontWeight: 'bold',
-      textAlign: 'center',
-    },
-    modalText: {
-      marginBottom: 15,
-      textAlign: 'center',
-    },
-    close: {
-      position: 'absolute',
-      background: 'red',
-      color: 'white',
-      top: 10,
-      right: 10,
-    },
-  });
+  const styles = TemplateScreenStyles;
 
   const handleMonthlySubscription = useCallback(async () => {
     try {
@@ -236,12 +188,10 @@ export const TemplateScreen = () => {
         if (templatePkg) {
           const { customerInfo } = await Purchases.purchasePackage(templatePkg);
           if (typeof customerInfo.entitlements.active.marketing_entitlement !== 'undefined') {
-            axios({
-              method: 'get',
-              url: 'https://us-central1-real-estate-app-9a719.cloudfunctions.net/helloWorld',
-              params: { pdf, email: userAuth.currentUser?.email },
-            }).then((response) => {
-              console.log('Sending notification if success');
+            const clouldUrl = `${Constants.manifest.extra.cloudFunctionUrl}/sendPdfEmail`;
+            const data = { pdf, email: userAuth.currentUser?.email };
+            axios.post(clouldUrl, data).catch((error) => {
+              console.log('error', error);
             });
           }
         }
@@ -259,6 +209,7 @@ export const TemplateScreen = () => {
 
   return (
     <Layout style={{ flex: 1 }}>
+      <StatusBar style="auto" />
       <PayWallView
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
@@ -341,7 +292,6 @@ export const TemplateScreen = () => {
             : null}
         </SafeAreaView>
       </ScrollView>
-      <StatusBar style="auto" />
     </Layout>
   );
 };

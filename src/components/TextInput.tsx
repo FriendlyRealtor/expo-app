@@ -6,13 +6,19 @@ import { Icon } from './Icon';
 import { Button } from './Button';
 import { Colors } from '../config';
 
+export type TextInputProps = {
+  width?: string;
+  leftIconName?: any;
+  rightIcon?: any;
+};
+
 export const TextInput = ({
   width = '100%',
   leftIconName,
   rightIcon,
   handlePasswordVisibility,
   ...otherProps
-}) => {
+}: TextInputProps) => {
   return (
     <View
       style={{
