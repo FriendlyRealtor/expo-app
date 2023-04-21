@@ -14,16 +14,16 @@ export const RootNavigator = inject('appStore')(
       Ubuntu: require('../../assets/fonts/Ubuntu/Ubuntu-Regular.ttf'),
     });
 
-	const { user, retrieveLoggedInUser } = appStore;
+    const { user, retrieveLoggedInUser } = appStore;
 
-	useEffect(() => {
-		const retrieveUser = async () => {
-			await retrieveLoggedInUser();
-		};
+    useEffect(() => {
+      const retrieveUser = async () => {
+        await retrieveLoggedInUser();
+      };
 
-		retrieveUser();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+      retrieveUser();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
       if (fontsLoaded) {

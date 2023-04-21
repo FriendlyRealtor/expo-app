@@ -12,6 +12,7 @@ import { SafeAreaView, ScrollView, View, Alert, Modal, Pressable } from 'react-n
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import _ from 'lodash';
+import Constants from 'expo-constants';
 
 export const PayWallView = ({ modalVisible, setModalVisible, monthlyPkg, annualPkg }) => {
   const styles = TemplateScreenStyles;
@@ -187,14 +188,11 @@ export const TemplateScreen = () => {
         if (templatePkg) {
           const { customerInfo } = await Purchases.purchasePackage(templatePkg);
           if (typeof customerInfo.entitlements.active.marketing_entitlement !== 'undefined') {
-            const clouldUrl =
-              'https://us-central1-real-estate-app-9a719.cloudfunctions.net/sendPdfEmail';
+            const clouldUrl = `${Constants.manifest.extra.cloudFunctionUrl}/sendPdfEmail`;
             const data = { pdf, email: userAuth.currentUser?.email };
-            axios
-              .post(clouldUrl, data)
-              .catch((error) => {
-                console.log('error', error);
-              });
+            axios.post(clouldUrl, data).catch((error) => {
+              console.log('error', error);
+            });
           }
         }
       } catch (error) {

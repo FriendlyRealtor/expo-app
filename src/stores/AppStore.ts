@@ -18,9 +18,9 @@ class AppStore {
       user: observable,
       setUser: action,
       getUser: action,
-			signOut: action,
+      signOut: action,
       retrieveLoggedInUser: action,
-			deleteUserAccount: action,
+      deleteUserAccount: action,
     });
   }
 
@@ -94,23 +94,23 @@ class AppStore {
     }
   };
 
-	signOut = () => {
-		signOut(auth)
-		.then(() => {
-			this.setUser(null);
-		})
-		.catch((error) => console.log('Error logging out: ', error));
-	};
+  signOut = () => {
+    signOut(auth)
+      .then(() => {
+        this.setUser(null);
+      })
+      .catch((error) => console.log('Error logging out: ', error));
+  };
 
-	deleteUserAccount = async () => {
-		const userAuth = getAuth();
+  deleteUserAccount = async () => {
+    const userAuth = getAuth();
 
-		if (userAuth.currentUser && userAuth.currentUser.uid) {
-			await deleteDoc(doc(db, 'users', userAuth.currentUser.uid));
-			await userAuth.currentUser?.delete();
-			this.setUser(null);
-		}
-	};
+    if (userAuth.currentUser && userAuth.currentUser.uid) {
+      await deleteDoc(doc(db, 'users', userAuth.currentUser.uid));
+      await userAuth.currentUser?.delete();
+      this.setUser(null);
+    }
+  };
 }
 
 export default new AppStore();

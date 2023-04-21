@@ -17,7 +17,7 @@ export default {
     ios: {
       supportsTablet: true,
       bundleIdentifier: 'jubileeinvestments.Real-Estate-App',
-      buildNumber: '10',
+      buildNumber: '11',
       config: {
         usesNonExemptEncryption: false,
       },
@@ -31,6 +31,8 @@ export default {
       appId: process.env.FIREBASE_APP_ID,
 			purchaseApiKey: process.env.PURCHASE_API_KEY,
       serverUrl: process.env.SERVER_URL,
+      cloudFunctionUrl: process.env.FIREBASE_CLOUD_FUNCTION_URL,
+			openAiKey: process.env.OPENAI_API_KEY,
       eas: {
         projectId: process.env.EAS_PROJECT_ID,
       },

@@ -11,126 +11,131 @@ import { loginValidationSchema } from '../../utils';
 import { StatusBar } from 'expo-status-bar';
 import { inject, observer } from 'mobx-react';
 
-export const LoginScreen = inject('appStore')(observer(({ appStore, navigation }) => {
+export const LoginScreen = inject('appStore')(
+  observer(({ appStore, navigation }) => {
+    const { retrieveLoggedInUser } = appStore;
 
-	const { retrieveLoggedInUser } = appStore;
+    const { values, touched, errors, handleChange, handleSubmit, resetForm } = useFormik({
+      initialValues: {
+        email: '',
+        password: '',
+      },
+      onSubmit: (submitValues) => {
+        handleLogin(submitValues);
+      },
+    });
 
-  const { values, touched, errors, handleChange, handleSubmit, resetForm } = useFormik({
-    initialValues: {
-      email: '',
-      password: '',
-    },
-    onSubmit: (submitValues) => {
-      handleLogin(submitValues);
-    },
-  });
+    const [errorState, setErrorState] = useState('');
+    const { passwordVisibility, handlePasswordVisibility, rightIcon } =
+      useTogglePasswordVisibility();
 
-  const [errorState, setErrorState] = useState('');
-  const { passwordVisibility, handlePasswordVisibility, rightIcon } = useTogglePasswordVisibility();
+    const handleLogin = (values) => {
+      const { email, password } = values;
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          if (auth.currentUser && !auth.currentUser.emailVerified) {
+            setErrorState('Head to your email and verify your account!');
+          } else {
+            retrieveLoggedInUser();
+          }
+        })
+        .catch((error) => {
+          switch (error.message) {
+            case 'Firebase: Error (auth/wrong-password).':
+              setErrorState('Wrong password!');
+              break;
+            case 'Firebase: Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later. (auth/too-many-requests).':
+              setErrorState(
+                'Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later',
+              );
+              break;
+            default:
+              setErrorState(`Error signing in! Contact support ${error.message}`);
+          }
+        });
+    };
 
-  const handleLogin = (values) => {
-    const { email, password } = values;
-    signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        if (auth.currentUser && !auth.currentUser.emailVerified) {
-          setErrorState('Head to your email and verify your account!');
-        } else {
-          retrieveLoggedInUser();
-        }
-      })
-      .catch((error) => {
-        switch (error.message) {
-          case 'Firebase: Error (auth/wrong-password).':
-            setErrorState('Wrong password!');
-            break;
-          case 'Firebase: Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later. (auth/too-many-requests).':
-            setErrorState(
-              'Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later',
-            );
-            break;
-          default:
-            setErrorState(`Error signing in! Contact support ${error.message}`);
-        }
-      });
-  };
-
-  return (
-    <View isSafe style={styles.container}>
-      <StatusBar style="auto" />
-      <KeyboardAwareScrollView>
-        <View style={styles.logoContainer}>
-          <Image source={require('../../../assets/icon.png')} style={{ width: 250, height: 250 }} />
-          <Text style={styles.screenTitle}>Friendly Realtor</Text>
-        </View>
-        <Formik validationSchema={loginValidationSchema}>
-          {() => (
-            <>
-              <TextInput
-                name="email"
-                leftIconName="email"
-                placeholder="Enter email"
-                autoCapitalize="none"
-                keyboardType="email-address"
-                textContentType="emailAddress"
-                autoFocus={true}
-                value={values.email}
-                onChangeText={handleChange('email')}
-              />
-              <FormErrorMessage error={errors.email} visible={touched.email} />
-              <TextInput
-                name="password"
-                leftIconName="key-variant"
-                placeholder="Enter password"
-                autoCapitalize="none"
-                autoCorrect={false}
-                secureTextEntry={passwordVisibility}
-                textContentType="password"
-                rightIcon={rightIcon}
-                handlePasswordVisibility={handlePasswordVisibility}
-                value={values.password}
-                onChangeText={handleChange('password')}
-              />
-              <FormErrorMessage error={errors.password} visible={touched.password} />
-              {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
-              <Button style={styles.button} onPress={handleSubmit}>
-                <Text style={styles.buttonText}>Login</Text>
-              </Button>
-            </>
-          )}
-        </Formik>
-        {/* Button to navigate to SignupScreen to Create Account */}
-        <Button
-          style={styles.borderlessButtonContainer}
-          borderless
-          title={'Create Account?'}
-          onPress={() => {
-            resetForm({
-              values: {
-                email: '',
-                password: '',
-              },
-            });
-            navigation.navigate('Signup');
-          }}
-        />
-        <Button
-          style={styles.borderlessButtonContainer}
-          borderless
-          title={'Forgot Password'}
-          onPress={() => {
-            resetForm({
-              values: {
-                email: '',
-                password: '',
-              },
-            });
-            navigation.navigate('ForgotPassword');
-          }}
-        />
-      </KeyboardAwareScrollView>
-    </View>
-  );
-}));
+    return (
+      <View isSafe style={styles.container}>
+        <StatusBar style="auto" />
+        <KeyboardAwareScrollView>
+          <View style={styles.logoContainer}>
+            <Image
+              source={require('../../../assets/icon.png')}
+              style={{ width: 250, height: 250 }}
+            />
+            <Text style={styles.screenTitle}>Friendly Realtor</Text>
+          </View>
+          <Formik validationSchema={loginValidationSchema}>
+            {() => (
+              <>
+                <TextInput
+                  name="email"
+                  leftIconName="email"
+                  placeholder="Enter email"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  textContentType="emailAddress"
+                  autoFocus={true}
+                  value={values.email}
+                  onChangeText={handleChange('email')}
+                />
+                <FormErrorMessage error={errors.email} visible={touched.email} />
+                <TextInput
+                  name="password"
+                  leftIconName="key-variant"
+                  placeholder="Enter password"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  secureTextEntry={passwordVisibility}
+                  textContentType="password"
+                  rightIcon={rightIcon}
+                  handlePasswordVisibility={handlePasswordVisibility}
+                  value={values.password}
+                  onChangeText={handleChange('password')}
+                />
+                <FormErrorMessage error={errors.password} visible={touched.password} />
+                {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
+                <Button style={styles.button} onPress={handleSubmit}>
+                  <Text style={styles.buttonText}>Login</Text>
+                </Button>
+              </>
+            )}
+          </Formik>
+          {/* Button to navigate to SignupScreen to Create Account */}
+          <Button
+            style={styles.borderlessButtonContainer}
+            borderless
+            title={'Create Account?'}
+            onPress={() => {
+              resetForm({
+                values: {
+                  email: '',
+                  password: '',
+                },
+              });
+              navigation.navigate('Signup');
+            }}
+          />
+          <Button
+            style={styles.borderlessButtonContainer}
+            borderless
+            title={'Forgot Password'}
+            onPress={() => {
+              resetForm({
+                values: {
+                  email: '',
+                  password: '',
+                },
+              });
+              navigation.navigate('ForgotPassword');
+            }}
+          />
+        </KeyboardAwareScrollView>
+      </View>
+    );
+  }),
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -168,5 +173,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-
 });
