@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useCallback, useContext } from 'react';
-import { View } from 'react-native';
+import { Image, View, Animated, TouchableOpacity } from 'react-native';
 import { getAuth } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
 import { auth, db, storage } from '../../config';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { Layout, StyleService, useStyleSheet, List, ListItem, Input } from '@ui-kitten/components';
+import { Layout, List, ListItem, Input } from '@ui-kitten/components';
 import { Button, Divider, Container, FormErrorMessage, Text } from '../../components';
 import {
   Extrapolate,
@@ -15,7 +15,7 @@ import {
 } from 'react-native-reanimated';
 import { ProgressBar } from 'react-native-paper';
 import { useLayout } from '../../hooks';
-import { User } from '../../providers/types';
+// import { User } from '../../providers/types';
 import * as ImagePicker from 'expo-image-picker';
 import moment from 'moment';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
@@ -224,39 +224,37 @@ export const SettingScreen = inject('appStore')(
             LOG OUT
           </Text>
         </View>
-        <Layout level="4" style={styles.top}>
-          {/*<Animated.View style={scaleAvatar}>
-          <TouchableOpacity onPress={pickImage}>
-            {user.photo && !photoShow && (
-              <Image
-                source={{uri: user.photo}}
-                style={{
-                  alignSelf: 'center',
-                  width: 96,
-                  height: 96,
-                  zIndex: 100,
-                  marginTop: 32,
-                  borderRadius: 9999,
-                }}
-              />
-            )}
-            {photoShow && (
-              <Image
-                source={{uri: photoShow}}
-                style={{
-                  alignSelf: 'center',
-                  width: 96,
-                  height: 96,
-                  zIndex: 100,
-                  marginTop: 32,
-                  borderRadius: 9999,
-                }}
-              />
-            )}
-          </TouchableOpacity>
-				</Animated.View>*/}
-        </Layout>
         <View style={styles.layout}>
+          <Animated.View style={scaleAvatar}>
+            <TouchableOpacity onPress={pickImage}>
+              {user.photo && !photoShow && (
+                <Image
+                  source={{ uri: user.photo }}
+                  style={{
+                    alignSelf: 'center',
+                    width: 96,
+                    height: 96,
+                    zIndex: 100,
+                    marginTop: 32,
+                    borderRadius: 9999,
+                  }}
+                />
+              )}
+              {photoShow && (
+                <Image
+                  source={{ uri: photoShow }}
+                  style={{
+                    alignSelf: 'center',
+                    width: 96,
+                    height: 96,
+                    zIndex: 100,
+                    marginTop: 32,
+                    borderRadius: 9999,
+                  }}
+                />
+              )}
+            </TouchableOpacity>
+          </Animated.View>
           <View style={styles.flexRow}>
             <Text category="label">Username</Text>
             <Text category="p1" style={{ marginTop: 16, fontFamily: 'Ubuntu' }}>
