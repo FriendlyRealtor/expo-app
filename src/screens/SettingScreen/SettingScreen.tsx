@@ -53,9 +53,9 @@ export const SettingScreen = inject('appStore')(
     const [localCmaRows, setLocalCmaRows] = useState();
     const isFocused = useIsFocused();
 
-		useEffect(() => {
-			setPhotoShow(user.photo)
-		}, [user])
+    useEffect(() => {
+      setPhotoShow(user.photo);
+    }, [user]);
 
     useEffect(() => {
       const retrieveRows = async () => {
@@ -91,9 +91,9 @@ export const SettingScreen = inject('appStore')(
                 (snapshot) => {
                   const progress = snapshot.bytesTransferred / snapshot.totalBytes;
 
-									if (progress) {
-										setPhotoProgress(progress);
-									}
+                  if (progress) {
+                    setPhotoProgress(progress);
+                  }
                 },
                 (error) => {
                   console.log('error uploading image: ', error);
