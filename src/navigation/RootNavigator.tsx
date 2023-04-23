@@ -6,6 +6,8 @@ import { SplashScreen } from '../screens';
 import { useFonts } from 'expo-font';
 import { auth } from '../config';
 import { inject, observer } from 'mobx-react';
+import { getTrackingPermissionsAsync } from 'expo-tracking-transparency';
+import { AppState } from 'react-native';
 
 export const RootNavigator = inject('appStore')(
   observer(({ appStore }) => {
@@ -30,6 +32,24 @@ export const RootNavigator = inject('appStore')(
         setIsLoading(false);
       }
     }, [fontsLoaded]);
+
+    useEffect(() => {
+      const requestTrackingData = async () => {
+        try {
+          const { status } = await getTrackingPermissionsAsync();
+
+          if (status === 'granted') {
+            console.log('Yay can track user');
+          } else {
+            console.log('Do not allow to track user');
+          }
+        } catch (error) {
+          console.log('error calling this function', error);
+        }
+      };
+
+      requestTrackingData();
+    }, []);
 
     if (isLoading) {
       return <SplashScreen />;
