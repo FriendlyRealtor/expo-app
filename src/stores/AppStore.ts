@@ -67,9 +67,8 @@ class AppStore {
         if (authenticatedUser) {
           const { uid } = authenticatedUser;
           const docSnap = await getDoc(doc(db, 'users', uid));
-					this.setUser(authenticatedUser);
           if (docSnap.exists()) {
-            this.setUser(...this.user, docSnap.data());
+            this.setUser(docSnap.data());
             await Purchases.configure({
               apiKey: Constants.manifest?.extra?.purchaseApiKey,
               appUserID: uid,
