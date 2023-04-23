@@ -38,6 +38,12 @@ export default {
       },
     },
     plugins: [
+			[
+				'expo-tracking-transparency',
+        {
+          'userTrackingPermission': 'This identifier will be used to deliver personalized ads to you.',
+        },
+			],
       [
         'expo-av',
         {

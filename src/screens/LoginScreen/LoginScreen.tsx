@@ -29,9 +29,6 @@ export const LoginScreen = inject('appStore')(
     const { passwordVisibility, handlePasswordVisibility, rightIcon } =
       useTogglePasswordVisibility();
 
-		useEffect(() => {
-			setErrorState('');
-		}, [])
 
     const handleLogin = (values) => {
       const { email, password } = values;
