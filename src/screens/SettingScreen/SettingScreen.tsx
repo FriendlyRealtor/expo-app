@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useCallback, useContext } from 'react';
-import { View } from 'react-native';
+import { Image, View, Animated, TouchableOpacity } from 'react-native';
 import { getAuth } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
 import { auth, db, storage } from '../../config';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { Layout, StyleService, useStyleSheet, List, ListItem, Input } from '@ui-kitten/components';
+import { Layout, List, ListItem, Input } from '@ui-kitten/components';
 import { Button, Divider, Container, FormErrorMessage, Text } from '../../components';
 import {
   Extrapolate,
@@ -15,7 +15,7 @@ import {
 } from 'react-native-reanimated';
 import { ProgressBar } from 'react-native-paper';
 import { useLayout } from '../../hooks';
-import { User } from '../../providers/types';
+// import { User } from '../../providers/types';
 import * as ImagePicker from 'expo-image-picker';
 import moment from 'moment';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
@@ -34,7 +34,7 @@ export const SettingScreen = inject('appStore')(
     const { user, signOut, cmaRows, cmaFromDatabase, deleteCMAItem, deleteUserAccount } = appStore;
 
     const [photoShow, setPhotoShow] = useState(null);
-    const [photoProgress, setPhotoProgress] = useState(0);
+    const [photoProgress, setPhotoProgress] = useState<number | undefined>(undefined);
     const [errorState, setErrorState] = useState('');
 
     const userAuth = getAuth();
@@ -52,6 +52,10 @@ export const SettingScreen = inject('appStore')(
 
     const [localCmaRows, setLocalCmaRows] = useState();
     const isFocused = useIsFocused();
+
+    useEffect(() => {
+      setPhotoShow(user.photo);
+    }, [user]);
 
     useEffect(() => {
       const retrieveRows = async () => {
@@ -86,7 +90,10 @@ export const SettingScreen = inject('appStore')(
                 'state_changed',
                 (snapshot) => {
                   const progress = snapshot.bytesTransferred / snapshot.totalBytes;
-                  setPhotoProgress(progress);
+
+                  if (progress) {
+                    setPhotoProgress(progress);
+                  }
                 },
                 (error) => {
                   console.log('error uploading image: ', error);
@@ -100,7 +107,7 @@ export const SettingScreen = inject('appStore')(
 
                     if (docRef) {
                       await updateDoc(docRef, data);
-                      setPhotoShow(null);
+                      setPhotoShow(downloadURL);
                     }
                   });
                 },
@@ -224,39 +231,37 @@ export const SettingScreen = inject('appStore')(
             LOG OUT
           </Text>
         </View>
-        <Layout level="4" style={styles.top}>
-          {/*<Animated.View style={scaleAvatar}>
-          <TouchableOpacity onPress={pickImage}>
-            {user.photo && !photoShow && (
-              <Image
-                source={{uri: user.photo}}
-                style={{
-                  alignSelf: 'center',
-                  width: 96,
-                  height: 96,
-                  zIndex: 100,
-                  marginTop: 32,
-                  borderRadius: 9999,
-                }}
-              />
-            )}
-            {photoShow && (
-              <Image
-                source={{uri: photoShow}}
-                style={{
-                  alignSelf: 'center',
-                  width: 96,
-                  height: 96,
-                  zIndex: 100,
-                  marginTop: 32,
-                  borderRadius: 9999,
-                }}
-              />
-            )}
-          </TouchableOpacity>
-				</Animated.View>*/}
-        </Layout>
         <View style={styles.layout}>
+          <Animated.View style={scaleAvatar}>
+            <TouchableOpacity onPress={pickImage}>
+              {user.photo && !photoShow && (
+                <Image
+                  source={{ uri: user.photo }}
+                  style={{
+                    alignSelf: 'center',
+                    width: 96,
+                    height: 96,
+                    zIndex: 100,
+                    marginTop: 32,
+                    borderRadius: 9999,
+                  }}
+                />
+              )}
+              {photoShow && (
+                <Image
+                  source={{ uri: photoShow }}
+                  style={{
+                    alignSelf: 'center',
+                    width: 96,
+                    height: 96,
+                    zIndex: 100,
+                    marginTop: 32,
+                    borderRadius: 9999,
+                  }}
+                />
+              )}
+            </TouchableOpacity>
+          </Animated.View>
           <View style={styles.flexRow}>
             <Text category="label">Username</Text>
             <Text category="p1" style={{ marginTop: 16, fontFamily: 'Ubuntu' }}>
@@ -369,7 +374,7 @@ export const SettingScreen = inject('appStore')(
               </View>
             </View>
           ) : null}
-          {photoShow && (
+          {photoProgress && photoProgress !== 1 && (
             <ProgressBar style={{ marginBottom: 10 }} progress={photoProgress} color="#02FDAA" />
           )}
           {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}

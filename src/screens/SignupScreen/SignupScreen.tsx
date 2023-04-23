@@ -56,7 +56,21 @@ export const SignupScreen = ({ navigation }) => {
           navigation.navigate('Login');
         });
       })
-      .catch((error) => setErrorState(error.message));
+      .catch((error) => {
+        switch (error.code) {
+          case 'auth/email-already-in-use':
+            setErrorState('Email already in use, try another one.');
+            break;
+          case 'auth/invalid-email':
+            setErrorState('Please enter a valid email!');
+            break;
+          case 'auth/weak-password':
+            setErrorState('Please enter a stronger password!');
+            break;
+          default:
+            setErrorState(`Contact Support contact@friendlyrealtor.app ${error.message}`);
+        }
+      });
   };
 
   return (
@@ -76,6 +90,8 @@ export const SignupScreen = ({ navigation }) => {
           <Formik validationSchema={signupValidationSchema}>
             {() => (
               <View isSafe style={styles.container}>
+                <Text category="p1">* Please complete all fields.</Text>
+                {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
                 <TextInput
                   name="firstName"
                   placeholder="First Name"
@@ -149,7 +165,6 @@ export const SignupScreen = ({ navigation }) => {
                   error={errors.confirmPassword}
                   visible={touched.confirmPassword}
                 />
-                {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
                 <Text
                   appearance="hint"
                   style={{ fontSize: 12, textAlign: 'center', marginTop: 10 }}
