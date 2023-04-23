@@ -12,7 +12,7 @@ export default {
     icon: './assets/logo.png',
     updates: {
       fallbackToCacheTimeout: 0,
-			url: `https://u.expo.dev/${process.env.EAS_PROJECT_ID}`,
+			url: 'https://u.expo.dev/367e8c43-826e-4fbb-9a0c-fdb79080a072',
     },
 		runtimeVersion: {
 			policy: 'sdkVersion',
@@ -38,7 +38,7 @@ export default {
       cloudFunctionUrl: process.env.FIREBASE_CLOUD_FUNCTION_URL,
 			openAiKey: process.env.OPENAI_API_KEY,
       eas: {
-        projectId: process.env.EAS_PROJECT_ID,
+        projectId: '367e8c43-826e-4fbb-9a0c-fdb79080a072',
       },
     },
     plugins: [
