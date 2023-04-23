@@ -41,36 +41,34 @@ export const SignupScreen = ({ navigation }) => {
 
   const handleSignup = async (values) => {
     const { email, password, firstName, lastName, userName } = values;
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        sendEmailVerification(user).then(async () => {
-          const { uid } = user;
-          await setDoc(doc(db, 'users', uid), {
-            name: `${firstName} ${lastName}`,
-            ceRenewalDate: new Date(),
-            userName: userName,
-            photo:
-              'https://firebasestorage.googleapis.com/v0/b/real-estate-app-9a719.appspot.com/o/default_photo%2Fimg_avatar.png?alt=media&token=ca7c1413-f7ea-4511-915a-699283568edc',
-          });
-          navigation.navigate('Login');
-        });
-      })
-      .catch((error) => {
-        switch (error.code) {
-          case 'auth/email-already-in-use':
-            setErrorState('Email already in use, try another one.');
-            break;
-          case 'auth/invalid-email':
-            setErrorState('Please enter a valid email!');
-            break;
-          case 'auth/weak-password':
-            setErrorState('Please enter a stronger password!');
-            break;
-          default:
-            setErrorState(`Contact Support contact@friendlyrealtor.app ${error.message}`);
-        }
-      });
+
+		try {
+			const res =  await createUserWithEmailAndPassword(auth, email, password)
+			await sendEmailVerification(res.user)
+			await setDoc(doc(db, 'users', res.user.uid), {
+				name: `${firstName} ${lastName}`,
+				ceRenewalDate: new Date(),
+				userName: userName,
+				photo:
+					'https://firebasestorage.googleapis.com/v0/b/real-estate-app-9a719.appspot.com/o/default_photo%2Fimg_avatar.png?alt=media&token=ca7c1413-f7ea-4511-915a-699283568edc',
+			});
+			navigation.navigate('Login');
+		} catch (error) {
+			switch (error.code) {
+				case 'auth/email-already-in-use':
+					setErrorState('Email already in use, try another one.');
+					break;
+				case 'auth/invalid-email':
+					setErrorState('Please enter a valid email!');
+					break;
+				case 'auth/weak-password':
+					setErrorState('Please enter a stronger password!');
+					break;
+				default:
+					setErrorState(`Contact Support contact@friendlyrealtor.app ${error.message}`);
+			}
+			console.log('error occured signing up', error);
+		}
   };
 
   return (
