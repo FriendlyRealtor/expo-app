@@ -113,14 +113,12 @@ class AppStore {
     }
   };
 
-
- checkUsernameExists = async (username: string) => {
-  const usersRef = collection(db, 'users');
-  const q = query(usersRef, where('username', '==', username));
-  const querySnapshot = await getDocs(q);
-  return !!querySnapshot.docs.length;
-};
-
+  checkUsernameExists = async (username: string) => {
+    const usersRef = collection(db, 'users');
+    const q = query(usersRef, where('username', '==', username));
+    const querySnapshot = await getDocs(q);
+    return !!querySnapshot.docs.length;
+  };
 }
 
 export default new AppStore();

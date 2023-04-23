@@ -10,10 +10,7 @@ import { useTogglePasswordVisibility } from '../../hooks';
 import { loginValidationSchema } from '../../utils';
 import { StatusBar } from 'expo-status-bar';
 import { inject, observer } from 'mobx-react';
-import {
-  isAvailable,
-  requestTrackingPermissionsAsync,
-} from 'expo-tracking-transparency';
+import { isAvailable, requestTrackingPermissionsAsync } from 'expo-tracking-transparency';
 
 export const LoginScreen = inject('appStore')(
   observer(({ appStore, navigation }) => {

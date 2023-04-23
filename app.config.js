@@ -12,7 +12,11 @@ export default {
     icon: './assets/logo.png',
     updates: {
       fallbackToCacheTimeout: 0,
+			url: `https://u.expo.dev/${process.env.EAS_PROJECT_ID}`,
     },
+		runtimeVersion: {
+			policy: 'sdkVersion',
+		},
     assetBundlePatterns: ['**/*'],
     ios: {
       supportsTablet: true,
@@ -34,7 +38,7 @@ export default {
       cloudFunctionUrl: process.env.FIREBASE_CLOUD_FUNCTION_URL,
 			openAiKey: process.env.OPENAI_API_KEY,
       eas: {
-        projectId: "367e8c43-826e-4fbb-9a0c-fdb79080a072",
+        projectId: process.env.EAS_PROJECT_ID,
       },
     },
     plugins: [
