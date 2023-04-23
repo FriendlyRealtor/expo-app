@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Image } from 'react-native';
 import { Formik, useFormik } from 'formik';
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -12,7 +12,6 @@ import { StatusBar } from 'expo-status-bar';
 import { inject, observer } from 'mobx-react';
 import {
   isAvailable,
-  getTrackingPermissionsAsync,
   requestTrackingPermissionsAsync,
 } from 'expo-tracking-transparency';
 

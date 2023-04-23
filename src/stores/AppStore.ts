@@ -4,6 +4,7 @@ import { auth, db } from '../config';
 import Constants from 'expo-constants';
 import Purchases from 'react-native-purchases';
 import { onAuthStateChanged, getAuth, signOut } from 'firebase/auth';
+import { getDocs, query, collection, where } from 'firebase/firestore';
 
 class AppStore {
   cmaRows = [];
@@ -111,6 +112,15 @@ class AppStore {
       this.setUser(null);
     }
   };
+
+
+ checkUsernameExists = async (username: string) => {
+  const usersRef = collection(db, 'users');
+  const q = query(usersRef, where('username', '==', username));
+  const querySnapshot = await getDocs(q);
+  return !!querySnapshot.docs.length;
+};
+
 }
 
 export default new AppStore();

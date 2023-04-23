@@ -11,8 +11,9 @@ import { signupValidationSchema } from '../../utils';
 import { StatusBar } from 'expo-status-bar';
 import { SignupScreenStyles } from './SignupScreenStyles';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { inject, observer } from 'mobx-react';
 
-export const SignupScreen = ({ navigation }) => {
+export const SignupScreen = inject('appStore')(observer(({ appStore, navigation }) => {
   const styles = SignupScreenStyles;
   const { values, touched, errors, handleChange, handleSubmit, handleBlur, resetForm } = useFormik({
     initialValues: {
@@ -23,6 +24,9 @@ export const SignupScreen = ({ navigation }) => {
       password: '',
       confirmPassword: '',
     },
+    validationSchema: signupValidationSchema,
+    validateOnChange: true,
+    validateOnBlur: true,
     onSubmit: (values) => {
       handleSignup(values);
     },
@@ -41,9 +45,15 @@ export const SignupScreen = ({ navigation }) => {
 
   const handleSignup = async (values) => {
     const { email, password, firstName, lastName, userName } = values;
+		const { checkUsernameExists } = appStore;
 
     try {
-      const res = await createUserWithEmailAndPassword(auth, email, password);
+			const doesUserNameExists = await checkUsernameExists(userName);
+			if (doesUserNameExists) {
+				throw new Error('Username already exists');
+			}
+
+			const res = await createUserWithEmailAndPassword(auth, email, password);
       await sendEmailVerification(res.user);
       await setDoc(doc(db, 'users', res.user.uid), {
         name: `${firstName} ${lastName}`,
@@ -53,6 +63,7 @@ export const SignupScreen = ({ navigation }) => {
           'https://firebasestorage.googleapis.com/v0/b/real-estate-app-9a719.appspot.com/o/default_photo%2Fimg_avatar.png?alt=media&token=ca7c1413-f7ea-4511-915a-699283568edc',
       });
       navigation.navigate('Login');
+      resetForm({});
     } catch (error) {
       switch (error.code) {
         case 'auth/email-already-in-use':
@@ -64,10 +75,12 @@ export const SignupScreen = ({ navigation }) => {
         case 'auth/weak-password':
           setErrorState('Please enter a stronger password!');
           break;
+				case undefined:
+					setErrorState(error.message as string)
+					break;
         default:
           setErrorState(`Contact Support contact@friendlyrealtor.app ${error.message}`);
       }
-      console.log('error occured signing up', error);
     }
   };
 
@@ -85,7 +98,7 @@ export const SignupScreen = ({ navigation }) => {
               <Text style={styles.screenTitle}>Sign Up!</Text>
             </View>
           </View>
-          <Formik validationSchema={signupValidationSchema}>
+          <Formik>
             {() => (
               <View isSafe style={styles.container}>
                 <Text category="p1">* Please complete all fields.</Text>
@@ -209,4 +222,4 @@ export const SignupScreen = ({ navigation }) => {
       </ScrollView>
     </SafeAreaView>
   );
-};
+}));
