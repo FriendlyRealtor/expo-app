@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 import { Colors } from '../../config';
 
 export const LoginScreenStyles = StyleSheet.create({
-	container: {
+  container: {
     flex: 1,
     backgroundColor: Colors.white,
     paddingHorizontal: 12,

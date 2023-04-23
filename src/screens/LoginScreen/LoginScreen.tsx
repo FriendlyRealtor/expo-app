@@ -10,6 +10,11 @@ import { useTogglePasswordVisibility } from '../../hooks';
 import { loginValidationSchema } from '../../utils';
 import { StatusBar } from 'expo-status-bar';
 import { inject, observer } from 'mobx-react';
+import {
+  isAvailable,
+  getTrackingPermissionsAsync,
+  requestTrackingPermissionsAsync,
+} from 'expo-tracking-transparency';
 
 export const LoginScreen = inject('appStore')(
   observer(({ appStore, navigation }) => {
@@ -29,22 +34,24 @@ export const LoginScreen = inject('appStore')(
     const { passwordVisibility, handlePasswordVisibility, rightIcon } =
       useTogglePasswordVisibility();
 
-
     const handleLogin = (values) => {
       const { email, password } = values;
       signInWithEmailAndPassword(auth, email, password)
-        .then(() => {
+        .then(async () => {
           if (!auth.currentUser.emailVerified) {
             setErrorState('Head to your email and verify your account!');
           } else {
+            if (isAvailable()) {
+              await requestTrackingPermissionsAsync();
+            }
             retrieveLoggedInUser();
           }
         })
         .catch((error) => {
           switch (error.message) {
-						case 'Firebase: Error (auth/user-not-found).':
-							setErrorState('User not found!');
-							break;
+            case 'Firebase: Error (auth/user-not-found).':
+              setErrorState('User not found!');
+              break;
             case 'Firebase: Error (auth/wrong-password).':
               setErrorState('Wrong password!');
               break;
@@ -73,7 +80,7 @@ export const LoginScreen = inject('appStore')(
           <Formik validationSchema={loginValidationSchema}>
             {() => (
               <>
-								{errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
+                {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
                 <TextInput
                   name="email"
                   leftIconName="email"

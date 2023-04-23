@@ -88,7 +88,7 @@ class AppStore {
           }
         }
       });
-			return this.getUser();
+      return this.getUser();
     } catch (error) {
       console.log(error);
     }
