@@ -34,7 +34,7 @@ export default {
       cloudFunctionUrl: process.env.FIREBASE_CLOUD_FUNCTION_URL,
 			openAiKey: process.env.OPENAI_API_KEY,
       eas: {
-        projectId: process.env.EAS_PROJECT_ID,
+        projectId: "367e8c43-826e-4fbb-9a0c-fdb79080a072",
       },
     },
     plugins: [
