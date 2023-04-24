@@ -82,11 +82,7 @@ export const LocalRestaurantScreen = (props) => {
           />
           <Text category="h5">{name}</Text>
           <View
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}
+            style={styles.rating}
           >
             <Icon style={styles.icon} fill="#FFE234" name="star" />
             <Text>{rating}</Text>

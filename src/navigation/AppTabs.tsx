@@ -17,6 +17,7 @@ export const AppTabs = (props) => {
   const { locationStatus } = usePermissions(props.currentUser);
 
   const [activeSub, setActiveSub] = useState(false);
+  const [location, setLocation] = useState(null);
 
   useEffect(() => {
     if (
@@ -27,6 +28,20 @@ export const AppTabs = (props) => {
       setActiveSub(true);
     }
   }, [props.user.customerInfo]);
+
+	useEffect(() => {
+    const getLocation = async () => {
+      if (locationStatus !== 'granted') {
+        setLoading(false);
+        return;
+      }
+
+      const res = await Location.getCurrentPositionAsync({});
+      setLocation(res.coords);
+    };
+
+    getLocation();
+  }, [locationStatus]);
 
   return (
     <Tab.Navigator>
@@ -66,7 +81,7 @@ export const AppTabs = (props) => {
           tabBarIcon: () => <Icon name="delicious" size={30} color="#02FDAA" />,
         }}
       >
-        {() => <LocalRestaurantScreen locationStatus={locationStatus} />}
+        {() => <LocalRestaurantScreen location={location} />}
       </Tab.Screen>
       <Tab.Screen
         name="Settings"

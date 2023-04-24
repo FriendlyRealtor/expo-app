@@ -15,6 +15,11 @@ export const LocalRestaurantScreenStyles = StyleSheet.create({
     height: 20,
     marginRight: 8,
   },
+  rating: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   notFound: { display: 'flex', alignItems: 'center', marginTop: 80 },
   container: {
     position: 'absolute',
