@@ -81,7 +81,7 @@ export const AppTabs = (props) => {
           tabBarIcon: () => <Icon name="delicious" size={30} color="#02FDAA" />,
         }}
       >
-        {() => <LocalRestaurantScreen location={location} />}
+        {() => <LocalRestaurantScreen locationStatus={locationStatus} />}
       </Tab.Screen>
       <Tab.Screen
         name="Settings"
