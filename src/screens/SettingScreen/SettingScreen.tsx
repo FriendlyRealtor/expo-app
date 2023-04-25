@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useCallback, useContext } from 'react';
-import { Image, View, Animated, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState, useCallback } from 'react';
+import { Image, View, Animated, TouchableOpacity, Alert } from 'react-native';
 import { getAuth } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
 import { auth, db, storage } from '../../config';
@@ -27,6 +27,7 @@ import * as Device from 'expo-device';
 import { SettingScreenStyles } from './SettingScreenStyles';
 import { StatusBar } from 'expo-status-bar';
 import { inject, observer } from 'mobx-react';
+import Purchases from 'react-native-purchases';
 
 export const SettingScreen = inject('appStore')(
   observer(({ appStore }) => {
@@ -210,6 +211,20 @@ export const SettingScreen = inject('appStore')(
       }
     };
 
+    const restorePurchase = async () => {
+      try {
+        const restoredEntitlements = await Purchases.restorePurchases();
+        if (restoredEntitlements.length > 0) {
+					Alert.alert('Successfully restored purchases.');
+        } else {
+					Alert.alert('No purchases to restore.');
+        }
+      } catch (error) {
+        console.log('Error restoring purchases', error);
+				Alert.alert('Error restoring purchases.', error);
+      }
+    };
+
     const year = moment().year();
     const month = moment().month();
     const day = moment().format('D');
@@ -330,9 +345,23 @@ export const SettingScreen = inject('appStore')(
             >{`https://friendlyrealtor.app/profile/${user.userName}`}</Text>
           </View>
           <Divider />
+          <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginVertical: 16 }}>
+            <Button
+              onPress={() => {
+                try {
+                  restorePurchase();
+                } catch (error) {
+                  console.log('error', error);
+                }
+              }}
+            >
+              <Text status="danger">Restore Purchases</Text>
+            </Button>
+          </View>
+          <Divider />
           <View style={styles.flexRow}>
             <Text category="label">App Version</Text>
-            <Text>{Constants.manifest.version}</Text>
+            <Text>{Constants?.manifest?.version}</Text>
           </View>
           <Divider />
           {Device.osVersion && (
@@ -343,9 +372,7 @@ export const SettingScreen = inject('appStore')(
           )}
           {Device.osVersion && <Divider />}
           <View style={styles.flexRow}>
-            <Text category="label" status="danger">
-              Delete Account
-            </Text>
+            <Text category="label">Delete Account</Text>
             <Button
               onPress={() => {
                 try {
@@ -355,7 +382,7 @@ export const SettingScreen = inject('appStore')(
                 }
               }}
             >
-              <Text>Delete</Text>
+              <Text status="danger">Delete</Text>
             </Button>
           </View>
         </View>

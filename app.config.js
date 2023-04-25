@@ -20,7 +20,7 @@ export default {
     ios: {
       supportsTablet: true,
       bundleIdentifier: 'jubileeinvestments.Real-Estate-App',
-      buildNumber: '19',
+      buildNumber: '20',
       config: {
         usesNonExemptEncryption: false,
       },
@@ -44,21 +44,21 @@ export default {
 			[
 				'expo-tracking-transparency',
         {
-          'userTrackingPermission': '${PRODUCT_NAME} will be used to deliver personalized ads to you.',
+          'userTrackingPermission': '${PRODUCT_NAME} will display ads tailored to your interests and preferences.',
         },
 			],
       [
         'expo-av',
         {
           microphonePermission:
-            'Allow $(PRODUCT_NAME) to access your microphone to play videos with sound.',
+            'Grant $(PRODUCT_NAME) access to your device\'s microphone so that you can listen to videos and other audio content within the app.',
         },
       ],
       [
         'expo-location',
         {
           locationAlwaysAndWhenInUsePermission:
-            'Allow $(PRODUCT_NAME) to access your location to show you nearby restaurants.',
+            'Grant $(PRODUCT_NAME) access to your device\'s location, you\'ll be able to receive a list of nearby restaurants within a 5-mile radius. You can then select a restaurant from the list to get more information and directions',
         },
       ],
       [
