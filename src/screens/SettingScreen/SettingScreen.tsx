@@ -210,6 +210,10 @@ export const SettingScreen = inject('appStore')(
       }
     };
 
+    const restorePurchase = async () => {
+			
+		};
+
     const year = moment().year();
     const month = moment().month();
     const day = moment().format('D');
@@ -331,8 +335,23 @@ export const SettingScreen = inject('appStore')(
           </View>
           <Divider />
           <View style={styles.flexRow}>
+            <Text category="label">Restore Purchases</Text>
+            <Button
+              onPress={() => {
+                try {
+                  restorePurchase();
+                } catch (error) {
+                  console.log('error', error);
+                }
+              }}
+            >
+              <Text status="danger">Delete</Text>
+            </Button>
+          </View>
+          <Divider />
+          <View style={styles.flexRow}>
             <Text category="label">App Version</Text>
-            <Text>{Constants.manifest.version}</Text>
+            <Text>{Constants?.manifest?.version}</Text>
           </View>
           <Divider />
           {Device.osVersion && (
@@ -343,9 +362,7 @@ export const SettingScreen = inject('appStore')(
           )}
           {Device.osVersion && <Divider />}
           <View style={styles.flexRow}>
-            <Text category="label" status="danger">
-              Delete Account
-            </Text>
+            <Text category="label">Delete Account</Text>
             <Button
               onPress={() => {
                 try {
@@ -355,7 +372,7 @@ export const SettingScreen = inject('appStore')(
                 }
               }}
             >
-              <Text>Delete</Text>
+              <Text status="danger">Delete</Text>
             </Button>
           </View>
         </View>
