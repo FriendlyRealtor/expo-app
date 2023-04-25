@@ -12,7 +12,6 @@ export default {
     icon: './assets/logo.png',
     updates: {
       fallbackToCacheTimeout: 0,
-			url: 'https://u.expo.dev/367e8c43-826e-4fbb-9a0c-fdb79080a072',
     },
 		runtimeVersion: {
 			policy: 'sdkVersion',
@@ -21,7 +20,7 @@ export default {
     ios: {
       supportsTablet: true,
       bundleIdentifier: 'jubileeinvestments.Real-Estate-App',
-      buildNumber: '16',
+      buildNumber: '19',
       config: {
         usesNonExemptEncryption: false,
       },
@@ -38,28 +37,28 @@ export default {
       cloudFunctionUrl: process.env.FIREBASE_CLOUD_FUNCTION_URL,
 			openAiKey: process.env.OPENAI_API_KEY,
       eas: {
-        projectId: '367e8c43-826e-4fbb-9a0c-fdb79080a072',
+        projectId: process.env.EAS_PROJECT_ID,
       },
     },
     plugins: [
 			[
 				'expo-tracking-transparency',
         {
-          'userTrackingPermission': 'This identifier will be used to deliver personalized ads to you.',
+          'userTrackingPermission': '${PRODUCT_NAME} will be used to deliver personalized ads to you.',
         },
 			],
       [
         'expo-av',
         {
           microphonePermission:
-            'Allow $(PRODUCT_NAME) to access your microphone.',
+            'Allow $(PRODUCT_NAME) to access your microphone to play videos with sound.',
         },
       ],
       [
         'expo-location',
         {
           locationAlwaysAndWhenInUsePermission:
-            'Allow $(PRODUCT_NAME) to use your location.',
+            'Allow $(PRODUCT_NAME) to access your location to show you nearby restaurants.',
         },
       ],
       [
