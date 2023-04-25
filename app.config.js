@@ -13,11 +13,14 @@ export default {
     updates: {
       fallbackToCacheTimeout: 0,
     },
+		runtimeVersion: {
+			policy: 'sdkVersion',
+		},
     assetBundlePatterns: ['**/*'],
     ios: {
       supportsTablet: true,
       bundleIdentifier: 'jubileeinvestments.Real-Estate-App',
-      buildNumber: '16',
+      buildNumber: '18',
       config: {
         usesNonExemptEncryption: false,
       },
