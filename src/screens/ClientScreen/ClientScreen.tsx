@@ -17,7 +17,7 @@ import moment from 'moment';
 import { useIsFocused } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 
-export const AddDeal = ({ modalVisible, setModalVisible, formData }) => {
+export const AddDeal = ({ modalVisible, setModalVisible, formData, setUserDeals }) => {
   const styles = StyleSheet.create({
     centeredView: {
       flex: 1,
@@ -74,6 +74,7 @@ export const AddDeal = ({ modalVisible, setModalVisible, formData }) => {
   const { values, touched, errors, setFieldValue, handleChange, handleSubmit, resetForm } =
     useFormik({
       onSubmit: async (submitValues) => {
+        submitValues.id = uuid.v4();
         if (formData && formData.id) {
           const { uid } = userAuth.currentUser;
           const docRef = await doc(db, 'users', uid);
@@ -86,6 +87,7 @@ export const AddDeal = ({ modalVisible, setModalVisible, formData }) => {
             updatedDeals.splice(1, docIndex, submitValues);
             if (docRef) {
               await updateDoc(docRef, { deals: updatedDeals });
+              setUserDeals(updatedDeals);
               resetForm();
               setModalVisible(false);
             }
@@ -97,8 +99,6 @@ export const AddDeal = ({ modalVisible, setModalVisible, formData }) => {
     });
 
   useEffect(() => {
-    if (formData && formData.closingDate) {
-    }
     resetForm({
       values: {
         id: formData && formData.id ? formData.id : uuid.v4(),
@@ -147,6 +147,7 @@ export const AddDeal = ({ modalVisible, setModalVisible, formData }) => {
         await updateDoc(docRef, { deals: deals });
         resetForm();
         setModalVisible(false);
+        setUserDeals(deals);
       }
     }
   };
@@ -366,11 +367,16 @@ export const ClientScreen = (props) => {
             size={24}
             color="red"
             onPress={async () => {
-              const userAuth = getAuth();
-              const { uid } = userAuth.currentUser;
-              const docRef = await doc(db, 'users', uid);
-              const filterDeals = userDeals.filter((deal) => deal.id !== item.id);
-              await updateDoc(docRef, { deals: filterDeals });
+              try {
+                const userAuth = getAuth();
+                const { uid } = userAuth.currentUser;
+                const docRef = await doc(db, 'users', uid);
+                const filterDeals = userDeals.filter((deal) => deal.id !== item.id);
+                await updateDoc(docRef, { deals: filterDeals });
+                setUserDeals(filterDeals);
+              } catch (error) {
+                console.log('error removing deal', error);
+              }
             }}
           />
         </View>
@@ -463,10 +469,16 @@ export const ClientScreen = (props) => {
   return (
     <Layout style={{ flex: 1 }}>
       <View>
+        {userDeals.length === 0 && (
+          <Text style={{ marginHorizontal: 12, marginTop: 32 }}>
+            Posting a deal is easy. Just create a post with the details of the deal.
+          </Text>
+        )}
         <AddDeal
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
           formData={formData}
+          setUserDeals={setUserDeals}
         />
         <Icon
           name="plus-circle"

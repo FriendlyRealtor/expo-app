@@ -29,7 +29,7 @@ export const AppTabs = (props) => {
     }
   }, [props.user.customerInfo]);
 
-	useEffect(() => {
+  useEffect(() => {
     const getLocation = async () => {
       if (locationStatus !== 'granted') {
         setLoading(false);
