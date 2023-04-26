@@ -20,9 +20,14 @@ export default {
     ios: {
       supportsTablet: true,
       bundleIdentifier: 'jubileeinvestments.Real-Estate-App',
-      buildNumber: '20',
+      buildNumber: '24',
       config: {
         usesNonExemptEncryption: false,
+      },
+			'infoPlist': {
+        'NSLocationWhenInUseUsageDescription': "Grant $(PRODUCT_NAME) access to your device\'s location, you\'ll be able to receive a list of nearby restaurants within a 5-mile radius. You can then select a restaurant from the list to get more information and directions",
+				'NSLocationAlwaysUsageDescription': "Grant $(PRODUCT_NAME) access to your device\'s location, you\'ll be able to receive a list of nearby restaurants within a 5-mile radius. You can then select a restaurant from the list to get more information and directions",
+				'NSLocationAlwaysAndWhenInUseUsageDescription': "Grant $(PRODUCT_NAME) access to your device\'s location, you\'ll be able to receive a list of nearby restaurants within a 5-mile radius. You can then select a restaurant from the list to get more information and directions",
       },
     },
     extra: {
@@ -59,6 +64,8 @@ export default {
         {
           locationAlwaysAndWhenInUsePermission:
             'Grant $(PRODUCT_NAME) access to your device\'s location, you\'ll be able to receive a list of nearby restaurants within a 5-mile radius. You can then select a restaurant from the list to get more information and directions',
+						locationAlwaysPermission: 'Grant $(PRODUCT_NAME) access to your device\'s location, you\'ll be able to receive a list of nearby restaurants within a 5-mile radius. You can then select a restaurant from the list to get more information and directions',
+						isIosBackgroundLocationEnabled: 'Grant $(PRODUCT_NAME) access to your device\'s location, you\'ll be able to receive a list of nearby restaurants within a 5-mile radius. You can then select a restaurant from the list to get more information and directions',
         },
       ],
       [
