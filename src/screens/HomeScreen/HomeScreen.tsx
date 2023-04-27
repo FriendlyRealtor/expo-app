@@ -18,6 +18,8 @@ import { db } from '../../config';
 import { getAuth } from 'firebase/auth';
 import { HomeScreenStyles } from './HomeScreenStyles';
 import { StatusBar } from 'expo-status-bar';
+import Purchases, { PurchasesPackage } from 'react-native-purchases';
+import { PayWallView } from '../TemplateScreen';
 
 export const HomeScreen = () => {
   const isFocused = useIsFocused();
@@ -27,6 +29,9 @@ export const HomeScreen = () => {
   const [errorState, setErrorState] = useState('');
   const userAuth = getAuth();
   const [crmEstimate, setCrmEstimate] = useState(null);
+	const [modalVisible, setModalVisible] = useState(false);
+	const [monthlyPkg, setMonthlyPkg] = useState<PurchasesPackage>(null);
+  const [annualPkg, setAnnualPkg] = useState<PurchasesPackage>(null);
   const { handleChange, values, handleBlur, handleSubmit, resetForm } = useFormik({
     initialValues: {
       location: '',
@@ -37,6 +42,28 @@ export const HomeScreen = () => {
   });
 
   const { location } = values;
+
+	useEffect(() => {
+    const fetchOfferings = async () => {
+      try {
+        const offerings = await Purchases.getOfferings();
+        if (offerings) {
+          if (offerings.all.default_offering) {
+            if (offerings.all.default_offering.monthly) {
+              setMonthlyPkg(offerings.all.default_offering.monthly);
+            }
+            if (offerings.all.default_offering.annual) {
+              setAnnualPkg(offerings.all.default_offering.annual);
+            }
+          }
+        }
+      } catch (err) {
+        console.log('error', err);
+      }
+    };
+
+    fetchOfferings();
+  }, []);
 
   useEffect(() => {
     resetForm({
@@ -112,11 +139,18 @@ export const HomeScreen = () => {
   return (
     <Layout style={styles.layout}>
       <StatusBar style="auto" />
+			<PayWallView
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        monthlyPkg={monthlyPkg}
+        annualPkg={annualPkg}
+      />
       <KeyboardAwareScrollView style={styles.keyboard}>
         <Formik validationSchema={locationValidationSchema}>
           <View style={styles.card}>
             <View style={styles.crmHeader}>
               <Text category="h6">Get CRM Valuation on the go!</Text>
+
               <Text category="s1" status="info" style={styles.search}>
                 Search for property by address.
               </Text>
@@ -129,6 +163,24 @@ export const HomeScreen = () => {
                 understanding of the local real estate market and make informed decisions about
                 buying or selling a property
               </Text>
+              <Button
+                style={{
+                  width: 250,
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  padding: 10,
+                  borderRadius: 8,
+                  marginTop: 16,
+                  marginBottom: 32,
+                  fontFamily: 'Ubuntu',
+                  backgroundColor: '#ededed',
+                }}
+                onPress={() => setModalVisible(true)}
+              >
+                <Text>Upgrade</Text>
+              </Button>
               <TextInput
                 name="location"
                 value={values.location}

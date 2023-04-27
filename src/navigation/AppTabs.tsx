@@ -61,20 +61,20 @@ export const AppTabs = (props) => {
           }}
         />
       )}
-      <Tab.Screen
+      {/*<Tab.Screen
         name="Templates"
         component={TemplateScreen}
         options={{
           tabBarIcon: () => <Icon name="newspaper-o" size={30} color="#02FDAA" />,
         }}
-      />
-      <Tab.Screen
+      />*/}
+      {/*<Tab.Screen
         name="Learning"
         component={ContinueEducationScreen}
         options={{
           tabBarIcon: () => <Icon name="book" size={30} color="#02FDAA" />,
         }}
-      />
+      />*/}
       <Tab.Screen
         name="Restaurants"
         options={{
