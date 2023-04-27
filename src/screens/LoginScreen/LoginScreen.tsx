@@ -109,11 +109,10 @@ export const LoginScreen = inject('appStore')(
               </>
             )}
           </Formik>
-          {/* Button to navigate to SignupScreen to Create Account */}
           <Button
             style={styles.borderlessButtonContainer}
             borderless
-            title={'Create Account?'}
+            title={'Create Account'}
             onPress={() => {
               resetForm({
                 values: {

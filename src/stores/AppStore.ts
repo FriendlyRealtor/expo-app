@@ -75,18 +75,15 @@ class AppStore {
               appUserID: uid,
             });
           }
+          // const customerInfo = await Purchases.getCustomerInfo();
 
-          if (this.user) {
-            const customerInfo = await Purchases.getCustomerInfo();
-
-            if (customerInfo) {
-              const updatedObj = {
-                ...this.user,
-                customerInfo,
-              };
-              this.setUser(updatedObj);
-            }
-          }
+          /*if (customerInfo) {
+						const updatedObj = {
+							...this.user,
+							customerInfo,
+						};
+						this.setUser(updatedObj);
+					}*/
         }
       });
       return this.getUser();

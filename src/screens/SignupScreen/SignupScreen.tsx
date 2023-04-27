@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Image, TouchableOpacity, Linking, SafeAreaView, ScrollView } from 'react-native';
+import { Image, TouchableOpacity, Linking, SafeAreaView, ScrollView, Alert } from 'react-native';
 import { Formik, useFormik } from 'formik';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { View, TextInput, Text, Button, FormErrorMessage } from '../../components';
+import { View, TextInput, Text, Button, FormErrorMessage, Loading } from '../../components';
 import { auth, db } from '../../config';
 import { useTogglePasswordVisibility } from '../../hooks';
 import { signupValidationSchema } from '../../utils';
@@ -34,7 +34,7 @@ export const SignupScreen = inject('appStore')(
         },
       });
 
-    const [errorState, setErrorState] = useState('');
+    const [errorState, setErrorState] = useState<string>('');
 
     const {
       passwordVisibility,
@@ -57,6 +57,7 @@ export const SignupScreen = inject('appStore')(
 
         const res = await createUserWithEmailAndPassword(auth, email, password);
         await sendEmailVerification(res.user);
+        Alert.alert('Email Verification sent.');
         await setDoc(doc(db, 'users', res.user.uid), {
           name: `${firstName} ${lastName}`,
           ceRenewalDate: new Date(),

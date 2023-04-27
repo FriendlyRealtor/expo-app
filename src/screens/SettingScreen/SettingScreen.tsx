@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Image, View, Animated, TouchableOpacity, Alert } from 'react-native';
+import { Image, View, ScrollView, Animated, TouchableOpacity, Alert } from 'react-native';
 import { getAuth } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
 import { auth, db, storage } from '../../config';
@@ -215,13 +215,13 @@ export const SettingScreen = inject('appStore')(
       try {
         const restoredEntitlements = await Purchases.restorePurchases();
         if (restoredEntitlements.length > 0) {
-					Alert.alert('Successfully restored purchases.');
+          Alert.alert('Successfully restored purchases.');
         } else {
-					Alert.alert('No purchases to restore.');
+          Alert.alert('No purchases to restore.');
         }
       } catch (error) {
         console.log('Error restoring purchases', error);
-				Alert.alert('Error restoring purchases.', error);
+        Alert.alert('Error restoring purchases.', error);
       }
     };
 
@@ -246,166 +246,175 @@ export const SettingScreen = inject('appStore')(
             LOG OUT
           </Text>
         </View>
-        <View style={styles.layout}>
-          <Animated.View style={scaleAvatar}>
-            <TouchableOpacity onPress={pickImage}>
-              {user.photo && !photoShow && (
-                <Image
-                  source={{ uri: user.photo }}
-                  style={{
-                    alignSelf: 'center',
-                    width: 96,
-                    height: 96,
-                    zIndex: 100,
-                    marginTop: 32,
-                    borderRadius: 9999,
-                  }}
-                />
-              )}
-              {photoShow && (
-                <Image
-                  source={{ uri: photoShow }}
-                  style={{
-                    alignSelf: 'center',
-                    width: 96,
-                    height: 96,
-                    zIndex: 100,
-                    marginTop: 32,
-                    borderRadius: 9999,
-                  }}
-                />
-              )}
-            </TouchableOpacity>
-          </Animated.View>
-          <View style={styles.flexRow}>
-            <Text category="label">Username</Text>
-            <Text category="p1" style={{ marginTop: 16, fontFamily: 'Ubuntu' }}>
-              {user.userName || ''}
-            </Text>
-          </View>
-          <Divider />
-          <View style={styles.flexRow}>
-            <Text category="label" style={{ marginTop: 16 }}>
-              Name
-            </Text>
-            <Text category="p1" style={{ marginTop: 16, fontFamily: 'Ubuntu' }}>
-              {user.name || ''}
-            </Text>
-          </View>
-          <Divider />
-          <View style={styles.flexRow}>
-            <Text category="label">Email</Text>
-            {userAuth.currentUser && userAuth.currentUser.email && (
-              <Text category="p1" style={{ fontFamily: 'Ubuntu' }}>
-                {userAuth.currentUser.email}
-              </Text>
-            )}
-          </View>
-          <Divider />
-          <View style={styles.flexRow}>
-            <Text category="label">Bio</Text>
-            <Input
-              placeholder="Place enter bio"
-              value={bio}
-              onChangeText={(nextValue) => setBio(nextValue)}
-              onBlur={() => updateProfileBio()}
-              size="small"
-              style={styles.input}
-            />
-          </View>
-          <Divider />
-          <View style={styles.flexRow}>
-            <Text category="label">Service Areas</Text>
-            <Input
-              placeholder="Place your service areas"
-              value={locations}
-              onChangeText={(nextValue) => setLocations(nextValue)}
-              onBlur={() => updateServiceLocation()}
-              size="small"
-              style={styles.input}
-            />
-          </View>
-          <Divider />
-          <View style={styles.flexRow}>
-            <Text category="label">Renew Education License</Text>
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={date}
-              mode={'date'}
-              onChange={onChange}
-              display="default"
-              minimumDate={new Date(year, month, day)}
-            />
-          </View>
-          <Divider />
-          <View style={styles.flexRow}>
-            <Text category="label">Referral Link</Text>
-            <Text
-              style={{ fontSize: 10, flexWrap: 'wrap' }}
-            >{`https://friendlyrealtor.app/profile/${user.userName}`}</Text>
-          </View>
-          <Divider />
-          <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginVertical: 16 }}>
-            <Button
-              onPress={() => {
-                try {
-                  restorePurchase();
-                } catch (error) {
-                  console.log('error', error);
-                }
-              }}
-            >
-              <Text status="danger">Restore Purchases</Text>
-            </Button>
-          </View>
-          <Divider />
-          <View style={styles.flexRow}>
-            <Text category="label">App Version</Text>
-            <Text>{Constants?.manifest?.version}</Text>
-          </View>
-          <Divider />
-          {Device.osVersion && (
+        <ScrollView>
+          <View style={styles.layout}>
+            <Animated.View style={scaleAvatar}>
+              <TouchableOpacity onPress={pickImage}>
+                {user.photo && !photoShow && (
+                  <Image
+                    source={{ uri: user.photo }}
+                    style={{
+                      alignSelf: 'center',
+                      width: 96,
+                      height: 96,
+                      zIndex: 100,
+                      marginTop: 32,
+                      borderRadius: 9999,
+                    }}
+                  />
+                )}
+                {photoShow && (
+                  <Image
+                    source={{ uri: photoShow }}
+                    style={{
+                      alignSelf: 'center',
+                      width: 96,
+                      height: 96,
+                      zIndex: 100,
+                      marginTop: 32,
+                      borderRadius: 9999,
+                    }}
+                  />
+                )}
+              </TouchableOpacity>
+            </Animated.View>
             <View style={styles.flexRow}>
-              <Text category="label">IOS Version</Text>
-              <Text>{Device.osVersion}</Text>
+              <Text category="label">Username</Text>
+              <Text category="p1" style={{ marginTop: 16, fontFamily: 'Ubuntu' }}>
+                {user.userName || ''}
+              </Text>
             </View>
-          )}
-          {Device.osVersion && <Divider />}
-          <View style={styles.flexRow}>
-            <Text category="label">Delete Account</Text>
-            <Button
-              onPress={() => {
-                try {
-                  deleteUserAccount();
-                } catch (error) {
-                  console.log('error', error);
-                }
+            <Divider />
+            <View style={styles.flexRow}>
+              <Text category="label" style={{ marginTop: 16 }}>
+                Name
+              </Text>
+              <Text category="p1" style={{ marginTop: 16, fontFamily: 'Ubuntu' }}>
+                {user.name || ''}
+              </Text>
+            </View>
+            <Divider />
+            <View style={styles.flexRow}>
+              <Text category="label">Email</Text>
+              {userAuth.currentUser && userAuth.currentUser.email && (
+                <Text category="p1" style={{ fontFamily: 'Ubuntu' }}>
+                  {userAuth.currentUser.email}
+                </Text>
+              )}
+            </View>
+            <Divider />
+            <View style={styles.flexRow}>
+              <Text category="label">Bio</Text>
+              <Input
+                placeholder="Place enter bio"
+                value={bio}
+                onChangeText={(nextValue) => setBio(nextValue)}
+                onBlur={() => updateProfileBio()}
+                size="small"
+                style={styles.input}
+              />
+            </View>
+            <Divider />
+            <View style={styles.flexRow}>
+              <Text category="label">Service Areas</Text>
+              <Input
+                placeholder="Place your service areas"
+                value={locations}
+                onChangeText={(nextValue) => setLocations(nextValue)}
+                onBlur={() => updateServiceLocation()}
+                size="small"
+                style={styles.input}
+              />
+            </View>
+            <Divider />
+            <View style={styles.flexRow}>
+              <Text category="label">Renew Education License</Text>
+              <DateTimePicker
+                testID="dateTimePicker"
+                value={date}
+                mode={'date'}
+                onChange={onChange}
+                display="default"
+                minimumDate={new Date(year, month, day)}
+              />
+            </View>
+            <Divider />
+            <View style={styles.flexRow}>
+              <Text category="label">Referral Link</Text>
+              <Text
+                style={{ fontSize: 10, flexWrap: 'wrap' }}
+              >{`https://friendlyrealtor.app/profile/${user.userName}`}</Text>
+            </View>
+            {/*<Divider />
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'flex-end',
+                marginVertical: 16,
               }}
             >
-              <Text status="danger">Delete</Text>
-            </Button>
-          </View>
-        </View>
-        <View style={styles.rows}>
-          {localCmaRows && _.size(localCmaRows) > 0 ? (
-            <View>
-              <Text category="h6" style={{ marginTop: 24, textAlign: 'center' }}>
-                CMA History
-              </Text>
-              <View style={{ textAlign: 'center' }}>
-                <List
-                  data={localCmaRows}
-                  ItemSeparatorComponent={Divider}
-                  renderItem={renderItem}
-                />
-              </View>
+              <Button
+                onPress={() => {
+                  try {
+                    restorePurchase();
+                  } catch (error) {
+                    console.log('error', error);
+                  }
+                }}
+              >
+                <Text status="danger">Restore Purchases</Text>
+              </Button>
+							</View>*/}
+            <Divider />
+            <View style={styles.flexRow}>
+              <Text category="label">App Version</Text>
+              <Text>{Constants?.manifest?.version}</Text>
             </View>
-          ) : null}
-          {photoProgress && photoProgress !== 1 && (
-            <ProgressBar style={{ marginBottom: 10 }} progress={photoProgress} color="#02FDAA" />
-          )}
-          {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
-        </View>
+            <Divider />
+            {Device.osVersion && (
+              <View style={styles.flexRow}>
+                <Text category="label">IOS Version</Text>
+                <Text>{Device.osVersion}</Text>
+              </View>
+            )}
+            {Device.osVersion && <Divider />}
+            <View style={styles.flexRow}>
+              <Text category="label">Delete Account</Text>
+              <Button
+                onPress={() => {
+                  try {
+                    deleteUserAccount();
+                  } catch (error) {
+                    console.log('error', error);
+                  }
+                }}
+              >
+                <Text status="danger">Delete</Text>
+              </Button>
+            </View>
+          </View>
+          <View style={styles.rows}>
+            {localCmaRows && _.size(localCmaRows) > 0 ? (
+              <View>
+                <Text category="h6" style={{ marginTop: 24, textAlign: 'center' }}>
+                  CMA History
+                </Text>
+                <View style={{ textAlign: 'center' }}>
+                  <List
+                    data={localCmaRows}
+                    ItemSeparatorComponent={Divider}
+                    renderItem={renderItem}
+                  />
+                </View>
+              </View>
+            ) : null}
+            {photoProgress && photoProgress !== 1 && (
+              <ProgressBar style={{ marginBottom: 10 }} progress={photoProgress} color="#02FDAA" />
+            )}
+            {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
+          </View>
+        </ScrollView>
       </Container>
     );
   }),

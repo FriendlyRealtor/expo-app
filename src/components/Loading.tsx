@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Layout, Text, Spinner } from '@ui-kitten/components';
 
-export const Loading = () => {
+export const Loading = ({ label }: { label?: string }) => {
   const styles = StyleSheet.create({
     container: {
       position: 'relative',
@@ -28,7 +28,7 @@ export const Loading = () => {
       <View style={styles.flexContainer}>
         <Spinner size="giant" status="primary" />
         <Text category="h6" style={styles.padding}>
-          Loading...
+          {label || 'Loading...'}
         </Text>
       </View>
     </Layout>
