@@ -20,7 +20,7 @@ export default {
     ios: {
       supportsTablet: true,
       bundleIdentifier: 'jubileeinvestments.Real-Estate-App',
-      buildNumber: '25',
+      buildNumber: '29',
       config: {
         usesNonExemptEncryption: false,
       },
@@ -52,13 +52,6 @@ export default {
           'userTrackingPermission': '${PRODUCT_NAME} will display ads tailored to your interests and preferences.',
         },
 			],
-      [
-        'expo-av',
-        {
-          microphonePermission:
-            'Grant $(PRODUCT_NAME) access to your device\'s microphone so that you can listen to videos and other audio content within the app.',
-        },
-      ],
       [
         'expo-location',
         {

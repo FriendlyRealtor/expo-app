@@ -9,7 +9,7 @@ export const LocalRestaurantScreenStyles = StyleSheet.create({
     marginHorizontal: 24,
     marginVertical: 16,
   },
-  text: { padding: 16, color: Colors.primary },
+  text: { padding: 16 },
   icon: {
     width: 20,
     height: 20,

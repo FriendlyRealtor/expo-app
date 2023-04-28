@@ -395,7 +395,7 @@ export const SettingScreen = inject('appStore')(
             </View>
           </View>
           <View style={styles.rows}>
-            {localCmaRows && _.size(localCmaRows) > 0 ? (
+            {/*localCmaRows && _.size(localCmaRows) > 0 ? (
               <View>
                 <Text category="h6" style={{ marginTop: 24, textAlign: 'center' }}>
                   CMA History
@@ -408,7 +408,7 @@ export const SettingScreen = inject('appStore')(
                   />
                 </View>
               </View>
-            ) : null}
+						) : null*/}
             {photoProgress && photoProgress !== 1 && (
               <ProgressBar style={{ marginBottom: 10 }} progress={photoProgress} color="#02FDAA" />
             )}
