@@ -16,6 +16,7 @@ import uuid from 'react-native-uuid';
 import moment from 'moment';
 import { useIsFocused } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
+import { Colors } from '../../config';
 
 export const AddDeal = ({ modalVisible, setModalVisible, formData, setUserDeals }) => {
   const styles = StyleSheet.create({
@@ -316,7 +317,7 @@ export const AddDeal = ({ modalVisible, setModalVisible, formData, setUserDeals 
   );
 };
 
-export const ClientScreen = (props) => {
+export const ClientScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [userDeals, setUserDeals] = useState([]);
   const [formData, setFormData] = useState();
@@ -468,6 +469,23 @@ export const ClientScreen = (props) => {
 
   return (
     <Layout style={{ flex: 1 }}>
+      <View style={{ marginTop: 16, display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+        <Button
+          style={{
+            width: '40%',
+            alignItems: 'center',
+            padding: 10,
+            borderRadius: 8,
+            backgroundColor: Colors.primary,
+            borderColor: Colors.primary,
+          }}
+          onPress={() => {
+            navigation.navigate('CMA');
+          }}
+        >
+          <Text>Use CRM Tool</Text>
+        </Button>
+      </View>
       <View>
         {userDeals.length === 0 && (
           <Text style={{ marginHorizontal: 12, marginTop: 32 }}>

@@ -34,8 +34,8 @@ export const LoginScreen = inject('appStore')(
       const { email, password } = values;
       signInWithEmailAndPassword(auth, email, password)
         .then(async () => {
-         if (!auth.currentUser.emailVerified) {
-					  await sendEmailVerification(auth.currentUser);
+          if (!auth.currentUser.emailVerified) {
+            await sendEmailVerification(auth.currentUser);
             setErrorState('Head to your email and verify your account!');
           } else {
             if (isAvailable()) {
@@ -49,9 +49,11 @@ export const LoginScreen = inject('appStore')(
             case 'Firebase: Error (auth/user-not-found).':
               setErrorState('User not found!');
               break;
-						case 'Firebase: Error (auth/too-many-requests).':
-							setErrorState('Try restarting the app, if error continues contact support. contact@friendlyrealtor.app');
-							break;
+            case 'Firebase: Error (auth/too-many-requests).':
+              setErrorState(
+                'Try restarting the app, if error continues contact support. contact@friendlyrealtor.app',
+              );
+              break;
             case 'Firebase: Error (auth/wrong-password).':
               setErrorState('Wrong password!');
               break;
@@ -61,7 +63,9 @@ export const LoginScreen = inject('appStore')(
               );
               break;
             default:
-              setErrorState(`Error signing in! Contact support contact@friendlyrealtor.app ${error.message}`);
+              setErrorState(
+                `Error signing in! Contact support contact@friendlyrealtor.app ${error.message}`,
+              );
           }
         });
     };

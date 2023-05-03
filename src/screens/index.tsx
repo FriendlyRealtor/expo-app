@@ -2,6 +2,7 @@ import { LoginScreen } from './LoginScreen';
 import { SignupScreen } from './SignupScreen';
 import { HomeScreen } from './HomeScreen/HomeScreen';
 import { ForgotPasswordScreen } from './ForgotPasswordScreen';
+import { FeedScreen } from './FeedScreen';
 import { SettingScreen } from './SettingScreen';
 import { LocalRestaurantScreen } from './LocalRestaurantScreen';
 import { ContinueEducationScreen } from './ContinueEducationScreen';
@@ -13,6 +14,7 @@ export {
   LoginScreen,
   SignupScreen,
   ClientScreen,
+	FeedScreen,
   HomeScreen,
   SplashScreen,
   ForgotPasswordScreen,

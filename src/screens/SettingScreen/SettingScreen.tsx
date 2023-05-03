@@ -306,24 +306,26 @@ export const SettingScreen = inject('appStore')(
             <View style={styles.flexRow}>
               <Text category="label">Bio</Text>
               <Input
-                placeholder="Place enter bio"
+                placeholder="Tell your viewers more about you."
                 value={bio}
+                multiline={true}
                 onChangeText={(nextValue) => setBio(nextValue)}
                 onBlur={() => updateProfileBio()}
                 size="small"
-                style={styles.input}
+                textStyle={styles.input}
               />
             </View>
             <Divider />
             <View style={styles.flexRow}>
               <Text category="label">Service Areas</Text>
               <Input
-                placeholder="Place your service areas"
+                placeholder="Where are your services located"
                 value={locations}
+                multiline={true}
                 onChangeText={(nextValue) => setLocations(nextValue)}
                 onBlur={() => updateServiceLocation()}
                 size="small"
-                style={styles.input}
+                textStyle={styles.input}
               />
             </View>
             <Divider />
