@@ -5,9 +5,10 @@ import {
   ClientScreen,
   ContinueEducationScreen,
   HomeScreen,
-	FeedScreen,
+  FeedScreen,
   SettingScreen,
   LocalRestaurantScreen,
+	PostScreen,
   TemplateScreen,
 } from '../screens';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -43,7 +44,7 @@ export const AppTabs = (props) => {
 
   return (
     <Tab.Navigator>
-			<Tab.Screen
+      <Tab.Screen
         name="Feed"
         component={FeedScreen}
         options={{
@@ -55,6 +56,13 @@ export const AppTabs = (props) => {
         component={ClientScreen}
         options={{
           tabBarIcon: () => <Icon name="user" size={30} color="#02FDAA" />,
+        }}
+      />
+			<Tab.Screen
+        name="Post"
+        component={PostScreen}
+        options={{
+          tabBarIcon: () => <Icon name="plus-circle" size={30} color="black" />,
         }}
       />
       {/*<Tab.Screen

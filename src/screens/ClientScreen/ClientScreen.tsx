@@ -469,7 +469,9 @@ export const ClientScreen = ({ navigation }) => {
 
   return (
     <Layout style={{ flex: 1 }}>
-      <View style={{ marginTop: 16, display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+      <View
+        style={{ marginTop: 16, display: 'flex', flexDirection: 'row', justifyContent: 'center' }}
+      >
         <Button
           style={{
             width: '40%',
