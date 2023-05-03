@@ -16,7 +16,7 @@ export {
   SignupScreen,
   ClientScreen,
   FeedScreen,
-	PostScreen,
+  PostScreen,
   HomeScreen,
   SplashScreen,
   ForgotPasswordScreen,

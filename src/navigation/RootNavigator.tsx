@@ -64,7 +64,7 @@ export const RootNavigator = inject('appStore')(
             <Stack.Screen
               name="Home"
               component={AppTabs}
-              initialParams={{ user, currentUser: auth.currentUser }}
+              initialParams={{ user: JSON.stringify(user), currentUser: JSON.stringify(auth.currentUser) }}
               options={{ headerShown: false }}
             />
             <Stack.Screen name="CMA" component={HomeScreen} />

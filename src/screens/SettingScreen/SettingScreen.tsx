@@ -2,9 +2,9 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { Image, View, ScrollView, Animated, TouchableOpacity, Alert } from 'react-native';
 import { getAuth } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
-import { auth, db, storage } from '../../config';
+import { db, storage } from '../../config';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { Layout, List, ListItem, Input } from '@ui-kitten/components';
+import { ListItem, Input } from '@ui-kitten/components';
 import { Button, Divider, Container, FormErrorMessage, Text } from '../../components';
 import {
   Extrapolate,
@@ -15,7 +15,6 @@ import {
 } from 'react-native-reanimated';
 import { ProgressBar } from 'react-native-paper';
 import { useLayout } from '../../hooks';
-// import { User } from '../../providers/types';
 import * as ImagePicker from 'expo-image-picker';
 import moment from 'moment';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';

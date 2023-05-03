@@ -8,7 +8,7 @@ import {
   FeedScreen,
   SettingScreen,
   LocalRestaurantScreen,
-	PostScreen,
+  PostScreen,
   TemplateScreen,
 } from '../screens';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -58,7 +58,7 @@ export const AppTabs = (props) => {
           tabBarIcon: () => <Icon name="user" size={30} color="#02FDAA" />,
         }}
       />
-			<Tab.Screen
+      <Tab.Screen
         name="Post"
         component={PostScreen}
         options={{
