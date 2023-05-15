@@ -6131,6 +6131,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-google-places-autocomplete@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "expo-google-places-autocomplete@npm:0.3.0"
+  peerDependencies:
+    expo: "*"
+    react: "*"
+    react-native: "*"
+  checksum: a62ecfad815115900bc8be9f8c129347be0860f15850feeafcc2ed925d323f93555369d910da9312d3e30809490040257420942382f9b010b3604db6d1055ff1
+  languageName: node
+  linkType: hard
+
 "expo-image-loader@npm:~4.0.0":
   version: 4.0.0
   resolution: "expo-image-loader@npm:4.0.0"
@@ -11244,6 +11255,7 @@ __metadata:
     expo-dev-client: ~2.0.1
     expo-device: ~5.0.0
     expo-font: ~11.0.1
+    expo-google-places-autocomplete: ^0.3.0
     expo-image-picker: ~14.0.2
     expo-linear-gradient: ~12.0.1
     expo-linking: ~3.3.1
