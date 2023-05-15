@@ -1,11 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { Text, FormErrorMessage } from '../../components';
 import axios from 'axios';
-import { numberWithCommas } from '../../utils';
+import { numberWithCommas, locationValidationSchema } from '../../utils';
 import { Formik, useFormik } from 'formik';
-import { locationValidationSchema } from '../../utils';
 import { Divider } from '@ui-kitten/components';
 import { Button, Container } from '../../components';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -18,7 +17,7 @@ import { db } from '../../config';
 import { getAuth } from 'firebase/auth';
 import { HomeScreenStyles } from './HomeScreenStyles';
 import { StatusBar } from 'expo-status-bar';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { GooglePlacesAutocomplete, PlaceDetails } from 'expo-google-places-autocomplete';
 
 export const HomeScreen = () => {
   const isFocused = useIsFocused();
@@ -110,6 +109,10 @@ export const HomeScreen = () => {
     [location, Constants.manifest?.extra?.serverUrl],
   );
 
+  const onPlaceSelected = React.useCallback((place: PlaceDetails) => {
+    setValues({ location: place.formattedAddress?.replace(/,/g, '') });
+  }, []);
+
   return (
     <Container style={styles.layout}>
       <StatusBar style="auto" />
@@ -131,30 +134,9 @@ export const HomeScreen = () => {
                 buying or selling a property
               </Text>
               <GooglePlacesAutocomplete
-                placeholder="Enter address you are interested in"
-                onPress={(data, details = null) => {
-                  setValues({ location: data.description });
-                }}
-                query={{
-                  key: Constants.manifest?.extra?.googleApiKey,
-                  language: 'en',
-                }}
-                styles={{
-                  textInputContainer: {
-                    paddingTop: 8,
-                    marginTop: 16,
-                    borderWidth: 1,
-                    borderColor: 'black',
-                  },
-                  textInput: {
-                    height: 38,
-                    color: '#5d5d5d',
-                    fontSize: 16,
-                  },
-                  predefinedPlacesDescription: {
-                    color: '#1faadb',
-                  },
-                }}
+                apiKey={Constants.manifest?.extra?.googleApiKey}
+                requestConfig={{ countries: ['US'] }}
+                onPlaceSelected={onPlaceSelected}
               />
               {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
             </View>

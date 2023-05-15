@@ -20,7 +20,7 @@ export default {
     ios: {
       supportsTablet: true,
       bundleIdentifier: 'jubileeinvestments.Real-Estate-App',
-      buildNumber: '1',
+      buildNumber: '2',
       config: {
         usesNonExemptEncryption: false,
       },
