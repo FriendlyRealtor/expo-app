@@ -11,7 +11,7 @@
     "ios": "expo run:ios --device",
     "lint": "eslint 'src/components/**/*.{ts,tsx,js,jsx}' 'src/config/**/*.{ts,tsx,js,jsx}' 'src/hooks/**/*.{ts,tsx,js,jsx}' 'src/navigation/**/*.{ts,tsx,js,jsx}' 'src/providers/**/*.{ts,tsx,js,jsx}' 'src/screens/**/*.{ts,tsx,js,jsx}' 'src/utils/**/*.{ts,tsx,js,jsx}'  'src/stores/**/*.{ts,tsx,js,jsx}' --fix",
     "prettier": "prettier --write 'src/components/**/*.{ts,tsx,js,jsx}' 'src/config/**/*.{ts,tsx,js,jsx}' 'src/hooks/**/*.{ts,tsx,js,jsx}' 'src/navigation/**/*.{ts,tsx,js,jsx}' 'src/providers/**/*.{ts,tsx,js,jsx}' 'src/screens/**/*.{ts,tsx,js,jsx}' 'src/utils/**/*.{ts,tsx,js,jsx}' 'src/stores/**/*.{ts,tsx,js,jsx}' ",
-    "prod:build-secrets": "eas secret:push --scope project --env-file .env.production",
+    "prod:build-secrets": "eas secret:push --scope project --env-file .env.production --force",
     "start": "npx expo start --dev-client",
     "web": "expo start --web"
   },
@@ -64,6 +64,7 @@
     "react-native": "0.70.8",
     "react-native-blob-util": "^0.17.3",
     "react-native-gesture-handler": "~2.8.0",
+    "react-native-google-places-autocomplete": "^2.5.1",
     "react-native-keyboard-aware-scroll-view": "^0.9.4",
     "react-native-paper": "^5.2.0",
     "react-native-pdf": "^6.6.2",
