@@ -6131,6 +6131,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-google-places-autocomplete@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "expo-google-places-autocomplete@npm:0.3.0"
+  peerDependencies:
+    expo: "*"
+    react: "*"
+    react-native: "*"
+  checksum: a62ecfad815115900bc8be9f8c129347be0860f15850feeafcc2ed925d323f93555369d910da9312d3e30809490040257420942382f9b010b3604db6d1055ff1
+  languageName: node
+  linkType: hard
+
 "expo-image-loader@npm:~4.0.0":
   version: 4.0.0
   resolution: "expo-image-loader@npm:4.0.0"
@@ -10366,6 +10377,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"qs@npm:~6.9.1":
+  version: 6.9.7
+  resolution: "qs@npm:6.9.7"
+  checksum: 5bbd263332ccf320a1f36d04a2019a5834dc20bcb736431eaccde2a39dcba03fb26d2fd00174f5d7bc26aaad1cad86124b18440883ac042ea2a0fca6170c1bf1
+  languageName: node
+  linkType: hard
+
 "query-string@npm:^5.0.1":
   version: 5.1.1
   resolution: "query-string@npm:5.1.1"
@@ -10554,6 +10572,19 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 3dc4ab5cf160e471b07cd644e24f6384bdc4fc777f259fb12dfb42a5c9a15f84f60043ce3a1cd737f8dc563892a52566c8ab33bed0b1635f2898ac8ba75c8668
+  languageName: node
+  linkType: hard
+
+"react-native-google-places-autocomplete@npm:^2.5.1":
+  version: 2.5.1
+  resolution: "react-native-google-places-autocomplete@npm:2.5.1"
+  dependencies:
+    lodash.debounce: ^4.0.8
+    prop-types: ^15.7.2
+    qs: ~6.9.1
+  peerDependencies:
+    react-native: ">= 0.59"
+  checksum: cf9d69ba101530a8d764541dd327954a7f47db48251fec1d7d20318a0553a96f6e484a6cb1d81a0517e2af9fcc50ce6a6f9a449800b53129e0057b8c903fac97
   languageName: node
   linkType: hard
 
@@ -11224,6 +11255,7 @@ __metadata:
     expo-dev-client: ~2.0.1
     expo-device: ~5.0.0
     expo-font: ~11.0.1
+    expo-google-places-autocomplete: ^0.3.0
     expo-image-picker: ~14.0.2
     expo-linear-gradient: ~12.0.1
     expo-linking: ~3.3.1
@@ -11248,6 +11280,7 @@ __metadata:
     react-native-blob-util: ^0.17.3
     react-native-dotenv: ^3.4.8
     react-native-gesture-handler: ~2.8.0
+    react-native-google-places-autocomplete: ^2.5.1
     react-native-keyboard-aware-scroll-view: ^0.9.4
     react-native-paper: ^5.2.0
     react-native-pdf: ^6.6.2

@@ -1,13 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
-import { TextInput, Text, FormErrorMessage } from '../../components';
+import { Text, FormErrorMessage } from '../../components';
 import axios from 'axios';
-import { numberWithCommas } from '../../utils';
+import { numberWithCommas, locationValidationSchema } from '../../utils';
 import { Formik, useFormik } from 'formik';
-import { locationValidationSchema } from '../../utils';
-import { Layout, Divider } from '@ui-kitten/components';
-import { Button } from '../../components';
+import { Divider } from '@ui-kitten/components';
+import { Button, Container } from '../../components';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Constants from 'expo-constants';
 import _ from 'lodash';
@@ -18,6 +17,7 @@ import { db } from '../../config';
 import { getAuth } from 'firebase/auth';
 import { HomeScreenStyles } from './HomeScreenStyles';
 import { StatusBar } from 'expo-status-bar';
+import { GooglePlacesAutocomplete, PlaceDetails } from 'expo-google-places-autocomplete';
 
 export const HomeScreen = () => {
   const isFocused = useIsFocused();
@@ -27,7 +27,7 @@ export const HomeScreen = () => {
   const [errorState, setErrorState] = useState('');
   const userAuth = getAuth();
   const [crmEstimate, setCrmEstimate] = useState(null);
-  const { handleChange, values, handleBlur, handleSubmit, resetForm } = useFormik({
+  const { handleChange, values, setValues, handleBlur, handleSubmit, resetForm } = useFormik({
     initialValues: {
       location: '',
     },
@@ -109,8 +109,12 @@ export const HomeScreen = () => {
     [location, Constants.manifest?.extra?.serverUrl],
   );
 
+  const onPlaceSelected = React.useCallback((place: PlaceDetails) => {
+    setValues({ location: place.formattedAddress?.replace(/,/g, '') });
+  }, []);
+
   return (
-    <Layout style={styles.layout}>
+    <Container style={styles.layout}>
       <StatusBar style="auto" />
       <KeyboardAwareScrollView style={styles.keyboard}>
         <Formik validationSchema={locationValidationSchema}>
@@ -129,16 +133,10 @@ export const HomeScreen = () => {
                 understanding of the local real estate market and make informed decisions about
                 buying or selling a property
               </Text>
-              <TextInput
-                name="location"
-                value={values.location}
-                autoCapitalize="none"
-                inputMode="search"
-                type="text"
-                onChangeText={handleChange('location')}
-                onBlur={handleBlur('location')}
-                textContentType="addressCityAndState"
-                placeholder="Enter address you are interested in"
+              <GooglePlacesAutocomplete
+                apiKey={Constants.manifest?.extra?.googleApiKey}
+                requestConfig={{ countries: ['US'] }}
+                onPlaceSelected={onPlaceSelected}
               />
               {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
             </View>
@@ -152,7 +150,7 @@ export const HomeScreen = () => {
               </Text>
             </View>
             {crmEstimate ? (
-              <Layout level="4" style={styles.layout}>
+              <Container level="4" style={styles.layout}>
                 <Text
                   style={styles.estimatedValue}
                   category="h6"
@@ -167,11 +165,11 @@ export const HomeScreen = () => {
                   style={styles.estimatedValue}
                   category="h6"
                 >{`CMA Price High $${numberWithCommas(crmEstimate.priceRangeHigh)}`}</Text>
-              </Layout>
+              </Container>
             ) : null}
 
             {crmEstimate && crmEstimate.listings && _.size(crmEstimate.listings) && (
-              <Layout level="4" style={styles.layoutCrm}>
+              <Container level="4" style={styles.layoutCrm}>
                 <Text style={styles.comparables} category="h6">
                   10 Comparables
                 </Text>
@@ -207,11 +205,11 @@ export const HomeScreen = () => {
                     </View>
                   );
                 })}
-              </Layout>
+              </Container>
             )}
           </View>
         </Formik>
       </KeyboardAwareScrollView>
-    </Layout>
+    </Container>
   );
 };
