@@ -46,7 +46,7 @@ export const AppTabs = (props) => {
     <Tab.Navigator>
       <Tab.Screen
         name="Feed"
-        component={FeedScreen}
+        component={HomeScreen}
         options={{
           tabBarIcon: () => <Icon name="home" size={30} color="#02FDAA" />,
         }}

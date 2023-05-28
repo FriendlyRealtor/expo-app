@@ -469,25 +469,6 @@ export const ClientScreen = ({ navigation }) => {
 
   return (
     <Layout style={{ flex: 1 }}>
-      <View
-        style={{ marginTop: 16, display: 'flex', flexDirection: 'row', justifyContent: 'center' }}
-      >
-        <Button
-          style={{
-            width: '40%',
-            alignItems: 'center',
-            padding: 10,
-            borderRadius: 8,
-            backgroundColor: Colors.primary,
-            borderColor: Colors.primary,
-          }}
-          onPress={() => {
-            navigation.navigate('CMA');
-          }}
-        >
-          <Text>Use CRM Tool</Text>
-        </Button>
-      </View>
       <View>
         {userDeals.length === 0 && (
           <Text style={{ marginHorizontal: 12, marginTop: 32 }}>
