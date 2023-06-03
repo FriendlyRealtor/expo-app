@@ -10,6 +10,9 @@ import {
 } from '../screens';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { usePermissions } from '../hooks';
+import { Text } from '../components';
+import { View, TouchableOpacity } from 'react-native';
+import { Colors } from '../config';
 
 const Tab = createBottomTabNavigator();
 
@@ -50,13 +53,39 @@ export const AppTabs = (props) => {
         component={HomeScreen}
         options={{
           tabBarIcon: () => <Icon name="home" size={30} color="#02FDAA" />,
+          header: ({ navigation, route, options }) => {
+            return (
+              <View
+                style={{
+                  top: 60,
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  paddingHorizontal: 16,
+                  alignItems: 'center',
+                  paddingBottom: 16,
+                  width: '100%',
+                  backgroundColor: Colors.primary,
+                }}
+              >
+                <Text category="h2">Friendly Realtor</Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    console.log('click');
+                  }}
+                >
+                  <Icon name="comment" size={30} color={Colors.color2} />
+                </TouchableOpacity>
+              </View>
+            );
+          },
         }}
       />
       <Tab.Screen
         name="Deals"
         component={ClientScreen}
         options={{
-          tabBarIcon: () => <Icon name="user" size={30} color="#02FDAA" />,
+          tabBarIcon: () => <Icon name="user" size={30} color={Colors.primary} />,
         }}
       />
       {/*<Tab.Screen
@@ -76,7 +105,7 @@ export const AppTabs = (props) => {
       <Tab.Screen
         name="Restaurants"
         options={{
-          tabBarIcon: () => <Icon name="delicious" size={30} color="#02FDAA" />,
+          tabBarIcon: () => <Icon name="delicious" size={30} color={Colors.primary} />,
         }}
       >
         {() => <LocalRestaurantScreen locationStatus={locationStatus} />}
@@ -85,7 +114,7 @@ export const AppTabs = (props) => {
         name="Settings"
         component={SettingScreen}
         options={{
-          tabBarIcon: () => <Icon name="gear" size={30} color="#02FDAA" />,
+          tabBarIcon: () => <Icon name="gear" size={30} color={Colors.primary} />,
         }}
       />
     </Tab.Navigator>
