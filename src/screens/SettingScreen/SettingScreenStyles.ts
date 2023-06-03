@@ -18,6 +18,7 @@ export const SettingScreenStyles = StyleSheet.create({
   },
   input: {
     width: 200,
+    minHeight: 64,
   },
   top: {
     borderBottomLeftRadius: 24,
