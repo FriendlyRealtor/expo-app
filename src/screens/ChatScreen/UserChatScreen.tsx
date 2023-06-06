@@ -28,7 +28,9 @@ export const UserChatScreen = () => {
     const messageStyle = item.sender === 'user' ? { textAlign: 'right' } : {};
     return (
       <View key={item.id}>
-        <Text style={messageStyle}>{item.text}</Text>
+        <Text marginY={2} style={messageStyle}>
+          {item.text}
+        </Text>
       </View>
     );
   };

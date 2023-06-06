@@ -72,111 +72,119 @@ export const ChatScreen = ({ navigation }) => {
   const handleSubmit = () => {};
 
   return (
-    <View>
+    <View marginTop="4">
       <StatusBar />
-      <ScrollView contentContainerStyle={styles.container}>
-        <TouchableOpacity style={styles.icon} onPress={handleAddMessage}>
-          <Icon name="plus" size={30} color={Colors.black} />
-        </TouchableOpacity>
-        <Box>
-          <Heading fontSize="xl" p="4" pb="3">
-            Messages
-          </Heading>
-          <FlatList
-            data={messages}
-            renderItem={({ item }) => (
-              <Pressable
-                key={item.id}
-                style={styles.messageContainer}
-                onPress={() => {
-                  navigation.navigate('UserChat');
-                }}
-              >
-                <Box
-                  borderBottomWidth="1"
-                  _dark={{
-                    borderColor: 'muted.50',
+      <TouchableOpacity style={styles.icon} onPress={handleAddMessage}>
+        <Icon name="plus" size={30} color={Colors.black} />
+      </TouchableOpacity>
+      <Modal
+        isOpen={open}
+        onClose={() => {
+          setOpen(!open);
+        }}
+        size="xl"
+        height="full"
+      >
+        <Modal.Content>
+          <Modal.CloseButton />
+          <Modal.Header>New Message</Modal.Header>
+          <Modal.Body>
+            <Search label="To:" data={messages} />
+            <View style={styles.messageArea}>
+              <Text>Message</Text>
+              <TextArea
+                autoCompleteType={false}
+                h={40}
+                placeholder="Text Area Placeholder"
+                w="100%"
+              />
+            </View>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button style={styles.sendBtn} onPress={handleSubmit}>
+              <Text>Send</Text>
+            </Button>
+          </Modal.Footer>
+        </Modal.Content>
+      </Modal>
+      {messages && messages.length ? (
+        <ScrollView contentContainerStyle={styles.container}>
+          <Box>
+            <Heading fontSize="xl" p="4" pb="3">
+              Messages
+            </Heading>
+            <FlatList
+              data={messages}
+              renderItem={({ item }) => (
+                <Pressable
+                  key={item.id}
+                  style={styles.messageContainer}
+                  onPress={() => {
+                    navigation.navigate('My Chat');
                   }}
-                  borderColor="muted.800"
-                  pl={['0', '4']}
-                  pr={['0', '5']}
-                  py="2"
                 >
-                  <HStack space={[2, 3]} justifyContent="space-between">
-                    <Avatar
-                      size="48px"
-                      source={{
-                        uri: item.avatarUrl,
-                      }}
-                    />
-                    <VStack>
+                  <Box
+                    borderBottomWidth="1"
+                    _dark={{
+                      borderColor: 'muted.50',
+                    }}
+                    borderColor="muted.800"
+                    pl={['0', '4']}
+                    pr={['0', '5']}
+                    py="2"
+                  >
+                    <HStack space={[2, 3]} justifyContent="space-between">
+                      <Avatar
+                        size="48px"
+                        source={{
+                          uri: item.avatarUrl,
+                        }}
+                      />
+                      <VStack>
+                        <Text
+                          _dark={{
+                            color: 'warmGray.50',
+                          }}
+                          color="coolGray.800"
+                          bold
+                        >
+                          {item.fullName}
+                        </Text>
+                        <Text
+                          color="coolGray.600"
+                          _dark={{
+                            color: 'warmGray.200',
+                          }}
+                        >
+                          {item.recentText}
+                        </Text>
+                      </VStack>
+                      <Spacer />
                       <Text
+                        fontSize="xs"
                         _dark={{
                           color: 'warmGray.50',
                         }}
                         color="coolGray.800"
-                        bold
+                        alignSelf="flex-start"
                       >
-                        {item.fullName}
+                        {item.timeStamp}
                       </Text>
-                      <Text
-                        color="coolGray.600"
-                        _dark={{
-                          color: 'warmGray.200',
-                        }}
-                      >
-                        {item.recentText}
-                      </Text>
-                    </VStack>
-                    <Spacer />
-                    <Text
-                      fontSize="xs"
-                      _dark={{
-                        color: 'warmGray.50',
-                      }}
-                      color="coolGray.800"
-                      alignSelf="flex-start"
-                    >
-                      {item.timeStamp}
-                    </Text>
-                  </HStack>
-                </Box>
-              </Pressable>
-            )}
-            keyExtractor={(item) => item.id}
-          />
-        </Box>
-        <Modal
-          isOpen={open}
-          onClose={() => {
-            setOpen(!open);
-          }}
-          size="xl"
-          height="full"
-        >
-          <Modal.Content>
-            <Modal.CloseButton />
-            <Modal.Header>Contact Us</Modal.Header>
-            <Modal.Body>
-              <Search label="To:" />
-              <View style={styles.messageArea}>
-                <Text>Message</Text>
-                <TextArea
-                  autoCompleteType={false}
-                  h={40}
-                  placeholder="Text Area Placeholder"
-                  w="100%"
-                />
-              </View>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button style={styles.sendBtn} onPress={handleSubmit}>
-                <Text>Send</Text>
-              </Button>
-            </Modal.Footer>
-          </Modal.Content>
-        </Modal>
-      </ScrollView>
+                    </HStack>
+                  </Box>
+                </Pressable>
+              )}
+              keyExtractor={(item) => item.id}
+            />
+          </Box>
+        </ScrollView>
+      ) : (
+        <View>
+          <Text fontSize="2xl" textAlign="center">
+            No Messages Found
+          </Text>
+        </View>
+      )}
     </View>
   );
 };

@@ -72,7 +72,7 @@ export const RootNavigator = inject('appStore')(
             />
             <Stack.Screen name="CMA" component={HomeScreen} />
             <Stack.Screen name="Chat" component={ChatScreen} />
-            <Stack.Screen name="UserChat" component={UserChatScreen} />
+            <Stack.Screen name="My Chat" component={UserChatScreen} />
           </Stack.Navigator>
         ) : (
           <AuthStack />
