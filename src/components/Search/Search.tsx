@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, FlatList, StyleSheet } from 'react-native';
-import { Text } from '../../components';
 import { SearchProps } from './SearchTypes';
+import { Text } from 'native-base';
 
 export const Search = (props: SearchProps) => {
   const { data, label } = props;
