@@ -1,16 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import {
-  ClientScreen,
-  ContinueEducationScreen,
-  HomeScreen,
-  FeedScreen,
-  SettingScreen,
-  LocalRestaurantScreen,
-  PostScreen,
-  TemplateScreen,
-} from '../screens';
+import { ClientScreen, HomeScreen, SettingScreen, LocalRestaurantScreen } from '../screens';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { usePermissions } from '../hooks';
 import { Text } from '../components';
@@ -64,16 +55,15 @@ export const AppTabs = (props) => {
                   alignItems: 'center',
                   paddingBottom: 16,
                   width: '100%',
-                  backgroundColor: Colors.primary,
                 }}
               >
                 <Text category="h2">Friendly Realtor</Text>
                 <TouchableOpacity
                   onPress={() => {
-                    console.log('click');
+                    navigation.navigate('Chat');
                   }}
                 >
-                  <Icon name="comment" size={30} color={Colors.color2} />
+                  <Icon name="inbox" size={30} color={Colors.color2} />
                 </TouchableOpacity>
               </View>
             );
@@ -87,13 +77,13 @@ export const AppTabs = (props) => {
           tabBarIcon: () => <Icon name="user" size={30} color={Colors.primary} />,
         }}
       />
-      <Tab.Screen
+      {/*<Tab.Screen
         name="Post"
         component={PostScreen}
         options={{
           tabBarIcon: () => <Icon name="plus-circle" size={30} color="black" />,
         }}
-      />
+      />*/}
       {/*<Tab.Screen
         name="Templates"
         component={TemplateScreen}
