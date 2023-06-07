@@ -9,6 +9,7 @@ import { LoadingIndicator } from './LoadingIndicator';
 import { Container } from './Container';
 import { Shimmer } from './Shimmer';
 import { Loading } from './Loading';
+import { Search } from './Search';
 import Text from './Text';
 import NavigationAction from './NavigationAction';
 
@@ -16,6 +17,7 @@ export {
   Loading,
   View,
   Divider,
+  Search,
   TextInput,
   Container,
   Text,

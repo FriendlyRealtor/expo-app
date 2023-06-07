@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { AuthStack } from './AuthStack';
 import { AppTabs } from './AppTabs';
-import { SplashScreen } from '../screens';
+import { SplashScreen, UserChatScreen } from '../screens';
 import { useFonts } from 'expo-font';
 import { auth } from '../config';
 import { inject, observer } from 'mobx-react';
 import { getTrackingPermissionsAsync } from 'expo-tracking-transparency';
-import { AppState } from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { HomeScreen, ChatScreen } from '../screens';
 
+const Stack = createStackNavigator();
 export const RootNavigator = inject('appStore')(
   observer(({ appStore }) => {
     const [isLoading, setIsLoading] = useState(true);
@@ -58,7 +60,20 @@ export const RootNavigator = inject('appStore')(
     return (
       <NavigationContainer>
         {user && auth.currentUser && auth.currentUser.emailVerified ? (
-          <AppTabs currentUser={auth.currentUser} user={user} />
+          <Stack.Navigator>
+            <Stack.Screen
+              name="Home"
+              component={AppTabs}
+              initialParams={{
+                user: JSON.stringify(user),
+                currentUser: JSON.stringify(auth.currentUser),
+              }}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen name="CMA" component={HomeScreen} />
+            <Stack.Screen name="Chat" component={ChatScreen} />
+            <Stack.Screen name="My Chat" component={UserChatScreen} />
+          </Stack.Navigator>
         ) : (
           <AuthStack />
         )}
