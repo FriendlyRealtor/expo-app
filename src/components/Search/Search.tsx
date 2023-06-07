@@ -16,7 +16,7 @@ import {
 import { EvilIcons } from '@expo/vector-icons';
 
 export const Search = (props: SearchProps) => {
-  const { data, label } = props;
+  const { data, label, onSelectionChange } = props;
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredData, setFilteredData] = useState(data);
   const [selectedUser, setSelectedUser] = useState({});
@@ -33,6 +33,11 @@ export const Search = (props: SearchProps) => {
     );
     setFilteredData(filtered);
     setFilteredData(filtered);
+  };
+
+  const handleSelectUser = (item) => {
+    setSelectedUser(item);
+    onSelectionChange(item);
   };
 
   return (
@@ -58,7 +63,7 @@ export const Search = (props: SearchProps) => {
           contentContainerStyle={styles.listContainer}
           maxHeight={200}
           renderItem={({ item }) => (
-            <Pressable key={item.id} onPress={() => setSelectedUser(item)}>
+            <Pressable key={item.id} onPress={() => handleSelectUser(item)}>
               <Box
                 borderBottomWidth="1"
                 _dark={{

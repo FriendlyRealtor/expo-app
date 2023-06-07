@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { db } from '../../config';
-import { collection, getDocs } from 'firebase/firestore';
+import { db, realtimeDb } from '../../config';
+import { collection, getDocs, Timestamp } from 'firebase/firestore';
+import { ref, set, push } from 'firebase/database';
 
 export const useChats = () => {
   const [messages, setMessages] = useState([]);
@@ -20,8 +21,29 @@ export const useChats = () => {
     fetchUsers();
   }, []);
 
+  const sendUserMsg = async (senderId: string, recipientId: string, msg: string) => {
+    try {
+      const messagesRef = ref(realtimeDb, `users/${senderId}/messages/${recipientId}`);
+
+      const newMessageRef = push(messagesRef);
+      const newMessageKey = newMessageRef.key;
+
+      await set(newMessageRef, {
+        senderId: senderId,
+        content: msg,
+        timestamp: Timestamp.now(),
+      });
+
+      return newMessageKey;
+    } catch (error) {
+      console.log('Error sending user message:', error);
+      return null;
+    }
+  };
+
   return {
     messages,
     searchableUsers,
+    sendUserMsg,
   };
 };

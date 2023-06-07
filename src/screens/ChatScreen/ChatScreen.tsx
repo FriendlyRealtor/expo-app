@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, Pressable, StatusBar, TouchableOpacity } from 'react-native';
+import { StyleSheet, Pressable, StatusBar } from 'react-native';
 import { Search } from '../../components';
 import { Colors } from '../../config';
 import {
@@ -22,17 +22,19 @@ import {
 import { EvilIcons } from '@expo/vector-icons';
 import SwipeableItem from '../../components/SwipeableItem';
 import { useChats } from './ChatHooks';
+import { collection, query, where, getDocs, limit } from 'firebase/firestore';
+import { auth, db } from '../../config';
 
 export const ChatScreen = ({ navigation }) => {
   const [open, setOpen] = useState<boolean>(false);
+  const [selectedUser, setSelectedUser] = useState({});
+  const [textAreaValue, setTextAreaValue] = useState('');
 
-  const { messages, searchableUsers } = useChats();
+  const { messages, searchableUsers, sendUserMsg } = useChats();
 
   const handleAddMessage = () => {
     setOpen(true);
   };
-
-  const handleSubmit = () => {};
 
   return (
     <View marginTop="4">
@@ -57,11 +59,18 @@ export const ChatScreen = ({ navigation }) => {
           <Modal.CloseButton />
           <Modal.Header>New Message</Modal.Header>
           <Modal.Body>
-            <Search label="To:" data={searchableUsers} />
+            <Search
+              label="To:"
+              data={searchableUsers}
+              onSelectionChange={(value) => {
+                setSelectedUser(value);
+              }}
+            />
             <View style={styles.messageArea}>
               <Text>Message</Text>
               <TextArea
                 autoCompleteType={false}
+                onChangeText={(text) => setTextAreaValue(text)}
                 h={40}
                 placeholder="Text Area Placeholder"
                 w="100%"
@@ -69,8 +78,31 @@ export const ChatScreen = ({ navigation }) => {
             </View>
           </Modal.Body>
           <Modal.Footer>
-            <Button style={styles.sendBtn} onPress={handleSubmit}>
-              <Text>Send</Text>
+            <Button
+              style={styles.sendBtn}
+              onPress={async () => {
+                try {
+                  const userRef = collection(db, 'users');
+                  const q = query(
+                    userRef,
+                    where('userName', '==', selectedUser.userName || ''),
+                    where('name', '==', selectedUser.name || ''),
+                    limit(1),
+                  );
+                  const querySnapshot = await getDocs(q);
+                  querySnapshot.forEach(async (doc) => {
+                    const recipientId = doc.id;
+                    const messageContent = textAreaValue;
+                    await sendUserMsg(auth.currentUser?.uid, recipientId, messageContent);
+                    setOpen(false);
+                  });
+                } catch (error) {
+                  console.log('Error sending user message:', error);
+                }
+              }}
+              disabled={!Object.keys(selectedUser).length}
+            >
+              <Text color="white">Send</Text>
             </Button>
           </Modal.Footer>
         </Modal.Content>
