@@ -126,7 +126,7 @@ export const useChats = () => {
       const recipientMessagesRef = ref(realtimeDb, `users/${recipientId}/messages/${senderId}`);
 
       const newMessageRef = push(senderMessagesRef);
-      const newMessageKey = newMessageRef.key;
+      const newMessageRecipientMessageRef = push(recipientMessagesRef);
 
       const timestamp = Timestamp.now();
 
@@ -137,12 +137,9 @@ export const useChats = () => {
       };
 
       await set(newMessageRef, messageData);
-      await set(recipientMessagesRef, messageData);
-
-      return newMessageKey;
+      await set(newMessageRecipientMessageRef, messageData);
     } catch (error) {
       console.log('Error sending user message:', error);
-      return null;
     }
   };
 

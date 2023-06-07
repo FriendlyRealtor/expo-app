@@ -157,14 +157,6 @@ export const ChatScreen = ({ navigation }) => {
                           >
                             {item.userName || item.name}
                           </Text>
-                          <Text
-                            color="coolGray.600"
-                            _dark={{
-                              color: 'warmGray.200',
-                            }}
-                          >
-                            {item.latestMessage.content}
-                          </Text>
                         </VStack>
                         <Spacer />
                         <Text

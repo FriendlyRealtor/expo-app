@@ -36,6 +36,7 @@ export const UserChatScreen = () => {
               source={{
                 uri: item.user.photo,
               }}
+							mt={4}
             />
           ) : null}
           {isFirstMessageFromSender && (
