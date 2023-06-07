@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import { auth, db, realtimeDb } from '../../config';
 import { collection, getDocs, Timestamp, query, where } from 'firebase/firestore';
 import { ref, set, push, onValue } from 'firebase/database';
 
 export const useChats = () => {
   const [messageList, setMessageList] = useState([]);
+  const [messages, setMessages] = useState([]);
   const [searchableUsers, setSearchableUsers] = useState([]);
 
   useEffect(() => {
@@ -44,6 +45,7 @@ export const useChats = () => {
                 : null;
               return {
                 ...userData,
+                id: doc.id,
                 latestMessage,
               };
             });
@@ -61,12 +63,51 @@ export const useChats = () => {
     };
   }, []);
 
-  const sendUserMsg = async (
-    senderId: string,
-    recipientId: string,
-    msg: string,
-    photoUrl: string,
-  ) => {
+  const retrieveUserChats = useCallback((receiptId: string) => {
+    const userId = auth.currentUser?.uid;
+
+    const messagesRef = ref(realtimeDb, `users/${userId}/messages/${receiptId}`);
+    const messagesListener = onValue(messagesRef, (snapshot) => {
+      const messagesData = snapshot.val();
+      if (messagesData) {
+        const senderIds = Object.values(messagesData).map((message) => message.senderId);
+
+        // Query Firestore for users with matching senderIds
+        const userRef = collection(db, 'users');
+        const q = query(userRef, where('__name__', 'in', senderIds));
+
+        getDocs(q)
+          .then((querySnapshot) => {
+            const usersData = querySnapshot.docs.reduce((users, doc) => {
+              const userData = doc.data();
+              const userId = doc.id;
+              users[userId] = userData;
+              return users;
+            }, {});
+
+            // Combine messagesData and usersData
+            const flattenedArray = Object.entries(messagesData).map(([key, value]) => ({
+              id: key,
+              ...value,
+              user: usersData[value.senderId],
+            }));
+
+            // Update the state with the combined data
+            setMessages(flattenedArray);
+          })
+          .catch((error) => {
+            console.log('Error querying users:', error);
+          });
+      }
+    });
+
+    return () => {
+      // Cleanup listener
+      messagesListener();
+    };
+  }, []);
+
+  const sendUserMsg = async (senderId: string, recipientId: string, msg: string) => {
     try {
       const messagesRef = ref(realtimeDb, `users/${senderId}/messages/${recipientId}`);
 
@@ -77,7 +118,6 @@ export const useChats = () => {
         senderId: senderId,
         content: msg,
         timestamp: Timestamp.now(),
-        photo: photoUrl,
       });
 
       return newMessageKey;
@@ -91,5 +131,7 @@ export const useChats = () => {
     messageList,
     searchableUsers,
     sendUserMsg,
+    retrieveUserChats,
+    messages,
   };
 };

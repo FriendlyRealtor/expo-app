@@ -1,53 +1,75 @@
-import React from 'react';
-import { View, Text, SectionList, Input, Button } from 'native-base';
+import React, { useEffect, useState } from 'react';
+import { Avatar, FlatList, View, Text, Input, Button } from 'native-base';
+import { useRoute } from '@react-navigation/native';
+import { useChats } from './ChatHooks';
+import moment from 'moment';
+import { auth } from '../../config';
 
 export const UserChatScreen = () => {
-  // Dummy messages
-  const messages = [
-    { id: 1, text: 'Hello', sender: 'user' },
-    { id: 2, text: 'Hi there!', sender: 'otherUser' },
-    { id: 3, text: 'How are you?', sender: 'user' },
-    { id: 4, text: "I'm good, thanks!", sender: 'otherUser' },
-    { id: 5, text: 'What about you?', sender: 'otherUser' },
-  ];
+  const [value, setValue] = useState<string>('');
 
-  // Group messages by sender
-  const sections = [
-    {
-      title: 'User',
-      data: messages.filter((message) => message.sender === 'user'),
-    },
-    {
-      title: 'Other User',
-      data: messages.filter((message) => message.sender === 'otherUser'),
-    },
-  ];
+  const route = useRoute();
+  const { retrieveUserChats, messages, sendUserMsg } = useChats();
+  const { item } = route.params;
 
-  // Function to render each message
-  const renderMessage = ({ item }) => {
-    const messageStyle = item.sender === 'user' ? { textAlign: 'right' } : {};
+  useEffect(() => {
+    if (item.id) {
+      retrieveUserChats(item.id);
+    }
+  }, [item.id]);
+
+  // Render each message item
+  const renderItem = ({ item, index }) => {
+    const isFirstMessageFromSender = index === 0 || item.senderId !== messages[index - 1].senderId;
     return (
-      <View key={item.id}>
-        <Text marginY={2} style={messageStyle}>
-          {item.text}
-        </Text>
+      <View>
+        <View
+          display="flex"
+          flexDirection="row"
+          justifyContent="space-between"
+          alignItems="center"
+          mb="4"
+        >
+          {isFirstMessageFromSender ? (
+            <Avatar
+              size="48px"
+              source={{
+                uri: item.user.photo,
+              }}
+            />
+          ) : null}
+          {isFirstMessageFromSender && (
+            <Text textAlign="right">
+              {' '}
+              {moment.unix(item.timestamp.seconds).format('MMMM, Do, h:mm:ss a')}
+            </Text>
+          )}
+        </View>
+        <Text>{item.content}</Text>
       </View>
     );
   };
 
   return (
     <View flex={1} marginY={16} marginX={4}>
-      <SectionList
-        sections={sections}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={renderMessage}
-        renderSectionHeader={({ section: { title } }) => (
-          <Text style={{ fontWeight: 'bold', marginVertical: 10 }}>{title}</Text>
-        )}
-      />
+      <FlatList data={messages} keyExtractor={(item) => item.id} renderItem={renderItem} />
       <View display="flex" flexDirection="column" alignItems="flex-end">
-        <Input placeholder="Send Message..." borderRadius={99} borderColor="black" />
-        <Button marginTop={4} borderRadius={99} width={100}>
+        <Input
+          value={value}
+          onChangeText={(text) => setValue(text)}
+          placeholder="Send Message..."
+          borderRadius={99}
+          borderColor="black"
+        />
+        <Button
+          marginTop={4}
+          borderRadius={99}
+          width={100}
+          onPress={async () => {
+            await sendUserMsg(auth.currentUser?.uid, item.id, value);
+            setValue('');
+          }}
+        >
           Send
         </Button>
       </View>

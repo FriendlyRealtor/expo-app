@@ -94,17 +94,10 @@ export const ChatScreen = ({ navigation }) => {
                     where('__name__', '==', auth.currentUser?.uid),
                     limit(1),
                   );
-                  const authQuerySnapshot = await getDocs(userQ);
-                  const currentUserPhoto = authQuerySnapshot.docs[0]?.data()?.photo;
                   querySnapshot.forEach(async (doc) => {
                     const recipientId = doc.id;
                     const messageContent = textAreaValue;
-                    await sendUserMsg(
-                      auth.currentUser?.uid,
-                      recipientId,
-                      messageContent,
-                      currentUserPhoto,
-                    );
+                    await sendUserMsg(auth.currentUser?.uid, recipientId, messageContent);
                     setTextAreaValue('');
                     setSelectedUser({});
                     setOpen(false);
@@ -134,7 +127,7 @@ export const ChatScreen = ({ navigation }) => {
                     key={item.id}
                     style={styles.messageContainer}
                     onPress={() => {
-                      navigation.navigate('My Chat');
+                      navigation.navigate('My Chat', { item });
                     }}
                   >
                     <Box
@@ -162,7 +155,7 @@ export const ChatScreen = ({ navigation }) => {
                             color="coolGray.800"
                             bold
                           >
-                            {item.name}
+                            {item.userName || item.name}
                           </Text>
                           <Text
                             color="coolGray.600"

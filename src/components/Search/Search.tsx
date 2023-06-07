@@ -89,7 +89,7 @@ export const Search = (props: SearchProps) => {
                   <Avatar
                     size="48px"
                     source={{
-                      uri: item.avatarUrl,
+                      uri: item.photo,
                     }}
                   />
                   <VStack>
