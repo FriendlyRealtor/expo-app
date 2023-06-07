@@ -45,6 +45,7 @@ export default {
       cloudFunctionUrl: process.env.FIREBASE_CLOUD_FUNCTION_URL,
       openAiKey: process.env.OPENAI_API_KEY,
       googleApiKey: process.env.GOOGLE_API_KEY,
+      realTimeDbUrl: process.env.FIREBASE_REAL_TIME_DATABASE_URL,
       eas: {
         projectId: process.env.EAS_PROJECT_ID,
       },

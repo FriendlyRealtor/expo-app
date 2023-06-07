@@ -24,9 +24,14 @@ export const Search = (props: SearchProps) => {
   const handleSearch = (text) => {
     setSearchQuery(text);
 
-    const filtered = data.filter((item) =>
-      item.fullName.toLowerCase().includes(text.toLowerCase()),
+    const filtered = data.filter(
+      (item) =>
+        item.name &&
+        item.userName &&
+        (item.name.toLowerCase().includes(text.toLowerCase()) ||
+          item.userName.toLowerCase().includes(text.toLowerCase())),
     );
+    setFilteredData(filtered);
     setFilteredData(filtered);
   };
 
@@ -95,7 +100,7 @@ export const Search = (props: SearchProps) => {
             alignItems="center"
             justifyContent="space-between"
           >
-            <Text>{selectedUser.fullName}</Text>
+            <Text>{selectedUser.userName || selectedUser.name}</Text>
             <IconButton
               icon={<Icon as={EvilIcons} name="close" />}
               onPress={() => {
