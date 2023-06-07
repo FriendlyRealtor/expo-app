@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Pressable } from 'react-native';
 import { SearchProps } from './SearchTypes';
 import {
@@ -16,7 +16,7 @@ import {
 import { EvilIcons } from '@expo/vector-icons';
 
 export const Search = (props: SearchProps) => {
-  const { data, label, onSelectionChange } = props;
+  const { data, label, onSelectionChange, resetQuery } = props;
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredData, setFilteredData] = useState(data);
   const [selectedUser, setSelectedUser] = useState({});
@@ -39,6 +39,17 @@ export const Search = (props: SearchProps) => {
     setSelectedUser(item);
     onSelectionChange(item);
   };
+
+  const handleReset = () => {
+    setSearchQuery('');
+    setSelectedUser({});
+  };
+
+  useEffect(() => {
+    if (resetQuery) {
+      handleReset();
+    }
+  }, [resetQuery]);
 
   return (
     <View style={styles.container}>
@@ -106,13 +117,7 @@ export const Search = (props: SearchProps) => {
             justifyContent="space-between"
           >
             <Text>{selectedUser.userName || selectedUser.name}</Text>
-            <IconButton
-              icon={<Icon as={EvilIcons} name="close" />}
-              onPress={() => {
-                setSelectedUser({});
-                setSearchQuery('');
-              }}
-            />
+            <IconButton icon={<Icon as={EvilIcons} name="close" />} onPress={handleReset} />
           </View>
         )
       )}

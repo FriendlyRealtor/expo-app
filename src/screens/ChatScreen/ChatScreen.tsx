@@ -65,10 +65,12 @@ export const ChatScreen = ({ navigation }) => {
               onSelectionChange={(value) => {
                 setSelectedUser(value);
               }}
+              resetQuery={Object.keys(selectedUser).length === 0}
             />
             <View style={styles.messageArea}>
               <Text>Message</Text>
               <TextArea
+                value={textAreaValue}
                 autoCompleteType={false}
                 onChangeText={(text) => setTextAreaValue(text)}
                 h={40}
@@ -94,6 +96,8 @@ export const ChatScreen = ({ navigation }) => {
                     const recipientId = doc.id;
                     const messageContent = textAreaValue;
                     await sendUserMsg(auth.currentUser?.uid, recipientId, messageContent);
+                    setTextAreaValue('');
+                    setSelectedUser({});
                     setOpen(false);
                   });
                 } catch (error) {
