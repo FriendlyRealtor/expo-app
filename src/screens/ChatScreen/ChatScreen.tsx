@@ -24,17 +24,14 @@ import SwipeableItem from '../../components/SwipeableItem';
 import { useChats } from './ChatHooks';
 import { collection, query, where, getDocs, limit } from 'firebase/firestore';
 import { auth, db } from '../../config';
+import moment from 'moment';
 
 export const ChatScreen = ({ navigation }) => {
   const [open, setOpen] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState({});
   const [textAreaValue, setTextAreaValue] = useState('');
 
-  const { messages, searchableUsers, sendUserMsg } = useChats();
-
-  const handleAddMessage = () => {
-    setOpen(true);
-  };
+  const { messageList, searchableUsers, sendUserMsg } = useChats();
 
   return (
     <View marginTop="4">
@@ -44,7 +41,7 @@ export const ChatScreen = ({ navigation }) => {
         display="flex"
         flexDirection="row"
         justifyContent="flex-end"
-        onPress={handleAddMessage}
+        onPress={() => setOpen(true)}
       />
 
       <Modal
@@ -92,10 +89,22 @@ export const ChatScreen = ({ navigation }) => {
                     limit(1),
                   );
                   const querySnapshot = await getDocs(q);
+                  const userQ = query(
+                    userRef,
+                    where('__name__', '==', auth.currentUser?.uid),
+                    limit(1),
+                  );
+                  const authQuerySnapshot = await getDocs(userQ);
+                  const currentUserPhoto = authQuerySnapshot.docs[0]?.data()?.photo;
                   querySnapshot.forEach(async (doc) => {
                     const recipientId = doc.id;
                     const messageContent = textAreaValue;
-                    await sendUserMsg(auth.currentUser?.uid, recipientId, messageContent);
+                    await sendUserMsg(
+                      auth.currentUser?.uid,
+                      recipientId,
+                      messageContent,
+                      currentUserPhoto,
+                    );
                     setTextAreaValue('');
                     setSelectedUser({});
                     setOpen(false);
@@ -111,14 +120,14 @@ export const ChatScreen = ({ navigation }) => {
           </Modal.Footer>
         </Modal.Content>
       </Modal>
-      {messages && messages.length ? (
+      {messageList && messageList.length ? (
         <ScrollView contentContainerStyle={styles.container}>
           <Box>
             <Heading fontSize="xl" p="4" pb="3">
               Messages
             </Heading>
             <FlatList
-              data={messages}
+              data={messageList}
               renderItem={({ item }) => (
                 <SwipeableItem item={item}>
                   <Pressable
@@ -142,7 +151,7 @@ export const ChatScreen = ({ navigation }) => {
                         <Avatar
                           size="48px"
                           source={{
-                            uri: item.avatarUrl,
+                            uri: item.photo,
                           }}
                         />
                         <VStack>
@@ -153,7 +162,7 @@ export const ChatScreen = ({ navigation }) => {
                             color="coolGray.800"
                             bold
                           >
-                            {item.fullName}
+                            {item.name}
                           </Text>
                           <Text
                             color="coolGray.600"
@@ -161,7 +170,7 @@ export const ChatScreen = ({ navigation }) => {
                               color: 'warmGray.200',
                             }}
                           >
-                            {item.recentText}
+                            {item.latestMessage.content}
                           </Text>
                         </VStack>
                         <Spacer />
@@ -173,7 +182,9 @@ export const ChatScreen = ({ navigation }) => {
                           color="coolGray.800"
                           alignSelf="flex-start"
                         >
-                          {item.timeStamp}
+                          {moment
+                            .unix(item.latestMessage.timestamp.seconds)
+                            .format('MMMM, Do, h:mm:ss a')}
                         </Text>
                       </HStack>
                     </Box>

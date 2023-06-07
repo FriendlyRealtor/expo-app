@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { db, realtimeDb } from '../../config';
-import { collection, getDocs, Timestamp } from 'firebase/firestore';
-import { ref, set, push } from 'firebase/database';
+import { auth, db, realtimeDb } from '../../config';
+import { collection, getDocs, Timestamp, query, where } from 'firebase/firestore';
+import { ref, set, push, onValue } from 'firebase/database';
 
 export const useChats = () => {
-  const [messages, setMessages] = useState([]);
+  const [messageList, setMessageList] = useState([]);
   const [searchableUsers, setSearchableUsers] = useState([]);
 
   useEffect(() => {
@@ -21,7 +21,52 @@ export const useChats = () => {
     fetchUsers();
   }, []);
 
-  const sendUserMsg = async (senderId: string, recipientId: string, msg: string) => {
+  useEffect(() => {
+    const userId = auth.currentUser?.uid;
+
+    const messagesRef = ref(realtimeDb, `users/${userId}/messages`);
+    const messagesListener = onValue(messagesRef, (snapshot) => {
+      const messagesData = snapshot.val();
+
+      if (messagesData) {
+        const userIds = Object.keys(messagesData);
+        const userRef = collection(db, 'users');
+        const q = query(userRef, where('__name__', 'in', userIds));
+
+        getDocs(q)
+          .then((querySnapshot) => {
+            const combinedData = querySnapshot.docs.map((doc) => {
+              const userData = doc.data();
+              const userId = doc.id;
+              const messages = messagesData[userId];
+              const latestMessage = messages
+                ? Object.values(messages)[Object.values(messages).length - 1]
+                : null;
+              return {
+                ...userData,
+                latestMessage,
+              };
+            });
+            setMessageList(combinedData);
+          })
+          .catch((error) => {
+            console.log('Error querying users:', error);
+          });
+      }
+    });
+
+    return () => {
+      // Cleanup listener
+      messagesListener();
+    };
+  }, []);
+
+  const sendUserMsg = async (
+    senderId: string,
+    recipientId: string,
+    msg: string,
+    photoUrl: string,
+  ) => {
     try {
       const messagesRef = ref(realtimeDb, `users/${senderId}/messages/${recipientId}`);
 
@@ -32,6 +77,7 @@ export const useChats = () => {
         senderId: senderId,
         content: msg,
         timestamp: Timestamp.now(),
+        photo: photoUrl,
       });
 
       return newMessageKey;
@@ -42,7 +88,7 @@ export const useChats = () => {
   };
 
   return {
-    messages,
+    messageList,
     searchableUsers,
     sendUserMsg,
   };
