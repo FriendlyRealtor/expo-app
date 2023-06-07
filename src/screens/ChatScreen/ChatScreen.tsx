@@ -176,7 +176,11 @@ export const ChatScreen = ({ navigation }) => {
                           alignSelf="flex-start"
                         >
                           {moment
-                            .unix(item.latestMessage.timestamp.seconds)
+                            .unix(
+                              item.latestMessage.timestamp
+                                ? item.latestMessage.timestamp.seconds
+                                : item.latestMessage.seconds,
+                            )
                             .format('MMMM, Do, h:mm:ss a')}
                         </Text>
                       </HStack>

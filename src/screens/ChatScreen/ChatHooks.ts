@@ -92,8 +92,21 @@ export const useChats = () => {
               user: usersData[value.senderId],
             }));
 
+            const sortedMessages = flattenedArray.sort((a, b) => {
+              const timestampA = a.timestamp.seconds;
+              const timestampB = b.timestamp.seconds;
+
+              if (timestampA < timestampB) {
+                return -1;
+              }
+              if (timestampA > timestampB) {
+                return 1;
+              }
+              return 0;
+            });
+
             // Update the state with the combined data
-            setMessages(flattenedArray);
+            setMessages(sortedMessages);
           })
           .catch((error) => {
             console.log('Error querying users:', error);
@@ -109,16 +122,22 @@ export const useChats = () => {
 
   const sendUserMsg = async (senderId: string, recipientId: string, msg: string) => {
     try {
-      const messagesRef = ref(realtimeDb, `users/${senderId}/messages/${recipientId}`);
+      const senderMessagesRef = ref(realtimeDb, `users/${senderId}/messages/${recipientId}`);
+      const recipientMessagesRef = ref(realtimeDb, `users/${recipientId}/messages/${senderId}`);
 
-      const newMessageRef = push(messagesRef);
+      const newMessageRef = push(senderMessagesRef);
       const newMessageKey = newMessageRef.key;
 
-      await set(newMessageRef, {
+      const timestamp = Timestamp.now();
+
+      const messageData = {
         senderId: senderId,
         content: msg,
-        timestamp: Timestamp.now(),
-      });
+        timestamp: timestamp,
+      };
+
+      await set(newMessageRef, messageData);
+      await set(recipientMessagesRef, messageData);
 
       return newMessageKey;
     } catch (error) {
