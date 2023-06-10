@@ -9,7 +9,7 @@ export const UserChatScreen = () => {
   const [value, setValue] = useState<string>('');
 
   const route = useRoute();
-	const scrollViewRef = useRef(null);
+  const scrollViewRef = useRef(null);
   const { retrieveUserChats, messages, sendUserMsg } = useChats();
   const { item } = route.params;
 
@@ -37,7 +37,7 @@ export const UserChatScreen = () => {
               source={{
                 uri: item.user.photo,
               }}
-							mt={4}
+              mt={4}
             />
           ) : null}
           {isFirstMessageFromSender && (
@@ -54,15 +54,13 @@ export const UserChatScreen = () => {
 
   return (
     <View flex={1} marginY={16} marginX={4}>
-			  <ScrollView
-					marginBottom={6}
-					ref={scrollViewRef}
-					onContentSizeChange={() =>
-						scrollViewRef.current?.scrollToEnd({ animated: true })
-					}
-				>
-					<FlatList data={messages} keyExtractor={(item) => item.id} renderItem={renderItem} />
-				</ScrollView>
+      <ScrollView
+        marginBottom={6}
+        ref={scrollViewRef}
+        onContentSizeChange={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
+      >
+        <FlatList data={messages} keyExtractor={(item) => item.id} renderItem={renderItem} />
+      </ScrollView>
       <View display="flex" flexDirection="column" alignItems="flex-end">
         <Input
           value={value}
