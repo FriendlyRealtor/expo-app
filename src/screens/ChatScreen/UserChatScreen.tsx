@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Avatar, FlatList, View, Text, Input, Button } from 'native-base';
+import React, { useEffect, useState, useRef } from 'react';
+import { Avatar, FlatList, View, Text, Input, Button, ScrollView } from 'native-base';
 import { useRoute } from '@react-navigation/native';
 import { useChats } from './ChatHooks';
 import moment from 'moment';
@@ -9,6 +9,7 @@ export const UserChatScreen = () => {
   const [value, setValue] = useState<string>('');
 
   const route = useRoute();
+  const scrollViewRef = useRef(null);
   const { retrieveUserChats, messages, sendUserMsg } = useChats();
   const { item } = route.params;
 
@@ -36,7 +37,7 @@ export const UserChatScreen = () => {
               source={{
                 uri: item.user.photo,
               }}
-							mt={4}
+              mt={4}
             />
           ) : null}
           {isFirstMessageFromSender && (
@@ -53,7 +54,13 @@ export const UserChatScreen = () => {
 
   return (
     <View flex={1} marginY={16} marginX={4}>
-      <FlatList data={messages} keyExtractor={(item) => item.id} renderItem={renderItem} />
+      <ScrollView
+        marginBottom={6}
+        ref={scrollViewRef}
+        onContentSizeChange={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
+      >
+        <FlatList data={messages} keyExtractor={(item) => item.id} renderItem={renderItem} />
+      </ScrollView>
       <View display="flex" flexDirection="column" alignItems="flex-end">
         <Input
           value={value}
