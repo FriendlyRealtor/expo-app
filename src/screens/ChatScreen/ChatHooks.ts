@@ -72,16 +72,30 @@ export const useChats = () => {
       if (messagesData) {
         const senderIds = Object.values(messagesData).map((message) => message.senderId);
 
-        // Query Firestore for users with matching senderIds
-        const userRef = collection(db, 'users');
-        const q = query(userRef, where('__name__', 'in', senderIds));
+        // Split senderIds into chunks of 10 elements or less
+        const chunks = [];
+        const chunkSize = 10;
+        for (let i = 0; i < senderIds.length; i += chunkSize) {
+          chunks.push(senderIds.slice(i, i + chunkSize));
+        }
 
-        getDocs(q)
-          .then((querySnapshot) => {
-            const usersData = querySnapshot.docs.reduce((users, doc) => {
-              const userData = doc.data();
-              const userId = doc.id;
-              users[userId] = userData;
+        const userRef = collection(db, 'users');
+
+        // Create an array to hold the results
+        const queries = chunks.map((chunk) => {
+          const q = query(userRef, where('__name__', 'in', chunk));
+          return getDocs(q);
+        });
+
+        // Execute all queries concurrently using Promise.all()
+        Promise.all(queries)
+          .then((querySnapshots) => {
+            const usersData = querySnapshots.reduce((users, querySnapshot) => {
+              querySnapshot.docs.forEach((doc) => {
+                const userData = doc.data();
+                const userId = doc.id;
+                users[userId] = userData;
+              });
               return users;
             }, {});
 
