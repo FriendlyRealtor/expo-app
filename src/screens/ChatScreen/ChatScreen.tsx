@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, Pressable, StatusBar } from 'react-native';
+import { StyleSheet, Pressable, StatusBar, RefreshControl } from 'react-native';
 import { Search } from '../../components';
 import { Colors } from '../../config';
 import {
@@ -24,6 +24,7 @@ import SwipeableItem from '../../components/SwipeableItem';
 import { useChats } from './ChatHooks';
 import { collection, query, where, getDocs, limit } from 'firebase/firestore';
 import { auth, db } from '../../config';
+import { useRefresh } from '../../hooks';
 import moment from 'moment';
 
 export const ChatScreen = ({ navigation }) => {
@@ -31,7 +32,15 @@ export const ChatScreen = ({ navigation }) => {
   const [selectedUser, setSelectedUser] = useState({});
   const [textAreaValue, setTextAreaValue] = useState('');
 
-  const { messageList, searchableUsers, sendUserMsg } = useChats();
+  const { messageList, searchableUsers, sendUserMsg, fetchMessageList } = useChats();
+
+  const handleRefresh = async (): Promise<void> => {
+    setTimeout(() => {
+      fetchMessageList();
+    }, 2000);
+  };
+
+  const { isRefreshing, onRefresh } = useRefresh({ handleRefresh });
 
   return (
     <View marginTop="4">
@@ -113,12 +122,16 @@ export const ChatScreen = ({ navigation }) => {
           </Modal.Footer>
         </Modal.Content>
       </Modal>
-      {messageList && messageList.length ? (
-        <ScrollView contentContainerStyle={styles.container}>
-          <Box>
-            <Heading fontSize="xl" p="4" pb="3">
-              Messages
-            </Heading>
+      <ScrollView
+        height="full"
+        refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />}
+        style={styles.container}
+      >
+        <Box>
+          <Heading fontSize="xl" p="4" pb="3">
+            Messages
+          </Heading>
+          {messageList && messageList.length ? (
             <FlatList
               data={messageList}
               renderItem={({ item }) => (
@@ -182,15 +195,15 @@ export const ChatScreen = ({ navigation }) => {
               )}
               keyExtractor={(item) => item.id}
             />
-          </Box>
-        </ScrollView>
-      ) : (
-        <View>
-          <Text fontSize="2xl" textAlign="center">
-            No Messages Found
-          </Text>
-        </View>
-      )}
+          ) : (
+            <View>
+              <Text fontSize="2xl" textAlign="center">
+                No Messages Found
+              </Text>
+            </View>
+          )}
+        </Box>
+      </ScrollView>
     </View>
   );
 };

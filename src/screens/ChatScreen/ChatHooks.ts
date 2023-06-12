@@ -22,11 +22,11 @@ export const useChats = () => {
     fetchUsers();
   }, []);
 
-  useEffect(() => {
+  const fetchMessageList = () => {
     const userId = auth.currentUser?.uid;
 
     const messagesRef = ref(realtimeDb, `users/${userId}/messages`);
-    const messagesListener = onValue(messagesRef, (snapshot) => {
+    onValue(messagesRef, (snapshot) => {
       const messagesData = snapshot.val();
 
       if (messagesData) {
@@ -56,11 +56,10 @@ export const useChats = () => {
           });
       }
     });
+  };
 
-    return () => {
-      // Cleanup listener
-      messagesListener();
-    };
+  useEffect(() => {
+    fetchMessageList();
   }, []);
 
   const retrieveUserChats = useCallback((receiptId: string) => {
@@ -162,6 +161,7 @@ export const useChats = () => {
     searchableUsers,
     sendUserMsg,
     retrieveUserChats,
+    fetchMessageList,
     messages,
   };
 };
