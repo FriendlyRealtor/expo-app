@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 import { Colors } from '../../config';
 
 export const HomeScreenStyles = StyleSheet.create({
-  layout: { flex: 1 },
+  layout: { flex: 1, marginTop: 72 },
   layoutContainer: { paddingHorizontal: 16, paddingVertical: 32, borderRadius: 12 },
   layoutCrm: {
     paddingHorizontal: 16,
@@ -15,7 +15,6 @@ export const HomeScreenStyles = StyleSheet.create({
     flex: 1,
     margin: 2,
   },
-  crmHeader: { marginTop: 16 },
   search: { color: Colors.primary },
   textArea: { marginVertical: 15 },
   estimatedValue: {

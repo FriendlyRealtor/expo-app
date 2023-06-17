@@ -1,15 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, ScrollView } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
-import { Text, FormErrorMessage } from '../../components';
+import { FormErrorMessage } from '../../components';
 import axios from 'axios';
 import { numberWithCommas, locationValidationSchema } from '../../utils';
 import { Formik, useFormik } from 'formik';
-import { Divider } from '@ui-kitten/components';
-import { Button, Container } from '../../components';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Constants from 'expo-constants';
 import _ from 'lodash';
+import { TouchableOpacity } from 'react-native';
 import uuid from 'react-native-uuid';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
@@ -18,8 +16,9 @@ import { getAuth } from 'firebase/auth';
 import { HomeScreenStyles } from './HomeScreenStyles';
 import { StatusBar } from 'expo-status-bar';
 import { GooglePlacesAutocomplete, PlaceDetails } from 'expo-google-places-autocomplete';
+import { View, Text, Container, Button, Divider } from 'native-base';
 
-export const HomeScreen = () => {
+export const HomeScreen = ({ navigation }) => {
   const isFocused = useIsFocused();
 
   const styles = HomeScreenStyles;
@@ -114,16 +113,22 @@ export const HomeScreen = () => {
   }, []);
 
   return (
-    <Container style={styles.layout}>
+    <View style={styles.layout}>
       <StatusBar style="auto" />
+      <Button
+        onPress={() => {
+          navigation.navigate('Distance Properties');
+        }}
+        mb={10}
+      >
+        <Text>Distance To Properties.</Text>
+      </Button>
       <KeyboardAwareScrollView style={styles.keyboard}>
         <Formik validationSchema={locationValidationSchema}>
           <View style={styles.card}>
             <View style={styles.crmHeader}>
-              <Text category="h6">Get CRM Valuation on the go!</Text>
-              <Text category="s1" status="info" style={styles.search}>
-                Search for property by address.
-              </Text>
+              <Text fontSize="2xl">Get CRM Valuation on the go!</Text>
+              <Text style={styles.search}>Search for property by address.</Text>
             </View>
             <View style={styles.textArea}>
               <Text>
@@ -137,7 +142,7 @@ export const HomeScreen = () => {
                 apiKey={Constants.manifest?.extra?.googleApiKey}
                 requestConfig={{ countries: ['US'] }}
                 onPlaceSelected={onPlaceSelected}
-	/>*/}
+							/>*/}
               {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
             </View>
             <View style={styles.footerContainer}>
@@ -145,71 +150,59 @@ export const HomeScreen = () => {
               <Button style={styles.button} onPress={handleSubmit}>
                 <Text style={styles.buttonText}>Get Valuation</Text>
               </Button>
-              <Text style={styles.hintText} appearance="hint">
+              <Text style={styles.hintText}>
                 Valuation is calculated by default 10 properties in the area.
               </Text>
             </View>
             {crmEstimate ? (
-              <Container level="4" style={styles.layout}>
-                <Text
-                  style={styles.estimatedValue}
-                  category="h6"
-                >{`Estimated CMA value $${numberWithCommas(crmEstimate.price)}`}</Text>
+              <View style={styles.layout}>
+                <Text style={styles.estimatedValue}>{`Estimated CMA value $${numberWithCommas(
+                  crmEstimate.price,
+                )}`}</Text>
                 <Divider />
-                <Text
-                  style={styles.estimatedValue}
-                  category="h6"
-                >{`CMA Price Low $${numberWithCommas(crmEstimate.priceRangeLow)}`}</Text>
+                <Text style={styles.estimatedValue}>{`CMA Price Low $${numberWithCommas(
+                  crmEstimate.priceRangeLow,
+                )}`}</Text>
                 <Divider />
-                <Text
-                  style={styles.estimatedValue}
-                  category="h6"
-                >{`CMA Price High $${numberWithCommas(crmEstimate.priceRangeHigh)}`}</Text>
-              </Container>
+                <Text style={styles.estimatedValue}>{`CMA Price High $${numberWithCommas(
+                  crmEstimate.priceRangeHigh,
+                )}`}</Text>
+              </View>
             ) : null}
 
             {crmEstimate && crmEstimate.listings && _.size(crmEstimate.listings) && (
-              <Container level="4" style={styles.layoutCrm}>
-                <Text style={styles.comparables} category="h6">
-                  10 Comparables
-                </Text>
+              <View style={styles.layoutCrm}>
+                <Text style={styles.comparables}>10 Comparables</Text>
                 {crmEstimate.listings.map((listing, idx) => {
                   const key = uuid.v4();
                   return (
                     <View key={key}>
-                      <Text style={styles.formattedValue} category="h6">
+                      <Text style={styles.formattedValue}>
                         {`${idx + 1}.) ${listing.formattedAddress}`}
                       </Text>
                       <Divider />
                       <View style={styles.estimateContainer}>
-                        <Text
-                          style={styles.estimatedValue}
-                          appearance="hint"
-                          status="info"
-                          category="h6"
-                        >{`Price $${numberWithCommas(listing.price)}`}</Text>
+                        <Text style={styles.estimatedValue}>{`Price $${numberWithCommas(
+                          listing.price,
+                        )}`}</Text>
                         <View style={styles.iconFlex}>
                           <Icon style={styles.icon} name="bed" size={24} />
-                          <Text status="info" appearance="hint">
-                            {listing.bedrooms}
-                          </Text>
+                          <Text>{listing.bedrooms}</Text>
                         </View>
                         <View style={styles.iconFlex}>
                           <Icon style={styles.icon} name="bath" size={24} />
-                          <Text status="info" appearance="hint">
-                            {listing.bathrooms}
-                          </Text>
+                          <Text>{listing.bathrooms}</Text>
                         </View>
                       </View>
                       <Divider />
                     </View>
                   );
                 })}
-              </Container>
+              </View>
             )}
           </View>
         </Formik>
       </KeyboardAwareScrollView>
-    </Container>
+    </View>
   );
 };

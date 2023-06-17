@@ -8,7 +8,7 @@ import { auth } from '../config';
 import { inject, observer } from 'mobx-react';
 import { getTrackingPermissionsAsync } from 'expo-tracking-transparency';
 import { createStackNavigator } from '@react-navigation/stack';
-import { HomeScreen, ChatScreen } from '../screens';
+import { HomeScreen, ChatScreen, DistancePropertiesScreen } from '../screens';
 
 const Stack = createStackNavigator();
 export const RootNavigator = inject('appStore')(
@@ -72,6 +72,7 @@ export const RootNavigator = inject('appStore')(
             />
             <Stack.Screen name="CMA" component={HomeScreen} />
             <Stack.Screen name="Chat" component={ChatScreen} />
+            <Stack.Screen name="Distance Properties" component={DistancePropertiesScreen} />
             <Stack.Screen name="My Chat" component={UserChatScreen} />
           </Stack.Navigator>
         ) : (
