@@ -7,60 +7,81 @@ import { EvilIcons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import * as Location from 'expo-location';
 import * as geolib from 'geolib';
+import * as Linking from 'expo-linking';
+import { Address } from './DistancePropertiesScreenTypes';
 
 export const DistancePropertiesScreen = () => {
-	const [currentPos, setCurrentPos] = useState();
-	const [distancePos, setDistancePos] = useState([]);
+  const [currentPosition, setCurrentPosition] = useState<Address | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-	const getGeocoding = async (address) => {
-		try {
-			const geocode = await Location.geocodeAsync(address);
-			return geocode[0];
-		} catch (error) {
-			console.log('Geocoding error:', error);
-			return null;
+  const getGeocoding = async (address: string): Promise<Address | null> => {
+    try {
+      const geocodeResult = await Location.geocodeAsync(address);
+      if (geocodeResult.length > 0) {
+        const { latitude, longitude } = geocodeResult[0];
+        const geocodedAddress: Address = {
+          latitude,
+          longitude,
+          address,
+        };
+        return geocodedAddress;
+      }
+      return null;
+    } catch (error) {
+      console.log('Geocoding error:', error);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    const retrieveCurrentPosition = async () => {
+      const { coords } = await Location.getCurrentPositionAsync({});
+      const currentPosition: Address = {
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+        address: '',
+      };
+
+      setCurrentPosition(currentPosition);
+    };
+
+    retrieveCurrentPosition();
+  }, []);
+
+  const handleDistanceCalculation = async (values: { distances: string[] }) => {
+    try {
+			setIsLoading(true)
+      const geocodedAddresses: Address[] = [];
+      for (let i = 0; i < values.distances.length; i++) {
+        const address = values.distances[i];
+        const geocode = await getGeocoding(address);
+        if (geocode) {
+          geocode.address = address;
+          geocodedAddresses.push(geocode);
+        }
+      }
+
+      if (currentPosition) {
+        const sortedAddresses = geolib.orderByDistance(currentPosition, geocodedAddresses);
+
+        const formattedAddresses = sortedAddresses.map((address) =>
+          encodeURIComponent(address.address),
+        );
+
+        const url = `http://maps.apple.com/?daddr=${formattedAddresses.join('+to:')}`;
+
+        const isSupported = await Linking.canOpenURL(url);
+
+        if (isSupported) {
+          await Linking.openURL(url);
+        }
+      }
+    } catch (error) {
+      console.log('Error during distance calculation:', error);
+    } finally {
+			setIsLoading(false);
 		}
-	};
-
-	useEffect(() => {
-		const retrieveCurrentPosition = async () => {
-			const res = await Location.getCurrentPositionAsync({});
-			const currentPosition = {
-				latitude: res.coords.latitude,
-				longitude: res.coords.longitude,
-			};
-	
-			setCurrentPos(currentPosition);
-		}
-
-		retrieveCurrentPosition();
-	}, [])
-
-	const handleDistanceCalculation = async (values) => {
-		try {
-			const geocodedAddresses = [];
-			for (let i = 0; i < values.distances.length; i++) {
-				const geocode = await getGeocoding(values.distances[i]);
-				geocodedAddresses.push(geocode);
-			}
-	
-			const redo = geocodedAddresses.map((address) => {
-				return { latitude: address?.latitude, longitude: address?.longitude }
-			})
-			const distances = [];
-			const test = geolib.orderByDistance(currentPos, redo);
-			setDistancePos(test);
-			/*geocodedAddresses.forEach((geocodedAddress) => {
-				const { latitude, longitude } = geocodedAddress;
-				const position = { latitude, longitude };
-				const distance = geolib.getDistance(currentPosition, position);
-				distances.push(distance);
-			});*/	
-		} catch (error) {
-			console.log('Error during distance calculation:', error);
-		}
-	};	
-
+  };
   const initialValues = {
     distances: [''], // Initial value with one input field
   };
@@ -88,7 +109,6 @@ export const DistancePropertiesScreen = () => {
             Enter the properties you will be showing and calculate the shortest distance to reach
             them.
           </Text>
-					</FormikProvider>
           <View textAlign="right">
             <TouchableOpacity onPress={addField}>
               <Icon as={EvilIcons} name="plus" size="2xl" />
@@ -124,7 +144,14 @@ export const DistancePropertiesScreen = () => {
               </>
             )}
           </FieldArray>
-          <Button mt={8} onPress={formik.handleSubmit} color="primary.500">
+          <Button
+            mt={8}
+            onPress={formik.handleSubmit}
+            color="primary.500"
+            isLoading={isLoading}
+            spinnerPlacement="end"
+            isLoadingText="Submitting"
+          >
             Submit
           </Button>
         </ScrollView>
