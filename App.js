@@ -10,13 +10,16 @@ import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { Provider } from 'mobx-react';
 import stores from './src/stores/stores';
 import { NativeBaseProvider } from 'native-base';
+import { useMaterialTheme } from './nativeBaseTheme';
 
 const App = () => {
+  const { theme: nativeBaseTheme } = useMaterialTheme();
+
   return (
     <Provider {...stores}>
       <AuthenticatedUserProvider>
         <SafeAreaProvider>
-          <NativeBaseProvider>
+          <NativeBaseProvider theme={nativeBaseTheme}>
             <PaperProvider theme={theme}>
               <IconRegistry icons={[EvaIconsPack]} />
               <ApplicationProvider {...eva} theme={eva.light}>

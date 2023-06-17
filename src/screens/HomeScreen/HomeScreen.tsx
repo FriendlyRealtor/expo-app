@@ -127,11 +127,13 @@ export const HomeScreen = ({ navigation }) => {
         <Formik validationSchema={locationValidationSchema}>
           <View style={styles.card}>
             <View style={styles.crmHeader}>
-              <Text fontSize="2xl">Get CRM Valuation on the go!</Text>
+              <Text fontSize="2xl" color="black">
+                Get CRM Valuation on the go!
+              </Text>
               <Text style={styles.search}>Search for property by address.</Text>
             </View>
             <View style={styles.textArea}>
-              <Text>
+              <Text color="black">
                 A Comparative Market Analysis (CMA) is a crucial tool for real estate agents to
                 accurately price and sell properties. The importance of a good CMA cannot be
                 overstated, as it allows agents to provide their clients with a comprehensive
@@ -146,7 +148,6 @@ export const HomeScreen = ({ navigation }) => {
               {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
             </View>
             <View style={styles.footerContainer}>
-              <Divider />
               <Button style={styles.button} onPress={handleSubmit}>
                 <Text style={styles.buttonText}>Get Valuation</Text>
               </Button>
