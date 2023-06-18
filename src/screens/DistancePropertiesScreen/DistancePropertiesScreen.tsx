@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Button, ScrollView, View, Text, Icon } from 'native-base';
+import { Container, Button, Input, ScrollView, View, Text, Icon } from 'native-base';
 import { useFormik, FormikProvider, FieldArray } from 'formik';
 import Constants from 'expo-constants';
 import { GooglePlacesAutocomplete, PlaceDetails } from 'expo-google-places-autocomplete';
@@ -119,16 +119,18 @@ export const DistancePropertiesScreen = () => {
               <>
                 {formik.values.distances.map((_, index) => (
                   <View key={index} my={4} display="flex" flexDirection="row">
-                    <GooglePlacesAutocomplete
-                      apiKey={Constants.manifest?.extra?.googleApiKey}
-                      requestConfig={{ countries: ['US'] }}
-                      onPlaceSelected={(place: PlaceDetails) => {
-                        const newDistances = [...formik.values.distances];
-                        newDistances[index] = place.formattedAddress?.replace(/,/g, '');
-                        formik.setFieldValue('distances', newDistances);
-                      }}
-                      style={{ flex: 1 }}
-                    />
+                    <View flex="1">
+                      <GooglePlacesAutocomplete
+                        apiKey={Constants.manifest?.extra?.googleApiKey}
+                        requestConfig={{ countries: ['US'] }}
+                        onPlaceSelected={(place: PlaceDetails) => {
+                          const newDistances = [...formik.values.distances];
+                          newDistances[index] = place.formattedAddress?.replace(/,/g, '');
+                          formik.setFieldValue('distances', newDistances);
+                        }}
+                      />
+                    </View>
+                    <Input flex="1" />
                     <TouchableOpacity onPress={() => removeField(index)}>
                       <Icon as={EvilIcons} name="close" size="2xl" color="black" />
                     </TouchableOpacity>

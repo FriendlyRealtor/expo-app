@@ -24,6 +24,7 @@ export const HomeScreen = ({ navigation }) => {
   const styles = HomeScreenStyles;
 
   const [errorState, setErrorState] = useState('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const userAuth = getAuth();
   const [crmEstimate, setCrmEstimate] = useState(null);
   const { handleChange, values, setValues, handleBlur, handleSubmit, resetForm } = useFormik({
@@ -51,6 +52,7 @@ export const HomeScreen = ({ navigation }) => {
       const regex = /[,#-\/\s\!\@\$.....]/gi; // regex to test if valid street address
 
       if (regex.test(location)) {
+        setIsLoading(true);
         axios({
           method: 'get',
           url: `${Constants.manifest?.extra?.serverUrl}/crm?location=${location}`,
@@ -99,6 +101,9 @@ export const HomeScreen = ({ navigation }) => {
           })
           .catch((error) => {
             setErrorState(error.message);
+          })
+          .finally(() => {
+            setIsLoading(false);
           });
       } else {
         setErrorState('Invalid Street Address, Please Try Again.');
@@ -142,15 +147,21 @@ export const HomeScreen = ({ navigation }) => {
                 understanding of the local real estate market and make informed decisions about
                 buying or selling a property
               </Text>
-              <GooglePlacesAutocomplete
+              {/*<GooglePlacesAutocomplete
                 apiKey={Constants.manifest?.extra?.googleApiKey}
                 requestConfig={{ countries: ['US'] }}
                 onPlaceSelected={onPlaceSelected}
-              />
+			/>*/}
               {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
             </View>
             <View style={styles.footerContainer}>
-              <Button style={styles.button} onPress={handleSubmit}>
+              <Button
+                style={styles.button}
+                onPress={handleSubmit}
+                isLoading={isLoading}
+                spinnerPlacement="end"
+                isLoadingText="Submitting"
+              >
                 <Text style={styles.buttonText}>Get Valuation</Text>
               </Button>
               <Text style={styles.hintText}>
