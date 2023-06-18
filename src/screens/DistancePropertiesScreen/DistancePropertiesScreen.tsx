@@ -119,7 +119,7 @@ export const DistancePropertiesScreen = () => {
               <>
                 {formik.values.distances.map((_, index) => (
                   <View key={index} my={4}>
-                    {/*<GooglePlacesAutocomplete
+                    <GooglePlacesAutocomplete
 										apiKey={Constants.manifest?.extra?.googleApiKey}
 										requestConfig={{ countries: ['US'] }}
 										onPlaceSelected={(place: PlaceDetails) => {
@@ -127,7 +127,7 @@ export const DistancePropertiesScreen = () => {
 											newDistances[index] =  place.formattedAddress?.replace(/,/g, '');
 											formik.setFieldValue('distances', newDistances);
 										}}
-									/>*/}
+									/>
                     <Input
                       type="text"
                       onChangeText={(text) => {
