@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Button, Input, ScrollView, View, Text, Icon } from 'native-base';
+import { Container, Button, ScrollView, View, Text, Icon } from 'native-base';
 import { useFormik, FormikProvider, FieldArray } from 'formik';
 import Constants from 'expo-constants';
 import { GooglePlacesAutocomplete, PlaceDetails } from 'expo-google-places-autocomplete';
@@ -50,7 +50,7 @@ export const DistancePropertiesScreen = () => {
 
   const handleDistanceCalculation = async (values: { distances: string[] }) => {
     try {
-			setIsLoading(true)
+      setIsLoading(true);
       const geocodedAddresses: Address[] = [];
       for (let i = 0; i < values.distances.length; i++) {
         const address = values.distances[i];
@@ -79,8 +79,8 @@ export const DistancePropertiesScreen = () => {
     } catch (error) {
       console.log('Error during distance calculation:', error);
     } finally {
-			setIsLoading(false);
-		}
+      setIsLoading(false);
+    }
   };
   const initialValues = {
     distances: [''], // Initial value with one input field
@@ -111,34 +111,27 @@ export const DistancePropertiesScreen = () => {
           </Text>
           <View textAlign="right">
             <TouchableOpacity onPress={addField}>
-              <Icon as={EvilIcons} name="plus" size="2xl" />
+              <Icon as={EvilIcons} name="plus" size="2xl" color="primary.500" />
             </TouchableOpacity>
           </View>
           <FieldArray name="distances">
             {() => (
               <>
                 {formik.values.distances.map((_, index) => (
-                  <View key={index} my={4}>
+                  <View key={index} my={4} display="flex" flexDirection="row">
                     <GooglePlacesAutocomplete
-										apiKey={Constants.manifest?.extra?.googleApiKey}
-										requestConfig={{ countries: ['US'] }}
-										onPlaceSelected={(place: PlaceDetails) => {
-											const newDistances = [...formik.values.distances];
-											newDistances[index] =  place.formattedAddress?.replace(/,/g, '');
-											formik.setFieldValue('distances', newDistances);
-										}}
-									/>
-                    <Input
-                      type="text"
-                      onChangeText={(text) => {
+                      apiKey={Constants.manifest?.extra?.googleApiKey}
+                      requestConfig={{ countries: ['US'] }}
+                      onPlaceSelected={(place: PlaceDetails) => {
                         const newDistances = [...formik.values.distances];
-                        newDistances[index] = text;
+                        newDistances[index] = place.formattedAddress?.replace(/,/g, '');
                         formik.setFieldValue('distances', newDistances);
                       }}
-                      value={formik.values.distances[index]}
-                      mb={2}
+                      style={{ flex: 1 }}
                     />
-                    <Button onPress={() => removeField(index)}>Remove</Button>
+                    <TouchableOpacity onPress={() => removeField(index)}>
+                      <Icon as={EvilIcons} name="close" size="2xl" color="black" />
+                    </TouchableOpacity>
                   </View>
                 ))}
               </>
