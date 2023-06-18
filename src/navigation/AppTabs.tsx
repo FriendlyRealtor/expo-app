@@ -41,34 +41,19 @@ export const AppTabs = (props) => {
       <Tab.Screen
         name="Feed"
         component={HomeScreen}
-        options={{
+        options={({ navigation }) => ({
           tabBarIcon: () => <Icon name="home" size={30} color="#02FDAA" />,
-          header: ({ navigation, route, options }) => {
-            return (
-              <View
-                style={{
-                  top: 60,
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  paddingHorizontal: 16,
-                  alignItems: 'center',
-                  paddingBottom: 16,
-                  width: '100%',
-                }}
-              >
-                <Text category="h2">Friendly Realtor</Text>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate('Chat');
-                  }}
-                >
-                  <Icon name="inbox" size={30} color={Colors.color2} />
-                </TouchableOpacity>
-              </View>
-            );
-          },
-        }}
+          title: 'FriendlyRealtor',
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Chat');
+              }}
+            >
+              <Icon name="inbox" size={30} style={{ marginRight: 16 }} color={Colors.color2} />
+            </TouchableOpacity>
+          ),
+        })}
       />
       <Tab.Screen
         name="Deals"

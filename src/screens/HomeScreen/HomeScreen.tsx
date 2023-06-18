@@ -1,15 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, ScrollView } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
-import { Text, FormErrorMessage } from '../../components';
+import { FormErrorMessage } from '../../components';
 import axios from 'axios';
 import { numberWithCommas, locationValidationSchema } from '../../utils';
 import { Formik, useFormik } from 'formik';
-import { Divider } from '@ui-kitten/components';
-import { Button, Container } from '../../components';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Constants from 'expo-constants';
 import _ from 'lodash';
+import { TouchableOpacity } from 'react-native';
 import uuid from 'react-native-uuid';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
@@ -18,13 +16,15 @@ import { getAuth } from 'firebase/auth';
 import { HomeScreenStyles } from './HomeScreenStyles';
 import { StatusBar } from 'expo-status-bar';
 import { GooglePlacesAutocomplete, PlaceDetails } from 'expo-google-places-autocomplete';
+import { View, Text, Container, Button, Divider } from 'native-base';
 
-export const HomeScreen = () => {
+export const HomeScreen = ({ navigation }) => {
   const isFocused = useIsFocused();
 
   const styles = HomeScreenStyles;
 
   const [errorState, setErrorState] = useState('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const userAuth = getAuth();
   const [crmEstimate, setCrmEstimate] = useState(null);
   const { handleChange, values, setValues, handleBlur, handleSubmit, resetForm } = useFormik({
@@ -52,6 +52,7 @@ export const HomeScreen = () => {
       const regex = /[,#-\/\s\!\@\$.....]/gi; // regex to test if valid street address
 
       if (regex.test(location)) {
+        setIsLoading(true);
         axios({
           method: 'get',
           url: `${Constants.manifest?.extra?.serverUrl}/crm?location=${location}`,
@@ -100,6 +101,9 @@ export const HomeScreen = () => {
           })
           .catch((error) => {
             setErrorState(error.message);
+          })
+          .finally(() => {
+            setIsLoading(false);
           });
       } else {
         setErrorState('Invalid Street Address, Please Try Again.');
@@ -114,102 +118,105 @@ export const HomeScreen = () => {
   }, []);
 
   return (
-    <Container style={styles.layout}>
+    <View style={styles.layout}>
       <StatusBar style="auto" />
+      <Button
+        onPress={() => {
+          navigation.navigate('Distance Properties');
+        }}
+        my={10}
+        mx={10}
+        rounded="lg"
+      >
+        <Text color="white">Calculate distance for showings.</Text>
+      </Button>
       <KeyboardAwareScrollView style={styles.keyboard}>
         <Formik validationSchema={locationValidationSchema}>
           <View style={styles.card}>
             <View style={styles.crmHeader}>
-              <Text category="h6">Get CRM Valuation on the go!</Text>
-              <Text category="s1" status="info" style={styles.search}>
-                Search for property by address.
+              <Text fontSize="2xl" color="black">
+                Get CRM Valuation on the go!
               </Text>
+              <Text style={styles.search}>Search for property by address.</Text>
             </View>
             <View style={styles.textArea}>
-              <Text>
+              <Text color="black">
                 A Comparative Market Analysis (CMA) is a crucial tool for real estate agents to
                 accurately price and sell properties. The importance of a good CMA cannot be
                 overstated, as it allows agents to provide their clients with a comprehensive
                 understanding of the local real estate market and make informed decisions about
                 buying or selling a property
               </Text>
-              {/*<GooglePlacesAutocomplete
+              <GooglePlacesAutocomplete
                 apiKey={Constants.manifest?.extra?.googleApiKey}
                 requestConfig={{ countries: ['US'] }}
                 onPlaceSelected={onPlaceSelected}
-	/>*/}
+              />
               {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
             </View>
             <View style={styles.footerContainer}>
-              <Divider />
-              <Button style={styles.button} onPress={handleSubmit}>
+              <Button
+                style={styles.button}
+                onPress={handleSubmit}
+                isLoading={isLoading}
+                spinnerPlacement="end"
+                isLoadingText="Submitting"
+              >
                 <Text style={styles.buttonText}>Get Valuation</Text>
               </Button>
-              <Text style={styles.hintText} appearance="hint">
+              <Text style={styles.hintText}>
                 Valuation is calculated by default 10 properties in the area.
               </Text>
             </View>
             {crmEstimate ? (
-              <Container level="4" style={styles.layout}>
-                <Text
-                  style={styles.estimatedValue}
-                  category="h6"
-                >{`Estimated CMA value $${numberWithCommas(crmEstimate.price)}`}</Text>
+              <View style={styles.layout}>
+                <Text style={styles.estimatedValue}>{`Estimated CMA value $${numberWithCommas(
+                  crmEstimate.price,
+                )}`}</Text>
                 <Divider />
-                <Text
-                  style={styles.estimatedValue}
-                  category="h6"
-                >{`CMA Price Low $${numberWithCommas(crmEstimate.priceRangeLow)}`}</Text>
+                <Text style={styles.estimatedValue}>{`CMA Price Low $${numberWithCommas(
+                  crmEstimate.priceRangeLow,
+                )}`}</Text>
                 <Divider />
-                <Text
-                  style={styles.estimatedValue}
-                  category="h6"
-                >{`CMA Price High $${numberWithCommas(crmEstimate.priceRangeHigh)}`}</Text>
-              </Container>
+                <Text style={styles.estimatedValue}>{`CMA Price High $${numberWithCommas(
+                  crmEstimate.priceRangeHigh,
+                )}`}</Text>
+              </View>
             ) : null}
 
             {crmEstimate && crmEstimate.listings && _.size(crmEstimate.listings) && (
-              <Container level="4" style={styles.layoutCrm}>
-                <Text style={styles.comparables} category="h6">
-                  10 Comparables
-                </Text>
+              <View style={styles.layoutCrm}>
+                <Text style={styles.comparables}>10 Comparables</Text>
                 {crmEstimate.listings.map((listing, idx) => {
                   const key = uuid.v4();
                   return (
                     <View key={key}>
-                      <Text style={styles.formattedValue} category="h6">
+                      <Text style={styles.formattedValue}>
                         {`${idx + 1}.) ${listing.formattedAddress}`}
                       </Text>
                       <Divider />
                       <View style={styles.estimateContainer}>
-                        <Text
-                          style={styles.estimatedValue}
-                          appearance="hint"
-                          status="info"
-                          category="h6"
-                        >{`Price $${numberWithCommas(listing.price)}`}</Text>
+                        <Text style={styles.estimatedValue}>{`Price $${numberWithCommas(
+                          listing.price,
+                        )}`}</Text>
                         <View style={styles.iconFlex}>
                           <Icon style={styles.icon} name="bed" size={24} />
-                          <Text status="info" appearance="hint">
-                            {listing.bedrooms}
-                          </Text>
+                          <Text>{listing.bedrooms}</Text>
                         </View>
                         <View style={styles.iconFlex}>
                           <Icon style={styles.icon} name="bath" size={24} />
-                          <Text status="info" appearance="hint">
-                            {listing.bathrooms}
-                          </Text>
+                          <Text>{listing.bathrooms}</Text>
                         </View>
                       </View>
                       <Divider />
                     </View>
                   );
                 })}
-              </Container>
+              </View>
             )}
           </View>
         </Formik>
       </KeyboardAwareScrollView>
-    </Container>
+    </View>
   );
 };
