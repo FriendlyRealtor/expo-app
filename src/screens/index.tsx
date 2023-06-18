@@ -12,11 +12,13 @@ import { TemplateScreen } from './TemplateScreen';
 import { ClientScreen } from './ClientScreen/ClientScreen';
 import { ChatScreen } from './ChatScreen/ChatScreen';
 import { UserChatScreen } from './ChatScreen/UserChatScreen';
+import { DistancePropertiesScreen } from './DistancePropertiesScreen/DistancePropertiesScreen';
 
 export {
   LoginScreen,
   SignupScreen,
   ClientScreen,
+  DistancePropertiesScreen,
   ChatScreen,
   FeedScreen,
   PostScreen,
