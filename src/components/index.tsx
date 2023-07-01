@@ -1,5 +1,6 @@
 import { TextInput } from './TextInput';
 import { View } from './View';
+import { Chip } from './Chip';
 import { Divider } from './Divider';
 import { Logo } from './Logo';
 import { Icon } from './Icon';
@@ -16,6 +17,7 @@ import NavigationAction from './NavigationAction';
 export {
   Loading,
   View,
+  Chip,
   Divider,
   Search,
   TextInput,

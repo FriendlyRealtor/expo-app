@@ -9508,6 +9508,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"libphonenumber-js@npm:^1.10.37":
+  version: 1.10.37
+  resolution: "libphonenumber-js@npm:1.10.37"
+  checksum: c28f7623226d6ab33c48044f12e772d35dfdbebae53e89434840f64da92e92736fa547a47b48d99050f225d921df71d9827848f78d6c62a063dec4c44dad1b1b
+  languageName: node
+  linkType: hard
+
 "lie@npm:~3.3.0":
   version: 3.3.0
   resolution: "lie@npm:3.3.0"
@@ -12545,6 +12552,7 @@ __metadata:
     firebase: 9.6.11
     formik: 2.1.4
     geolib: ^3.3.4
+    libphonenumber-js: ^1.10.37
     lodash: ^4.17.21
     lottie-react-native: 5.1.4
     mobx: ^6.9.0
@@ -12573,6 +12581,7 @@ __metadata:
     react-native-web: ~0.18.11
     typescript: ^4.9.4
     yup: 0.27.0
+    zipcodes: ^8.0.0
   languageName: unknown
   linkType: soft
 
@@ -14469,5 +14478,12 @@ __metadata:
     synchronous-promise: ^2.0.6
     toposort: ^2.0.2
   checksum: a95be1512759145b068bc9c3171b0f71121cce128d96c8e33f6dbf43f4f7a6aa43bcd2b0d70e3699333e1dbb59dbcfb19a66eec70443138115bf6a3c10ebea90
+  languageName: node
+  linkType: hard
+
+"zipcodes@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "zipcodes@npm:8.0.0"
+  checksum: 4d6512115943b5b97a1ffdb2720146e8ab2c94f235cf31bf78aecf0e2621c32dfe3bc9fdb152d1ab7d59eb3c71200b8a1f7419f60d63cfa46566dc254ccd9a77
   languageName: node
   linkType: hard

@@ -125,8 +125,12 @@ export const DistancePropertiesScreen = () => {
                         requestConfig={{ countries: ['US'] }}
                         onPlaceSelected={(place: PlaceDetails) => {
                           const newDistances = [...formik.values.distances];
-                          newDistances[index] = place.formattedAddress?.replace(/,/g, '');
-                          formik.setFieldValue('distances', newDistances);
+                          const formattedAddress = place.formattedAddress?.replace(/,/g, '');
+
+                          if (formattedAddress !== undefined) {
+                            newDistances[index] = formattedAddress;
+                            formik.setFieldValue('distances', newDistances);
+                          }
                         }}
                       />
                     </View>
