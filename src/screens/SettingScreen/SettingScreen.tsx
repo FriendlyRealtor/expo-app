@@ -26,7 +26,18 @@ import { SettingScreenStyles } from './SettingScreenStyles';
 import { StatusBar } from 'expo-status-bar';
 import { inject, observer } from 'mobx-react';
 import Purchases from 'react-native-purchases';
-import { Image, Button, Heading, Divider, Text, Link, HStack, View, Input, TextArea } from 'native-base';
+import {
+  Image,
+  Button,
+  Heading,
+  Divider,
+  Text,
+  Link,
+  HStack,
+  View,
+  Input,
+  TextArea,
+} from 'native-base';
 import { validatePhoneNumberLength, AsYouType } from 'libphonenumber-js';
 
 export const SettingScreen = inject('appStore')(
@@ -48,11 +59,11 @@ export const SettingScreen = inject('appStore')(
     const [errorState, setErrorState] = useState<string>('');
     const [value, setValue] = useState(user.referralLink || '');
     const [bio, setBio] = useState(user.bio || '');
-    const [locations, setLocations] = useState(user.location || '');
-    const [chips, setChips] = useState<string[]>([]);
+    const [locations, setLocations] = useState<string[]>(user.serviceZipCodes || []);
     const [saving, setSaving] = useState<boolean>(false);
 
     const [phoneNumber, setPhoneNumber] = useState(user.phone || '');
+    const [chipValue, setChipValue] = useState<string>('');
     const [localCmaRows, setLocalCmaRows] = useState();
     const isFocused = useIsFocused();
 
@@ -84,46 +95,40 @@ export const SettingScreen = inject('appStore')(
           const { uid } = userAuth.currentUser;
           const storageRef = ref(storage, uid);
           const response = await fetch(result.uri);
-          try {
-            const blob = await response.blob();
-            try {
-              const uploadTask = uploadBytesResumable(storageRef, blob);
+          const blob = await response.blob();
+          const uploadTask = uploadBytesResumable(storageRef, blob);
 
-              uploadTask.on(
-                'state_changed',
-                (snapshot) => {
-                  const progress = snapshot.bytesTransferred / snapshot.totalBytes;
+          uploadTask.on(
+            'state_changed',
+            (snapshot) => {
+              const progress = snapshot.bytesTransferred / snapshot.totalBytes;
 
-                  if (progress) {
-                    setPhotoProgress(progress);
-                  }
-                },
-                (error) => {
-                  console.log('error uploading image: ', error);
-                },
-                () => {
-                  // Handle successful uploads on complete
-                  // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-                  getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-                    const docRef = await doc(db, 'users', uid);
-                    const data = { photo: downloadURL };
+              if (progress) {
+                setPhotoProgress(progress);
+              }
+            },
+            (error) => {
+              console.log('error uploading image: ', error);
+            },
+            () => {
+              // Handle successful uploads on complete
+              // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+              getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+                const docRef = await doc(db, 'users', uid);
+                const data = { photo: downloadURL };
 
-                    if (docRef) {
-                      await updateDoc(docRef, data);
-                      setPhotoShow(downloadURL);
-                    }
-                  });
-                },
-              );
-            } catch (err) {
-              console.log('error storing image', err);
-            }
-          } catch (err) {
-            console.log('error uploading image', err);
-          }
+                if (docRef) {
+                  await updateDoc(docRef, data);
+                  setPhotoShow(downloadURL);
+                }
+              });
+            },
+          );
+
+          setErrorState('');
         }
       } catch (err) {
-        console.log('error selecting image from camera', err);
+        setErrorState('error uploading/selecting image from camera.');
       }
     }, []);
 
@@ -221,16 +226,19 @@ export const SettingScreen = inject('appStore')(
     };
 
     const handleAddChip = () => {
-      if (locations.trim() !== '') {
-        setChips([...chips, locations.trim()]);
-        setLocations('');
+      if (/^\d{5}$/.test(chipValue.trim())) {
+        setLocations([...locations, chipValue]);
+        setChipValue('');
+        setErrorState('');
+      } else {
+        setErrorState('Make sure the zip code is a valid 5 digit number.');
       }
     };
 
     const handleDeleteChip = (index: number) => {
-      const updatedChips = [...chips];
+      const updatedChips = [...locations];
       updatedChips.splice(index, 1);
-      setChips(updatedChips);
+      setLocations(updatedChips);
     };
 
     const handleSaveToFirebase = async () => {
@@ -244,7 +252,12 @@ export const SettingScreen = inject('appStore')(
           setErrorState('Invalid phone number length, US.');
           return;
         }
-        const data = { phone: phoneNumber, bio: bio, ceRenewalDate: date, location: locations };
+        const data = {
+          phone: phoneNumber,
+          bio: bio,
+          ceRenewalDate: date,
+          serviceZipCodes: locations,
+        };
 
         if (docRef) {
           await updateDoc(docRef, data);
@@ -288,9 +301,14 @@ export const SettingScreen = inject('appStore')(
             paddingRight: 32,
           }}
         >
-          <Text status="danger" onPress={() => signOut()}>
+          <Text fontSize="md" bold onPress={() => signOut()}>
             LOG OUT
           </Text>
+        </View>
+        <View>
+          {photoProgress && photoProgress !== 1 && (
+            <ProgressBar style={{ marginBottom: 10 }} progress={photoProgress} color="#02FDAA" />
+          )}
         </View>
         <View>
           <View style={styles.layout}>
@@ -312,30 +330,32 @@ export const SettingScreen = inject('appStore')(
                 {user.photo && !photoShow && (
                   <Image
                     source={{ uri: user.photo }}
-										rounded="full"
-										display="flex"
-										alignItems="center"
+                    rounded="full"
+                    display="flex"
+                    alignItems="center"
+                    alt="User Profile Photo"
                     style={{
                       alignSelf: 'center',
                       width: 96,
                       height: 96,
-											marginTop: 8,
-											marginBottom: 32
+                      marginTop: 8,
+                      marginBottom: 32,
                     }}
                   />
                 )}
                 {photoShow && (
                   <Image
                     source={{ uri: photoShow }}
-										rounded="full"
-										display="flex"
-										alignItems="center"
+                    rounded="full"
+                    display="flex"
+                    alignItems="center"
+                    alt="User Profile Photo"
                     style={{
                       alignSelf: 'center',
                       width: 96,
                       height: 96,
-											marginTop: 8,
-											marginBottom: 32
+                      marginTop: 8,
+                      marginBottom: 32,
                     }}
                   />
                 )}
@@ -350,7 +370,7 @@ export const SettingScreen = inject('appStore')(
                   justifyContent="space-between"
                 >
                   <Heading size="xs">Username</Heading>
-                  <Text>{user.username || user.userName || ''}</Text>
+                  <Text fontSize="md">{user.username || user.userName || ''}</Text>
                 </HStack>
                 <Divider thickness={1} bg="black" />
                 <HStack
@@ -360,9 +380,7 @@ export const SettingScreen = inject('appStore')(
                   justifyContent="space-between"
                 >
                   <Heading size="xs">Name</Heading>
-                  <Text category="p1" style={{ marginTop: 16, fontFamily: 'Ubuntu' }}>
-                    {user.name || ''}
-                  </Text>
+                  <Text fontSize="md">{user.name || ''}</Text>
                 </HStack>
                 <Divider thickness={1} bg="black" />
                 <HStack
@@ -374,9 +392,7 @@ export const SettingScreen = inject('appStore')(
                 >
                   <Heading size="xs">Email</Heading>
                   {userAuth.currentUser && userAuth.currentUser.email && (
-                    <Text category="p1" style={{ fontFamily: 'Ubuntu' }}>
-                      {userAuth.currentUser.email}
-                    </Text>
+                    <Text fontSize="md">{userAuth.currentUser.email}</Text>
                   )}
                 </HStack>
                 <Divider thickness={1} bg="black" />
@@ -421,6 +437,7 @@ export const SettingScreen = inject('appStore')(
                     h={20}
                     w="75%"
                     maxW="300"
+                    fontSize="sm"
                   />
                 </HStack>
                 <Divider thickness={1} bg="black" />
@@ -431,16 +448,17 @@ export const SettingScreen = inject('appStore')(
                   paddingX={4}
                   justifyContent="space-between"
                 >
-                  <Heading size="xs">Service Areas</Heading>
+                  <Heading size="xs">Service Areas By ZipCode</Heading>
                   <View display="flex" flexDirection="column" flex={1}>
-                    {chips.map((chip, index) => (
-                      <Chip label={chip} onPress={() => handleDeleteChip(index)} />
+                    {locations.map((loc, index) => (
+                      <Chip label={loc} onPress={() => handleDeleteChip(index)} />
                     ))}
                     <Input
                       placeholder="Enter service locations by zip code."
-                      value={locations}
-                      onChangeText={(nextValue) => setLocations(nextValue)}
+                      value={chipValue}
+                      onChangeText={(text) => setChipValue(text)}
                       onSubmitEditing={handleAddChip}
+                      keyboardType="numeric"
                       width="100%"
                     />
                   </View>
@@ -473,7 +491,7 @@ export const SettingScreen = inject('appStore')(
                       justifyContent="space-between"
                     >
                       <Heading size="xs">Referral Link</Heading>
-                      <Text style={{ fontSize: 10, flexWrap: 'wrap' }}>
+                      <Text fontSize="md">
                         <Link onPress={visitPublicProfile}>Visit Public Profile</Link>
                       </Text>
                     </HStack>
@@ -492,7 +510,7 @@ export const SettingScreen = inject('appStore')(
                   justifyContent="space-between"
                 >
                   <Heading size="xs">App Version</Heading>
-                  <Text>{Constants?.manifest?.version}</Text>
+                  <Text fontSize="md">{Constants?.manifest?.version}</Text>
                 </HStack>
                 <Divider thickness={1} bg="black" />
                 {Device.osVersion && (
@@ -503,7 +521,7 @@ export const SettingScreen = inject('appStore')(
                     justifyContent="space-between"
                   >
                     <Heading size="sm">Ios Version</Heading>
-                    <Text>{Device.osVersion}</Text>
+                    <Text fontSize="md">{Device.osVersion}</Text>
                   </HStack>
                 )}
                 {Device.osVersion && <Divider thickness={1} bg="black" />}
@@ -518,14 +536,18 @@ export const SettingScreen = inject('appStore')(
                     onPress={() => {
                       try {
                         deleteUserAccount();
+                        setErrorState('');
                       } catch (error) {
                         console.log('error', error);
+                        setErrorState('Error deleting user account');
                       }
                     }}
                     colorScheme="red"
                     size="sm"
                   >
-                    <Text color="white">Delete</Text>
+                    <Text fontSize="md" color="white">
+                      Delete
+                    </Text>
                   </Button>
                 </HStack>
               </ScrollView>
@@ -542,9 +564,6 @@ export const SettingScreen = inject('appStore')(
 							) : null*/}
               </View>
             </View>
-            {photoProgress && photoProgress !== 1 && (
-              <ProgressBar style={{ marginBottom: 10 }} progress={photoProgress} color="#02FDAA" />
-            )}
           </View>
         </View>
       </Container>
