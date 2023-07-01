@@ -117,7 +117,7 @@ export const DistancePropertiesScreen = () => {
           <FieldArray name="distances">
             {() => (
               <>
-                {/*formik.values.distances.map((_, index) => (
+                {formik.values.distances.map((_, index) => (
                   <View key={index} my={4} display="flex" flexDirection="row" alignItems="center">
                     <View flex="1">
                       <GooglePlacesAutocomplete
@@ -125,8 +125,12 @@ export const DistancePropertiesScreen = () => {
                         requestConfig={{ countries: ['US'] }}
                         onPlaceSelected={(place: PlaceDetails) => {
                           const newDistances = [...formik.values.distances];
-                          newDistances[index] = place.formattedAddress?.replace(/,/g, '');
-                          formik.setFieldValue('distances', newDistances);
+                          const formattedAddress = place.formattedAddress?.replace(/,/g, '');
+
+                          if (formattedAddress !== undefined) {
+                            newDistances[index] = formattedAddress;
+                            formik.setFieldValue('distances', newDistances);
+                          }
                         }}
                       />
                     </View>
@@ -134,7 +138,7 @@ export const DistancePropertiesScreen = () => {
                       <Icon as={EvilIcons} name="close" size="2xl" color="black" />
                     </TouchableOpacity>
                   </View>
-											))*/}
+                ))}
               </>
             )}
           </FieldArray>
