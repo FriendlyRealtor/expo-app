@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Image, Linking, ScrollView, Animated, TouchableOpacity, Alert } from 'react-native';
+import { Linking, ScrollView, Animated, TouchableOpacity, Alert } from 'react-native';
 import { getAuth } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db, storage } from '../../config';
@@ -26,7 +26,7 @@ import { SettingScreenStyles } from './SettingScreenStyles';
 import { StatusBar } from 'expo-status-bar';
 import { inject, observer } from 'mobx-react';
 import Purchases from 'react-native-purchases';
-import { Button, Heading, Divider, Text, Link, HStack, View, Input, TextArea } from 'native-base';
+import { Image, Button, Heading, Divider, Text, Link, HStack, View, Input, TextArea } from 'native-base';
 import { validatePhoneNumberLength, AsYouType } from 'libphonenumber-js';
 
 export const SettingScreen = inject('appStore')(
@@ -312,26 +312,30 @@ export const SettingScreen = inject('appStore')(
                 {user.photo && !photoShow && (
                   <Image
                     source={{ uri: user.photo }}
+										rounded="full"
+										display="flex"
+										alignItems="center"
                     style={{
                       alignSelf: 'center',
                       width: 96,
                       height: 96,
-                      zIndex: 100,
-                      marginTop: 32,
-                      borderRadius: 9999,
+											marginTop: 8,
+											marginBottom: 32
                     }}
                   />
                 )}
                 {photoShow && (
                   <Image
                     source={{ uri: photoShow }}
+										rounded="full"
+										display="flex"
+										alignItems="center"
                     style={{
                       alignSelf: 'center',
                       width: 96,
                       height: 96,
-                      zIndex: 100,
-                      marginTop: 32,
-                      borderRadius: 9999,
+											marginTop: 8,
+											marginBottom: 32
                     }}
                   />
                 )}
