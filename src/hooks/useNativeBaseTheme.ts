@@ -19,6 +19,18 @@ export const useNativeBaseTheme = () => {
         400: '#d97706',
       },
     },
+    components: {
+      Input: {
+        defaultProps: {
+          borderColor: 'black',
+        },
+      },
+      TextArea: {
+        defaultProps: {
+          borderColor: 'black',
+        },
+      },
+    },
   });
 
   return { theme };

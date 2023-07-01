@@ -4,8 +4,7 @@ import { getAuth } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db, storage } from '../../config';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { ListItem } from '@ui-kitten/components';
-import { Chip, Button, Divider, Container, FormErrorMessage } from '../../components';
+import { Chip, Container, FormErrorMessage } from '../../components';
 import {
   Extrapolate,
   interpolate,
@@ -27,16 +26,13 @@ import { SettingScreenStyles } from './SettingScreenStyles';
 import { StatusBar } from 'expo-status-bar';
 import { inject, observer } from 'mobx-react';
 import Purchases from 'react-native-purchases';
-import { Text, Link, HStack, View, Input, TextArea } from 'native-base';
+import { Button, Heading, Divider, Text, Link, HStack, View, Input, TextArea } from 'native-base';
+import { validatePhoneNumberLength, AsYouType } from 'libphonenumber-js';
 
 export const SettingScreen = inject('appStore')(
   observer(({ appStore }) => {
     const styles = SettingScreenStyles;
     const { user, signOut, cmaRows, cmaFromDatabase, deleteCMAItem, deleteUserAccount } = appStore;
-
-    const [photoShow, setPhotoShow] = useState(null);
-    const [photoProgress, setPhotoProgress] = useState<number | undefined>(undefined);
-    const [errorState, setErrorState] = useState('');
 
     const userAuth = getAuth();
     const { height } = useLayout();
@@ -47,13 +43,16 @@ export const SettingScreen = inject('appStore')(
         ? new Date(user.ceRenewalDate.seconds * 1000)
         : new Date();
     const [date, setDate] = useState(defaultDate);
+    const [photoShow, setPhotoShow] = useState(null);
+    const [photoProgress, setPhotoProgress] = useState<number | undefined>(undefined);
+    const [errorState, setErrorState] = useState<string>('');
     const [value, setValue] = useState(user.referralLink || '');
     const [bio, setBio] = useState(user.bio || '');
     const [locations, setLocations] = useState(user.location || '');
     const [chips, setChips] = useState<string[]>([]);
+    const [saving, setSaving] = useState<boolean>(false);
 
     const [phoneNumber, setPhoneNumber] = useState(user.phone || '');
-
     const [localCmaRows, setLocalCmaRows] = useState();
     const isFocused = useIsFocused();
 
@@ -174,30 +173,20 @@ export const SettingScreen = inject('appStore')(
     );
 
     const renderItem = ({ item, index }) => {
-      return (
-        <ListItem
+      return {
+        /*<ListItem
           title={`${index + 1}. ${item.location}`}
           description={`Estimated Value $${item.price}`}
           accessoryRight={<RenderItemIcon index={index} />}
           style={styles.listItem}
-        />
-      );
-    };
-
-    const updateReferralLink = async () => {
-      const { uid } = userAuth.currentUser;
-      const docRef = await doc(db, 'users', uid);
-      const data = { referralLink: value };
-
-      if (docRef) {
-        await updateDoc(docRef, data);
-      }
+			/>*/
+      };
     };
 
     const updateProfileBio = async () => {
       const { uid } = userAuth.currentUser;
       const docRef = await doc(db, 'users', uid);
-      const data = { referralLink: value };
+      const data = { bio };
 
       if (docRef) {
         await updateDoc(docRef, data);
@@ -225,7 +214,9 @@ export const SettingScreen = inject('appStore')(
     };
 
     const visitPublicProfile = () => {
-      const publicProfileURL = `https://friendlyrealtor.app/profile/${user.userName}`;
+      const publicProfileURL = `https://friendlyrealtor.app/profile/${
+        user.username || user.userName
+      }`;
       Linking.openURL(publicProfileURL);
     };
 
@@ -240,6 +231,30 @@ export const SettingScreen = inject('appStore')(
       const updatedChips = [...chips];
       updatedChips.splice(index, 1);
       setChips(updatedChips);
+    };
+
+    const handleSaveToFirebase = async () => {
+      setSaving(true);
+
+      const { uid } = userAuth.currentUser;
+      try {
+        const docRef = await doc(db, 'users', uid);
+
+        if (validatePhoneNumberLength(phoneNumber, 'US')) {
+          setErrorState('Invalid phone number length, US.');
+          return;
+        }
+        const data = { phone: phoneNumber, bio: bio, ceRenewalDate: date, location: locations };
+
+        if (docRef) {
+          await updateDoc(docRef, data);
+          setErrorState('');
+        }
+      } catch (event) {
+        setErrorState('Error saving settings', event);
+      } finally {
+        setSaving(false);
+      }
     };
 
     const restorePurchase = async () => {
@@ -279,6 +294,19 @@ export const SettingScreen = inject('appStore')(
         </View>
         <View>
           <View style={styles.layout}>
+            <HStack mt={4} mr={6} justifyContent="flex-end">
+              <Button
+                onPress={handleSaveToFirebase}
+                isLoading={saving}
+                isLoadingText="Save"
+                spinnerPlacement="end"
+              >
+                Save
+              </Button>
+            </HStack>
+            <View textAlign="center">
+              {errorState != '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
+            </View>
             <Animated.View style={scaleAvatar}>
               <TouchableOpacity onPress={pickImage}>
                 {user.photo && !photoShow && (
@@ -317,26 +345,22 @@ export const SettingScreen = inject('appStore')(
                   paddingX={4}
                   justifyContent="space-between"
                 >
-                  <Text category="label">Username</Text>
-                  <Text category="p1" style={{ marginTop: 16, fontFamily: 'Ubuntu' }}>
-                    {user.userName || ''}
-                  </Text>
+                  <Heading size="xs">Username</Heading>
+                  <Text>{user.username || user.userName || ''}</Text>
                 </HStack>
-                <Divider />
+                <Divider thickness={1} bg="black" />
                 <HStack
                   alignItems="center"
                   paddingY={2}
                   paddingX={4}
                   justifyContent="space-between"
                 >
-                  <Text category="label" style={{ marginTop: 16 }}>
-                    Name
-                  </Text>
+                  <Heading size="xs">Name</Heading>
                   <Text category="p1" style={{ marginTop: 16, fontFamily: 'Ubuntu' }}>
                     {user.name || ''}
                   </Text>
                 </HStack>
-                <Divider />
+                <Divider thickness={1} bg="black" />
                 <HStack
                   alignItems="center"
                   space={2}
@@ -344,14 +368,14 @@ export const SettingScreen = inject('appStore')(
                   paddingX={4}
                   justifyContent="space-between"
                 >
-                  <Text category="label">Email</Text>
+                  <Heading size="xs">Email</Heading>
                   {userAuth.currentUser && userAuth.currentUser.email && (
                     <Text category="p1" style={{ fontFamily: 'Ubuntu' }}>
                       {userAuth.currentUser.email}
                     </Text>
                   )}
                 </HStack>
-                <Divider />
+                <Divider thickness={1} bg="black" />
                 <HStack
                   alignItems="center"
                   space={2}
@@ -359,18 +383,22 @@ export const SettingScreen = inject('appStore')(
                   paddingX={4}
                   justifyContent="space-between"
                 >
-                  <Text category="label">Phone Number</Text>
+                  <Heading size="xs">Phone Number</Heading>
                   <View flex={1}>
                     <Input
                       placeholder="Phone Number"
-                      onChangeText={(nextValue) => setPhoneNumber(nextValue)}
-                      onSubmitEditing={handleAddChip}
-                      onBlur={() => updatePhoneNumber()}
+                      value={phoneNumber}
+                      onChangeText={(nextValue) => {
+                        {
+                          const formatNum = new AsYouType('US').input(nextValue);
+                          setPhoneNumber(formatNum);
+                        }
+                      }}
                       width="100%"
                     />
                   </View>
                 </HStack>
-                <Divider />
+                <Divider thickness={1} bg="black" />
                 <HStack
                   alignItems="center"
                   space={2}
@@ -378,21 +406,20 @@ export const SettingScreen = inject('appStore')(
                   paddingX={4}
                   justifyContent="space-between"
                 >
-                  <Text category="label">Bio</Text>
+                  <Heading size="xs">Bio</Heading>
                   <TextArea
                     placeholder="Tell your viewers more about you."
                     autoCompleteType="false"
                     value={bio}
                     multiline={true}
                     onChangeText={(nextValue) => setBio(nextValue)}
-                    onBlur={() => updateProfileBio()}
                     size="sm"
                     h={20}
                     w="75%"
                     maxW="300"
                   />
                 </HStack>
-                <Divider />
+                <Divider thickness={1} bg="black" />
                 <HStack
                   alignItems="center"
                   space={2}
@@ -400,21 +427,21 @@ export const SettingScreen = inject('appStore')(
                   paddingX={4}
                   justifyContent="space-between"
                 >
-                  <Text category="label">Service Areas</Text>
+                  <Heading size="xs">Service Areas</Heading>
                   <View display="flex" flexDirection="column" flex={1}>
                     {chips.map((chip, index) => (
                       <Chip label={chip} onPress={() => handleDeleteChip(index)} />
                     ))}
                     <Input
                       placeholder="Enter service locations by zip code."
+                      value={locations}
                       onChangeText={(nextValue) => setLocations(nextValue)}
                       onSubmitEditing={handleAddChip}
-                      // onBlur={() => updateServiceLocation()}
                       width="100%"
                     />
                   </View>
                 </HStack>
-                <Divider />
+                <Divider thickness={1} bg="black" />
                 <HStack
                   alignItems="center"
                   space={2}
@@ -422,7 +449,7 @@ export const SettingScreen = inject('appStore')(
                   paddingX={4}
                   justifyContent="space-between"
                 >
-                  <Text category="label">Renew Education License</Text>
+                  <Heading size="xs">Renew Education License</Heading>
                   <DateTimePicker
                     testID="dateTimePicker"
                     value={date}
@@ -432,35 +459,38 @@ export const SettingScreen = inject('appStore')(
                     minimumDate={new Date(year, month, day)}
                   />
                 </HStack>
-                <Divider />
-                <HStack
-                  alignItems="center"
-                  paddingY={2}
-                  paddingX={4}
-                  justifyContent="space-between"
-                >
-                  <Text category="label">Referral Link</Text>
-                  <Text style={{ fontSize: 10, flexWrap: 'wrap' }}>
-                    <Link onPress={visitPublicProfile}>Visit Public Profile</Link>
-                  </Text>
-                </HStack>
-                {/*<Divider />
+                <Divider thickness={1} bg="black" />
+                {user.username ||
+                  (user.userName && (
+                    <HStack
+                      alignItems="center"
+                      paddingY={2}
+                      paddingX={4}
+                      justifyContent="space-between"
+                    >
+                      <Heading size="xs">Referral Link</Heading>
+                      <Text style={{ fontSize: 10, flexWrap: 'wrap' }}>
+                        <Link onPress={visitPublicProfile}>Visit Public Profile</Link>
+                      </Text>
+                    </HStack>
+                  ))}
+                {/*<Divider thickness={1} bg="black" />
 									<View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginVertical: 16 }}>
 										<Button onPress={() => { try { restorePurchase(); } catch (error) { console.log('error', error); } }}>
 											<Text status="danger">Restore Purchases</Text>
 										</Button>
 									</View>*/}
-                <Divider />
+                <Divider thickness={1} bg="black" />
                 <HStack
                   alignItems="center"
                   paddingY={2}
                   paddingX={4}
                   justifyContent="space-between"
                 >
-                  <Text category="label">App Version</Text>
+                  <Heading size="xs">App Version</Heading>
                   <Text>{Constants?.manifest?.version}</Text>
                 </HStack>
-                <Divider />
+                <Divider thickness={1} bg="black" />
                 {Device.osVersion && (
                   <HStack
                     alignItems="center"
@@ -468,18 +498,18 @@ export const SettingScreen = inject('appStore')(
                     paddingX={4}
                     justifyContent="space-between"
                   >
-                    <Text category="label">IOS Version</Text>
+                    <Heading size="sm">Ios Version</Heading>
                     <Text>{Device.osVersion}</Text>
                   </HStack>
                 )}
-                {Device.osVersion && <Divider />}
+                {Device.osVersion && <Divider thickness={1} bg="black" />}
                 <HStack
                   alignItems="center"
                   paddingY={2}
                   paddingX={4}
                   justifyContent="space-between"
                 >
-                  <Text category="label">Delete Account</Text>
+                  <Heading size="xs">Delete Account</Heading>
                   <Button
                     onPress={() => {
                       try {
@@ -488,8 +518,10 @@ export const SettingScreen = inject('appStore')(
                         console.log('error', error);
                       }
                     }}
+                    colorScheme="red"
+                    size="sm"
                   >
-                    <Text color="red.500">Delete</Text>
+                    <Text color="white">Delete</Text>
                   </Button>
                 </HStack>
               </ScrollView>
@@ -509,7 +541,6 @@ export const SettingScreen = inject('appStore')(
             {photoProgress && photoProgress !== 1 && (
               <ProgressBar style={{ marginBottom: 10 }} progress={photoProgress} color="#02FDAA" />
             )}
-            {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
           </View>
         </View>
       </Container>

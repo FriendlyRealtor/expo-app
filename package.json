@@ -54,6 +54,7 @@
     "firebase": "9.6.11",
     "formik": "2.1.4",
     "geolib": "^3.3.4",
+    "libphonenumber-js": "^1.10.37",
     "lodash": "^4.17.21",
     "lottie-react-native": "5.1.4",
     "mobx": "^6.9.0",
