@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Image, View, ScrollView, Animated, TouchableOpacity, Alert } from 'react-native';
+import { Image, Linking, ScrollView, Animated, TouchableOpacity, Alert } from 'react-native';
 import { getAuth } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db, storage } from '../../config';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { ListItem, Input } from '@ui-kitten/components';
-import { Button, Divider, Container, FormErrorMessage, Text } from '../../components';
+import { ListItem } from '@ui-kitten/components';
+import { Chip, Button, Divider, Container, FormErrorMessage } from '../../components';
 import {
   Extrapolate,
   interpolate,
@@ -27,6 +27,7 @@ import { SettingScreenStyles } from './SettingScreenStyles';
 import { StatusBar } from 'expo-status-bar';
 import { inject, observer } from 'mobx-react';
 import Purchases from 'react-native-purchases';
+import { Text, Link, HStack, View, Input, TextArea } from 'native-base';
 
 export const SettingScreen = inject('appStore')(
   observer(({ appStore }) => {
@@ -49,6 +50,9 @@ export const SettingScreen = inject('appStore')(
     const [value, setValue] = useState(user.referralLink || '');
     const [bio, setBio] = useState(user.bio || '');
     const [locations, setLocations] = useState(user.location || '');
+    const [chips, setChips] = useState<string[]>([]);
+
+    const [phoneNumber, setPhoneNumber] = useState(user.phone || '');
 
     const [localCmaRows, setLocalCmaRows] = useState();
     const isFocused = useIsFocused();
@@ -210,6 +214,34 @@ export const SettingScreen = inject('appStore')(
       }
     };
 
+    const updatePhoneNumber = async () => {
+      const { uid } = userAuth.currentUser;
+      const docRef = await doc(db, 'users', uid);
+      const data = { phone: value };
+
+      if (docRef) {
+        await updateDoc(docRef, data);
+      }
+    };
+
+    const visitPublicProfile = () => {
+      const publicProfileURL = `https://friendlyrealtor.app/profile/${user.userName}`;
+      Linking.openURL(publicProfileURL);
+    };
+
+    const handleAddChip = () => {
+      if (locations.trim() !== '') {
+        setChips([...chips, locations.trim()]);
+        setLocations('');
+      }
+    };
+
+    const handleDeleteChip = (index: number) => {
+      const updatedChips = [...chips];
+      updatedChips.splice(index, 1);
+      setChips(updatedChips);
+    };
+
     const restorePurchase = async () => {
       try {
         const restoredEntitlements = await Purchases.restorePurchases();
@@ -237,7 +269,7 @@ export const SettingScreen = inject('appStore')(
             justifyContent: 'flex-end',
             width: '100%',
             flexDirection: 'row',
-            paddingTop: 24,
+            paddingVertical: 24,
             paddingRight: 32,
           }}
         >
@@ -245,7 +277,7 @@ export const SettingScreen = inject('appStore')(
             LOG OUT
           </Text>
         </View>
-        <ScrollView>
+        <View>
           <View style={styles.layout}>
             <Animated.View style={scaleAvatar}>
               <TouchableOpacity onPress={pickImage}>
@@ -277,145 +309,209 @@ export const SettingScreen = inject('appStore')(
                 )}
               </TouchableOpacity>
             </Animated.View>
-            <View style={styles.flexRow}>
-              <Text category="label">Username</Text>
-              <Text category="p1" style={{ marginTop: 16, fontFamily: 'Ubuntu' }}>
-                {user.userName || ''}
-              </Text>
-            </View>
-            <Divider />
-            <View style={styles.flexRow}>
-              <Text category="label" style={{ marginTop: 16 }}>
-                Name
-              </Text>
-              <Text category="p1" style={{ marginTop: 16, fontFamily: 'Ubuntu' }}>
-                {user.name || ''}
-              </Text>
-            </View>
-            <Divider />
-            <View style={styles.flexRow}>
-              <Text category="label">Email</Text>
-              {userAuth.currentUser && userAuth.currentUser.email && (
-                <Text category="p1" style={{ fontFamily: 'Ubuntu' }}>
-                  {userAuth.currentUser.email}
-                </Text>
-              )}
-            </View>
-            <Divider />
-            <View style={styles.flexRow}>
-              <Text category="label">Bio</Text>
-              <Input
-                placeholder="Tell your viewers more about you."
-                value={bio}
-                multiline={true}
-                onChangeText={(nextValue) => setBio(nextValue)}
-                onBlur={() => updateProfileBio()}
-                size="small"
-                textStyle={styles.input}
-              />
-            </View>
-            <Divider />
-            <View style={styles.flexRow}>
-              <Text category="label">Service Areas</Text>
-              <Input
-                placeholder="Where are your services located"
-                value={locations}
-                multiline={true}
-                onChangeText={(nextValue) => setLocations(nextValue)}
-                onBlur={() => updateServiceLocation()}
-                size="small"
-                textStyle={styles.input}
-              />
-            </View>
-            <Divider />
-            <View style={styles.flexRow}>
-              <Text category="label">Renew Education License</Text>
-              <DateTimePicker
-                testID="dateTimePicker"
-                value={date}
-                mode={'date'}
-                onChange={onChange}
-                display="default"
-                minimumDate={new Date(year, month, day)}
-              />
-            </View>
-            <Divider />
-            <View style={styles.flexRow}>
-              <Text category="label">Referral Link</Text>
-              <Text
-                style={{ fontSize: 10, flexWrap: 'wrap' }}
-              >{`https://friendlyrealtor.app/profile/${user.userName}`}</Text>
-            </View>
-            {/*<Divider />
-            <View
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'flex-end',
-                marginVertical: 16,
-              }}
-            >
-              <Button
-                onPress={() => {
-                  try {
-                    restorePurchase();
-                  } catch (error) {
-                    console.log('error', error);
-                  }
-                }}
-              >
-                <Text status="danger">Restore Purchases</Text>
-              </Button>
-							</View>*/}
-            <Divider />
-            <View style={styles.flexRow}>
-              <Text category="label">App Version</Text>
-              <Text>{Constants?.manifest?.version}</Text>
-            </View>
-            <Divider />
-            {Device.osVersion && (
-              <View style={styles.flexRow}>
-                <Text category="label">IOS Version</Text>
-                <Text>{Device.osVersion}</Text>
-              </View>
-            )}
-            {Device.osVersion && <Divider />}
-            <View style={styles.flexRow}>
-              <Text category="label">Delete Account</Text>
-              <Button
-                onPress={() => {
-                  try {
-                    deleteUserAccount();
-                  } catch (error) {
-                    console.log('error', error);
-                  }
-                }}
-              >
-                <Text status="danger">Delete</Text>
-              </Button>
-            </View>
-          </View>
-          <View style={styles.rows}>
-            {/*localCmaRows && _.size(localCmaRows) > 0 ? (
-              <View>
-                <Text category="h6" style={{ marginTop: 24, textAlign: 'center' }}>
-                  CMA History
-                </Text>
-                <View style={{ textAlign: 'center' }}>
-                  <List
-                    data={localCmaRows}
-                    ItemSeparatorComponent={Divider}
-                    renderItem={renderItem}
+            <View style={{ height: 450 }}>
+              <ScrollView>
+                <HStack
+                  alignItems="center"
+                  paddingY={2}
+                  paddingX={4}
+                  justifyContent="space-between"
+                >
+                  <Text category="label">Username</Text>
+                  <Text category="p1" style={{ marginTop: 16, fontFamily: 'Ubuntu' }}>
+                    {user.userName || ''}
+                  </Text>
+                </HStack>
+                <Divider />
+                <HStack
+                  alignItems="center"
+                  paddingY={2}
+                  paddingX={4}
+                  justifyContent="space-between"
+                >
+                  <Text category="label" style={{ marginTop: 16 }}>
+                    Name
+                  </Text>
+                  <Text category="p1" style={{ marginTop: 16, fontFamily: 'Ubuntu' }}>
+                    {user.name || ''}
+                  </Text>
+                </HStack>
+                <Divider />
+                <HStack
+                  alignItems="center"
+                  space={2}
+                  paddingY={2}
+                  paddingX={4}
+                  justifyContent="space-between"
+                >
+                  <Text category="label">Email</Text>
+                  {userAuth.currentUser && userAuth.currentUser.email && (
+                    <Text category="p1" style={{ fontFamily: 'Ubuntu' }}>
+                      {userAuth.currentUser.email}
+                    </Text>
+                  )}
+                </HStack>
+                <Divider />
+                <HStack
+                  alignItems="center"
+                  space={2}
+                  paddingY={2}
+                  paddingX={4}
+                  justifyContent="space-between"
+                >
+                  <Text category="label">Phone Number</Text>
+                  <View flex={1}>
+                    <Input
+                      placeholder="Phone Number"
+                      onChangeText={(nextValue) => setPhoneNumber(nextValue)}
+                      onSubmitEditing={handleAddChip}
+                      onBlur={() => updatePhoneNumber()}
+                      width="100%"
+                    />
+                  </View>
+                </HStack>
+                <Divider />
+                <HStack
+                  alignItems="center"
+                  space={2}
+                  paddingY={2}
+                  paddingX={4}
+                  justifyContent="space-between"
+                >
+                  <Text category="label">Bio</Text>
+                  <TextArea
+                    placeholder="Tell your viewers more about you."
+                    autoCompleteType="false"
+                    value={bio}
+                    multiline={true}
+                    onChangeText={(nextValue) => setBio(nextValue)}
+                    onBlur={() => updateProfileBio()}
+                    size="sm"
+                    h={20}
+                    w="75%"
+                    maxW="300"
                   />
-                </View>
+                </HStack>
+                <Divider />
+                <HStack
+                  alignItems="center"
+                  space={2}
+                  paddingY={2}
+                  paddingX={4}
+                  justifyContent="space-between"
+                >
+                  <Text category="label">Service Areas</Text>
+                  <View display="flex" flexDirection="column" flex={1}>
+                    {chips.map((chip, index) => (
+                      <Chip label={chip} onPress={() => handleDeleteChip(index)} />
+                    ))}
+                    <Input
+                      placeholder="Enter service locations by zip code."
+                      onChangeText={(nextValue) => setLocations(nextValue)}
+                      onSubmitEditing={handleAddChip}
+                      // onBlur={() => updateServiceLocation()}
+                      width="100%"
+                    />
+                  </View>
+                </HStack>
+                <Divider />
+                <HStack
+                  alignItems="center"
+                  space={2}
+                  paddingY={2}
+                  paddingX={4}
+                  justifyContent="space-between"
+                >
+                  <Text category="label">Renew Education License</Text>
+                  <DateTimePicker
+                    testID="dateTimePicker"
+                    value={date}
+                    mode={'date'}
+                    onChange={onChange}
+                    display="default"
+                    minimumDate={new Date(year, month, day)}
+                  />
+                </HStack>
+                <Divider />
+                <HStack
+                  alignItems="center"
+                  paddingY={2}
+                  paddingX={4}
+                  justifyContent="space-between"
+                >
+                  <Text category="label">Referral Link</Text>
+                  <Text style={{ fontSize: 10, flexWrap: 'wrap' }}>
+                    <Link onPress={visitPublicProfile}>Visit Public Profile</Link>
+                  </Text>
+                </HStack>
+                {/*<Divider />
+									<View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginVertical: 16 }}>
+										<Button onPress={() => { try { restorePurchase(); } catch (error) { console.log('error', error); } }}>
+											<Text status="danger">Restore Purchases</Text>
+										</Button>
+									</View>*/}
+                <Divider />
+                <HStack
+                  alignItems="center"
+                  paddingY={2}
+                  paddingX={4}
+                  justifyContent="space-between"
+                >
+                  <Text category="label">App Version</Text>
+                  <Text>{Constants?.manifest?.version}</Text>
+                </HStack>
+                <Divider />
+                {Device.osVersion && (
+                  <HStack
+                    alignItems="center"
+                    paddingY={2}
+                    paddingX={4}
+                    justifyContent="space-between"
+                  >
+                    <Text category="label">IOS Version</Text>
+                    <Text>{Device.osVersion}</Text>
+                  </HStack>
+                )}
+                {Device.osVersion && <Divider />}
+                <HStack
+                  alignItems="center"
+                  paddingY={2}
+                  paddingX={4}
+                  justifyContent="space-between"
+                >
+                  <Text category="label">Delete Account</Text>
+                  <Button
+                    onPress={() => {
+                      try {
+                        deleteUserAccount();
+                      } catch (error) {
+                        console.log('error', error);
+                      }
+                    }}
+                  >
+                    <Text color="red.500">Delete</Text>
+                  </Button>
+                </HStack>
+              </ScrollView>
+              <View style={styles.rows}>
+                {/*localCmaRows && _.size(localCmaRows) > 0 ? (
+								<View>
+									<Text category="h6" style={{ marginTop: 24, textAlign: 'center' }}>
+										CMA History
+									</Text>
+									<View style={{ textAlign: 'center' }}>
+										<List data={localCmaRows} ItemSeparatorComponent={Divider} renderItem={renderItem} />
+									</View>
+								</View>
+							) : null*/}
               </View>
-						) : null*/}
+            </View>
             {photoProgress && photoProgress !== 1 && (
               <ProgressBar style={{ marginBottom: 10 }} progress={photoProgress} color="#02FDAA" />
             )}
             {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
           </View>
-        </ScrollView>
+        </View>
       </Container>
     );
   }),

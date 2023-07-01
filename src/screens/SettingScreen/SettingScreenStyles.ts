@@ -5,6 +5,7 @@ export const SettingScreenStyles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 0,
+    paddingBottom: 32,
   },
   flexRow: {
     display: 'flex',
@@ -16,10 +17,6 @@ export const SettingScreenStyles = StyleSheet.create({
   delete: {
     color: Colors.red,
   },
-  input: {
-    width: 200,
-    minHeight: 64,
-  },
   top: {
     borderBottomLeftRadius: 24,
     borderBottomRightRadius: 24,
@@ -29,7 +26,6 @@ export const SettingScreenStyles = StyleSheet.create({
     justifyContent: 'center',
   },
   layout: {
-    paddingHorizontal: 16,
     borderRadius: 12,
     marginHorizontal: 24,
     backgroundColor: Colors.lightGray,

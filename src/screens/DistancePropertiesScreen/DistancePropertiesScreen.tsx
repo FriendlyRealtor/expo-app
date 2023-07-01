@@ -117,7 +117,7 @@ export const DistancePropertiesScreen = () => {
           <FieldArray name="distances">
             {() => (
               <>
-                {formik.values.distances.map((_, index) => (
+                {/*formik.values.distances.map((_, index) => (
                   <View key={index} my={4} display="flex" flexDirection="row" alignItems="center">
                     <View flex="1">
                       <GooglePlacesAutocomplete
@@ -134,7 +134,7 @@ export const DistancePropertiesScreen = () => {
                       <Icon as={EvilIcons} name="close" size="2xl" color="black" />
                     </TouchableOpacity>
                   </View>
-                ))}
+											))*/}
               </>
             )}
           </FieldArray>

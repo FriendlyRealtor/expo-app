@@ -12573,6 +12573,7 @@ __metadata:
     react-native-web: ~0.18.11
     typescript: ^4.9.4
     yup: 0.27.0
+    zipcodes: ^8.0.0
   languageName: unknown
   linkType: soft
 
@@ -14469,5 +14470,12 @@ __metadata:
     synchronous-promise: ^2.0.6
     toposort: ^2.0.2
   checksum: a95be1512759145b068bc9c3171b0f71121cce128d96c8e33f6dbf43f4f7a6aa43bcd2b0d70e3699333e1dbb59dbcfb19a66eec70443138115bf6a3c10ebea90
+  languageName: node
+  linkType: hard
+
+"zipcodes@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "zipcodes@npm:8.0.0"
+  checksum: 4d6512115943b5b97a1ffdb2720146e8ab2c94f235cf31bf78aecf0e2621c32dfe3bc9fdb152d1ab7d59eb3c71200b8a1f7419f60d63cfa46566dc254ccd9a77
   languageName: node
   linkType: hard
