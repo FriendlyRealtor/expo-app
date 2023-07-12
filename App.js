@@ -1,35 +1,51 @@
-import React, { useEffect } from 'react';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Provider as PaperProvider } from 'react-native-paper';
-import { RootNavigator } from './src/navigation/RootNavigator';
-import { AuthenticatedUserProvider } from './src/providers';
-import { theme } from './theme';
 import * as eva from '@eva-design/eva';
+
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
+import React, { useEffect } from 'react';
+import { Text, View } from 'native-base';
+
+import { AuthenticatedUserProvider } from './src/providers';
+import Bugsnag from '@bugsnag/expo';
+import Constants from 'expo-constants';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
-import { Provider } from 'mobx-react';
-import stores from './src/stores/stores';
 import { NativeBaseProvider } from 'native-base';
+import { Provider as PaperProvider } from 'react-native-paper';
+import { Provider } from 'mobx-react';
+import { RootNavigator } from './src/navigation/RootNavigator';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import stores from './src/stores/stores';
+import { theme } from './theme';
 import { useNativeBaseTheme } from './src/hooks';
 
 const App = () => {
   const { theme: nativeBaseTheme } = useNativeBaseTheme();
 
+  Bugsnag.start(Constants?.manifest?.extra?.bugSnagApiKey || '');
+  const ErrorBoundary = Bugsnag.getPlugin('react').createErrorBoundary(React);
+
+  const ErrorView = ({ error }) => (
+    <View>
+      <Text>{error?.message || 'An error occurred.'}</Text>
+    </View>
+  );
+
   return (
-    <Provider {...stores}>
-      <AuthenticatedUserProvider>
-        <SafeAreaProvider>
-          <NativeBaseProvider theme={nativeBaseTheme}>
-            <PaperProvider theme={theme}>
-              <IconRegistry icons={[EvaIconsPack]} />
-              <ApplicationProvider {...eva} theme={eva.light}>
-                <RootNavigator />
-              </ApplicationProvider>
-            </PaperProvider>
-          </NativeBaseProvider>
-        </SafeAreaProvider>
-      </AuthenticatedUserProvider>
-    </Provider>
+    <ErrorBoundary FallbackComponent={ErrorView}>
+      <Provider {...stores}>
+        <AuthenticatedUserProvider>
+          <SafeAreaProvider>
+            <NativeBaseProvider theme={nativeBaseTheme}>
+              <PaperProvider theme={theme}>
+                <IconRegistry icons={[EvaIconsPack]} />
+                <ApplicationProvider {...eva} theme={eva.light}>
+                  <RootNavigator />
+                </ApplicationProvider>
+              </PaperProvider>
+            </NativeBaseProvider>
+          </SafeAreaProvider>
+        </AuthenticatedUserProvider>
+      </Provider>
+    </ErrorBoundary>
   );
 };
 

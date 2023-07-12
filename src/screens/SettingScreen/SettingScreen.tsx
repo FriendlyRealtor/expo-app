@@ -450,9 +450,10 @@ export const SettingScreen = inject('appStore')(
                 >
                   <Heading size="xs">Service Areas By ZipCode</Heading>
                   <View display="flex" flexDirection="column" flex={1}>
-                    {locations?.length && locations.map((loc, index) => (
-                      <Chip label={loc} onPress={() => handleDeleteChip(index)} />
-                    ))}
+                    {locations?.length &&
+                      locations.map((loc, index) => (
+                        <Chip label={loc} onPress={() => handleDeleteChip(index)} />
+                      ))}
                     <Input
                       placeholder="Enter service locations by zip code."
                       value={chipValue}

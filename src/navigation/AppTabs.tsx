@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { ClientScreen, HomeScreen, SettingScreen, LocalRestaurantScreen } from '../screens';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import {
+  ClientScreen,
+  ContactScreen,
+  HomeScreen,
+  SettingScreen,
+  //LocalRestaurantScreen,
+} from '../screens';
 import { usePermissions } from '../hooks';
 import { Text } from '../components';
+import { Icon } from 'native-base';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { View, TouchableOpacity } from 'react-native';
 import { Colors } from '../config';
 import * as Location from 'expo-location';
@@ -42,7 +49,9 @@ export const AppTabs = (props) => {
         name="Feed"
         component={HomeScreen}
         options={({ navigation }) => ({
-          tabBarIcon: () => <Icon name="home" size={30} color="#02FDAA" />,
+          tabBarIcon: () => (
+            <Icon as={MaterialCommunityIcons} name="home" size="2xl" color={Colors.primary} />
+          ),
           title: 'FriendlyRealtor',
           headerRight: () => (
             <TouchableOpacity
@@ -50,7 +59,13 @@ export const AppTabs = (props) => {
                 navigation.navigate('Chat');
               }}
             >
-              <Icon name="inbox" size={30} style={{ marginRight: 16 }} color={Colors.color2} />
+              <Icon
+                as={MaterialCommunityIcons}
+                name="inbox"
+                size="2xl"
+                style={{ marginRight: 16 }}
+                color={Colors.color2}
+              />
             </TouchableOpacity>
           ),
         })}
@@ -59,7 +74,9 @@ export const AppTabs = (props) => {
         name="Deals"
         component={ClientScreen}
         options={{
-          tabBarIcon: () => <Icon name="user" size={30} color={Colors.primary} />,
+          tabBarIcon: () => (
+            <Icon as={MaterialCommunityIcons} name="handshake" size="2xl" color={Colors.primary} />
+          ),
         }}
       />
       {/*<Tab.Screen
@@ -84,12 +101,14 @@ export const AppTabs = (props) => {
         }}
       />*/}
       <Tab.Screen
-        name="Restaurants"
+        name="Contacts"
         options={{
-          tabBarIcon: () => <Icon name="delicious" size={30} color={Colors.primary} />,
+          tabBarIcon: () => (
+            <Icon as={MaterialCommunityIcons} name="account" size="2xl" color={Colors.primary} />
+          ),
         }}
       >
-        {() => <LocalRestaurantScreen locationStatus={locationStatus} />}
+        {() => <ContactScreen />}
       </Tab.Screen>
       <Tab.Screen
         name="Menu"

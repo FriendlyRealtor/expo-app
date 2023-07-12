@@ -16,7 +16,6 @@ import uuid from 'react-native-uuid';
 import moment from 'moment';
 import { useIsFocused } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
-import { Colors } from '../../config';
 
 export const AddDeal = ({ modalVisible, setModalVisible, formData, setUserDeals }) => {
   const styles = StyleSheet.create({
