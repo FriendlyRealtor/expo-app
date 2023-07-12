@@ -120,7 +120,7 @@ export const DistancePropertiesScreen = () => {
                 {formik.values.distances.map((_, index) => (
                   <View key={index} my={4} display="flex" flexDirection="row" alignItems="center">
                     <View flex="1">
-                      <GooglePlacesAutocomplete
+                      {/*<GooglePlacesAutocomplete
                         apiKey={Constants.manifest?.extra?.googleApiKey}
                         requestConfig={{ countries: ['US'] }}
                         onPlaceSelected={(place: PlaceDetails) => {
@@ -132,7 +132,7 @@ export const DistancePropertiesScreen = () => {
                             formik.setFieldValue('distances', newDistances);
                           }
                         }}
-                      />
+                      />*/}
                     </View>
                     <TouchableOpacity onPress={() => removeField(index)}>
                       <Icon as={EvilIcons} name="close" size="2xl" color="black" />
