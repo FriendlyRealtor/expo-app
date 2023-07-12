@@ -7194,6 +7194,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-contacts@npm:~11.0.1":
+  version: 11.0.1
+  resolution: "expo-contacts@npm:11.0.1"
+  dependencies:
+    uuid: ^3.4.0
+  peerDependencies:
+    expo: "*"
+  checksum: 2207388a6c50d43b7fd8541d34579936322fc99486d679296ca0a56ba38e05d6a2b7b2b7be325061cd00328d2fad64f0dbd976c1e58ffe90250d29f465577b48
+  languageName: node
+  linkType: hard
+
 "expo-dev-client@npm:~2.0.1":
   version: 2.0.1
   resolution: "expo-dev-client@npm:2.0.1"
@@ -12535,6 +12546,7 @@ __metadata:
     expo: ~47.0.14
     expo-av: ~13.0.3
     expo-constants: ~14.2.1
+    expo-contacts: ~11.0.1
     expo-dev-client: ~2.0.1
     expo-device: ~5.0.0
     expo-font: ~11.0.1

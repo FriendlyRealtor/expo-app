@@ -52,6 +52,12 @@ export default {
     },
     plugins: [
       [
+        'expo-contacts',
+        {
+          contactsPermission: 'Allow $(PRODUCT_NAME) to access your contacts.',
+        },
+      ],
+      [
         'expo-tracking-transparency',
         {
           userTrackingPermission:
