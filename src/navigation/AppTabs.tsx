@@ -1,20 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { Image } from 'react-native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import {
-  ClientScreen,
-  ContactScreen,
-  HomeScreen,
-  SettingScreen,
-  //LocalRestaurantScreen,
-} from '../screens';
-import { usePermissions } from '../hooks';
-import { Text } from '../components';
-import { Icon } from 'native-base';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { View, TouchableOpacity } from 'react-native';
-import { Colors } from '../config';
 import * as Location from 'expo-location';
+
+import { ClientScreen, ContactScreen, HomeScreen, SettingScreen } from '../screens';
+import React, { useEffect, useState } from 'react';
+import { TouchableOpacity, View } from 'react-native';
+
+import { Colors } from '../config';
+import { Icon } from 'native-base';
+import { Image } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { usePermissions } from '../hooks';
 
 const Tab = createBottomTabNavigator();
 
@@ -23,8 +18,7 @@ export const AppTabs = (props) => {
 
   const [activeSub, setActiveSub] = useState(false);
   const [location, setLocation] = useState(null);
-
-  useEffect(() => {
+  /* useEffect(() => {
     if (
       props.route.params.user.customerInfo &&
       props.route.params.user.customerInfo.activeSubscriptions &&
@@ -32,7 +26,7 @@ export const AppTabs = (props) => {
     ) {
       setActiveSub(true);
     }
-  }, [props.route.params.user.customerInfo]);
+  }, [props.route.params.user.customerInfo]);*/
 
   useEffect(() => {
     const getLocation = async () => {

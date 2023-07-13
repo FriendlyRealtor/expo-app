@@ -88,7 +88,7 @@ class AppStore {
 					}*/
         }
       });
-      return this.getUser();
+      return this.user;
     } catch (error) {
       Bugsnag.notify(error);
     }

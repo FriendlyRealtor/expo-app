@@ -10,32 +10,30 @@ import { NavigationContainer } from '@react-navigation/native';
 import { auth } from '../config';
 import { createStackNavigator } from '@react-navigation/stack';
 import { getTrackingPermissionsAsync } from 'expo-tracking-transparency';
-import { useFonts } from 'expo-font';
 
 const Stack = createStackNavigator();
+
 export const RootNavigator = inject('appStore')(
   observer(({ appStore }) => {
     const [isLoading, setIsLoading] = useState(true);
-    const [fontsLoaded] = useFonts({
-      Ubuntu: require('../../assets/fonts/Ubuntu/Ubuntu-Regular.ttf'),
-    });
-
-    const { user, retrieveLoggedInUser } = appStore;
+    const { user, getUser, retrieveLoggedInUser } = appStore;
+    const [localUser, setLocalUser] = useState(undefined);
 
     useEffect(() => {
-      const retrieveUser = async () => {
+      const fetchUser = async () => {
         await retrieveLoggedInUser();
       };
 
-      retrieveUser();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    useEffect(() => {
-      if (fontsLoaded) {
+      fetchUser();
+      const unsubscribe = auth.onAuthStateChanged((user) => {
+        if (user) {
+          setLocalUser(user);
+        }
         setIsLoading(false);
-      }
-    }, [fontsLoaded]);
+      });
+
+      return () => unsubscribe();
+    }, []);
 
     useEffect(() => {
       const requestTrackingData = async () => {
@@ -61,14 +59,14 @@ export const RootNavigator = inject('appStore')(
 
     return (
       <NavigationContainer>
-        {user && auth.currentUser && auth.currentUser.emailVerified ? (
+        {localUser && auth?.currentUser?.emailVerified ? (
           <Stack.Navigator>
             <Stack.Screen
               name="Home"
               component={AppTabs}
               initialParams={{
-                user: JSON.stringify(user),
-                currentUser: JSON.stringify(auth.currentUser),
+                user: localUser,
+                currentUser: localUser,
               }}
               options={{ headerShown: false }}
             />

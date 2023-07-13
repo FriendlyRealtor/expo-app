@@ -111,7 +111,7 @@ export const SettingScreen = inject('appStore')(
               }
             },
             (error) => {
-              console.log('error uploading image: ', error);
+              Bugsnag.notify(error);
             },
             () => {
               // Handle successful uploads on complete
@@ -286,7 +286,6 @@ export const SettingScreen = inject('appStore')(
         }
       } catch (error) {
         Bugsnag.notify(error);
-        console.log('Error restoring purchases', error);
         Alert.alert('Error restoring purchases.', error);
       }
     };
