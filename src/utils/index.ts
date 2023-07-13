@@ -39,6 +39,11 @@ export const passwordResetSchema = Yup.object().shape({
     .email('Enter a valid email'),
 });
 
+export const agentContactFormSchema = Yup.object().shape({
+  name: Yup.string().required('Please enter a name').label('Name'),
+  phoneNumber: Yup.string().required('Please enter a phone number').label('Phone Number'),
+});
+
 export const numberWithCommas = (num) => {
   if (num) {
     num = num.toString();
