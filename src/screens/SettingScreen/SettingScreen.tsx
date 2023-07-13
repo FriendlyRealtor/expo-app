@@ -32,7 +32,6 @@ import { inject, observer } from 'mobx-react';
 import Bugsnag from '@bugsnag/expo';
 import Constants from 'expo-constants';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { ProgressBar } from 'react-native-paper';
 import Purchases from 'react-native-purchases';
 import { SettingScreenStyles } from './SettingScreenStyles';
@@ -60,7 +59,6 @@ export const SettingScreen = inject('appStore')(
     const [photoShow, setPhotoShow] = useState(null);
     const [photoProgress, setPhotoProgress] = useState<number | undefined>(undefined);
     const [errorState, setErrorState] = useState<string>('');
-    const [value, setValue] = useState(user.referralLink || '');
     const [bio, setBio] = useState(user.bio || '');
     const [locations, setLocations] = useState<string[]>(user.serviceZipCodes || []);
     const [saving, setSaving] = useState<boolean>(false);
@@ -161,67 +159,6 @@ export const SettingScreen = inject('appStore')(
     const scrollHandler = useAnimatedScrollHandler((event) => {
       translateY.value = event.contentOffset.y;
     });
-
-    const handleDeleteItem = async (index) => {
-      try {
-        await deleteCMAItem(userAuth, user, index);
-        setLocalCmaRows(cmaRows);
-      } catch (error) {
-        Bugsnag.notify(error);
-        setErrorState('error deleting item');
-      }
-    };
-
-    const RenderItemIcon = (props: { index: number }) => (
-      <Button
-        title=""
-        style={{ padding: 0, margin: 0 }}
-        onPress={() => handleDeleteItem(props.index)}
-      >
-        <Icon name="trash" color="red" size={20} />
-      </Button>
-    );
-
-    const renderItem = ({ item, index }) => {
-      return {
-        /*<ListItem
-          title={`${index + 1}. ${item.location}`}
-          description={`Estimated Value $${item.price}`}
-          accessoryRight={<RenderItemIcon index={index} />}
-          style={styles.listItem}
-			/>*/
-      };
-    };
-
-    const updateProfileBio = async () => {
-      const { uid } = userAuth.currentUser;
-      const docRef = await doc(db, 'users', uid);
-      const data = { bio };
-
-      if (docRef) {
-        await updateDoc(docRef, data);
-      }
-    };
-
-    const updateServiceLocation = async () => {
-      const { uid } = userAuth.currentUser;
-      const docRef = await doc(db, 'users', uid);
-      const data = { referralLink: value };
-
-      if (docRef) {
-        await updateDoc(docRef, data);
-      }
-    };
-
-    const updatePhoneNumber = async () => {
-      const { uid } = userAuth.currentUser;
-      const docRef = await doc(db, 'users', uid);
-      const data = { phone: value };
-
-      if (docRef) {
-        await updateDoc(docRef, data);
-      }
-    };
 
     const visitPublicProfile = () => {
       const publicProfileURL = `https://friendlyrealtor.app/profile/${
