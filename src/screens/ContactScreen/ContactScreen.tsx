@@ -34,6 +34,7 @@ export const ContactScreen = () => {
   const userAuth = getAuth();
   const [contacts, setContacts] = useState([]);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [selectedType, setSelectedType] = useState('');
 
   useEffect(() => {
     fetchContacts();
@@ -108,6 +109,14 @@ export const ContactScreen = () => {
       Bugsnag.notify(error);
     }
   };
+
+  const filterContacts = (type) => {
+    setSelectedType(type);
+  };
+
+  const filteredContacts = selectedType
+    ? contacts.filter((contact) => contact.type === selectedType)
+    : contacts;
 
   return (
     <View w="100%" px={8} textAlign="center">
@@ -300,10 +309,25 @@ export const ContactScreen = () => {
                 />
               </IconButton>
             </Stack>
-
+            <Select
+              selectedValue={selectedType}
+              minWidth={200}
+              accessibilityLabel="Filter by Type"
+              placeholder="Filter by Type"
+              onValueChange={filterContacts}
+              mt={4}
+              mb={2}
+            >
+              <Select.Item label="All" value="" />
+              <Select.Item label="Client" value="client" />
+              <Select.Item label="Lender" value="lender" />
+              <Select.Item label="Agent" value="agent" />
+              <Select.Item label="Title" value="title" />
+              <Select.Item label="Inspector" value="inspector" />
+            </Select>
             <ScrollView width="100%" maxHeight={500}>
               <List width="100%" height="100%" borderWidth={0}>
-                {contacts.map((contact) => (
+                {filteredContacts.map((contact) => (
                   <List.Item key={contact.id} my={2}>
                     <View flex={1}>
                       <Stack direction="row" justifyContent="space-between" alignItems="center">
