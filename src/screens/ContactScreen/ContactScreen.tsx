@@ -1,3 +1,5 @@
+import * as Linking from 'expo-linking';
+
 import {
   Box,
   Button,
@@ -26,6 +28,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { agentContactFormSchema } from '../../utils';
 import { db } from '../../config';
 import { getAuth } from 'firebase/auth';
+import uuid from 'react-native-uuid';
 
 export const ContactScreen = () => {
   const userAuth = getAuth();
@@ -62,7 +65,7 @@ export const ContactScreen = () => {
 
       if (docSnap.exists()) {
         const firebaseData = docSnap.data();
-
+        values.id = uuid.v4();
         if (firebaseData.contacts && Array.isArray(firebaseData.contacts)) {
           const updatedContacts = [...firebaseData.contacts, values];
           await updateDoc(docRef, { contacts: updatedContacts });
@@ -71,6 +74,7 @@ export const ContactScreen = () => {
         }
 
         Alert.alert('Contact added successfully');
+        setModalVisible(false);
         fetchContacts(); // Fetch updated contacts from Firebase
       }
     } catch (error) {
@@ -80,8 +84,29 @@ export const ContactScreen = () => {
     }
   };
 
-  const handleOpenForm = () => {
-    setContacts([]);
+  const deleteContact = async (contactId: string) => {
+    try {
+      const { uid } = userAuth.currentUser;
+      const docRef = doc(db, 'users', uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const firebaseData = docSnap.data();
+
+        if (firebaseData.contacts && Array.isArray(firebaseData.contacts)) {
+          const updatedContacts = firebaseData.contacts.filter(
+            (contact) => contact.id !== contactId,
+          );
+
+          await updateDoc(docRef, { contacts: updatedContacts });
+          setContacts(updatedContacts);
+        }
+
+        Alert.alert('Contact deleted successfully');
+      }
+    } catch (error) {
+      Bugsnag.notify(error);
+    }
   };
 
   return (
@@ -163,7 +188,7 @@ export const ContactScreen = () => {
           }}
         </Formik>
       ) : (
-        <Container my={8}>
+        <View my={8}>
           <Modal isOpen={modalVisible} onClose={() => setModalVisible(false)}>
             <Formik
               initialValues={{
@@ -254,24 +279,91 @@ export const ContactScreen = () => {
               }}
             </Formik>
           </Modal>
-          <IconButton
-            my={4}
-            onPress={() => {
-              setModalVisible(!modalVisible);
-            }}
-          >
-            <Icon as={MaterialCommunityIcons} name="plus-circle-outline" size="2xl" color="black" />
-          </IconButton>
-          <ScrollView width="100%">
-            {contacts.map((contact) => (
-              <View key={contact.id} my={2}>
-                <Text>{contact.name}</Text>
-                <Text>{contact.phoneNumber}</Text>
-                <Text>{contact.type}</Text>
-              </View>
-            ))}
-          </ScrollView>
-        </Container>
+          <View>
+            <Stack display="flex" flexDirection="row" justifyContent="flex-end">
+              <IconButton
+                my={4}
+                justifyContent="flex-end"
+                onPress={() => {
+                  setModalVisible(!modalVisible);
+                }}
+                _pressed={{
+                  bg: 'transparent',
+                }}
+                width="10"
+              >
+                <Icon
+                  as={MaterialCommunityIcons}
+                  name="plus-circle-outline"
+                  size="2xl"
+                  color="black"
+                />
+              </IconButton>
+            </Stack>
+
+            <ScrollView width="100%" maxHeight={500}>
+              <List width="100%" height="100%" borderWidth={0}>
+                {contacts.map((contact) => (
+                  <List.Item key={contact.id} my={2}>
+                    <View flex={1}>
+                      <Stack direction="row" justifyContent="space-between" alignItems="center">
+                        <View flex={1}>
+                          <Text fontWeight="bold">{contact.name}</Text>
+                          <Text>{contact.phoneNumber}</Text>
+                          <Text>{contact.type}</Text>
+                        </View>
+                        <Stack direction="row" spacing={2}>
+                          <IconButton
+                            variant="ghost"
+                            onPress={() => {
+                              Linking.openURL(`tel:+1${contact.phoneNumber}`);
+                            }}
+                            icon={
+                              <Icon
+                                as={MaterialCommunityIcons}
+                                name="phone-hangup"
+                                size="sm"
+                                color="black"
+                              />
+                            }
+                          />
+                          <IconButton
+                            variant="ghost"
+                            onPress={() => {
+                              Linking.openURL(`sms:+1${contact.phoneNumber}`);
+                            }}
+                            icon={
+                              <Icon
+                                as={MaterialCommunityIcons}
+                                name="message"
+                                size="sm"
+                                color="#02FDAA"
+                              />
+                            }
+                          />
+                          <IconButton
+                            variant="ghost"
+                            onPress={() => {
+                              deleteContact(contact.id);
+                            }}
+                            icon={
+                              <Icon
+                                as={MaterialCommunityIcons}
+                                name="trash-can-outline"
+                                size="sm"
+                                color="red.500"
+                              />
+                            }
+                          />
+                        </Stack>
+                      </Stack>
+                    </View>
+                  </List.Item>
+                ))}
+              </List>
+            </ScrollView>
+          </View>
+        </View>
       )}
     </View>
   );
