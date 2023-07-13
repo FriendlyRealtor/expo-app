@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
-import { StyleSheet, Image } from 'react-native';
-import { Formik, useFormik } from 'formik';
-import { signInWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-
-import { View, TextInput, Text, Button, FormErrorMessage } from '../../components';
+import { Button, FormErrorMessage, Text, TextInput, View } from '../../components';
 import { Colors, auth } from '../../config';
-import { useTogglePasswordVisibility } from '../../hooks';
-import { loginValidationSchema } from '../../utils';
-import { StatusBar } from 'expo-status-bar';
+import { Formik, useFormik } from 'formik';
+import { Image, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
 import { inject, observer } from 'mobx-react';
 import { isAvailable, requestTrackingPermissionsAsync } from 'expo-tracking-transparency';
+import { sendEmailVerification, signInWithEmailAndPassword } from 'firebase/auth';
+
+import Bugsnag from '@bugsnag/expo';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { StatusBar } from 'expo-status-bar';
+import { loginValidationSchema } from '../../utils';
+import { useTogglePasswordVisibility } from '../../hooks';
 
 export const LoginScreen = inject('appStore')(
   observer(({ appStore, navigation }) => {
@@ -45,6 +46,7 @@ export const LoginScreen = inject('appStore')(
           }
         })
         .catch((error) => {
+          Bugsnag.notify(error);
           switch (error.message) {
             case 'Firebase: Error (auth/user-not-found).':
               setErrorState('User not found!');

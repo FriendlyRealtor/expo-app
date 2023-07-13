@@ -1,31 +1,33 @@
-import { useState } from 'react';
-import { StyleSheet, Pressable, StatusBar, RefreshControl } from 'react-native';
-import { Search } from '../../components';
-import { Colors } from '../../config';
 import {
-  Box,
-  FlatList,
-  Heading,
   Avatar,
-  HStack,
-  VStack,
-  Text,
-  Spacer,
-  View,
-  ScrollView,
-  Modal,
+  Box,
   Button,
-  TextArea,
-  IconButton,
+  FlatList,
+  HStack,
+  Heading,
   Icon,
+  IconButton,
+  Modal,
+  ScrollView,
+  Spacer,
+  Text,
+  TextArea,
+  VStack,
+  View,
 } from 'native-base';
-import { EvilIcons } from '@expo/vector-icons';
-import SwipeableItem from '../../components/SwipeableItem';
-import { useChats } from './ChatHooks';
-import { collection, query, where, getDocs, limit } from 'firebase/firestore';
+import { Pressable, RefreshControl, StatusBar, StyleSheet } from 'react-native';
 import { auth, db } from '../../config';
-import { useRefresh } from '../../hooks';
+import { collection, getDocs, limit, query, where } from 'firebase/firestore';
+
+import Bugsnag from '@bugsnag/expo';
+import { Colors } from '../../config';
+import { EvilIcons } from '@expo/vector-icons';
+import { Search } from '../../components';
+import SwipeableItem from '../../components/SwipeableItem';
 import moment from 'moment';
+import { useChats } from './ChatHooks';
+import { useRefresh } from '../../hooks';
+import { useState } from 'react';
 
 export const ChatScreen = ({ navigation }) => {
   const [open, setOpen] = useState<boolean>(false);
@@ -112,7 +114,7 @@ export const ChatScreen = ({ navigation }) => {
                     setOpen(false);
                   });
                 } catch (error) {
-                  console.log('Error sending user message:', error);
+                  Bugsnag.notify(error);
                 }
               }}
               disabled={!Object.keys(selectedUser).length}

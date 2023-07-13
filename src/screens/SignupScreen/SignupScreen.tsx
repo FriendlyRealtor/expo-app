@@ -1,17 +1,19 @@
-import React, { useState } from 'react';
-import { Image, TouchableOpacity, Linking, SafeAreaView, ScrollView, Alert } from 'react-native';
+import { Alert, Image, Linking, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
+import { Button, FormErrorMessage, Loading, Text, TextInput, View } from '../../components';
 import { Formik, useFormik } from 'formik';
+import React, { useState } from 'react';
+import { auth, db } from '../../config';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { View, TextInput, Text, Button, FormErrorMessage, Loading } from '../../components';
-import { auth, db } from '../../config';
-import { useTogglePasswordVisibility } from '../../hooks';
-import { signupValidationSchema } from '../../utils';
-import { StatusBar } from 'expo-status-bar';
-import { SignupScreenStyles } from './SignupScreenStyles';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { inject, observer } from 'mobx-react';
+
+import Bugsnag from '@bugsnag/expo';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { SignupScreenStyles } from './SignupScreenStyles';
+import { StatusBar } from 'expo-status-bar';
+import { signupValidationSchema } from '../../utils';
+import { useTogglePasswordVisibility } from '../../hooks';
 
 export const SignupScreen = inject('appStore')(
   observer(({ appStore, navigation }) => {
@@ -68,6 +70,7 @@ export const SignupScreen = inject('appStore')(
         navigation.navigate('Login');
         resetForm({});
       } catch (error) {
+        Bugsnag.notify(error);
         switch (error.code) {
           case 'auth/email-already-in-use':
             setErrorState('Email already in use, try another one.');

@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { Image, FlatList, View, Linking, TouchableOpacity, Platform } from 'react-native';
-import { Layout, Icon } from '@ui-kitten/components';
-import Constants from 'expo-constants';
-import { Loading, Text } from '../../components';
-import axios from 'axios';
-import _ from 'lodash';
-import { LocalRestaurantScreenStyles } from './LocalRestaurantScreenStyles';
 import * as Location from 'expo-location';
+
+import { FlatList, Image, Linking, Platform, TouchableOpacity, View } from 'react-native';
+import { Icon, Layout } from '@ui-kitten/components';
+import { Loading, Text } from '../../components';
+import React, { useEffect, useState } from 'react';
+
+import Bugsnag from '@bugsnag/expo';
+import Constants from 'expo-constants';
+import { LocalRestaurantScreenStyles } from './LocalRestaurantScreenStyles';
 import { StatusBar } from 'expo-status-bar';
+import _ from 'lodash';
+import axios from 'axios';
 
 export const LocalRestaurantScreen = (props) => {
   const styles = LocalRestaurantScreenStyles;
@@ -47,7 +50,7 @@ export const LocalRestaurantScreen = (props) => {
           setLoading(false);
         })
         .catch((error) => {
-          console.log('receiving', JSON.stringify(error));
+          Bugsnag.notify(error);
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

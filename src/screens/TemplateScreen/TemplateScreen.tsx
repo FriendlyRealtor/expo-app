@@ -1,18 +1,20 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { Layout, Card } from '@ui-kitten/components';
+import { Alert, Modal, Pressable, SafeAreaView, ScrollView, View } from 'react-native';
 import { Button, Text } from '../../components';
-import { getAuth } from 'firebase/auth';
+import { Card, Layout } from '@ui-kitten/components';
 import Purchases, { PurchasesPackage } from 'react-native-purchases';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { getDownloadURL, listAll, ref } from 'firebase/storage';
+
+import Bugsnag from '@bugsnag/expo';
+import Constants from 'expo-constants';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import Pdf from 'react-native-pdf';
 import { StatusBar } from 'expo-status-bar';
-import { storage } from '../../config';
-import { ref, getDownloadURL, listAll } from 'firebase/storage';
 import { TemplateScreenStyles } from './TemplateScreenStyles';
-import { SafeAreaView, ScrollView, View, Alert, Modal, Pressable } from 'react-native';
-import axios from 'axios';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import _ from 'lodash';
-import Constants from 'expo-constants';
+import axios from 'axios';
+import { getAuth } from 'firebase/auth';
+import { storage } from '../../config';
 
 export const PayWallView = ({ modalVisible, setModalVisible, monthlyPkg, annualPkg }) => {
   const styles = TemplateScreenStyles;
@@ -23,7 +25,7 @@ export const PayWallView = ({ modalVisible, setModalVisible, monthlyPkg, annualP
         await Purchases.purchasePackage(monthlyPkg);
       }
     } catch (error) {
-      console.log('error', error);
+      Bugsnag.notify(error);
     }
   }, [monthlyPkg]);
 
@@ -33,7 +35,7 @@ export const PayWallView = ({ modalVisible, setModalVisible, monthlyPkg, annualP
         await Purchases.purchasePackage(annualPkg);
       }
     } catch (error) {
-      console.log('error', error);
+      Bugsnag.notify(error);
     }
   }, [annualPkg]);
 
@@ -149,7 +151,7 @@ export const TemplateScreen = () => {
           });
         }
       } catch (error) {
-        console.log('error', error);
+        Bugsnag.notify(error);
       }
     };
     fetchTemplates();
@@ -174,8 +176,8 @@ export const TemplateScreen = () => {
             }
           }
         }
-      } catch (err) {
-        console.log('error', err);
+      } catch (error) {
+        Bugsnag.notify(error);
       }
     };
 
@@ -191,11 +193,13 @@ export const TemplateScreen = () => {
             const clouldUrl = `${Constants.manifest.extra.cloudFunctionUrl}/sendPdfEmail`;
             const data = { pdf, email: userAuth.currentUser?.email };
             axios.post(clouldUrl, data).catch((error) => {
+              Bugsnag.notify(error);
               console.log('error', error);
             });
           }
         }
       } catch (error) {
+        Bugsnag.notify(error);
         if (!error.userCancelled) {
           console.log('cancel error', error);
         } else {

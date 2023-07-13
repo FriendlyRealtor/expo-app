@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { AuthStack } from './AuthStack';
-import { AppTabs } from './AppTabs';
+import { ChatScreen, DistancePropertiesScreen, HomeScreen } from '../screens';
+import React, { useEffect, useState } from 'react';
 import { SplashScreen, UserChatScreen } from '../screens';
-import { useFonts } from 'expo-font';
-import { auth } from '../config';
 import { inject, observer } from 'mobx-react';
-import { getTrackingPermissionsAsync } from 'expo-tracking-transparency';
+
+import { AppTabs } from './AppTabs';
+import { AuthStack } from './AuthStack';
+import Bugsnag from '@bugsnag/expo';
+import { NavigationContainer } from '@react-navigation/native';
+import { auth } from '../config';
 import { createStackNavigator } from '@react-navigation/stack';
-import { HomeScreen, ChatScreen, DistancePropertiesScreen } from '../screens';
+import { getTrackingPermissionsAsync } from 'expo-tracking-transparency';
+import { useFonts } from 'expo-font';
 
 const Stack = createStackNavigator();
 export const RootNavigator = inject('appStore')(
@@ -46,7 +48,7 @@ export const RootNavigator = inject('appStore')(
             console.log('Do not allow to track user');
           }
         } catch (error) {
-          console.log('error calling this function', error);
+          Bugsnag.notify(error);
         }
       };
 

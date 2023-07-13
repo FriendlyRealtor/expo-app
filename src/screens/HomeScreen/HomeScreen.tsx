@@ -1,22 +1,24 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { useIsFocused } from '@react-navigation/native';
-import { FormErrorMessage } from '../../components';
-import axios from 'axios';
-import { numberWithCommas, locationValidationSchema } from '../../utils';
+import { Button, Container, Divider, Text, View } from 'native-base';
 import { Formik, useFormik } from 'formik';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import Constants from 'expo-constants';
-import _ from 'lodash';
-import { TouchableOpacity } from 'react-native';
-import uuid from 'react-native-uuid';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { GooglePlacesAutocomplete, PlaceDetails } from 'expo-google-places-autocomplete';
+import React, { useCallback, useEffect, useState } from 'react';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { locationValidationSchema, numberWithCommas } from '../../utils';
+
+import Bugsnag from '@bugsnag/expo';
+import Constants from 'expo-constants';
+import { FormErrorMessage } from '../../components';
+import { HomeScreenStyles } from './HomeScreenStyles';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { StatusBar } from 'expo-status-bar';
+import { TouchableOpacity } from 'react-native';
+import _ from 'lodash';
+import axios from 'axios';
 import { db } from '../../config';
 import { getAuth } from 'firebase/auth';
-import { HomeScreenStyles } from './HomeScreenStyles';
-import { StatusBar } from 'expo-status-bar';
-import { GooglePlacesAutocomplete, PlaceDetails } from 'expo-google-places-autocomplete';
-import { View, Text, Container, Button, Divider } from 'native-base';
+import { useIsFocused } from '@react-navigation/native';
+import uuid from 'react-native-uuid';
 
 export const HomeScreen = ({ navigation }) => {
   const isFocused = useIsFocused();
@@ -101,6 +103,7 @@ export const HomeScreen = ({ navigation }) => {
           })
           .catch((error) => {
             setErrorState(error.message);
+            Bugsnag.notify(error);
           })
           .finally(() => {
             setIsLoading(false);
