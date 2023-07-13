@@ -1,7 +1,9 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Timestamp, collection, getDocs, query, where } from 'firebase/firestore';
 import { auth, db, realtimeDb } from '../../config';
-import { collection, getDocs, Timestamp, query, where } from 'firebase/firestore';
-import { ref, set, push, onValue } from 'firebase/database';
+import { onValue, push, ref, set } from 'firebase/database';
+
+import Bugsnag from '@bugsnag/expo';
 
 export const useChats = () => {
   const [messageList, setMessageList] = useState([]);
@@ -15,7 +17,7 @@ export const useChats = () => {
         const users = querySnapshot.docs.map((doc) => doc.data());
         setSearchableUsers(users);
       } catch (error) {
-        console.log('Error fetching users:', error);
+        Bugsnag.notify(error);
       }
     };
 
@@ -52,7 +54,7 @@ export const useChats = () => {
             setMessageList(combinedData);
           })
           .catch((error) => {
-            console.log('Error querying users:', error);
+            Bugsnag.notify(error);
           });
       }
     });
@@ -122,7 +124,7 @@ export const useChats = () => {
             setMessages(sortedMessages);
           })
           .catch((error) => {
-            console.log('Error querying users:', error);
+            Bugsnag.notify(error);
           });
       }
     });
@@ -152,7 +154,7 @@ export const useChats = () => {
       await set(newMessageRef, messageData);
       await set(newMessageRecipientMessageRef, messageData);
     } catch (error) {
-      console.log('Error sending user message:', error);
+      Bugsnag.notify(error);
     }
   };
 

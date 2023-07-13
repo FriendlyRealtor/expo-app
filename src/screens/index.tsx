@@ -2,6 +2,7 @@ import { LoginScreen } from './LoginScreen';
 import { SignupScreen } from './SignupScreen';
 import { HomeScreen } from './HomeScreen/HomeScreen';
 import { ForgotPasswordScreen } from './ForgotPasswordScreen';
+import { ContactScreen } from './ContactScreen';
 import { FeedScreen } from './FeedScreen';
 import { SettingScreen } from './SettingScreen';
 import { LocalRestaurantScreen } from './LocalRestaurantScreen';
@@ -20,6 +21,7 @@ export {
   ClientScreen,
   DistancePropertiesScreen,
   ChatScreen,
+  ContactScreen,
   FeedScreen,
   PostScreen,
   HomeScreen,

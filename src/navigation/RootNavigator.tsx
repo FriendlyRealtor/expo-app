@@ -1,39 +1,39 @@
-import React, { useState, useEffect } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { AuthStack } from './AuthStack';
-import { AppTabs } from './AppTabs';
+import { ChatScreen, DistancePropertiesScreen, HomeScreen } from '../screens';
+import React, { useEffect, useState } from 'react';
 import { SplashScreen, UserChatScreen } from '../screens';
-import { useFonts } from 'expo-font';
-import { auth } from '../config';
 import { inject, observer } from 'mobx-react';
-import { getTrackingPermissionsAsync } from 'expo-tracking-transparency';
+
+import { AppTabs } from './AppTabs';
+import { AuthStack } from './AuthStack';
+import Bugsnag from '@bugsnag/expo';
+import { NavigationContainer } from '@react-navigation/native';
+import { auth } from '../config';
 import { createStackNavigator } from '@react-navigation/stack';
-import { HomeScreen, ChatScreen, DistancePropertiesScreen } from '../screens';
+import { getTrackingPermissionsAsync } from 'expo-tracking-transparency';
 
 const Stack = createStackNavigator();
+
 export const RootNavigator = inject('appStore')(
   observer(({ appStore }) => {
     const [isLoading, setIsLoading] = useState(true);
-    const [fontsLoaded] = useFonts({
-      Ubuntu: require('../../assets/fonts/Ubuntu/Ubuntu-Regular.ttf'),
-    });
-
-    const { user, retrieveLoggedInUser } = appStore;
+    const { user, getUser, retrieveLoggedInUser } = appStore;
+    const [localUser, setLocalUser] = useState(undefined);
 
     useEffect(() => {
-      const retrieveUser = async () => {
+      const fetchUser = async () => {
         await retrieveLoggedInUser();
       };
 
-      retrieveUser();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    useEffect(() => {
-      if (fontsLoaded) {
+      fetchUser();
+      const unsubscribe = auth.onAuthStateChanged((user) => {
+        if (user) {
+          setLocalUser(user);
+        }
         setIsLoading(false);
-      }
-    }, [fontsLoaded]);
+      });
+
+      return () => unsubscribe();
+    }, []);
 
     useEffect(() => {
       const requestTrackingData = async () => {
@@ -46,7 +46,7 @@ export const RootNavigator = inject('appStore')(
             console.log('Do not allow to track user');
           }
         } catch (error) {
-          console.log('error calling this function', error);
+          Bugsnag.notify(error);
         }
       };
 
@@ -59,14 +59,14 @@ export const RootNavigator = inject('appStore')(
 
     return (
       <NavigationContainer>
-        {user && auth.currentUser && auth.currentUser.emailVerified ? (
+        {localUser && auth?.currentUser?.emailVerified ? (
           <Stack.Navigator>
             <Stack.Screen
               name="Home"
               component={AppTabs}
               initialParams={{
-                user: JSON.stringify(user),
-                currentUser: JSON.stringify(auth.currentUser),
+                user: localUser,
+                currentUser: localUser,
               }}
               options={{ headerShown: false }}
             />

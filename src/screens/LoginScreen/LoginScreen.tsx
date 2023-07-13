@@ -1,19 +1,23 @@
-import React, { useState } from 'react';
-import { StyleSheet, Image } from 'react-native';
-import { Formik, useFormik } from 'formik';
-import { signInWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-
-import { View, TextInput, Text, Button, FormErrorMessage } from '../../components';
+import { Button, FormErrorMessage, Text, TextInput, View } from '../../components';
 import { Colors, auth } from '../../config';
-import { useTogglePasswordVisibility } from '../../hooks';
-import { loginValidationSchema } from '../../utils';
-import { StatusBar } from 'expo-status-bar';
+import { Formik, useFormik } from 'formik';
+import { Image, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
 import { inject, observer } from 'mobx-react';
 import { isAvailable, requestTrackingPermissionsAsync } from 'expo-tracking-transparency';
+import { sendEmailVerification, signInWithEmailAndPassword } from 'firebase/auth';
+
+import Bugsnag from '@bugsnag/expo';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { SplashScreen } from '../SplashScreen';
+import { StatusBar } from 'expo-status-bar';
+import { loginValidationSchema } from '../../utils';
+import { useTogglePasswordVisibility } from '../../hooks';
 
 export const LoginScreen = inject('appStore')(
   observer(({ appStore, navigation }) => {
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
     const { retrieveLoggedInUser } = appStore;
 
     const { values, touched, errors, handleChange, handleSubmit, resetForm } = useFormik({
@@ -30,45 +34,56 @@ export const LoginScreen = inject('appStore')(
     const { passwordVisibility, handlePasswordVisibility, rightIcon } =
       useTogglePasswordVisibility();
 
-    const handleLogin = (values) => {
+    const handleLogin = async (values) => {
+      setIsLoading(true); // Set isLoading to true to display the SplashScreen
+
       const { email, password } = values;
-      signInWithEmailAndPassword(auth, email, password)
-        .then(async () => {
-          if (!auth.currentUser.emailVerified) {
-            await sendEmailVerification(auth.currentUser);
-            setErrorState('Head to your email and verify your account!');
-          } else {
-            if (isAvailable()) {
-              await requestTrackingPermissionsAsync();
-            }
-            retrieveLoggedInUser();
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+
+        if (!auth.currentUser.emailVerified) {
+          await sendEmailVerification(auth.currentUser);
+          setErrorState('Head to your email and verify your account!');
+        } else {
+          if (isAvailable()) {
+            await requestTrackingPermissionsAsync();
           }
-        })
-        .catch((error) => {
-          switch (error.message) {
-            case 'Firebase: Error (auth/user-not-found).':
-              setErrorState('User not found!');
-              break;
-            case 'Firebase: Error (auth/too-many-requests).':
-              setErrorState(
-                'Try restarting the app, if error continues contact support. contact@friendlyrealtor.app',
-              );
-              break;
-            case 'Firebase: Error (auth/wrong-password).':
-              setErrorState('Wrong password!');
-              break;
-            case 'Firebase: Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later. (auth/too-many-requests).':
-              setErrorState(
-                'Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later',
-              );
-              break;
-            default:
-              setErrorState(
-                `Error signing in! Contact support contact@friendlyrealtor.app ${error.message}`,
-              );
-          }
-        });
+          await retrieveLoggedInUser();
+        }
+      } catch (error) {
+        Bugsnag.notify(error);
+
+        switch (error.code) {
+          case 'auth/user-not-found':
+            setErrorState('User not found!');
+            break;
+          case 'auth/too-many-requests':
+            setErrorState(
+              'Try restarting the app, if error continues contact support. contact@friendlyrealtor.app',
+            );
+            break;
+          case 'auth/wrong-password':
+            setErrorState('Wrong password!');
+            break;
+          case 'auth/too-many-requests':
+            setErrorState(
+              'Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later',
+            );
+            break;
+          default:
+            setErrorState(
+              `Error signing in! Contact support contact@friendlyrealtor.app ${error.message}`,
+            );
+        }
+      } finally {
+        setIsLoading(false); // Set isLoading to false once the login process is completed
+      }
     };
+
+    if (isLoading) {
+      return <SplashScreen />;
+    }
 
     return (
       <View isSafe style={styles.container}>

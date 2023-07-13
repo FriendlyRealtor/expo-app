@@ -46,11 +46,18 @@ export default {
       openAiKey: process.env.OPENAI_API_KEY,
       googleApiKey: process.env.GOOGLE_API_KEY,
       realTimeDbUrl: process.env.FIREBASE_REAL_TIME_DATABASE_URL,
+      bugSnagApiKey: process.env.BUGSNAG_API_KEY,
       eas: {
         projectId: process.env.EAS_PROJECT_ID,
       },
     },
     plugins: [
+      [
+        'expo-contacts',
+        {
+          contactsPermission: 'Allow $(PRODUCT_NAME) to access your contacts.',
+        },
+      ],
       [
         'expo-tracking-transparency',
         {

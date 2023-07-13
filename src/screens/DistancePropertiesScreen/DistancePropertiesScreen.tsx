@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { Container, Button, Input, ScrollView, View, Text, Icon } from 'native-base';
-import { useFormik, FormikProvider, FieldArray } from 'formik';
-import Constants from 'expo-constants';
-import { GooglePlacesAutocomplete, PlaceDetails } from 'expo-google-places-autocomplete';
-import { EvilIcons } from '@expo/vector-icons';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import * as Linking from 'expo-linking';
 import * as Location from 'expo-location';
 import * as geolib from 'geolib';
-import * as Linking from 'expo-linking';
+
+import { Button, Container, Icon, Input, ScrollView, Text, View } from 'native-base';
+import { FieldArray, FormikProvider, useFormik } from 'formik';
+import { GooglePlacesAutocomplete, PlaceDetails } from 'expo-google-places-autocomplete';
+import React, { useEffect, useState } from 'react';
+
 import { Address } from './DistancePropertiesScreenTypes';
+import Bugsnag from '@bugsnag/expo';
+import Constants from 'expo-constants';
+import { EvilIcons } from '@expo/vector-icons';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export const DistancePropertiesScreen = () => {
   const [currentPosition, setCurrentPosition] = useState<Address | null>(null);
@@ -28,7 +31,7 @@ export const DistancePropertiesScreen = () => {
       }
       return null;
     } catch (error) {
-      console.log('Geocoding error:', error);
+      Bugsnag.notify(error);
       return null;
     }
   };
@@ -77,7 +80,7 @@ export const DistancePropertiesScreen = () => {
         }
       }
     } catch (error) {
-      console.log('Error during distance calculation:', error);
+      Bugsnag.notify(error);
     } finally {
       setIsLoading(false);
     }

@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "extra": {
+      "bugsnag": {
+        "apiKey": "e2f1d89b3b8b9a0e64139d98ad459114"
+      }
+    },
+    "plugins": [
+      "@bugsnag/plugin-expo-eas-sourcemaps"
+    ]
+  }
+}

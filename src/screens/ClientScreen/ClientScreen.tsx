@@ -1,22 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { Layout, List, ListItem, Divider, Card, Input } from '@ui-kitten/components';
-import { View, Modal, Alert, StyleSheet, Pressable, ScrollView } from 'react-native';
 import * as Linking from 'expo-linking';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { Button } from '../../components';
-import { Formik, useFormik } from 'formik';
-import { passwordResetSchema } from '../../utils';
+
+import { Alert, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Card, Divider, Input, Layout, List, ListItem } from '@ui-kitten/components';
 import { FormErrorMessage, Text } from '../../components';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { Formik, useFormik } from 'formik';
+import React, { useEffect, useState } from 'react';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
+
+import Bugsnag from '@bugsnag/expo';
+import { Button } from '../../components';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { StatusBar } from 'expo-status-bar';
+import _ from 'lodash';
 import { db } from '../../config';
 import { getAuth } from 'firebase/auth';
-import _ from 'lodash';
-import uuid from 'react-native-uuid';
 import moment from 'moment';
+import { passwordResetSchema } from '../../utils';
 import { useIsFocused } from '@react-navigation/native';
-import { StatusBar } from 'expo-status-bar';
-import { Colors } from '../../config';
+import uuid from 'react-native-uuid';
 
 export const AddDeal = ({ modalVisible, setModalVisible, formData, setUserDeals }) => {
   const styles = StyleSheet.create({
@@ -376,7 +378,7 @@ export const ClientScreen = ({ navigation }) => {
                 await updateDoc(docRef, { deals: filterDeals });
                 setUserDeals(filterDeals);
               } catch (error) {
-                console.log('error removing deal', error);
+                Bugsnag.notify(error);
               }
             }}
           />

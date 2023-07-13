@@ -1,12 +1,14 @@
+import { Button, FormErrorMessage, TextInput, View } from '../../components';
+import { Colors, auth } from '../../config';
 import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
+
+import Bugsnag from '@bugsnag/expo';
 import { Formik } from 'formik';
-import { sendPasswordResetEmail } from 'firebase/auth';
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet } from 'react-native';
 import { Text } from '../../components';
 import { passwordResetSchema } from '../../utils';
-import { Colors, auth } from '../../config';
-import { View, TextInput, Button, FormErrorMessage } from '../../components';
-import { StatusBar } from 'expo-status-bar';
+import { sendPasswordResetEmail } from 'firebase/auth';
 
 export const ForgotPasswordScreen = ({ navigation }) => {
   const [errorState, setErrorState] = useState('');
@@ -18,7 +20,10 @@ export const ForgotPasswordScreen = ({ navigation }) => {
       .then(() => {
         navigation.navigate('Login');
       })
-      .catch((error) => setErrorState(error.message));
+      .catch((error) => {
+        setErrorState(error.message);
+        Bugsnag.notify(error);
+      });
   };
 
   return (

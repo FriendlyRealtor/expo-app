@@ -1,9 +1,20 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { Linking, ScrollView, Animated, TouchableOpacity, Alert } from 'react-native';
-import { getAuth } from 'firebase/auth';
-import { doc, updateDoc } from 'firebase/firestore';
-import { db, storage } from '../../config';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import * as Device from 'expo-device';
+import * as ImagePicker from 'expo-image-picker';
+
+import { Alert, Animated, Linking, ScrollView, TouchableOpacity } from 'react-native';
+import { AsYouType, validatePhoneNumberLength } from 'libphonenumber-js';
+import {
+  Button,
+  Divider,
+  HStack,
+  Heading,
+  Image,
+  Input,
+  Link,
+  Text,
+  TextArea,
+  View,
+} from 'native-base';
 import { Chip, Container, FormErrorMessage } from '../../components';
 import {
   Extrapolate,
@@ -12,33 +23,25 @@ import {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
-import { ProgressBar } from 'react-native-paper';
-import { useLayout } from '../../hooks';
-import * as ImagePicker from 'expo-image-picker';
-import moment from 'moment';
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { useIsFocused } from '@react-navigation/native';
-import _ from 'lodash';
+import React, { useCallback, useEffect, useState } from 'react';
+import { db, storage } from '../../config';
+import { doc, updateDoc } from 'firebase/firestore';
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import { inject, observer } from 'mobx-react';
+
+import Bugsnag from '@bugsnag/expo';
 import Constants from 'expo-constants';
-import * as Device from 'expo-device';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { ProgressBar } from 'react-native-paper';
+import Purchases from 'react-native-purchases';
 import { SettingScreenStyles } from './SettingScreenStyles';
 import { StatusBar } from 'expo-status-bar';
-import { inject, observer } from 'mobx-react';
-import Purchases from 'react-native-purchases';
-import {
-  Image,
-  Button,
-  Heading,
-  Divider,
-  Text,
-  Link,
-  HStack,
-  View,
-  Input,
-  TextArea,
-} from 'native-base';
-import { validatePhoneNumberLength, AsYouType } from 'libphonenumber-js';
+import _ from 'lodash';
+import { getAuth } from 'firebase/auth';
+import moment from 'moment';
+import { useIsFocused } from '@react-navigation/native';
+import { useLayout } from '../../hooks';
 
 export const SettingScreen = inject('appStore')(
   observer(({ appStore }) => {
@@ -108,7 +111,7 @@ export const SettingScreen = inject('appStore')(
               }
             },
             (error) => {
-              console.log('error uploading image: ', error);
+              Bugsnag.notify(error);
             },
             () => {
               // Handle successful uploads on complete
@@ -128,6 +131,7 @@ export const SettingScreen = inject('appStore')(
           setErrorState('');
         }
       } catch (err) {
+        Bugsnag.notify(err);
         setErrorState('error uploading/selecting image from camera.');
       }
     }, []);
@@ -163,6 +167,7 @@ export const SettingScreen = inject('appStore')(
         await deleteCMAItem(userAuth, user, index);
         setLocalCmaRows(cmaRows);
       } catch (error) {
+        Bugsnag.notify(error);
         setErrorState('error deleting item');
       }
     };
@@ -264,6 +269,7 @@ export const SettingScreen = inject('appStore')(
           setErrorState('');
         }
       } catch (event) {
+        Bugsnag.notify(event);
         setErrorState('Error saving settings', event);
       } finally {
         setSaving(false);
@@ -279,7 +285,7 @@ export const SettingScreen = inject('appStore')(
           Alert.alert('No purchases to restore.');
         }
       } catch (error) {
-        console.log('Error restoring purchases', error);
+        Bugsnag.notify(error);
         Alert.alert('Error restoring purchases.', error);
       }
     };
@@ -450,9 +456,10 @@ export const SettingScreen = inject('appStore')(
                 >
                   <Heading size="xs">Service Areas By ZipCode</Heading>
                   <View display="flex" flexDirection="column" flex={1}>
-                    {locations?.length && locations.map((loc, index) => (
-                      <Chip label={loc} onPress={() => handleDeleteChip(index)} />
-                    ))}
+                    {locations?.length &&
+                      locations.map((loc, index) => (
+                        <Chip label={loc} onPress={() => handleDeleteChip(index)} />
+                      ))}
                     <Input
                       placeholder="Enter service locations by zip code."
                       value={chipValue}
@@ -538,7 +545,7 @@ export const SettingScreen = inject('appStore')(
                         deleteUserAccount();
                         setErrorState('');
                       } catch (error) {
-                        console.log('error', error);
+                        Bugsnag.notify(error);
                         setErrorState('Error deleting user account');
                       }
                     }}

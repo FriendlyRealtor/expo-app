@@ -1,10 +1,12 @@
-import { observable, action, makeObservable } from 'mobx';
-import { doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { action, makeObservable, observable } from 'mobx';
 import { auth, db } from '../config';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+
+import Bugsnag from '@bugsnag/expo';
 import Constants from 'expo-constants';
 import Purchases from 'react-native-purchases';
-import { onAuthStateChanged, getAuth, signOut } from 'firebase/auth';
-import { getDocs, query, collection, where } from 'firebase/firestore';
 
 class AppStore {
   cmaRows = [];
@@ -86,9 +88,9 @@ class AppStore {
 					}*/
         }
       });
-      return this.getUser();
+      return this.user;
     } catch (error) {
-      console.log(error);
+      Bugsnag.notify(error);
     }
   };
 
@@ -97,7 +99,7 @@ class AppStore {
       .then(() => {
         this.setUser(null);
       })
-      .catch((error) => console.log('Error logging out: ', error));
+      .catch((error) => Bugsnag.notify(error));
   };
 
   deleteUserAccount = async () => {

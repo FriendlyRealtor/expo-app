@@ -1,13 +1,16 @@
-import React, { useState, useCallback } from 'react';
-import { StyleSheet, SafeAreaView, TouchableOpacity, View, Image } from 'react-native';
-import { Text } from '../../components';
+import * as ImagePicker from 'expo-image-picker';
+
+import { Image, SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+
+import Bugsnag from '@bugsnag/expo';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input } from '@ui-kitten/components';
+import { Text } from '../../components';
 import _ from 'lodash';
-import { storage } from '../../config';
 import { getAuth } from 'firebase/auth';
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import * as ImagePicker from 'expo-image-picker';
+import { storage } from '../../config';
 
 export const PostScreen = () => {
   const userAuth = getAuth();
@@ -51,21 +54,21 @@ export const PostScreen = () => {
               },
             );
           } catch (err) {
-            console.log('error storing image', err);
+            Bugsnag.notify(err);
           }
         } catch (err) {
-          console.log('error uploading image', err);
+          Bugsnag.notify(err);
         }
       }
     } catch (err) {
-      console.log('error selecting image from camera', err);
+      Bugsnag.notify(err);
     }
   }, []);
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity></TouchableOpacity>
+        <TouchableOpacity />
         <TouchableOpacity>
           <Text style={{ fontWeight: '500' }}>Post</Text>
         </TouchableOpacity>

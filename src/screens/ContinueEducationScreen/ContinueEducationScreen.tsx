@@ -1,11 +1,13 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { View, StyleSheet, SafeAreaView, StatusBar, ScrollView } from 'react-native';
-import _ from 'lodash';
+import { Loading, Text } from '../../components';
+import React, { useEffect, useRef, useState } from 'react';
+import { SafeAreaView, ScrollView, StatusBar, StyleSheet, View } from 'react-native';
+import { getDownloadURL, listAll, ref } from 'firebase/storage';
+
+import Bugsnag from '@bugsnag/expo';
 import { Video } from 'expo-av';
-import { ref, getDownloadURL, listAll } from 'firebase/storage';
+import _ from 'lodash';
 import { storage } from '../../config';
 import uuid from 'react-native-uuid';
-import { Loading, Text } from '../../components';
 
 export const ContinueEducationScreen = () => {
   const styles = StyleSheet.create({
@@ -39,12 +41,12 @@ export const ContinueEducationScreen = () => {
               setLoading(false);
             })
             .catch((error) => {
-              // Handle any errors
+              Bugsnag.notify(error);
             });
         });
       })
       .catch((error) => {
-        // Uh-oh, an error occurred!
+        Bugsnag.notify(error);
       });
   }, []);
 
