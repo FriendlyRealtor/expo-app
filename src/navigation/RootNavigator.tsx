@@ -6,10 +6,12 @@ import { inject, observer } from 'mobx-react';
 import { AppTabs } from './AppTabs';
 import { AuthStack } from './AuthStack';
 import Bugsnag from '@bugsnag/expo';
+import { NativeBaseProvider } from 'native-base';
 import { NavigationContainer } from '@react-navigation/native';
 import { auth } from '../config';
 import { createStackNavigator } from '@react-navigation/stack';
 import { getTrackingPermissionsAsync } from 'expo-tracking-transparency';
+import { useNativeBaseTheme } from '../hooks';
 
 const Stack = createStackNavigator();
 
@@ -18,6 +20,8 @@ export const RootNavigator = inject('appStore')(
     const [isLoading, setIsLoading] = useState(true);
     const { user, getUser, retrieveLoggedInUser } = appStore;
     const [localUser, setLocalUser] = useState(undefined);
+
+    const { theme: nativeBaseTheme } = useNativeBaseTheme();
 
     useEffect(() => {
       const fetchUser = async () => {
@@ -58,27 +62,29 @@ export const RootNavigator = inject('appStore')(
     }
 
     return (
-      <NavigationContainer>
-        {localUser && auth?.currentUser?.emailVerified ? (
-          <Stack.Navigator>
-            <Stack.Screen
-              name="Home"
-              component={AppTabs}
-              initialParams={{
-                user: localUser,
-                currentUser: localUser,
-              }}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen name="CMA" component={HomeScreen} />
-            <Stack.Screen name="Chat" component={ChatScreen} />
-            <Stack.Screen name="Distance Properties" component={DistancePropertiesScreen} />
-            <Stack.Screen name="My Chat" component={UserChatScreen} />
-          </Stack.Navigator>
-        ) : (
-          <AuthStack />
-        )}
-      </NavigationContainer>
+      <NativeBaseProvider theme={nativeBaseTheme}>
+        <NavigationContainer>
+          {localUser && auth?.currentUser?.emailVerified ? (
+            <Stack.Navigator>
+              <Stack.Screen
+                name="Home"
+                component={AppTabs}
+                initialParams={{
+                  user: localUser,
+                  currentUser: localUser,
+                }}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen name="CMA" component={HomeScreen} />
+              <Stack.Screen name="Chat" component={ChatScreen} />
+              <Stack.Screen name="Distance Properties" component={DistancePropertiesScreen} />
+              <Stack.Screen name="My Chat" component={UserChatScreen} />
+            </Stack.Navigator>
+          ) : (
+            <AuthStack />
+          )}
+        </NavigationContainer>
+      </NativeBaseProvider>
     );
   }),
 );

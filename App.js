@@ -20,7 +20,6 @@ import { useFonts } from 'expo-font';
 import { useNativeBaseTheme } from './src/hooks';
 
 const App = () => {
-  const { theme: nativeBaseTheme } = useNativeBaseTheme();
   const [isLoading, setIsLoading] = useState(true);
 
   Bugsnag.start(Constants?.manifest?.extra?.bugSnagApiKey || '');
@@ -51,14 +50,12 @@ const App = () => {
       <Provider {...stores}>
         <AuthenticatedUserProvider>
           <SafeAreaProvider>
-            <NativeBaseProvider theme={nativeBaseTheme}>
-              <PaperProvider theme={theme}>
-                <IconRegistry icons={[EvaIconsPack]} />
-                <ApplicationProvider {...eva} theme={eva.light}>
-                  <RootNavigator />
-                </ApplicationProvider>
-              </PaperProvider>
-            </NativeBaseProvider>
+            <PaperProvider theme={theme}>
+              <IconRegistry icons={[EvaIconsPack]} />
+              <ApplicationProvider {...eva} theme={eva.light}>
+                <RootNavigator />
+              </ApplicationProvider>
+            </PaperProvider>
           </SafeAreaProvider>
         </AuthenticatedUserProvider>
       </Provider>
