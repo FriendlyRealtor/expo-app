@@ -136,14 +136,16 @@ export const SettingScreen = inject('appStore')(
 
     const onChange = async (event, selectedDate) => {
       if (selectedDate && userAuth.currentUser) {
-        setDate(selectedDate);
-        const { uid } = userAuth.currentUser;
-        const docRef = await doc(db, 'users', uid);
-        const data = { ceRenewalDate: selectedDate };
-        if (docRef) {
-          await updateDoc(docRef, data);
-        } else {
-          console.log('Not able to retrieve user renewal date');
+        try {
+          setDate(selectedDate);
+          const { uid } = userAuth.currentUser;
+          const docRef = await doc(db, 'users', uid);
+          const data = { ceRenewalDate: selectedDate };
+          if (docRef) {
+            await updateDoc(docRef, data);
+          }
+        } catch (error) {
+          Bugsnag.notify(error);
         }
       }
     };
@@ -190,7 +192,7 @@ export const SettingScreen = inject('appStore')(
       try {
         const docRef = await doc(db, 'users', uid);
 
-        if (validatePhoneNumberLength(phoneNumber, 'US')) {
+        if (phoneNumber?.length > 0 && validatePhoneNumberLength(phoneNumber, 'US')) {
           setErrorState('Invalid phone number length, US.');
           return;
         }
@@ -393,7 +395,7 @@ export const SettingScreen = inject('appStore')(
                 >
                   <Heading size="xs">Service Areas By ZipCode</Heading>
                   <View display="flex" flexDirection="column" flex={1}>
-                    {locations?.length &&
+                    {!!locations?.length &&
                       locations.map((loc, index) => (
                         <Chip label={loc} onPress={() => handleDeleteChip(index)} />
                       ))}
