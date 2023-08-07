@@ -28,7 +28,9 @@ import { db, storage } from '../../config';
 import { doc, updateDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { inject, observer } from 'mobx-react';
-
+import * as FileSystem from 'expo-file-system';
+import { Camera } from 'expo-camera';
+import { Video } from 'expo-av';
 import Bugsnag from '@bugsnag/expo';
 import Constants from 'expo-constants';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -56,6 +58,8 @@ export const SettingScreen = inject('appStore')(
         ? new Date(user.ceRenewalDate.seconds * 1000)
         : new Date();
     const [date, setDate] = useState(defaultDate);
+    const [videoUri, setVideoUri] = useState(user.video || null);
+    const [videoProgress, setVideoProgress] = useState<number | undefined>(undefined);
     const [photoShow, setPhotoShow] = useState(null);
     const [photoProgress, setPhotoProgress] = useState<number | undefined>(undefined);
     const [errorState, setErrorState] = useState<string>('');
@@ -69,7 +73,13 @@ export const SettingScreen = inject('appStore')(
     const isFocused = useIsFocused();
 
     useEffect(() => {
-      setPhotoShow(user.photo);
+      if (user?.photo) {
+        setPhotoShow(user.photo);
+      }
+
+      if (user?.video) {
+        setVideoUri(user.video);
+      }
     }, [user]);
 
     useEffect(() => {
@@ -81,6 +91,63 @@ export const SettingScreen = inject('appStore')(
       };
       retrieveRows();
     }, [isFocused]);
+
+    const pickVideo = useCallback(async () => {
+      try {
+        const { granted } = await Camera.requestCameraPermissionsAsync();
+        if (!granted) {
+          setErrorState('Camera permission is required to access videos.');
+          return;
+        }
+
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+          allowsEditing: false,
+          quality: 1,
+        });
+
+        if (!result.cancelled) {
+          setVideoUri(result.uri);
+          setErrorState('');
+
+          const { uid } = userAuth.currentUser;
+          const storageRef = ref(storage, `video/${uid}`);
+
+          // Convert the video to a blob
+          const response = await fetch(result.uri);
+          const videoBlob = await response.blob();
+
+          // Upload video blob to Firebase Storage
+          const uploadTask = uploadBytesResumable(storageRef, videoBlob);
+
+          uploadTask.on(
+            'state_changed',
+            (snapshot) => {
+              const progress = snapshot.bytesTransferred / snapshot.totalBytes;
+              if (progress) {
+                setVideoProgress(progress);
+              }
+            },
+            (error) => {
+              Bugsnag.notify(error);
+            },
+            () => {
+              getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+                const docRef = await doc(db, 'users', uid);
+                const data = { video: downloadURL };
+                if (docRef) {
+                  await updateDoc(docRef, data);
+                  setVideoUri(downloadURL);
+                }
+              });
+            },
+          );
+        }
+      } catch (err) {
+        Bugsnag.notify(err);
+        setErrorState('Error uploading/selecting video.');
+      }
+    }, []);
 
     const pickImage = useCallback(async () => {
       try {
@@ -158,12 +225,8 @@ export const SettingScreen = inject('appStore')(
       };
     }, []);
 
-    const scrollHandler = useAnimatedScrollHandler((event) => {
-      translateY.value = event.contentOffset.y;
-    });
-
     const visitPublicProfile = () => {
-      const publicProfileURL = `https://friendlyrealtor.app/profile/${
+      const publicProfileURL = `https://friendlyrealtor.app/agent/${
         user.username || user.userName
       }`;
       Linking.openURL(publicProfileURL);
@@ -409,6 +472,35 @@ export const SettingScreen = inject('appStore')(
                     />
                   </View>
                 </HStack>
+                <Divider thickness={1} bg="black" />
+                <HStack
+                  alignItems="center"
+                  space={2}
+                  paddingY={2}
+                  paddingX={4}
+                  justifyContent="space-between"
+                >
+                  <Heading size="xs">Upload Profile Video</Heading>
+                  <Button onPress={pickVideo}>Pick Video</Button>
+                </HStack>
+                {videoProgress && videoProgress !== 1 && (
+                  <ProgressBar
+                    style={{ marginBottom: 10 }}
+                    progress={videoProgress}
+                    color="#02FDAA"
+                  />
+                )}
+                {videoUri && (
+                  <Video
+                    source={{ uri: videoUri }}
+                    rate={1.0}
+                    volume={1.0}
+                    isMuted={false}
+                    resizeMode="cover"
+                    useNativeControls
+                    style={{ width: '100%', height: 200 }}
+                  />
+                )}
                 <Divider thickness={1} bg="black" />
                 <HStack
                   alignItems="center"
