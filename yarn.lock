@@ -2987,6 +2987,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@koale/useworker@npm:^4.0.2":
+  version: 4.0.2
+  resolution: "@koale/useworker@npm:4.0.2"
+  dependencies:
+    dequal: ^1.0.0
+  peerDependencies:
+    react: ^16.8.0
+  checksum: 5d0894979ca9f24db747df21e0ded53b7ee24f9db4cf714a18f9f9bab79af538554cc5915fe8bd7e89560a1abfac036679b9985bbfdd3f4ddc9d820c1b676c9b
+  languageName: node
+  linkType: hard
+
 "@nicolo-ribaudo/eslint-scope-5-internals@npm:5.1.1-v1":
   version: 5.1.1-v1
   resolution: "@nicolo-ribaudo/eslint-scope-5-internals@npm:5.1.1-v1"
@@ -6800,6 +6811,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dequal@npm:^1.0.0":
+  version: 1.0.1
+  resolution: "dequal@npm:1.0.1"
+  checksum: 92a80c10ec52c256e306ef44c6640f0f2451edfba795b314aec90ee2770930f472c95e8f438b2fb80b0060033d0b5589f2ccb243c0ddd3e9a427c0faa92035c3
+  languageName: node
+  linkType: hard
+
 "destroy@npm:1.2.0":
   version: 1.2.0
   resolution: "destroy@npm:1.2.0"
@@ -7461,6 +7479,18 @@ __metadata:
   peerDependencies:
     expo: "*"
   checksum: 9f7cfde57fa725943332f34468a962a4cefed37614c24921c2cbb0daf12a15bd8f97afc10e5cf477dfba9f3d626a18c19117499b26cb666598a43655c9157956
+  languageName: node
+  linkType: hard
+
+"expo-camera@npm:~13.1.0":
+  version: 13.1.0
+  resolution: "expo-camera@npm:13.1.0"
+  dependencies:
+    "@koale/useworker": ^4.0.2
+    invariant: ^2.2.4
+  peerDependencies:
+    expo: "*"
+  checksum: 78bfa446f6e6f5c3f86aa7b9ab33069074cba46fbc20237ad9db0655c263063f70fe57d2882ae766d0bd335b8a0435e862ef9339d710cb2680531fac67f34b0d
   languageName: node
   linkType: hard
 
@@ -13155,6 +13185,7 @@ __metadata:
     expo: ~47.0.14
     expo-application: ~5.0.1
     expo-av: ~13.0.3
+    expo-camera: ~13.1.0
     expo-constants: ~14.0.2
     expo-contacts: ~11.0.1
     expo-crypto: ~12.0.0
