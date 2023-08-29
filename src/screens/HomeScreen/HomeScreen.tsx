@@ -1,4 +1,4 @@
-import { Button, Container, Divider, Text, View } from 'native-base';
+import { Button, Divider, Text, View } from 'native-base';
 import { Formik, useFormik } from 'formik';
 import { GooglePlacesAutocomplete, PlaceDetails } from 'expo-google-places-autocomplete';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -150,11 +150,11 @@ export const HomeScreen = ({ navigation }) => {
                 understanding of the local real estate market and make informed decisions about
                 buying or selling a property.
               </Text>
-              <GooglePlacesAutocomplete
+              {/*<GooglePlacesAutocomplete
                 apiKey={Constants.manifest?.extra?.googleApiKey}
                 requestConfig={{ countries: ['US'] }}
                 onPlaceSelected={onPlaceSelected}
-              />
+			/>*/}
               {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
             </View>
             <View style={styles.footerContainer}>

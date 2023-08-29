@@ -101,5 +101,7 @@
     "babel-plugin-transform-inline-environment-variables": "^0.4.4",
     "babel-preset-expo": "^9.3.0",
     "react-native-dotenv": "^3.4.8"
-  }
+  },
+  "name": "friendly-realtor-app",
+  "version": "1.0.0"
 }
