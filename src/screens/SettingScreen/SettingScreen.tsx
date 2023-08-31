@@ -8,7 +8,6 @@ import {
   Divider,
   HStack,
   Heading,
-  Modal,
   Image,
   Input,
   Link,
@@ -44,7 +43,6 @@ import { getAuth } from 'firebase/auth';
 import moment from 'moment';
 import { useIsFocused } from '@react-navigation/native';
 import { useLayout } from '../../hooks';
-import QRCode from 'react-native-qrcode-svg';
 
 export const SettingScreen = inject('appStore')(
   observer(({ appStore }) => {
@@ -60,7 +58,6 @@ export const SettingScreen = inject('appStore')(
         ? new Date(user.ceRenewalDate.seconds * 1000)
         : new Date();
     const [date, setDate] = useState(defaultDate);
-    const [openBusinessCard, setOpenBusinessCard] = useState<boolean>(false);
     const [videoUri, setVideoUri] = useState(user.video || null);
     const [videoProgress, setVideoProgress] = useState<number | undefined>(undefined);
     const [photoShow, setPhotoShow] = useState(null);
@@ -298,17 +295,6 @@ export const SettingScreen = inject('appStore')(
     const year = moment().year();
     const month = moment().month();
     const day = moment().format('D');
-    const businessCardInfo = {
-      name: 'Montrell Jubileeaaw',
-      phone: '+12405348102',
-      email: 'test@gmail.com',
-    };
-    const vCardData = `BEGIN:VCARD
-												VERSION:3.0
-												FN:${businessCardInfo.name}
-												EMAIL:${businessCardInfo.email}
-												TEL:${businessCardInfo.phone}
-												END:VCARD`;
 
     return (
       <Container style={styles.container}>
@@ -542,25 +528,10 @@ export const SettingScreen = inject('appStore')(
                       paddingX={4}
                       justifyContent="space-between"
                     >
-                      <Heading size="xs">Business Card</Heading>
+                      <Heading size="xs">Referral Link</Heading>
                       <Text fontSize="md">
-                        <Link onPress={() => setOpenBusinessCard(true)}>Share Contact Info</Link>
+                        <Link onPress={visitPublicProfile}>Visit Public Profile</Link>
                       </Text>
-                      <Modal isOpen={openBusinessCard} onClose={() => setOpenBusinessCard(false)}>
-                        <Modal.Content style={{ height: 450 }}>
-                          <Modal.CloseButton />
-                          <Modal.Header>Business Card</Modal.Header>
-                          <Modal.Body>
-                            <View margin={'auto'}>
-                              <QRCode
-                                value={vCardData}
-                                size={200}
-                                onError={(error) => Bugsnag.notify(error)}
-                              />
-                            </View>
-                          </Modal.Body>
-                        </Modal.Content>
-                      </Modal>
                     </HStack>
                   ))}
                 {/*<Divider thickness={1} bg="black" />
