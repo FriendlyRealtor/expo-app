@@ -1,4 +1,4 @@
-import { ChatScreen, DistancePropertiesScreen, HomeScreen } from '../screens';
+import { ChatScreen, DistancePropertiesScreen, HomeScreen, BusinessCardScreen } from '../screens';
 import React, { useEffect, useState } from 'react';
 import { SplashScreen, UserChatScreen } from '../screens';
 import { inject, observer } from 'mobx-react';
@@ -77,6 +77,7 @@ export const RootNavigator = inject('appStore')(
               />
               <Stack.Screen name="CMA" component={HomeScreen} />
               <Stack.Screen name="Chat" component={ChatScreen} />
+              <Stack.Screen name="BusinessCard" component={BusinessCardScreen} />
               <Stack.Screen name="Distance Properties" component={DistancePropertiesScreen} />
               <Stack.Screen name="My Chat" component={UserChatScreen} />
             </Stack.Navigator>

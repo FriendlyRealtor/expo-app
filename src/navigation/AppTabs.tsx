@@ -2,20 +2,23 @@ import * as Location from 'expo-location';
 
 import { ClientScreen, ContactScreen, HomeScreen, SettingScreen } from '../screens';
 import React, { useEffect, useState } from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 
 import { Colors } from '../config';
-import { Icon } from 'native-base';
+import { Icon, Modal, View } from 'native-base';
 import { Image } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { usePermissions } from '../hooks';
+import QRCode from 'react-native-qrcode-svg';
+import Bugsnag from '@bugsnag/expo';
 
 const Tab = createBottomTabNavigator();
 
 export const AppTabs = (props) => {
   const { locationStatus } = usePermissions(props.route.params.currentUser);
 
+  const [openBusinessCard, setOpenBusinessCard] = useState<boolean>(false);
   const [activeSub, setActiveSub] = useState(false);
   const [location, setLocation] = useState(null);
   /* useEffect(() => {
@@ -37,6 +40,13 @@ export const AppTabs = (props) => {
     getLocation();
   }, [locationStatus]);
 
+  const vCardData = `BEGIN:VCARD
+	VERSION:3.0
+	FN:Montrell Jubilee
+	EMAIL:mjubil96@gmail.com
+	TEL:240-906-4819
+	END:VCARD`;
+
   return (
     <Tab.Navigator>
       <Tab.Screen
@@ -47,6 +57,34 @@ export const AppTabs = (props) => {
             <Icon as={MaterialCommunityIcons} name="home" size="2xl" color={Colors.primary} />
           ),
           title: 'FriendlyRealtor',
+          headerLeft: () => (
+            <>
+              <TouchableOpacity onPress={() => setOpenBusinessCard(true)}>
+                <Icon
+                  as={MaterialCommunityIcons}
+                  name="qrcode"
+                  size="2xl"
+                  marginLeft="16px"
+                  color={Colors.color2}
+                />
+              </TouchableOpacity>
+              <Modal isOpen={openBusinessCard} onClose={() => setOpenBusinessCard(false)}>
+                <Modal.Content>
+                  <Modal.CloseButton />
+                  <Modal.Header>Business Card</Modal.Header>
+                  <Modal.Body>
+                    <View margin={'auto'}>
+                      <QRCode
+                        value={vCardData}
+                        size={100}
+                        onError={(error) => Bugsnag.notify(error)}
+                      />
+                    </View>
+                  </Modal.Body>
+                </Modal.Content>
+              </Modal>
+            </>
+          ),
           headerRight: () => (
             <TouchableOpacity
               onPress={() => {
