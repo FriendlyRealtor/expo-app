@@ -66,7 +66,9 @@ export const AppTabs = (props) => {
                   name="qrcode"
                   size="2xl"
                   marginLeft="16px"
-                  color={Colors.color2}
+                  color={Colors.blue}
+                  borderWidth={1}
+                  alignItems="center"
                 />
               </TouchableOpacity>
               <Modal isOpen={openBusinessCard} onClose={() => setOpenBusinessCard(false)}>
@@ -93,7 +95,7 @@ export const AppTabs = (props) => {
                         {props.route.params.currentUser.name && (
                           <Text
                             style={styles.nameText}
-                          >{`Name:${props.route.params.currentUser.name}`}</Text>
+                          >{`Name: ${props.route.params.currentUser.name}`}</Text>
                         )}
                         {(props.route.params.currentUser.emailAddress ||
                           props.route.params.user.email) && (
@@ -112,7 +114,7 @@ export const AppTabs = (props) => {
                       <View style={styles.qrCodeContainer}>
                         <QRCode
                           value={vCardData}
-                          size={150}
+                          size={200}
                           onError={(error) => Bugsnag.notify(error)}
                         />
                       </View>
@@ -209,6 +211,9 @@ export const AppTabs = (props) => {
 const styles = StyleSheet.create({
   modalContent: {
     backgroundColor: 'black',
+    width: '100%',
+    height: '100%',
+    borderRadius: 16,
   },
   modalHeader: {
     color: 'white',
@@ -216,22 +221,26 @@ const styles = StyleSheet.create({
   cardContainer: {
     flexDirection: 'column',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 20,
+    alignItems: 'flex-start',
   },
   nameText: {
     fontSize: 18,
     fontWeight: 'bold',
+    marginTop: 12,
+    marginBottom: 12,
     color: 'white',
   },
   contactText: {
-    fontSize: 16,
+    fontSize: 18,
+    marginBottom: 12,
     color: 'white',
   },
   qrCodeContainer: {
     padding: 12,
-    marginTop: 32,
-    borderRadius: 8,
+    marginTop: 96,
+    width: '100%',
     backgroundColor: 'white',
+    alignItems: 'center',
+    borderRadius: 8,
   },
 });
