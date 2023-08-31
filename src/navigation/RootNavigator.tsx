@@ -64,14 +64,14 @@ export const RootNavigator = inject('appStore')(
     return (
       <NativeBaseProvider theme={nativeBaseTheme}>
         <NavigationContainer>
-          {localUser && auth?.currentUser?.emailVerified ? (
+          {user && localUser && auth?.currentUser?.emailVerified ? (
             <Stack.Navigator>
               <Stack.Screen
                 name="Home"
                 component={AppTabs}
                 initialParams={{
                   user: localUser,
-                  currentUser: localUser,
+                  currentUser: user,
                 }}
                 options={{ headerShown: false }}
               />

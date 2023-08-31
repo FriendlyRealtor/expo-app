@@ -2,10 +2,10 @@ import * as Location from 'expo-location';
 
 import { ClientScreen, ContactScreen, HomeScreen, SettingScreen } from '../screens';
 import React, { useEffect, useState } from 'react';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, StyleSheet } from 'react-native';
 
 import { Colors } from '../config';
-import { Icon, Modal, View } from 'native-base';
+import { Icon, Modal, View, Text } from 'native-base';
 import { Image } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -41,11 +41,12 @@ export const AppTabs = (props) => {
   }, [locationStatus]);
 
   const vCardData = `BEGIN:VCARD
-	VERSION:3.0
-	FN:Montrell Jubilee
-	EMAIL:mjubil96@gmail.com
-	TEL:240-906-4819
-	END:VCARD`;
+											VERSION:3.0
+											FN:${props.route.params.currentUser.name}
+											EMAIL:${props.route.params.currentUser.emailAddress || props.route.params.user.email}
+											TEL:${props.route.params.currentUser.phone || ''}
+											TITLE:Real Estate Agent
+											END:VCARD`;
 
   return (
     <Tab.Navigator>
@@ -69,16 +70,52 @@ export const AppTabs = (props) => {
                 />
               </TouchableOpacity>
               <Modal isOpen={openBusinessCard} onClose={() => setOpenBusinessCard(false)}>
-                <Modal.Content>
+                <Modal.Content style={styles.modalContent}>
                   <Modal.CloseButton />
-                  <Modal.Header>Business Card</Modal.Header>
+                  <Modal.Header style={styles.modalHeader}>Business Card</Modal.Header>
                   <Modal.Body>
-                    <View margin={'auto'}>
-                      <QRCode
-                        value={vCardData}
-                        size={100}
-                        onError={(error) => Bugsnag.notify(error)}
-                      />
+                    <View style={styles.cardContainer}>
+                      {props.route.params.currentUser.photo && (
+                        <Image
+                          source={{ uri: props.route.params.currentUser.photo }}
+                          style={{
+                            width: 100,
+                            height: 100,
+                            borderRadius: 999,
+                            borderColor: 'lightgray',
+                            borderWidth: 2,
+                            overflow: 'hidden',
+                            marginBottom: 24,
+                          }}
+                        />
+                      )}
+                      <View>
+                        {props.route.params.currentUser.name && (
+                          <Text
+                            style={styles.nameText}
+                          >{`Name:${props.route.params.currentUser.name}`}</Text>
+                        )}
+                        {(props.route.params.currentUser.emailAddress ||
+                          props.route.params.user.email) && (
+                          <Text style={styles.contactText}>{`Email: ${
+                            props.route.params.currentUser.emailAddress ||
+                            props.route.params.user.email
+                          }`}</Text>
+                        )}
+                        {props.route.params.currentUser.phone && (
+                          <Text
+                            style={styles.contactText}
+                          >{`Phone: ${props.route.params.currentUser.phone}`}</Text>
+                        )}
+                        <Text style={styles.contactText}>Title: Real Estate Agent</Text>
+                      </View>
+                      <View style={styles.qrCodeContainer}>
+                        <QRCode
+                          value={vCardData}
+                          size={150}
+                          onError={(error) => Bugsnag.notify(error)}
+                        />
+                      </View>
                     </View>
                   </Modal.Body>
                 </Modal.Content>
@@ -168,3 +205,33 @@ export const AppTabs = (props) => {
     </Tab.Navigator>
   );
 };
+
+const styles = StyleSheet.create({
+  modalContent: {
+    backgroundColor: 'black',
+  },
+  modalHeader: {
+    color: 'white',
+  },
+  cardContainer: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 20,
+  },
+  nameText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  contactText: {
+    fontSize: 16,
+    color: 'white',
+  },
+  qrCodeContainer: {
+    padding: 12,
+    marginTop: 32,
+    borderRadius: 8,
+    backgroundColor: 'white',
+  },
+});
