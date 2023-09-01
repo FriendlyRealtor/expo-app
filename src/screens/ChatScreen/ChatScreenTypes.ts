@@ -1,1 +1,1 @@
-export type UserChatScreenProps = {};
+export type ChatScreenProps = {};
