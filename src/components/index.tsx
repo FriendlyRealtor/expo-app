@@ -13,6 +13,7 @@ import { Loading } from './Loading';
 import { Search } from './Search';
 import Text from './Text';
 import NavigationAction from './NavigationAction';
+import { BusinessCard } from './BusinessCard';
 
 export {
   Loading,
@@ -29,5 +30,6 @@ export {
   Button,
   FormErrorMessage,
   NavigationAction,
+  BusinessCard,
   LoadingIndicator,
 };

@@ -12,7 +12,7 @@ import { auth } from '../config';
 import { createStackNavigator } from '@react-navigation/stack';
 import { getTrackingPermissionsAsync } from 'expo-tracking-transparency';
 import { useNativeBaseTheme } from '../hooks';
-
+import { MyDrawer } from './Drawer';
 const Stack = createStackNavigator();
 
 export const RootNavigator = inject('appStore')(
@@ -66,19 +66,21 @@ export const RootNavigator = inject('appStore')(
         <NavigationContainer>
           {user && localUser && auth?.currentUser?.emailVerified ? (
             <Stack.Navigator>
-              <Stack.Screen
-                name="Home"
-                component={AppTabs}
-                initialParams={{
-                  user: localUser,
-                  currentUser: user,
-                }}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen name="CMA" component={HomeScreen} />
-              <Stack.Screen name="Chat" component={ChatScreen} />
-              <Stack.Screen name="Distance Properties" component={DistancePropertiesScreen} />
-              <Stack.Screen name="My Chat" component={UserChatScreen} />
+              <Stack.Group>
+                <Stack.Screen
+                  name="Home"
+                  component={MyDrawer}
+                  initialParams={{
+                    user: localUser,
+                    currentUser: user,
+                  }}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen name="CMA" component={HomeScreen} />
+                <Stack.Screen name="Chat" component={ChatScreen} />
+                <Stack.Screen name="Distance Properties" component={DistancePropertiesScreen} />
+                <Stack.Screen name="My Chat" component={UserChatScreen} />
+              </Stack.Group>
             </Stack.Navigator>
           ) : (
             <AuthStack />
