@@ -15,6 +15,7 @@ import { ChatScreen } from './ChatScreen/ChatScreen';
 import { UserChatScreen } from './ChatScreen/UserChatScreen';
 import { DistancePropertiesScreen } from './DistancePropertiesScreen/DistancePropertiesScreen';
 import { EventScreen } from './EventScreen';
+import { PaymentScreen } from './PaymentScreen';
 
 export {
   LoginScreen,
@@ -26,6 +27,7 @@ export {
   FeedScreen,
   PostScreen,
   EventScreen,
+  PaymentScreen,
   HomeScreen,
   SplashScreen,
   ForgotPasswordScreen,
