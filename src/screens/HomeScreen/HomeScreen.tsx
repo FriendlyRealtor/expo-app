@@ -3,7 +3,8 @@ import { Formik, useFormik } from 'formik';
 import { GooglePlacesAutocomplete, PlaceDetails } from 'expo-google-places-autocomplete';
 import React, { useCallback, useEffect, useState } from 'react';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { locationValidationSchema, numberWithCommas } from '../../utils';
+import { locationValidationSchema, numberWithCommas, trackPageView } from '../../utils';
+import { useRoute } from '@react-navigation/native';
 
 import Bugsnag from '@bugsnag/expo';
 import Constants from 'expo-constants';
@@ -12,7 +13,6 @@ import { HomeScreenStyles } from './HomeScreenStyles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { StatusBar } from 'expo-status-bar';
-import { TouchableOpacity } from 'react-native';
 import _ from 'lodash';
 import axios from 'axios';
 import { db } from '../../config';
@@ -28,6 +28,7 @@ export const HomeScreen = ({ navigation }) => {
   const [errorState, setErrorState] = useState('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const userAuth = getAuth();
+  const route = useRoute();
   const [crmEstimate, setCrmEstimate] = useState(null);
   const { handleChange, values, setValues, handleBlur, handleSubmit, resetForm } = useFormik({
     initialValues: {
@@ -39,6 +40,10 @@ export const HomeScreen = ({ navigation }) => {
   });
 
   const { location } = values;
+
+  useEffect(() => {
+    trackPageView(route.name);
+  }, [route]);
 
   useEffect(() => {
     resetForm({
@@ -150,11 +155,11 @@ export const HomeScreen = ({ navigation }) => {
                 understanding of the local real estate market and make informed decisions about
                 buying or selling a property.
               </Text>
-              <GooglePlacesAutocomplete
+              {/*<GooglePlacesAutocomplete
                 apiKey={Constants.manifest?.extra?.googleApiKey}
                 requestConfig={{ countries: ['US'] }}
                 onPlaceSelected={onPlaceSelected}
-              />
+			/>*/}
               {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
             </View>
             <View style={styles.footerContainer}>

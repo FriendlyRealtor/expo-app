@@ -1,4 +1,6 @@
 import * as Yup from 'yup';
+import { analytics } from '../config/firebase';
+import { logEvent } from 'expo-firebase-analytics';
 
 export const continueEducationCourse = [
   {
@@ -55,4 +57,26 @@ export const numberWithCommas = (num) => {
   }
 
   return 0;
+};
+
+/**
+ * Track a button click event.
+ * @param {string} buttonName - The name or identifier of the clicked button.
+ * @param {string} screenName - The name or identifier of the current screen.
+ */
+export const trackButtonClick = async (buttonName, screenName) => {
+  await logEvent('button_click', {
+    screen: screenName,
+    button_name: buttonName,
+  });
+};
+
+/**
+ * Track a page view event.
+ * @param {string} screenName - The name or identifier of the viewed screen.
+ */
+export const trackPageView = async (screenName) => {
+  await logEvent('page_view', {
+    screen: screenName,
+  });
 };

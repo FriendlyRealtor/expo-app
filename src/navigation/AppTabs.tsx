@@ -142,6 +142,16 @@ export const AppTabs = (props) => {
         })}
       />
       <Tab.Screen
+        name="Contacts"
+        options={{
+          tabBarIcon: () => (
+            <Icon as={MaterialCommunityIcons} name="account" size="2xl" color={Colors.primary} />
+          ),
+        }}
+      >
+        {() => <ContactScreen />}
+      </Tab.Screen>
+      <Tab.Screen
         name="Deals"
         component={ClientScreen}
         options={{
@@ -172,35 +182,11 @@ export const AppTabs = (props) => {
         }}
       />*/}
       <Tab.Screen
-        name="Contacts"
-        options={{
-          tabBarIcon: () => (
-            <Icon as={MaterialCommunityIcons} name="account" size="2xl" color={Colors.primary} />
-          ),
-        }}
-      >
-        {() => <ContactScreen />}
-      </Tab.Screen>
-      <Tab.Screen
-        name="Menu"
+        name="Settings"
         component={SettingScreen}
         options={{
           tabBarIcon: () => (
-            <Image
-              source={
-                props.route.params.user.photo
-                  ? { uri: props.route.params.user.photo }
-                  : require('../../assets/icon.png')
-              }
-              style={{
-                width: 25,
-                height: 25,
-                borderRadius: 25 / 2,
-                borderColor: 'lightgray',
-                borderWidth: 2,
-                overflow: 'hidden',
-              }}
-            />
+            <Icon as={MaterialCommunityIcons} name="cog" size="2xl" color={Colors.primary} />
           ),
         }}
       />

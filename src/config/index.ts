@@ -1,4 +1,4 @@
 import { Colors } from './theme';
-import { auth, db, storage, realtimeDb } from './firebase';
+import { auth, db, storage, realtimeDb, analytics } from './firebase';
 
-export { Colors, auth, db, storage, realtimeDb };
+export { Colors, auth, db, storage, realtimeDb, analytics };
