@@ -1,8 +1,7 @@
 import { ChatScreen, DistancePropertiesScreen, HomeScreen } from '../screens';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { SplashScreen, UserChatScreen } from '../screens';
 import { inject, observer } from 'mobx-react';
-
 import { AppTabs } from './AppTabs';
 import { AuthStack } from './AuthStack';
 import Bugsnag from '@bugsnag/expo';
@@ -12,18 +11,21 @@ import { auth } from '../config';
 import { createStackNavigator } from '@react-navigation/stack';
 import { getTrackingPermissionsAsync } from 'expo-tracking-transparency';
 import { useNativeBaseTheme } from '../hooks';
+import { setDebugModeEnabled } from 'expo-firebase-analytics';
 
 const Stack = createStackNavigator();
 
 export const RootNavigator = inject('appStore')(
   observer(({ appStore }) => {
     const [isLoading, setIsLoading] = useState(true);
-    const { user, getUser, retrieveLoggedInUser } = appStore;
+    const { user, retrieveLoggedInUser } = appStore;
     const [localUser, setLocalUser] = useState(undefined);
 
-    const { theme: nativeBaseTheme } = useNativeBaseTheme();
-
     useEffect(() => {
+      if (__DEV__) {
+        setDebugModeEnabled(true);
+      }
+
       const fetchUser = async () => {
         await retrieveLoggedInUser();
       };
@@ -62,7 +64,7 @@ export const RootNavigator = inject('appStore')(
     }
 
     return (
-      <NativeBaseProvider theme={nativeBaseTheme}>
+      <NativeBaseProvider>
         <NavigationContainer>
           {user && localUser && auth?.currentUser?.emailVerified ? (
             <Stack.Navigator>

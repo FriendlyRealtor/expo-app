@@ -1,5 +1,6 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import { getAnalytics } from 'firebase/analytics';
 import { getFirestore } from 'firebase/firestore';
 import { getDatabase } from 'firebase/database';
 import { getStorage } from 'firebase/storage';
@@ -13,6 +14,7 @@ const firebaseConfig = {
   projectId: Constants.manifest.extra.projectId,
   storageBucket: Constants.manifest.extra.storageBucket,
   messagingSenderId: Constants.manifest.extra.messagingSenderId,
+  measurementId: Constants.manifest.extra.measurementId,
   databaseURL: Constants.manifest.extra.realTimeDbUrl,
   appId: Constants.manifest.extra.appId,
 };
@@ -33,4 +35,6 @@ const storage = getStorage();
 // initialize realTime db
 const realtimeDb = getDatabase();
 
-export { auth, db, storage, realtimeDb };
+const analytics = getAnalytics();
+
+export { auth, db, storage, realtimeDb, analytics };

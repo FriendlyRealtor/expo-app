@@ -12,7 +12,6 @@ import { Shimmer } from './Shimmer';
 import { Loading } from './Loading';
 import { Search } from './Search';
 import Text from './Text';
-import NavigationAction from './NavigationAction';
 
 export {
   Loading,
@@ -28,6 +27,5 @@ export {
   Icon,
   Button,
   FormErrorMessage,
-  NavigationAction,
   LoadingIndicator,
 };
