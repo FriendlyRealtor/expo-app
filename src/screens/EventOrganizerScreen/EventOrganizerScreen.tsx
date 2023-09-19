@@ -61,14 +61,13 @@ export const EventOrganizerScreen = () => {
   const [selectedOption, setSelectedOption] = useState('Option 1');
   const [chipValue, setChipValue] = useState<string>('');
   const [eventImage, setEventImage] = useState(null);
+  const [saving, setSaving] = useState<boolean>(false);
+  const [photoProgress, setPhotoProgress] = useState<number | undefined>(undefined);
   const [tags, setTags] = useState([]);
 
   const createEvent = () => {
-    // Validate and save the new event to your database
-    // For simplicity, we'll just add it to the local state here
     setEvents([...events, newEvent]);
-    setIsCreatingEvent(false);
-    // You would typically send the event data to your backend or database here
+    setSaving(true);
   };
 
   // Simulated function to edit an existing event
@@ -239,48 +238,47 @@ export const EventOrganizerScreen = () => {
               alignItems="flex-start" // Adjust alignment as needed
               my={4}
             >
-							<HStack  justifyContent="space-between" width="100%">
-              <Text fontSize="md" fontWeight="bold">
-                Event Date
-              </Text>
-              <Text fontSize="md" fontWeight="bold">
-                Start Time
-              </Text>
-              <Text fontSize="md" fontWeight="bold">
-                End Time
-              </Text>
+              <HStack justifyContent="space-between" width="100%">
+                <Text fontSize="md" fontWeight="bold">
+                  Event Date
+                </Text>
+                <Text fontSize="md" fontWeight="bold">
+                  Start Time
+                </Text>
+                <Text fontSize="md" fontWeight="bold">
+                  End Time
+                </Text>
+              </HStack>
+              <HStack justifyContent="space-between" width="100%" mt={2}>
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  value={date}
+                  mode="date"
+                  onChange={onChange}
+                  display="default"
+                  minimumDate={new Date()}
+                />
 
-							</HStack>
-							<HStack justifyContent="space-between" width="100%" mt={2}>
-							<DateTimePicker
-                testID="dateTimePicker"
-                value={date}
-                mode="date"
-                onChange={onChange}
-                display="default"
-                minimumDate={new Date()}
-              />
+                <DateTimePicker
+                  testID="startTimePicker"
+                  value={startTime}
+                  mode="time"
+                  onChange={(event, selectedTime) => {
+                    setStartTime(selectedTime || startTime);
+                  }}
+                  display="default"
+                />
 
-              <DateTimePicker
-                testID="startTimePicker"
-                value={startTime}
-                mode="time"
-                onChange={(event, selectedTime) => {
-                  setStartTime(selectedTime || startTime);
-                }}
-                display="default"
-              />
-
-              <DateTimePicker
-                testID="endTimePicker"
-                value={endTime}
-                mode="time"
-                onChange={(event, selectedTime) => {
-                  setEndTime(selectedTime || endTime);
-                }}
-                display="default"
-              />
-							</HStack>
+                <DateTimePicker
+                  testID="endTimePicker"
+                  value={endTime}
+                  mode="time"
+                  onChange={(event, selectedTime) => {
+                    setEndTime(selectedTime || endTime);
+                  }}
+                  display="default"
+                />
+              </HStack>
             </Flex>
             <Input
               placeholder="Avaliable Seats"
@@ -297,7 +295,9 @@ export const EventOrganizerScreen = () => {
               my={4}
             />
             <HStack justifyContent="space-between" mt={4}>
-              <Button onPress={createEvent}>Save Event</Button>
+              <Button onPress={createEvent} isLoading={saving}>
+                Save Event
+              </Button>
               <Button onPress={() => setIsCreatingEvent(false)}>Cancel</Button>
             </HStack>
           </ScrollView>
