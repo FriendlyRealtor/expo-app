@@ -7,6 +7,7 @@ import {
   Input,
   ScrollView,
   Actionsheet,
+  Flex,
   Select,
   HStack,
   TextArea,
@@ -232,24 +233,33 @@ export const EventOrganizerScreen = () => {
                 <Select.Item key={index} label={option} value={option} />
               ))}
             </Select>
-            <View my={4}>
+            <Flex
+              flexDirection="row"
+              flexWrap="wrap"
+              alignItems="flex-start" // Adjust alignment as needed
+              my={4}
+            >
+							<HStack  justifyContent="space-between" width="100%">
               <Text fontSize="md" fontWeight="bold">
                 Event Date
               </Text>
+              <Text fontSize="md" fontWeight="bold">
+                Start Time
+              </Text>
+              <Text fontSize="md" fontWeight="bold">
+                End Time
+              </Text>
 
-              <DateTimePicker
+							</HStack>
+							<HStack justifyContent="space-between" width="100%" mt={2}>
+							<DateTimePicker
                 testID="dateTimePicker"
                 value={date}
                 mode="date"
                 onChange={onChange}
                 display="default"
                 minimumDate={new Date()}
-                style={{ width: '100%' }}
               />
-
-              <Text fontSize="md" fontWeight="bold" mt={2}>
-                Start Time
-              </Text>
 
               <DateTimePicker
                 testID="startTimePicker"
@@ -259,12 +269,8 @@ export const EventOrganizerScreen = () => {
                   setStartTime(selectedTime || startTime);
                 }}
                 display="default"
-                style={{ width: '100%' }}
               />
 
-              <Text fontSize="md" fontWeight="bold" mt={2}>
-                End Time
-              </Text>
               <DateTimePicker
                 testID="endTimePicker"
                 value={endTime}
@@ -273,9 +279,9 @@ export const EventOrganizerScreen = () => {
                   setEndTime(selectedTime || endTime);
                 }}
                 display="default"
-                style={{ width: '100%' }}
               />
-            </View>
+							</HStack>
+            </Flex>
             <Input
               placeholder="Avaliable Seats"
               value={newEvent.totalSeats}
