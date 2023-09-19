@@ -44,7 +44,14 @@ const UpgradeBenefitsSection = () => {
 
 export const EventOrganizerScreen = () => {
   const [events, setEvents] = useState([]); // Store the list of events
-  const [newEvent, setNewEvent] = useState({ title: '', location: '', description: '', date: '' });
+  const [newEvent, setNewEvent] = useState({
+    title: '',
+    location: '',
+    description: '',
+    date: '',
+    totalSeats: '',
+    price: '',
+  });
   const [isCreatingEvent, setIsCreatingEvent] = useState(false);
   const [editingEventIndex, setEditingEventIndex] = useState(-1); // Index of the event being edited
   const [date, setDate] = useState(new Date());
@@ -206,7 +213,7 @@ export const EventOrganizerScreen = () => {
                 onChangeText={(text) => setChipValue(text)}
                 onSubmitEditing={handleAddChip}
                 width="100%"
-								mb={2}
+                mb={2}
               />
               <View style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
                 {!!tags?.length &&
@@ -225,7 +232,7 @@ export const EventOrganizerScreen = () => {
                 <Select.Item key={index} label={option} value={option} />
               ))}
             </Select>
-            <View>
+            <View my={4}>
               <Text fontSize="md" fontWeight="bold">
                 Event Date
               </Text>
@@ -269,6 +276,20 @@ export const EventOrganizerScreen = () => {
                 style={{ width: '100%' }}
               />
             </View>
+            <Input
+              placeholder="Avaliable Seats"
+              value={newEvent.totalSeats}
+              keyboardType="numeric"
+              onChangeText={(text) => setNewEvent({ ...newEvent, totalSeats: text })}
+              my={4}
+            />
+            <Input
+              placeholder="Cost of Event (0 = Free)"
+              value={newEvent.price}
+              keyboardType="numeric"
+              onChangeText={(text) => setNewEvent({ ...newEvent, price: text })}
+              my={4}
+            />
             <HStack justifyContent="space-between" mt={4}>
               <Button onPress={createEvent}>Save Event</Button>
               <Button onPress={() => setIsCreatingEvent(false)}>Cancel</Button>
