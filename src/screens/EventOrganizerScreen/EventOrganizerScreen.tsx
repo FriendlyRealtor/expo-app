@@ -14,7 +14,7 @@ import {
 } from 'native-base';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { TouchableOpacity } from 'react-native';
-import { Chip } from '../../components';
+import { Chip, EventCard } from '../../components';
 
 const UpgradeBenefitsSection = () => {
   return (
@@ -98,8 +98,6 @@ export const EventOrganizerScreen = () => {
   };
 
   useEffect(() => {
-    // Simulated function to fetch events from your database
-    // For simplicity, we'll use a local array as the initial state
     const initialEvents = [
       {
         title: 'Event 1',
@@ -144,20 +142,7 @@ export const EventOrganizerScreen = () => {
       <Button onPress={() => setIsCreatingEvent(true)}>Create Event</Button>
       {/* List of Events */}
       {events.map((event, index) => (
-        <View key={index} p={2} borderWidth={1} my={2} borderRadius={4}>
-          <Text fontSize="lg" fontWeight="bold">
-            {event.title}
-          </Text>
-          <Text fontSize="md" color="gray.600">
-            Location: {event.location}
-          </Text>
-          <Text fontSize="md" color="gray.600">
-            Date: {event.date}
-          </Text>
-          <Text fontSize="md">{event.description}</Text>
-          <Button onPress={() => setEditingEventIndex(index)}>Edit</Button>
-          <Button onPress={() => deleteEvent(index)}>Delete</Button>
-        </View>
+        <EventCard key={event.id} event={event} isOrganizerCard editEvent={editEvent} deleteEvent={deleteEvent} />
       ))}
       <Actionsheet
         isOpen={isCreatingEvent}

@@ -14,6 +14,7 @@ import { Search } from './Search';
 import Text from './Text';
 import NavigationAction from './NavigationAction';
 import { BusinessCard } from './BusinessCard';
+import { EventCard } from './EventCard';
 
 export {
   Loading,
@@ -25,6 +26,7 @@ export {
   Container,
   Text,
   Shimmer,
+  EventCard,
   Logo,
   Icon,
   Button,
