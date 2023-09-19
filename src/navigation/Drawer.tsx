@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { AppTabs } from './AppTabs';
-import { EventScreen, PaymentScreen } from '../screens';
+import { EventScreen, EventOrganizerScreen, PaymentScreen } from '../screens';
 import { TouchableOpacity, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Icon } from 'native-base';
@@ -53,6 +53,7 @@ export const MyDrawer = ({ navigation, ...restProps }) => {
     >
       <Drawer.Screen name="FriendlyRealtor" component={AppTabs} />
       <Drawer.Screen name="Discover Events" component={EventScreen} />
+      <Drawer.Screen name="Event Organizer" component={EventOrganizerScreen} />
       <Drawer.Screen name="Payment Method" component={PaymentScreen} />
     </Drawer.Navigator>
   );
