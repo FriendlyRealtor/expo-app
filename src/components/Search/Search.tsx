@@ -16,7 +16,14 @@ import {
 import { EvilIcons } from '@expo/vector-icons';
 
 export const Search = (props: SearchProps) => {
-  const { data, label, onSelectionChange, resetQuery } = props;
+  const {
+    data,
+    label,
+    onSelectionChange,
+    resetQuery,
+    placeholder = 'Search...',
+    filterKeys, // Accept an array of filter keys
+  } = props;
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredData, setFilteredData] = useState(data);
   const [selectedUser, setSelectedUser] = useState({});
@@ -24,14 +31,12 @@ export const Search = (props: SearchProps) => {
   const handleSearch = (text) => {
     setSearchQuery(text);
 
-    const filtered = data.filter(
-      (item) =>
-        item.name &&
-        item.userName &&
-        (item.name.toLowerCase().includes(text.toLowerCase()) ||
-          item.userName.toLowerCase().includes(text.toLowerCase())),
-    );
-    setFilteredData(filtered);
+    const filtered = data.filter((item) => {
+      return filterKeys.some(
+        (key) => item[key] && item[key].toLowerCase().includes(text.toLowerCase()),
+      );
+    });
+
     setFilteredData(filtered);
   };
 
@@ -61,8 +66,8 @@ export const Search = (props: SearchProps) => {
         )}
         <Input
           borderWidth={0}
-          backgroundColor="white"
-          placeholder="Search..."
+          backgroundColor="transparent"
+          placeholder={placeholder}
           width={250}
           value={searchQuery}
           onChangeText={handleSearch}
@@ -76,10 +81,7 @@ export const Search = (props: SearchProps) => {
           renderItem={({ item }) => (
             <Pressable key={item.id} onPress={() => handleSelectUser(item)}>
               <Box
-                borderBottomWidth="1"
-                _dark={{
-                  borderColor: 'muted.50',
-                }}
+                borderBottomWidth={1}
                 borderColor="muted.800"
                 pl={['0', '4']}
                 pr={['0', '5']}
@@ -93,13 +95,7 @@ export const Search = (props: SearchProps) => {
                     }}
                   />
                   <VStack>
-                    <Text
-                      _dark={{
-                        color: 'warmGray.50',
-                      }}
-                      color="coolGray.800"
-                      bold
-                    >
+                    <Text color="coolGray.800" bold>
                       {item.fullName}
                     </Text>
                   </VStack>

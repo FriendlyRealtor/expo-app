@@ -15,6 +15,9 @@ import Text from './Text';
 import NavigationAction from './NavigationAction';
 import { BusinessCard } from './BusinessCard';
 import { EventCard } from './EventCard';
+import { Filter } from './Filter';
+import { ToggleSwitch } from './ToggleSwitch';
+import { UpgradePrompt } from './UpgradePrompt';
 
 export {
   Loading,
@@ -26,7 +29,10 @@ export {
   Container,
   Text,
   Shimmer,
+  ToggleSwitch,
   EventCard,
+  Filter,
+  UpgradePrompt,
   Logo,
   Icon,
   Button,

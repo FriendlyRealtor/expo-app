@@ -123,16 +123,6 @@ export const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.layout}>
       <StatusBar style="auto" />
-      <Button
-        onPress={() => {
-          navigation.navigate('Distance Properties');
-        }}
-        my={10}
-        mx={10}
-        rounded="lg"
-      >
-        <Text color="white">Calculate distance for showings.</Text>
-      </Button>
       <KeyboardAwareScrollView style={styles.keyboard}>
         <Formik validationSchema={locationValidationSchema}>
           <View style={styles.card}>

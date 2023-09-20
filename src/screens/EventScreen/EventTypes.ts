@@ -1,0 +1,101 @@
+export const EventDates = [
+  { key: 'today', name: 'Today' },
+  { key: 'tomorrow', name: 'Tomorrow' },
+  { key: 'this_week', name: 'This Week' },
+  { key: 'this_weekend', name: 'This Weekend' },
+  { key: 'any_date', name: 'Any Date' },
+];
+
+export const EventCategories = [
+  { key: 'open_house', name: 'Open House' },
+  { key: 'property_tours', name: 'Property Tours' },
+  { key: 'realtor_networking', name: 'Realtor Networking' },
+  { key: 'homebuyer_seminars', name: 'Homebuyer Seminars' },
+  { key: 'real_estate_workshops', name: 'Real Estate Workshops' },
+  { key: 'investment_property_seminars', name: 'Investment Property Seminars' },
+  { key: 'property_auctions', name: 'Property Auctions' },
+  { key: 'real_estate_conferences', name: 'Real Estate Conferences' },
+  { key: 'realtor_training_sessions', name: 'Realtor Training Sessions' },
+  { key: 'property_investment_expos', name: 'Property Investment Expos' },
+  { key: 'community_outreach_events', name: 'Community Outreach Events' },
+  { key: 'realtor_appreciation_dinners', name: 'Realtor Appreciation Dinners' },
+  { key: 'mortgage_and_financing_workshops', name: 'Mortgage and Financing Workshops' },
+  { key: 'real_estate_technology_demonstrations', name: 'Real Estate Technology Demonstrations' },
+  { key: 'property_market_updates', name: 'Property Market Updates' },
+];
+
+export const EventData = [
+  {
+    id: 1,
+    title: 'Event 1',
+    location: 'Location 1',
+    date: 'Sept 22 2023 5:00 p.m',
+    category: 'Open House',
+    participants: 90,
+    totalParticipants: 100,
+    cost: 'Free',
+    description: 'Description of Event 1...',
+    address: '123 Main St, City, Country',
+    longerDetails: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vehicula ex eu odio tincidunt, in facilisis arcu blandit. Sed ac euismod risus. Nulla facilisi. In hac habitasse platea dictumst. Vivamus viverra nisl id purus dictum, eget fringilla augue vulputate. Proin auctor mauris velit, id condimentum elit lacinia at. Vestibulum auctor odio in eros vehicula tempus. Fusce eleifend at ante eu iaculis. Sed vestibulum quis libero id fermentum. Aliquam vitae gravida turpis. Nunc id orci in massa pharetra viverra. Nullam quis est eu dolor lacinia elementum. Vivamus tincidunt scelerisque vehicula. Fusce vulputate neque ac libero hendrerit bibendum. Nullam eu auctor nunc. Aliquam venenatis fermentum odio, nec aliquet justo tincidunt non. Nullam malesuada pharetra erat eget varius.
+
+Phasellus nec ultrices quam. Integer a sapien purus. Fusce vel feugiat erat. Cras blandit purus quis lacinia pharetra. Sed luctus ut justo non dapibus. Quisque euismod bibendum cursus. Sed sed purus venenatis, efficitur sapien sit amet, hendrerit est. Fusce non ante vel nulla finibus aliquam. Praesent scelerisque risus nec aliquam consectetur. Proin iaculis ligula id libero tincidunt rhoncus. Integer blandit urna velit, nec blandit ipsum mattis eget. Fusce eget neque ac quam efficitur auctor. Vestibulum sollicitudin malesuada justo, non laoreet velit laoreet at. Suspendisse quis ligula ut lectus efficitur scelerisque eu in leo. Aliquam nec bibendum arcu, non vestibulum nisi. Ut hendrerit euismod libero non vulputate.
+
+Address: 123 Main St, City, Country`,
+  },
+  {
+    id: 2,
+    title: 'Event 2',
+    location: 'Location 2',
+    date: 'Sept 20 2023 5:00 p.m',
+    participants: 50,
+    category: 'Real Estate Workshops',
+    totalParticipants: 100,
+    cost: '$10',
+    description: 'Description of Event 2...',
+  },
+  {
+    id: 3,
+    title: 'Event 2',
+    location: 'Location 2',
+    date: 'Sept 20 2023 5:00 p.m',
+    participants: 50,
+    category: 'Realtor Appreciation Dinners',
+    totalParticipants: 100,
+    cost: 'Free',
+    description: 'Description of Event 2...',
+  },
+  {
+    id: 4,
+    title: 'Event 3',
+    location: 'Location 2',
+    date: 'Sept 21 2023 5:00 p.m',
+    participants: 50,
+    category: 'Realtor Appreciation Dinners',
+    totalParticipants: 100,
+    cost: 'Free',
+    description: 'Description of Event 2...',
+  },
+  {
+    id: 5,
+    title: 'Event 4',
+    location: 'Location 2',
+    date: 'Sept 23 2023 5:00 p.m',
+    participants: 50,
+    category: 'Open House',
+    totalParticipants: 100,
+    cost: '$10',
+    description: 'Description of Event 2...',
+  },
+  {
+    id: 6,
+    title: 'Event 2',
+    location: 'Location 2',
+    date: 'Dec 20 2023 5:00 p.m',
+    participants: 50,
+    category: 'Open House',
+    totalParticipants: 100,
+    cost: '$10',
+    description: 'Description of Event 2...',
+  },
+  // Add more events here
+];

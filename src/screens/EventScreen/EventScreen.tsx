@@ -1,109 +1,96 @@
-import React, { useState } from 'react';
-import { View, Text, Input, Icon, ScrollView, Box, Actionsheet, Button, HStack } from 'native-base';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Colors } from '../../config';
-import { EventCard } from '../../components';
+import React, { useState, useMemo } from 'react';
+import { View, Text, Center, Input, ScrollView, VStack } from 'native-base';
+import { EventCard, Filter, ToggleSwitch, UpgradePrompt } from '../../components';
+import { EventCategories, EventDates, EventData } from './EventTypes';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import moment from 'moment';
 
-export const EventScreen = () => {
+export const EventScreen = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [events, setEvents] = useState([
-    {
-      id: 1,
-      title: 'Event 1',
-      location: 'Location 1',
-      timeframe: 'Timeframe 1',
-      attendees: 100,
-      cost: 'Free',
-      description: 'Description of Event 1...',
-      address: '123 Main St, City, Country',
-      longerDetails: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vehicula ex eu odio tincidunt, in facilisis arcu blandit. Sed ac euismod risus. Nulla facilisi. In hac habitasse platea dictumst. Vivamus viverra nisl id purus dictum, eget fringilla augue vulputate. Proin auctor mauris velit, id condimentum elit lacinia at. Vestibulum auctor odio in eros vehicula tempus. Fusce eleifend at ante eu iaculis. Sed vestibulum quis libero id fermentum. Aliquam vitae gravida turpis. Nunc id orci in massa pharetra viverra. Nullam quis est eu dolor lacinia elementum. Vivamus tincidunt scelerisque vehicula. Fusce vulputate neque ac libero hendrerit bibendum. Nullam eu auctor nunc. Aliquam venenatis fermentum odio, nec aliquet justo tincidunt non. Nullam malesuada pharetra erat eget varius.
+  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedCategories, setSelectedCategories] = useState('');
+  const [events, setEvents] = useState(EventData);
+  const [isFreeEvent, setIsFreeEvent] = useState(false);
 
-  Phasellus nec ultrices quam. Integer a sapien purus. Fusce vel feugiat erat. Cras blandit purus quis lacinia pharetra. Sed luctus ut justo non dapibus. Quisque euismod bibendum cursus. Sed sed purus venenatis, efficitur sapien sit amet, hendrerit est. Fusce non ante vel nulla finibus aliquam. Praesent scelerisque risus nec aliquam consectetur. Proin iaculis ligula id libero tincidunt rhoncus. Integer blandit urna velit, nec blandit ipsum mattis eget. Fusce eget neque ac quam efficitur auctor. Vestibulum sollicitudin malesuada justo, non laoreet velit laoreet at. Suspendisse quis ligula ut lectus efficitur scelerisque eu in leo. Aliquam nec bibendum arcu, non vestibulum nisi. Ut hendrerit euismod libero non vulputate.
+  const isDateFilterMatch = (eventDate, selectedDateFilter) => {
+    const today = moment();
+    const eventMoment = moment(eventDate, 'MMM DD YYYY h:mm a');
 
-  Address: 123 Main St, City, Country`,
-    },
-    {
-      id: 2,
-      title: 'Event 2',
-      location: 'Location 2',
-      timeframe: 'Timeframe 2',
-      attendees: 50,
-      cost: '$10',
-      description: 'Description of Event 2...',
-    },
-    {
-      id: 3,
-      title: 'Event 2',
-      location: 'Location 2',
-      timeframe: 'Timeframe 2',
-      attendees: 50,
-      cost: '$10',
-      description: 'Description of Event 2...',
-    },
-    {
-      id: 4,
-      title: 'Event 2',
-      location: 'Location 2',
-      timeframe: 'Timeframe 2',
-      attendees: 50,
-      cost: '$10',
-      description: 'Description of Event 2...',
-    },
-    {
-      id: 5,
-      title: 'Event 2',
-      location: 'Location 2',
-      timeframe: 'Timeframe 2',
-      attendees: 50,
-      cost: '$10',
-      description: 'Description of Event 2...',
-    },
-    {
-      id: 6,
-      title: 'Event 2',
-      location: 'Location 2',
-      timeframe: 'Timeframe 2',
-      attendees: 50,
-      cost: '$10',
-      description: 'Description of Event 2...',
-    },
-    // Add more events here
-  ]);
-
-  const handleSearch = () => {
-    // Implement your search logic here.
+    switch (selectedDateFilter.toLowerCase()) {
+      case 'today':
+        return eventMoment.isSame(today, 'day');
+      case 'tomorrow':
+        return eventMoment.isSame(today.clone().add(1, 'day'), 'day');
+      case 'this week':
+        return eventMoment.isSame(today, 'week');
+      case 'this weekend':
+        return (
+          eventMoment.isSame(today, 'week') && (eventMoment.day() === 0 || eventMoment.day() === 6)
+        );
+      case 'any date':
+        return true;
+      default:
+        return false;
+    }
   };
+
+  const filteredEvents = useMemo(() => {
+    return events.filter((event) => {
+      const titleMatches = event.title.toLowerCase().includes(searchQuery.toLowerCase());
+      const isFree = event.cost.toLowerCase() === 'free';
+      const categoryMatches =
+        selectedCategories.length === 0 || selectedCategories.includes(event.category);
+      const dateMatches =
+        selectedDate.length === 0 ||
+        selectedDate.some((filter) => isDateFilterMatch(event.date, filter));
+
+      // Check if the event is free (when isFreeEvent is true), if the title matches the search query,
+      // and if the category and date match the selected filters
+      return (isFreeEvent ? isFree : true) && titleMatches && categoryMatches && dateMatches;
+    });
+  }, [events, searchQuery, isFreeEvent, selectedCategories, selectedDate]);
 
   return (
     <View flex={1} p={4}>
-      {/* Search Bar */}
-      {/*<View flexDirection="row" alignItems="center" mb={4}>
+      {true && (
+        <TouchableOpacity onPress={() => navigation.navigate('Event Organizer')}>
+          <UpgradePrompt />
+        </TouchableOpacity>
+      )}
+      <View mb={12}>
         <Input
-          flex={1}
-          variant="filled"
-          placeholder="Search Local Events"
+          placeholder="Search For Events by name..."
           value={searchQuery}
           onChangeText={(text) => setSearchQuery(text)}
-          InputLeftElement={
-            <Icon as={<MaterialCommunityIcons name="magnify" />} size="md" m={2} color="gray.400" />
-          }
-          InputRightElement={
-            <Icon
-              as={<MaterialCommunityIcons name="arrow-right" />}
-              size="md"
-              m={2}
-              color="gray.400"
-              onPress={handleSearch}
-            />
-          }
         />
-				</View>*/}
-
-      {/* Event List */}
+      </View>
       <ScrollView>
-        {events.map((event) => (
-          <EventCard key={event.id} event={event} />
-        ))}
+        <VStack>
+          <Filter
+            title="Date"
+            options={EventDates.map((date) => date.name)}
+            onFilterChange={(filters) => setSelectedDate(filters)}
+          />
+          <Filter
+            title="Select Categories"
+            options={EventCategories.map((category) => category.name)}
+            onFilterChange={(filters) => setSelectedCategories(filters)}
+          />
+          <ToggleSwitch
+            label="Only Free Events"
+            initialValue={isFreeEvent}
+            onValueChange={(value) => setIsFreeEvent(value)}
+          />
+        </VStack>
+        {filteredEvents.length === 0 ? (
+          <Center mt={16}>
+            <Text fontWeight="bold" fontSize="lg">
+              No events found for your search query or selected filters.
+            </Text>
+          </Center>
+        ) : (
+          filteredEvents.map((event) => <EventCard key={event.id} event={event} />)
+        )}
       </ScrollView>
     </View>
   );

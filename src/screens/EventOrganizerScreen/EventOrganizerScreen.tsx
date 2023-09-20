@@ -15,6 +15,7 @@ import {
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { TouchableOpacity } from 'react-native';
 import { Chip, EventCard } from '../../components';
+import { EventOrganizerCategories } from './EventOrganizerScreenTypes';
 
 const UpgradeBenefitsSection = () => {
   return (
@@ -58,12 +59,11 @@ export const EventOrganizerScreen = () => {
   const [date, setDate] = useState(new Date());
   const [startTime, setStartTime] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());
-  const [selectedOption, setSelectedOption] = useState('Option 1');
+  const [selectedOption, setSelectedOption] = useState('open_houses');
   const [chipValue, setChipValue] = useState<string>('');
   const [eventImage, setEventImage] = useState(null);
   const [saving, setSaving] = useState<boolean>(false);
   const [photoProgress, setPhotoProgress] = useState<number | undefined>(undefined);
-  const [tags, setTags] = useState([]);
 
   const createEvent = () => {
     setEvents([...events, newEvent]);
@@ -116,17 +116,6 @@ export const EventOrganizerScreen = () => {
     setEvents(initialEvents);
   }, []);
 
-  const handleAddChip = () => {
-    setTags([...tags, chipValue]);
-    setChipValue('');
-  };
-
-  const handleDeleteChip = (index: number) => {
-    const updatedChips = [...tags];
-    updatedChips.splice(index, 1);
-    setTags(updatedChips);
-  };
-
   if (false) {
     return (
       <View px={8} pt={8}>
@@ -135,14 +124,18 @@ export const EventOrganizerScreen = () => {
     );
   }
 
-  const options = ['Option 1', 'Option 2', 'Option 3'];
-
   return (
     <ScrollView px={8} pt={8}>
       <Button onPress={() => setIsCreatingEvent(true)}>Create Event</Button>
       {/* List of Events */}
       {events.map((event, index) => (
-        <EventCard key={event.id} event={event} isOrganizerCard editEvent={editEvent} deleteEvent={deleteEvent} />
+        <EventCard
+          key={event.id}
+          event={event}
+          isOrganizerCard
+          editEvent={editEvent}
+          deleteEvent={deleteEvent}
+        />
       ))}
       <Actionsheet
         isOpen={isCreatingEvent}
@@ -191,30 +184,14 @@ export const EventOrganizerScreen = () => {
               onChangeText={(text) => setNewEvent({ ...newEvent, description: text })}
               my={4}
             />
-            <View>
-              <Input
-                placeholder="Event Tags"
-                value={chipValue}
-                onChangeText={(text) => setChipValue(text)}
-                onSubmitEditing={handleAddChip}
-                width="100%"
-                mb={2}
-              />
-              <View style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
-                {!!tags?.length &&
-                  tags.map((loc, index) => (
-                    <Chip label={loc} onPress={() => handleDeleteChip(index)} />
-                  ))}
-              </View>
-            </View>
             <Select
               selectedValue={selectedOption}
               minWidth={200} // Adjust the width as needed
               onValueChange={(itemValue) => setSelectedOption(itemValue)}
               mt={4} // Margin top to separate from DateTimePicker
             >
-              {options.map((option, index) => (
-                <Select.Item key={index} label={option} value={option} />
+              {EventOrganizerCategories.map((option, index) => (
+                <Select.Item key={index} label={option.name} value={option.key} />
               ))}
             </Select>
             <Flex

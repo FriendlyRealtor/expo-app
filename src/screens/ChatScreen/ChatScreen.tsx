@@ -74,6 +74,7 @@ export const ChatScreen = ({ navigation }) => {
                 setSelectedUser(value);
               }}
               resetQuery={Object.keys(selectedUser).length === 0}
+              filterKeys={['name', 'userName']}
             />
             <View style={styles.messageArea}>
               <Text>Message</Text>

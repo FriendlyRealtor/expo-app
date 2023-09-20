@@ -1,6 +1,6 @@
 import * as Location from 'expo-location';
 
-import { ClientScreen, ContactScreen, HomeScreen, SettingScreen } from '../screens';
+import { ClientScreen, ContactScreen, HomeScreen, SettingScreen, EventScreen } from '../screens';
 import React, { useEffect, useState } from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
 
@@ -41,12 +41,12 @@ export const AppTabs = (props) => {
   return (
     <Tab.Navigator>
       <Tab.Screen
-        name="Feed"
-        component={HomeScreen}
+        name="Discover Events"
+        component={EventScreen}
         options={({ navigation }) => ({
           headerShown: false,
           tabBarIcon: () => (
-            <Icon as={MaterialCommunityIcons} name="home" size="2xl" color={Colors.primary} />
+            <Icon as={MaterialCommunityIcons} name="map-search" size="2xl" color={Colors.color2} />
           ),
           headerRight: () => (
             <TouchableOpacity
@@ -66,23 +66,23 @@ export const AppTabs = (props) => {
         })}
       />
       <Tab.Screen
-        name="Contacts"
+        name="Client Details"
         options={{
           headerShown: false,
           tabBarIcon: () => (
-            <Icon as={MaterialCommunityIcons} name="account" size="2xl" color={Colors.primary} />
+            <Icon as={MaterialCommunityIcons} name="account" size="2xl" color={Colors.color2} />
           ),
         }}
       >
         {() => <ContactScreen />}
       </Tab.Screen>
       <Tab.Screen
-        name="Deals"
+        name="Client Contracts"
         component={ClientScreen}
         options={{
           headerShown: false,
           tabBarIcon: () => (
-            <Icon as={MaterialCommunityIcons} name="handshake" size="2xl" color={Colors.primary} />
+            <Icon as={MaterialCommunityIcons} name="handshake" size="2xl" color={Colors.color2} />
           ),
         }}
       />
@@ -107,16 +107,6 @@ export const AppTabs = (props) => {
           tabBarIcon: () => <Icon name="book" size={30} color="#02FDAA" />,
         }}
       />*/}
-      <Tab.Screen
-        name="Settings"
-        component={SettingScreen}
-        options={{
-          headerShown: false,
-          tabBarIcon: () => (
-            <Icon as={MaterialCommunityIcons} name="cog" size="2xl" color={Colors.primary} />
-          ),
-        }}
-      />
     </Tab.Navigator>
   );
 };

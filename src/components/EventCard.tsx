@@ -31,7 +31,6 @@ export const EventCard = ({ event, isOrganizerCard, editEvent, deleteEvent }) =>
         shadow={2}
         p={4}
         my={4}
-        mx="auto"
         onPress={() => setActionSheetVisible(true)}
       >
         {/* Event Image */}
@@ -40,20 +39,38 @@ export const EventCard = ({ event, isOrganizerCard, editEvent, deleteEvent }) =>
         </Box>
 
         {/* Event Details */}
-        <Text fontSize="xl" fontWeight="bold">
+        <Text fontSize="xl" fontWeight="bold" color={Colors.color2}>
           {event.title}
         </Text>
         <Text fontSize="md" color="gray.600" my={2}>
-          Location: {event.location}
+          <Text fontWeight="bold" color="black">
+            Location:
+          </Text>{' '}
+          {event.location}
         </Text>
         <Text fontSize="md" color="gray.600">
-          Time: {event.timeframe}
+          <Text fontWeight="bold" color="black">
+            Date:
+          </Text>{' '}
+          {event.date}
         </Text>
         <Text fontSize="md" color="gray.600" my={2}>
-          Attendees: {event.attendees}
+          <Text fontWeight="bold" color="black">
+            Participants:
+          </Text>{' '}
+          {event.participants} | {event.totalParticipants}
         </Text>
         <Text fontSize="md" color="gray.600">
-          Cost: {event.cost}
+          <Text fontWeight="bold" color="black">
+            Category:
+          </Text>{' '}
+          {event.category}
+        </Text>
+        <Text fontSize="md" color="gray.600">
+          <Text fontWeight="bold" color="black">
+            Cost:
+          </Text>{' '}
+          {event.cost}
         </Text>
         <HStack justifyContent="space-between" mt={4}>
           {buttons.map((button, index) => (
