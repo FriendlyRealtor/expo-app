@@ -1,4 +1,4 @@
-import { Button, FormErrorMessage, Text, TextInput, View } from '../../components';
+import { Button, ErrorMessage, Text, TextInput, View } from '../../components';
 import { Colors, auth } from '../../config';
 import { Formik, useFormik } from 'formik';
 import { Image, StyleSheet } from 'react-native';
@@ -99,7 +99,7 @@ export const LoginScreen = inject('appStore')(
           <Formik validationSchema={loginValidationSchema}>
             {() => (
               <>
-                {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
+                {errorState !== '' ? <ErrorMessage error={errorState} visible={true} /> : null}
                 <TextInput
                   name="email"
                   leftIconName="email"
@@ -111,7 +111,7 @@ export const LoginScreen = inject('appStore')(
                   value={values.email}
                   onChangeText={handleChange('email')}
                 />
-                <FormErrorMessage error={errors.email} visible={touched.email} />
+                <ErrorMessage error={errors.email} visible={touched.email} />
                 <TextInput
                   name="password"
                   leftIconName="key-variant"
@@ -125,7 +125,7 @@ export const LoginScreen = inject('appStore')(
                   value={values.password}
                   onChangeText={handleChange('password')}
                 />
-                <FormErrorMessage error={errors.password} visible={touched.password} />
+                <ErrorMessage error={errors.password} visible={touched.password} />
                 <Button style={styles.button} onPress={handleSubmit}>
                   <Text style={styles.buttonText}>Login</Text>
                 </Button>

@@ -2,7 +2,7 @@ import * as Linking from 'expo-linking';
 
 import { Alert, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { Card, Divider, Input, Layout, List, ListItem } from '@ui-kitten/components';
-import { FormErrorMessage, Text } from '../../components';
+import { ErrorMessage, Text } from '../../components';
 import { Formik, useFormik } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
@@ -181,7 +181,7 @@ export const AddDeal = ({ modalVisible, setModalVisible, formData, setUserDeals 
                     value={values.address}
                     onChangeText={handleChange('address')}
                   />
-                  <FormErrorMessage error={errors.address} visible={touched.address} />
+                  <ErrorMessage error={errors.address} visible={touched.address} />
                 </View>
                 <View>
                   <Text>Closing Date:</Text>
@@ -196,7 +196,7 @@ export const AddDeal = ({ modalVisible, setModalVisible, formData, setUserDeals 
                     style={{ width: '100%', marginBottom: 16 }}
                   />
                 </View>
-                <FormErrorMessage error={errors.closingDate} visible={touched.closingDate} />
+                <ErrorMessage error={errors.closingDate} visible={touched.closingDate} />
                 <View style={{ marginBottom: 16 }}>
                   <Input
                     name="clientName"
@@ -205,7 +205,7 @@ export const AddDeal = ({ modalVisible, setModalVisible, formData, setUserDeals 
                     value={values.clientName}
                     onChangeText={handleChange('clientName')}
                   />
-                  <FormErrorMessage error={errors.clientName} visible={touched.clientName} />
+                  <ErrorMessage error={errors.clientName} visible={touched.clientName} />
                   <Input
                     name="clientPhone"
                     placeholder="Enter Phone Number"
@@ -214,7 +214,7 @@ export const AddDeal = ({ modalVisible, setModalVisible, formData, setUserDeals 
                     onChangeText={handleChange('clientPhone')}
                     style={{ marginTop: 8 }}
                   />
-                  <FormErrorMessage error={errors.clientPhone} visible={touched.clientPhone} />
+                  <ErrorMessage error={errors.clientPhone} visible={touched.clientPhone} />
                 </View>
                 <View style={{ marginBottom: 16 }}>
                   <Input
@@ -224,7 +224,7 @@ export const AddDeal = ({ modalVisible, setModalVisible, formData, setUserDeals 
                     value={values.agentName}
                     onChangeText={handleChange('agentName')}
                   />
-                  <FormErrorMessage error={errors.agentName} visible={touched.agentName} />
+                  <ErrorMessage error={errors.agentName} visible={touched.agentName} />
                   <Input
                     name="agentPhone"
                     placeholder="Enter Phone Number"
@@ -233,7 +233,7 @@ export const AddDeal = ({ modalVisible, setModalVisible, formData, setUserDeals 
                     onChangeText={handleChange('agentPhone')}
                     style={{ marginTop: 8 }}
                   />
-                  <FormErrorMessage error={errors.agentPhone} visible={touched.agentPhone} />
+                  <ErrorMessage error={errors.agentPhone} visible={touched.agentPhone} />
                 </View>
                 <View style={{ marginBottom: 16 }}>
                   <Input
@@ -243,7 +243,7 @@ export const AddDeal = ({ modalVisible, setModalVisible, formData, setUserDeals 
                     value={values.inspectorName}
                     onChangeText={handleChange('inspectorName')}
                   />
-                  <FormErrorMessage error={errors.inspectorName} visible={touched.inspectorName} />
+                  <ErrorMessage error={errors.inspectorName} visible={touched.inspectorName} />
                   <Input
                     name="inspectorPhone"
                     placeholder="Enter Phone Number"
@@ -252,10 +252,7 @@ export const AddDeal = ({ modalVisible, setModalVisible, formData, setUserDeals 
                     onChangeText={handleChange('inspectorPhone')}
                     style={{ marginTop: 8 }}
                   />
-                  <FormErrorMessage
-                    error={errors.inspectorPhone}
-                    visible={touched.inspectorPhone}
-                  />
+                  <ErrorMessage error={errors.inspectorPhone} visible={touched.inspectorPhone} />
                 </View>
                 <View style={{ marginBottom: 16 }}>
                   <Input
@@ -265,7 +262,7 @@ export const AddDeal = ({ modalVisible, setModalVisible, formData, setUserDeals 
                     value={values.titleName}
                     onChangeText={handleChange('titleName')}
                   />
-                  <FormErrorMessage error={errors.titleName} visible={touched.titleName} />
+                  <ErrorMessage error={errors.titleName} visible={touched.titleName} />
                   <Input
                     name="titlePhone"
                     placeholder="Enter Phone Number"
@@ -274,7 +271,7 @@ export const AddDeal = ({ modalVisible, setModalVisible, formData, setUserDeals 
                     onChangeText={handleChange('titlePhone')}
                     style={{ marginTop: 8 }}
                   />
-                  <FormErrorMessage error={errors.titlePhone} visible={touched.titlePhone} />
+                  <ErrorMessage error={errors.titlePhone} visible={touched.titlePhone} />
                 </View>
                 <View style={{ marginBottom: 16 }}>
                   <Input
@@ -284,7 +281,7 @@ export const AddDeal = ({ modalVisible, setModalVisible, formData, setUserDeals 
                     value={values.lenderName}
                     onChangeText={handleChange('lenderName')}
                   />
-                  <FormErrorMessage error={errors.lenderName} visible={touched.lenderName} />
+                  <ErrorMessage error={errors.lenderName} visible={touched.lenderName} />
                   <Input
                     name="lenderPhone"
                     placeholder="Enter Phone Number"
@@ -293,7 +290,7 @@ export const AddDeal = ({ modalVisible, setModalVisible, formData, setUserDeals 
                     onChangeText={handleChange('lenderPhone')}
                     style={{ marginTop: 8 }}
                   />
-                  <FormErrorMessage error={errors.lenderPhone} visible={touched.lenderPhone} />
+                  <ErrorMessage error={errors.lenderPhone} visible={touched.lenderPhone} />
                 </View>
                 <Button
                   style={{

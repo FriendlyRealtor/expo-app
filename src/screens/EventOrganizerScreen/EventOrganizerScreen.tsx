@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -7,53 +7,44 @@ import {
   Input,
   ScrollView,
   Actionsheet,
+  FormControl,
   Flex,
   Select,
   HStack,
   TextArea,
+  VStack,
 } from 'native-base';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { TouchableOpacity } from 'react-native';
-import { Chip, EventCard } from '../../components';
-import { EventOrganizerCategories } from './EventOrganizerScreenTypes';
-
-const UpgradeBenefitsSection = () => {
-  return (
-    <View px={8} pt={8}>
-      <Text fontSize="xl" fontWeight="bold" mb={4}>
-        Why Upgrade to a Paid Plan?
-      </Text>
-      <Text fontSize="md" mb={2}>
-        Unlock the full potential of our app with a paid plan for just $10 per month or $100 per
-        year. Here's why it's important:
-      </Text>
-      <Text fontSize="md" mb={2}>
-        - Create and manage unlimited real estate community events.
-      </Text>
-      <Text fontSize="md" mb={2}>
-        - Earn money by hosting events and connecting with the real estate community.
-      </Text>
-      <Text fontSize="md" mb={2}>
-        - Access premium features and tools for event organizers.
-      </Text>
-      <Text fontSize="md" mb={4}>
-        - Priority customer support to assist you in your journey.
-      </Text>
-      <Button>Upgrade Now</Button>
-    </View>
-  );
-};
+import { EventCard, ErrorMessage, CurrencyInput } from '../../components';
+import { EventOrganizerCategories, CreateEventFormType } from './EventOrganizerScreenTypes';
+import { useForm, Controller } from 'react-hook-form';
+import { UpgradeBenefitsSection } from './UpgradeBenefitsSection';
+import moment from 'moment';
 
 export const EventOrganizerScreen = () => {
-  const [events, setEvents] = useState([]); // Store the list of events
-  const [newEvent, setNewEvent] = useState({
-    title: '',
-    location: '',
-    description: '',
-    date: '',
-    totalSeats: '',
-    price: '',
+  const {
+    control,
+    handleSubmit,
+    getValues,
+    setValue,
+    formState: { errors },
+  } = useForm<CreateEventFormType>({
+    defaultValues: {
+      title: '',
+      location: '',
+      description: '',
+      eventDate: '',
+      dateStartTime: '',
+      photo: '',
+      dateEndTime: '',
+      category: '',
+      totalParticipants: '',
+      cost: '',
+    },
   });
+
+  const [events, setEvents] = useState([]); // Store the list of events
   const [isCreatingEvent, setIsCreatingEvent] = useState(false);
   const [editingEventIndex, setEditingEventIndex] = useState(-1); // Index of the event being edited
   const [date, setDate] = useState(new Date());
@@ -65,9 +56,9 @@ export const EventOrganizerScreen = () => {
   const [saving, setSaving] = useState<boolean>(false);
   const [photoProgress, setPhotoProgress] = useState<number | undefined>(undefined);
 
-  const createEvent = () => {
-    setEvents([...events, newEvent]);
-    setSaving(true);
+  const onCreateEvent = (data) => {
+    console.log('what is this', data);
+    // setSaving(true);
   };
 
   // Simulated function to edit an existing event
@@ -90,11 +81,6 @@ export const EventOrganizerScreen = () => {
     updatedEvents.splice(index, 1);
     setEvents(updatedEvents);
     // You would typically send a delete request to your backend or database here
-  };
-
-  const onChange = async (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setDate(currentDate);
   };
 
   useEffect(() => {
@@ -146,122 +132,236 @@ export const EventOrganizerScreen = () => {
       >
         <Actionsheet.Content>
           <ScrollView width="100%">
-            <Input
-              placeholder="Event Title"
-              value={newEvent.title}
-              onChangeText={(text) => setNewEvent({ ...newEvent, title: text })}
-              my={4}
-            />
-            <TouchableOpacity>
-              <Image
-                source={{ uri: '' }}
-                display="flex"
-                alt="Event Photo"
-                style={{
-                  alignSelf: 'center',
-                  width: 96,
-                  height: 96,
-                  marginTop: 8,
-                  marginBottom: 32,
-                }}
-              />
-            </TouchableOpacity>
-            <Input
-              placeholder="Event Organizer"
-              value={newEvent.title}
-              onChangeText={(text) => setNewEvent({ ...newEvent, title: text })}
-              my={4}
-            />
-            <Input
-              placeholder="Event Location"
-              value={newEvent.location}
-              onChangeText={(text) => setNewEvent({ ...newEvent, location: text })}
-              my={4}
-            />
-            <TextArea
-              placeholder="Event Description"
-              value={newEvent.description}
-              onChangeText={(text) => setNewEvent({ ...newEvent, description: text })}
-              my={4}
-            />
-            <Select
-              selectedValue={selectedOption}
-              minWidth={200} // Adjust the width as needed
-              onValueChange={(itemValue) => setSelectedOption(itemValue)}
-              mt={4} // Margin top to separate from DateTimePicker
-            >
-              {EventOrganizerCategories.map((option, index) => (
-                <Select.Item key={index} label={option.name} value={option.key} />
-              ))}
-            </Select>
-            <Flex
-              flexDirection="row"
-              flexWrap="wrap"
-              alignItems="flex-start" // Adjust alignment as needed
-              my={4}
-            >
-              <HStack justifyContent="space-between" width="100%">
-                <Text fontSize="md" fontWeight="bold">
-                  Event Date
-                </Text>
-                <Text fontSize="md" fontWeight="bold">
-                  Start Time
-                </Text>
-                <Text fontSize="md" fontWeight="bold">
-                  End Time
-                </Text>
-              </HStack>
-              <HStack justifyContent="space-between" width="100%" mt={2}>
-                <DateTimePicker
-                  testID="dateTimePicker"
-                  value={date}
-                  mode="date"
-                  onChange={onChange}
-                  display="default"
-                  minimumDate={new Date()}
-                />
+            <VStack width="80%" space={4}>
+              {/*<FormControl isInvalid={'photo' in errors}>
+								<FormControl.Label>Event Photo</FormControl.Label>
+								<Controller 
+									control={control}
+									render={({ onChange }) => (
+										<TouchableOpacity>
+										<Image
+											source={{ uri: '' }}
+											display="flex"
+											alt="Event Photo"
+											style={{
+												alignSelf: 'center',
+												width: 96,
+												height: 96,
+												marginTop: 8,
+												marginBottom: 32,
+											}}
+										/>
+									</TouchableOpacity>
+									)}
+								/>
+										</FormControl>*/}
 
-                <DateTimePicker
-                  testID="startTimePicker"
-                  value={startTime}
-                  mode="time"
-                  onChange={(event, selectedTime) => {
-                    setStartTime(selectedTime || startTime);
-                  }}
-                  display="default"
+              <FormControl>
+                <FormControl.Label>Event Title</FormControl.Label>
+                <Controller
+                  control={control}
+                  name="title"
+                  rules={{ required: 'Field is required', minLength: 3 }}
+                  render={({ field: { onChange, value, onBlur } }) => (
+                    <Input
+                      value={value}
+                      onChangeText={(val) => onChange(val)}
+                      onBlur={onBlur}
+                      placeholder="Event Title"
+                      my={4}
+                    />
+                  )}
                 />
+                <ErrorMessage error={errors.title?.message} visible={!!errors.title?.message} />
+              </FormControl>
+              <FormControl>
+                <FormControl.Label>Event Organizer</FormControl.Label>
+                <Controller
+                  control={control}
+                  name="organizer"
+                  render={({ field: { onChange, value, onBlur } }) => (
+                    <Input
+                      value={value}
+                      onChangeText={(val) => onChange(val)}
+                      onBlur={onBlur}
+                      placeholder="Event Organizer"
+                      my={4}
+                    />
+                  )}
+                />
+                <ErrorMessage
+                  error={errors.organizer?.message}
+                  visible={!!errors.organizer?.message}
+                />
+              </FormControl>
+              <FormControl>
+                <FormControl.Label>Event Location</FormControl.Label>
+                <Controller
+                  control={control}
+                  name="location"
+                  render={({ field: { onChange, value, onBlur } }) => (
+                    <Input
+                      value={value}
+                      onChangeText={(val) => onChange(val)}
+                      onBlur={onBlur}
+                      placeholder="Event Location"
+                      my={4}
+                    />
+                  )}
+                />
+                <ErrorMessage
+                  error={errors.location?.message}
+                  visible={!!errors.location?.message}
+                />
+              </FormControl>
+              <FormControl>
+                <FormControl.Label>Event Description</FormControl.Label>
+                <Controller
+                  control={control}
+                  name="description"
+                  render={({ field: { onChange, value, onBlur } }) => (
+                    <TextArea
+                      value={value}
+                      onChangeText={(val) => onChange(val)}
+                      onBlur={onBlur}
+                      placeholder="Event Description"
+                      my={4}
+                    />
+                  )}
+                />
+                <ErrorMessage
+                  error={errors.description?.message}
+                  visible={!!errors.description?.message}
+                />
+              </FormControl>
+              <FormControl>
+                <FormControl.Label>Event Category</FormControl.Label>
+                <Controller
+                  control={control}
+                  name="category"
+                  render={({ field: { onChange, value } }) => (
+                    <Select
+                      selectedValue={value}
+                      minWidth={200}
+                      onValueChange={(val) => onChange(val)}
+                      mt={4}
+                    >
+                      {EventOrganizerCategories.map((option, index) => (
+                        <Select.Item key={index} label={option.name} value={option.key} />
+                      ))}
+                    </Select>
+                  )}
+                />
+              </FormControl>
+              <Flex
+                flexDirection="row"
+                flexWrap="wrap"
+                alignItems="flex-start" // Adjust alignment as needed
+                my={4}
+              >
+                <HStack justifyContent="space-between" width="100%">
+                  <Text fontSize="md" fontWeight="bold">
+                    Event Date
+                  </Text>
+                  <Text fontSize="md" fontWeight="bold">
+                    Start Time
+                  </Text>
+                  <Text fontSize="md" fontWeight="bold">
+                    End Time
+                  </Text>
+                </HStack>
+                <HStack justifyContent="space-between" width="100%" mt={2}>
+                  <DateTimePicker
+                    testID="dateTimePicker"
+                    value={date}
+                    mode="date"
+                    display="default"
+                    minimumDate={new Date()}
+                    onChange={(event, selectedTime) => {
+                      if (event.type === 'set') {
+                        const formattedDate = moment(selectedTime).format('MMMM Do YYYY');
+                        setValue('eventDate', formattedDate);
+                      }
+                    }}
+                  />
+                  <DateTimePicker
+                    testID="dateTimePicker"
+                    value={startTime}
+                    mode="time"
+                    display="default"
+                    onChange={(event, selectedTime) => {
+                      if (event.type === 'set') {
+                        const formattedTime = moment(selectedTime).format('h:mm a');
+                        setValue('dateStartTime', formattedTime);
+                      }
+                    }}
+                  />
+                  <DateTimePicker
+                    testID="dateTimePicker"
+                    value={endTime}
+                    mode="time"
+                    display="default"
+                    onChange={(event, selectedTime) => {
+                      if (event.type === 'set') {
+                        const formattedTime = moment(selectedTime).format('h:mm a');
+                        setValue('dateEndTime', formattedTime);
+                      }
+                    }}
+                  />
+                </HStack>
+              </Flex>
+              <FormControl>
+                <FormControl.Label>Total Available Participants</FormControl.Label>
+                <Controller
+                  control={control}
+                  name="totalParticipants"
+                  render={({ field: { onChange, value, onBlur } }) => (
+                    <Input
+                      value={value}
+                      onChangeText={(val) => {
+                        // Use a regular expression to remove any non-numeric characters
+                        const numericValue = val.replace(/[^0-9]/g, '');
+                        onChange(numericValue);
+                      }}
+                      onBlur={onBlur}
+                      placeholder="Total Available Participants"
+                      keyboardType="numeric"
+                      my={4}
+                    />
+                  )}
+                />
+                <ErrorMessage
+                  error={errors.totalParticipants?.message}
+                  visible={!!errors.totalParticipants?.message}
+                />
+              </FormControl>
 
-                <DateTimePicker
-                  testID="endTimePicker"
-                  value={endTime}
-                  mode="time"
-                  onChange={(event, selectedTime) => {
-                    setEndTime(selectedTime || endTime);
-                  }}
-                  display="default"
+              <FormControl>
+                <FormControl.Label>Cost of Event (0 = Free)</FormControl.Label>
+                <Controller
+                  control={control}
+                  name="cost"
+                  render={({ field: { onChange, value, onBlur } }) => (
+                    <View my={4}>
+                      <CurrencyInput
+                        value={value}
+                        onChangeText={(val) => onChange(val)}
+                        onBlur={onBlur}
+                        placeholder="Cost of Event (0 = Free)"
+                      />
+                    </View>
+                  )}
                 />
+                <ErrorMessage error={errors.cost?.message} visible={!!errors.cost?.message} />
+              </FormControl>
+
+              <HStack justifyContent="space-between" mt={4}>
+                <Button onPress={handleSubmit(onCreateEvent)} isLoading={saving}>
+                  Save Event
+                </Button>
+                <Button onPress={() => setIsCreatingEvent(false)}>Cancel</Button>
               </HStack>
-            </Flex>
-            <Input
-              placeholder="Avaliable Seats"
-              value={newEvent.totalSeats}
-              keyboardType="numeric"
-              onChangeText={(text) => setNewEvent({ ...newEvent, totalSeats: text })}
-              my={4}
-            />
-            <Input
-              placeholder="Cost of Event (0 = Free)"
-              value={newEvent.price}
-              keyboardType="numeric"
-              onChangeText={(text) => setNewEvent({ ...newEvent, price: text })}
-              my={4}
-            />
-            <HStack justifyContent="space-between" mt={4}>
-              <Button onPress={createEvent} isLoading={saving}>
-                Save Event
-              </Button>
-              <Button onPress={() => setIsCreatingEvent(false)}>Cancel</Button>
-            </HStack>
+            </VStack>
           </ScrollView>
         </Actionsheet.Content>
       </Actionsheet>

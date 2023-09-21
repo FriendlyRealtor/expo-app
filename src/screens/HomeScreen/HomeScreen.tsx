@@ -7,7 +7,7 @@ import { locationValidationSchema, numberWithCommas } from '../../utils';
 
 import Bugsnag from '@bugsnag/expo';
 import Constants from 'expo-constants';
-import { FormErrorMessage } from '../../components';
+import { ErrorMessage } from '../../components';
 import { HomeScreenStyles } from './HomeScreenStyles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -145,7 +145,7 @@ export const HomeScreen = ({ navigation }) => {
                 requestConfig={{ countries: ['US'] }}
                 onPlaceSelected={onPlaceSelected}
 			/>*/}
-              {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
+              {errorState !== '' ? <ErrorMessage error={errorState} visible={true} /> : null}
             </View>
             <View style={styles.footerContainer}>
               <Button

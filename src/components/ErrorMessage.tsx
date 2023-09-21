@@ -3,7 +3,7 @@ import { StyleSheet, Text } from 'react-native';
 
 import { Colors } from '../config';
 
-export const FormErrorMessage = ({ error, visible }) => {
+export const ErrorMessage = ({ error, visible }) => {
   if (!error || !visible) {
     return null;
   }
@@ -13,10 +13,7 @@ export const FormErrorMessage = ({ error, visible }) => {
 
 const styles = StyleSheet.create({
   errorText: {
-    marginLeft: 15,
     color: Colors.red,
-    fontSize: 16,
-    marginVertical: 8,
     fontWeight: '600',
   },
 });

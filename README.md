@@ -58,7 +58,7 @@ Expo Firebase Starter
 │   └── Button.js ➡️ Custom Button component using Pressable, comes with two variants and handles opacity
 │   └── TextInput.js ➡️ Custom TextInput component that supports left and right cons
 │   └── Icon.js ➡️ Icon component
-│   └── FormErrorMessage.js ➡️ Component to display server errors from Firebase
+│   └── ErrorMessage.js ➡️ Component to display server errors from Firebase
 │   └── LoadingIndicator.js ➡️ Loading indicator component
 │   └── Logo.js ➡️ Logo component
 │   └── View.js ➡️ Custom View component that supports safe area views

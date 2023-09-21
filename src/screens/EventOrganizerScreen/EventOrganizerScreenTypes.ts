@@ -15,3 +15,17 @@ export const EventOrganizerCategories = [
   { key: 'real_estate_technology_demonstrations', name: 'Real Estate Technology Demonstrations' },
   { key: 'property_market_updates', name: 'Property Market Updates' },
 ];
+
+export type CreateEventFormType = {
+  title: string;
+  location: string;
+  description: string;
+  photo?: string;
+  organizer?: string;
+  eventDate: string;
+  dateStartTime: string;
+  dateEndTime: string;
+  totalParticipants: string;
+  cost: string;
+  category: string;
+};

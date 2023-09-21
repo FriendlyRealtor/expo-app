@@ -1,5 +1,5 @@
 import { Alert, Image, Linking, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
-import { Button, FormErrorMessage, Loading, Text, TextInput, View } from '../../components';
+import { Button, ErrorMessage, Loading, Text, TextInput, View } from '../../components';
 import { Formik, useFormik } from 'formik';
 import React, { useState } from 'react';
 import { auth, db } from '../../config';
@@ -109,9 +109,7 @@ export const SignupScreen = inject('appStore')(
               {() => (
                 <View isSafe style={styles.container}>
                   <Text category="p1">* Please complete all fields.</Text>
-                  {errorState !== '' ? (
-                    <FormErrorMessage error={errorState} visible={true} />
-                  ) : null}
+                  {errorState !== '' ? <ErrorMessage error={errorState} visible={true} /> : null}
                   <TextInput
                     name="firstName"
                     placeholder="First Name"
@@ -121,7 +119,7 @@ export const SignupScreen = inject('appStore')(
                     onChangeText={handleChange('firstName')}
                     onBlur={handleBlur('firstName')}
                   />
-                  <FormErrorMessage error={errors.firstName} visible={touched.firstName} />
+                  <ErrorMessage error={errors.firstName} visible={touched.firstName} />
                   <TextInput
                     name="lastName"
                     placeholder="Last Name"
@@ -130,7 +128,7 @@ export const SignupScreen = inject('appStore')(
                     onChangeText={handleChange('lastName')}
                     onBlur={handleBlur('lastName')}
                   />
-                  <FormErrorMessage error={errors.lastName} visible={touched.lastName} />
+                  <ErrorMessage error={errors.lastName} visible={touched.lastName} />
                   <TextInput
                     name="username"
                     placeholder="User Name"
@@ -139,7 +137,7 @@ export const SignupScreen = inject('appStore')(
                     onChangeText={handleChange('userName')}
                     onBlur={handleBlur('userName')}
                   />
-                  <FormErrorMessage error={errors.userName} visible={touched.userName} />
+                  <ErrorMessage error={errors.userName} visible={touched.userName} />
                   <TextInput
                     name="email"
                     leftIconName="email"
@@ -151,7 +149,7 @@ export const SignupScreen = inject('appStore')(
                     onChangeText={handleChange('email')}
                     onBlur={handleBlur('email')}
                   />
-                  <FormErrorMessage error={errors.email} visible={touched.email} />
+                  <ErrorMessage error={errors.email} visible={touched.email} />
                   <TextInput
                     name="password"
                     leftIconName="key-variant"
@@ -166,7 +164,7 @@ export const SignupScreen = inject('appStore')(
                     onChangeText={handleChange('password')}
                     onBlur={handleBlur('password')}
                   />
-                  <FormErrorMessage error={errors.password} visible={touched.password} />
+                  <ErrorMessage error={errors.password} visible={touched.password} />
                   <TextInput
                     name="confirmPassword"
                     leftIconName="key-variant"
@@ -181,10 +179,7 @@ export const SignupScreen = inject('appStore')(
                     onChangeText={handleChange('confirmPassword')}
                     onBlur={handleBlur('confirmPassword')}
                   />
-                  <FormErrorMessage
-                    error={errors.confirmPassword}
-                    visible={touched.confirmPassword}
-                  />
+                  <ErrorMessage error={errors.confirmPassword} visible={touched.confirmPassword} />
                   <Text
                     appearance="hint"
                     style={{ fontSize: 12, textAlign: 'center', marginTop: 10 }}
