@@ -347,6 +347,7 @@ export const EventOrganizerScreen = () => {
                         value={value}
                         onChangeText={(val) => onChange(val)}
                         onBlur={onBlur}
+												wholeNumbersOnly
                         placeholder="Cost of Event (0 = Free)"
                       />
                     </View>
