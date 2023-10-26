@@ -15,14 +15,18 @@ import {
   VStack,
 } from 'native-base';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { TouchableOpacity } from 'react-native';
 import { EventCard, ErrorMessage, CurrencyInput } from '../../components';
 import { EventOrganizerCategories, CreateEventFormType } from './EventOrganizerScreenTypes';
 import { useForm, Controller } from 'react-hook-form';
 import { UpgradeBenefitsSection } from './UpgradeBenefitsSection';
 import moment from 'moment';
+import Bugsnag from '@bugsnag/expo';
+import { doc, addDoc, collection } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import { db } from '../../config';
 
 export const EventOrganizerScreen = () => {
+	const userAuth = getAuth();
   const {
     control,
     handleSubmit,
@@ -55,11 +59,31 @@ export const EventOrganizerScreen = () => {
   const [eventImage, setEventImage] = useState(null);
   const [saving, setSaving] = useState<boolean>(false);
   const [photoProgress, setPhotoProgress] = useState<number | undefined>(undefined);
+	const [errorState, setErrorState] = useState<string>('');
 
-  const onCreateEvent = (data) => {
-    console.log('what is this', data);
-    // setSaving(true);
-  };
+	const onCreateEvent = async (data) => {
+		try {
+			// Set the saving state to indicate the operation is in progress
+			setSaving(true);
+	
+			// Add the event data to the "events" collection in Firebase
+			await addDoc(collection(db, 'events'), { ...data, participants: [] });
+	
+			// Clear any previous error state, indicating a successful operation
+			setErrorState('');
+		} catch (error) {
+			// Notify Bugsnag with the error for monitoring and debugging
+			Bugsnag.notify(error);
+	
+			// Set an error state with a descriptive message and the error details
+			setErrorState('Error saving event: ' + error.message);
+		} finally {
+			// Set the saving state to indicate that the operation is complete
+			setSaving(false);
+		}
+	};
+	
+	
 
   // Simulated function to edit an existing event
   const editEvent = () => {
@@ -157,6 +181,9 @@ export const EventOrganizerScreen = () => {
 										</FormControl>*/}
 
               <FormControl>
+							<View textAlign="center">
+									{errorState != '' ? <ErrorMessage error={errorState} visible={true} /> : null}
+								</View>
                 <FormControl.Label>Event Title</FormControl.Label>
                 <Controller
                   control={control}
@@ -341,7 +368,7 @@ export const EventOrganizerScreen = () => {
                 <Controller
                   control={control}
                   name="cost"
-                  render={({ field: { onChange, value, onBlur } }) => (
+                  render={({ field: { onChange, value , onBlur } }) => (
                     <View my={4}>
                       <CurrencyInput
                         value={value}

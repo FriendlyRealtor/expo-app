@@ -3871,12 +3871,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-community/datetimepicker@npm:6.5.2":
-  version: 6.5.2
-  resolution: "@react-native-community/datetimepicker@npm:6.5.2"
+"@react-native-community/datetimepicker@npm:7.6.1":
+  version: 7.6.1
+  resolution: "@react-native-community/datetimepicker@npm:7.6.1"
   dependencies:
     invariant: ^2.2.4
-  checksum: ff17fd22750ec825366c980c7505b94a16690ffe529e62cded2d8f1af3f1eaba8fe17ddb67cc5f98fa242b4b939b899c013271b49d44438540e5c7d1a96fee39
+  checksum: 163d3e25b90ff5bfd734df89da0cb85c9550f84f5b8273d4d806a3702d6ad163bea58253e19534fa2ab1bb424d9079e2bfe9c2e7e6a6783610f477c35e980104
   languageName: node
   linkType: hard
 
@@ -13244,7 +13244,7 @@ __metadata:
     "@config-plugins/react-native-pdf": ^5.0.0
     "@eva-design/eva": ^2.1.1
     "@react-native-async-storage/async-storage": 1.17.11
-    "@react-native-community/datetimepicker": 6.5.2
+    "@react-native-community/datetimepicker": 7.6.1
     "@react-native-community/eslint-config": ^3.2.0
     "@react-native-community/netinfo": 9.3.5
     "@react-native-masked-view/masked-view": 0.2.8
