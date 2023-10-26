@@ -103,7 +103,11 @@ export const EventCard = ({ event, index, isOrganizerCard, deleteEvent }) => {
         </Text>
         <HStack justifyContent="space-between" mt={4}>
           {buttons.map((button, index) => {
-            if (!button.text || parseInt(event.totalParticipants) <= event.participants.length) {
+            if (
+              !button.text ||
+              (button.text === 'Join Event' &&
+                parseInt(event.totalParticipants) <= event.participants.length)
+            ) {
               return null;
             }
             return (
