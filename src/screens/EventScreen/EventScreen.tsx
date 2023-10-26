@@ -1,16 +1,47 @@
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { View, Text, Center, Input, ScrollView, VStack } from 'native-base';
 import { EventCard, Filter, ToggleSwitch, UpgradePrompt } from '../../components';
 import { EventCategories, EventDates, EventData } from './EventTypes';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import moment from 'moment';
+import { db } from '../../config';
+import { getDocs, collection } from 'firebase/firestore';
 
 export const EventScreen = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedCategories, setSelectedCategories] = useState('');
-  const [events, setEvents] = useState(EventData);
+  const [events, setEvents] = useState([]);
   const [isFreeEvent, setIsFreeEvent] = useState(false);
+
+  useEffect(() => {
+    // Function to fetch events from the "events" collection
+    const fetchEvents = async () => {
+      try {
+        const eventCollection = collection(db, 'events');
+        const querySnapshot = await getDocs(eventCollection);
+
+        const eventsData = [];
+        querySnapshot.forEach((doc) => {
+          // Extract event data and add it to the eventsData array
+          const event = doc.data();
+          // Include the document ID as an 'id' key in the event object
+          eventsData.push({
+            id: doc.id,
+            ...event,
+          });
+        });
+
+        // Set the events state with the fetched data
+        setEvents(eventsData);
+      } catch (error) {
+        console.error('Error fetching events:', error);
+      }
+    };
+
+    // Call the fetchEvents function to populate the events state
+    fetchEvents();
+  }, []);
 
   const isDateFilterMatch = (eventDate, selectedDateFilter) => {
     const today = moment();
@@ -37,7 +68,6 @@ export const EventScreen = ({ navigation }) => {
   const filteredEvents = useMemo(() => {
     return events.filter((event) => {
       const titleMatches = event.title.toLowerCase().includes(searchQuery.toLowerCase());
-      const isFree = event.cost.toLowerCase() === 'free';
       const categoryMatches =
         selectedCategories.length === 0 || selectedCategories.includes(event.category);
       const dateMatches =
@@ -46,7 +76,7 @@ export const EventScreen = ({ navigation }) => {
 
       // Check if the event is free (when isFreeEvent is true), if the title matches the search query,
       // and if the category and date match the selected filters
-      return (isFreeEvent ? isFree : true) && titleMatches && categoryMatches && dateMatches;
+      return titleMatches && categoryMatches && dateMatches;
     });
   }, [events, searchQuery, isFreeEvent, selectedCategories, selectedDate]);
 

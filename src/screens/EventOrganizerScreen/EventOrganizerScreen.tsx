@@ -18,10 +18,9 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { EventCard, ErrorMessage, CurrencyInput } from '../../components';
 import { EventOrganizerCategories, CreateEventFormType } from './EventOrganizerScreenTypes';
 import { useForm, Controller } from 'react-hook-form';
-import { UpgradeBenefitsSection } from './UpgradeBenefitsSection';
 import moment from 'moment';
 import Bugsnag from '@bugsnag/expo';
-import { doc, addDoc, collection } from 'firebase/firestore';
+import { getDocs, deleteDoc, doc, addDoc, collection } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { db } from '../../config';
 
@@ -104,57 +103,49 @@ export const EventOrganizerScreen = () => {
 			setSaving(false);
 		}
 	};
-	
-	
-
-  // Simulated function to edit an existing event
-  const editEvent = () => {
-    // Validate and update the event in your database
-    // For simplicity, we'll just update it in the local state here
-    const updatedEvents = [...events];
-    updatedEvents[editingEventIndex] = newEvent;
-    setEvents(updatedEvents);
-    setIsCreatingEvent(false);
-    setEditingEventIndex(-1);
-    // You would typically send the updated event data to your backend or database here
-  };
 
   // Simulated function to delete an event
-  const deleteEvent = (index) => {
-    // Delete the event from your database
-    // For simplicity, we'll just remove it from the local state here
-    const updatedEvents = [...events];
-    updatedEvents.splice(index, 1);
-    setEvents(updatedEvents);
-    // You would typically send a delete request to your backend or database here
-  };
+  const deleteEvent = async (documentId, index) => {
+		try {
+			// Delete the event document from the 'events' collection using its document ID
+			await deleteDoc(doc(db, 'events', documentId));
+	
+			// If the deletion is successful, remove the event from the local state
+			const updatedEvents = [...events];
+			updatedEvents.splice(index, 1);
+			setEvents(updatedEvents);
+		} catch (error) {
+			// Handle any errors that may occur during deletion
+			console.error('Error deleting event:', error);
+		}
+	};
 
-  useEffect(() => {
-    const initialEvents = [
-      {
-        title: 'Event 1',
-        location: 'Location 1',
-        description: 'Description of Event 1...',
-        date: '2023-09-30',
-      },
-      {
-        title: 'Event 2',
-        location: 'Location 2',
-        description: 'Description of Event 2...',
-        date: '2023-10-15',
-      },
-    ];
-
-    setEvents(initialEvents);
-  }, []);
-
-  if (false) {
-    return (
-      <View px={8} pt={8}>
-        <UpgradeBenefitsSection />
-      </View>
-    );
-  }
+	useEffect(() => {
+		const fetchEvents = async () => {
+			try {
+				const eventCollection = collection(db, 'events');
+				const querySnapshot = await getDocs(eventCollection);
+		
+				const eventsData = [];
+				querySnapshot.forEach((doc) => {
+					// Extract event data and add it to the eventsData array
+					const event = doc.data();
+					// Include the document ID as an 'id' key in the event object
+					eventsData.push({
+						id: doc.id,
+						...event,
+					});
+				});
+		
+				// Set the events state with the fetched data
+				setEvents(eventsData);
+			} catch (error) {
+				console.error('Error fetching events:', error);
+			}
+		};
+		// Call the fetchEvents function to populate the events state
+		fetchEvents();
+	}, []);
 
   return (
     <ScrollView px={8} pt={8}>
@@ -163,9 +154,9 @@ export const EventOrganizerScreen = () => {
       {events.map((event, index) => (
         <EventCard
           key={event.id}
+					index={index}
           event={event}
           isOrganizerCard
-          editEvent={editEvent}
           deleteEvent={deleteEvent}
         />
       ))}
