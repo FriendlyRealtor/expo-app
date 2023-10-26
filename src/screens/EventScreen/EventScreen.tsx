@@ -52,7 +52,7 @@ export const EventScreen = ({ navigation }) => {
 
   return (
     <View flex={1} p={4}>
-      {true && (
+      {false && (
         <TouchableOpacity onPress={() => navigation.navigate('Event Organizer')}>
           <UpgradePrompt />
         </TouchableOpacity>
@@ -76,11 +76,11 @@ export const EventScreen = ({ navigation }) => {
             options={EventCategories.map((category) => category.name)}
             onFilterChange={(filters) => setSelectedCategories(filters)}
           />
-          <ToggleSwitch
+          {/*<ToggleSwitch
             label="Only Free Events"
             initialValue={isFreeEvent}
             onValueChange={(value) => setIsFreeEvent(value)}
-          />
+			/>*/}
         </VStack>
         {filteredEvents.length === 0 ? (
           <Center mt={16}>

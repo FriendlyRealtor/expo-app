@@ -33,6 +33,7 @@ export const EventOrganizerScreen = () => {
     getValues,
     setValue,
     formState: { errors },
+		reset
   } = useForm<CreateEventFormType>({
     defaultValues: {
       title: '',
@@ -40,11 +41,11 @@ export const EventOrganizerScreen = () => {
       description: '',
       eventDate: '',
       dateStartTime: '',
+			dateEndTime: '',
       photo: '',
-      dateEndTime: '',
-      category: '',
+      category: 'open_houses',
       totalParticipants: '',
-      cost: '',
+      //cost: '',
     },
   });
 
@@ -67,11 +68,31 @@ export const EventOrganizerScreen = () => {
 			setSaving(true);
 			const { uid } = userAuth.currentUser;
 
+			const currentDate = moment(new Date());
+			const formattedDate = currentDate.format('MMMM Do YYYY');
+			const formattedStartTime = currentDate.format('h:mm a');
+			const formattedEndTime = currentDate.format('h:mm a');
+			
+			// Check if eventDate is not an empty string; otherwise, use the formatted date
+			const eventDate = data.eventDate ? data.eventDate : formattedDate;
+			
+			// Check if dateStartTime is not an empty string; otherwise, use the formatted start time
+			const dateStartTime = data.dateStartTime ? data.dateStartTime : formattedStartTime;
+			
+			// Check if dateEndTime is not an empty string; otherwise, use the formatted end time
+			const dateEndTime = data.dateEndTime ? data.dateEndTime : formattedEndTime;
+			
+			// Update the data object with the modified date and time values
+			data.eventDate = eventDate;
+			data.dateStartTime = dateStartTime;
+			data.dateEndTime = dateEndTime;
+						
 			// Add the event data to the "events" collection in Firebase
 			await addDoc(collection(db, 'events'), { ...data, participants: [], createdBy: uid });
-	
 			// Clear any previous error state, indicating a successful operation
 			setErrorState('');
+			setIsCreatingEvent(false);
+			reset();
 		} catch (error) {
 			// Notify Bugsnag with the error for monitoring and debugging
 			Bugsnag.notify(error);
@@ -207,6 +228,7 @@ export const EventOrganizerScreen = () => {
                 <Controller
                   control={control}
                   name="organizer"
+									rules={{ required: 'Field is required', minLength: 3 }}
                   render={({ field: { onChange, value, onBlur } }) => (
                     <Input
                       value={value}
@@ -227,6 +249,7 @@ export const EventOrganizerScreen = () => {
                 <Controller
                   control={control}
                   name="location"
+									rules={{ required: 'Field is required', minLength: 3 }}
                   render={({ field: { onChange, value, onBlur } }) => (
                     <Input
                       value={value}
@@ -247,6 +270,7 @@ export const EventOrganizerScreen = () => {
                 <Controller
                   control={control}
                   name="description"
+									rules={{ required: 'Field is required', minLength: 3 }}
                   render={({ field: { onChange, value, onBlur } }) => (
                     <TextArea
                       value={value}
@@ -343,6 +367,7 @@ export const EventOrganizerScreen = () => {
                 <Controller
                   control={control}
                   name="totalParticipants"
+									rules={{ required: 'Field is required', min: 1 }}
                   render={({ field: { onChange, value, onBlur } }) => (
                     <Input
                       value={value}
@@ -364,7 +389,7 @@ export const EventOrganizerScreen = () => {
                 />
               </FormControl>
 
-              <FormControl>
+              {/*<FormControl>
                 <FormControl.Label>Cost of Event (0 = Free)</FormControl.Label>
                 <Controller
                   control={control}
@@ -382,7 +407,7 @@ export const EventOrganizerScreen = () => {
                   )}
                 />
                 <ErrorMessage error={errors.cost?.message} visible={!!errors.cost?.message} />
-              </FormControl>
+									</FormControl>*/}
 
               <HStack justifyContent="space-between" mt={4}>
                 <Button onPress={handleSubmit(onCreateEvent)} isLoading={saving}>
