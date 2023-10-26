@@ -65,9 +65,10 @@ export const EventOrganizerScreen = () => {
 		try {
 			// Set the saving state to indicate the operation is in progress
 			setSaving(true);
-	
+			const { uid } = userAuth.currentUser;
+
 			// Add the event data to the "events" collection in Firebase
-			await addDoc(collection(db, 'events'), { ...data, participants: [] });
+			await addDoc(collection(db, 'events'), { ...data, participants: [], createdBy: uid });
 	
 			// Clear any previous error state, indicating a successful operation
 			setErrorState('');
