@@ -57,6 +57,7 @@ export const EventCard = ({ event, index, isOrganizerCard, deleteEvent }) => {
     },
   ];
 
+  console.log('get here', duplicateMsg);
   return (
     <>
       <Box

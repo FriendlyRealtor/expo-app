@@ -4,6 +4,7 @@ import { HomeScreen } from './HomeScreen/HomeScreen';
 import { ForgotPasswordScreen } from './ForgotPasswordScreen';
 import { ContactScreen } from './ContactScreen';
 import { FeedScreen } from './FeedScreen';
+import { AIScreen } from './AIScreen';
 import { SettingScreen } from './SettingScreen';
 import { LocalRestaurantScreen } from './LocalRestaurantScreen';
 import { ContinueEducationScreen } from './ContinueEducationScreen';
@@ -19,6 +20,7 @@ import { EventOrganizerScreen } from './EventOrganizerScreen';
 import { PaymentScreen } from './PaymentScreen';
 
 export {
+  AIScreen,
   LoginScreen,
   SignupScreen,
   ClientScreen,
