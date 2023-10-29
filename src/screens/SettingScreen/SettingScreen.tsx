@@ -15,7 +15,7 @@ import {
   TextArea,
   View,
 } from 'native-base';
-import { Chip, Container, FormErrorMessage } from '../../components';
+import { Chip, Container, ErrorMessage } from '../../components';
 import {
   Extrapolate,
   interpolate,
@@ -331,7 +331,7 @@ export const SettingScreen = inject('appStore')(
               </Button>
             </HStack>
             <View textAlign="center">
-              {errorState != '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
+              {errorState != '' ? <ErrorMessage error={errorState} visible={true} /> : null}
             </View>
             <Animated.View style={scaleAvatar}>
               <TouchableOpacity onPress={pickImage}>

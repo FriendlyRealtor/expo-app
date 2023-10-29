@@ -1,4 +1,4 @@
-import { Button, FormErrorMessage, TextInput, View } from '../../components';
+import { Button, ErrorMessage, TextInput, View } from '../../components';
 import { Colors, auth } from '../../config';
 import React, { useState } from 'react';
 
@@ -51,9 +51,9 @@ export const ForgotPasswordScreen = ({ navigation }) => {
               onChangeText={handleChange('email')}
               onBlur={handleBlur('email')}
             />
-            <FormErrorMessage error={errors.email} visible={touched.email} />
+            <ErrorMessage error={errors.email} visible={touched.email} />
             {/* Display Screen Error Mesages */}
-            {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
+            {errorState !== '' ? <ErrorMessage error={errorState} visible={true} /> : null}
             {/* Password Reset Send Email  button */}
             <Button style={styles.button} onPress={handleSubmit}>
               <Text style={styles.buttonText}>Send Reset Email</Text>

@@ -14,6 +14,9 @@ import { ClientScreen } from './ClientScreen/ClientScreen';
 import { ChatScreen } from './ChatScreen/ChatScreen';
 import { UserChatScreen } from './ChatScreen/UserChatScreen';
 import { DistancePropertiesScreen } from './DistancePropertiesScreen/DistancePropertiesScreen';
+import { EventScreen } from './EventScreen';
+import { EventOrganizerScreen } from './EventOrganizerScreen';
+import { PaymentScreen } from './PaymentScreen';
 
 export {
   LoginScreen,
@@ -24,6 +27,9 @@ export {
   ContactScreen,
   FeedScreen,
   PostScreen,
+  EventScreen,
+  EventOrganizerScreen,
+  PaymentScreen,
   HomeScreen,
   SplashScreen,
   ForgotPasswordScreen,

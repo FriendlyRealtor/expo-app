@@ -7,7 +7,7 @@ import { locationValidationSchema, numberWithCommas } from '../../utils';
 
 import Bugsnag from '@bugsnag/expo';
 import Constants from 'expo-constants';
-import { FormErrorMessage } from '../../components';
+import { ErrorMessage } from '../../components';
 import { HomeScreenStyles } from './HomeScreenStyles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -123,16 +123,6 @@ export const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.layout}>
       <StatusBar style="auto" />
-      <Button
-        onPress={() => {
-          navigation.navigate('Distance Properties');
-        }}
-        my={10}
-        mx={10}
-        rounded="lg"
-      >
-        <Text color="white">Calculate distance for showings.</Text>
-      </Button>
       <KeyboardAwareScrollView style={styles.keyboard}>
         <Formik validationSchema={locationValidationSchema}>
           <View style={styles.card}>
@@ -150,12 +140,12 @@ export const HomeScreen = ({ navigation }) => {
                 understanding of the local real estate market and make informed decisions about
                 buying or selling a property.
               </Text>
-              <GooglePlacesAutocomplete
+              {/*<GooglePlacesAutocomplete
                 apiKey={Constants.manifest?.extra?.googleApiKey}
                 requestConfig={{ countries: ['US'] }}
                 onPlaceSelected={onPlaceSelected}
-              />
-              {errorState !== '' ? <FormErrorMessage error={errorState} visible={true} /> : null}
+			/>*/}
+              {errorState !== '' ? <ErrorMessage error={errorState} visible={true} /> : null}
             </View>
             <View style={styles.footerContainer}>
               <Button
