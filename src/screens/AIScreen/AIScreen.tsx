@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS, SIZES, images } from '../../constants';
@@ -13,6 +13,7 @@ import Bugsnag from '@bugsnag/expo';
 export const AIScreen = ({ navigation }) => {
   const [inputMessage, setInputMessage] = useState('');
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [outputMessage, setOutputMessage] = useState('Results to be shown here.');
   const [messages, setMessages] = useState([]);
   const [isChatSaved, setIsChatSaved] = useState(false);
@@ -43,7 +44,7 @@ export const AIScreen = ({ navigation }) => {
       await AsyncStorage.setItem('chat_messages', JSON.stringify(updatedMessages));
       setIsChatSaved(true);
     } catch (error) {
-      setError('Error saving chat');
+      setError('Error isLoading chat');
     }
   };
 
@@ -130,6 +131,7 @@ export const AIScreen = ({ navigation }) => {
     };
     setMessages((previousMessage) => GiftedChat.append(previousMessage, [message]));
     try {
+      setIsLoading(true);
       const response = await axios.post(`${process.env.SERVER_URL}/mobile-prompt`, {
         inputMessage: inputMessage,
       });
@@ -154,6 +156,8 @@ export const AIScreen = ({ navigation }) => {
     } catch (error) {
       // Handle errors here
       Bugsnag.notify(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -166,6 +170,7 @@ export const AIScreen = ({ navigation }) => {
     };
     setMessages((previousMessage) => GiftedChat.append(previousMessage, [message]));
     try {
+      setIsLoading(true);
       const response = await axios.post(`${process.env.SERVER_URL}/prompt-images`, {
         prompt: inputMessage,
         n: 1,
@@ -191,6 +196,8 @@ export const AIScreen = ({ navigation }) => {
     } catch (error) {
       // Handle errors here
       Bugsnag.notify(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -276,17 +283,32 @@ export const AIScreen = ({ navigation }) => {
             placeholderTextColor={'#0B0B0B'}
             placeholder="Enter your question"
           />
-
           <TouchableOpacity onPress={submitHandler}>
-            <View
-              style={{
-                padding: 6,
-                borderRadius: 8,
-                marginHorizontal: 12,
-              }}
-            >
-              <FontAwesome name="send-o" size={24} color={COLORS.primary} />
-            </View>
+            {isLoading ? (
+              // Render the loading indicator (three dots) when loading is true
+              <View
+                style={{
+                  padding: 6,
+                  borderRadius: 8,
+                  marginHorizontal: 12,
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                }}
+              >
+                <ActivityIndicator size="small" color={COLORS.primary} />
+              </View>
+            ) : (
+              // Render the send icon when not loading
+              <View
+                style={{
+                  padding: 6,
+                  borderRadius: 8,
+                  marginHorizontal: 12,
+                }}
+              >
+                <FontAwesome name="send-o" size={24} color={COLORS.primary} />
+              </View>
+            )}
           </TouchableOpacity>
         </View>
       </View>
