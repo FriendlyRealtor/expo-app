@@ -25,14 +25,14 @@ import { getAuth } from 'firebase/auth';
 import { db } from '../../config';
 
 export const EventOrganizerScreen = () => {
-	const userAuth = getAuth();
+  const userAuth = getAuth();
   const {
     control,
     handleSubmit,
     getValues,
     setValue,
     formState: { errors },
-		reset
+    reset,
   } = useForm<CreateEventFormType>({
     defaultValues: {
       title: '',
@@ -40,7 +40,7 @@ export const EventOrganizerScreen = () => {
       description: '',
       eventDate: '',
       dateStartTime: '',
-			dateEndTime: '',
+      dateEndTime: '',
       photo: '',
       category: 'open_houses',
       totalParticipants: '',
@@ -59,93 +59,93 @@ export const EventOrganizerScreen = () => {
   const [eventImage, setEventImage] = useState(null);
   const [saving, setSaving] = useState<boolean>(false);
   const [photoProgress, setPhotoProgress] = useState<number | undefined>(undefined);
-	const [errorState, setErrorState] = useState<string>('');
+  const [errorState, setErrorState] = useState<string>('');
 
-	const onCreateEvent = async (data) => {
-		try {
-			// Set the saving state to indicate the operation is in progress
-			setSaving(true);
-			const { uid } = userAuth.currentUser;
+  const onCreateEvent = async (data) => {
+    try {
+      // Set the saving state to indicate the operation is in progress
+      setSaving(true);
+      const { uid } = userAuth.currentUser;
 
-			const currentDate = moment(new Date());
-			const formattedDate = currentDate.format('MMMM Do YYYY');
-			const formattedStartTime = currentDate.format('h:mm a');
-			const formattedEndTime = currentDate.format('h:mm a');
-			
-			// Check if eventDate is not an empty string; otherwise, use the formatted date
-			const eventDate = data.eventDate ? data.eventDate : formattedDate;
-			
-			// Check if dateStartTime is not an empty string; otherwise, use the formatted start time
-			const dateStartTime = data.dateStartTime ? data.dateStartTime : formattedStartTime;
-			
-			// Check if dateEndTime is not an empty string; otherwise, use the formatted end time
-			const dateEndTime = data.dateEndTime ? data.dateEndTime : formattedEndTime;
-			
-			// Update the data object with the modified date and time values
-			data.eventDate = eventDate;
-			data.dateStartTime = dateStartTime;
-			data.dateEndTime = dateEndTime;
-						
-			// Add the event data to the "events" collection in Firebase
-			await addDoc(collection(db, 'events'), { ...data, participants: [], createdBy: uid });
-			// Clear any previous error state, indicating a successful operation
-			setErrorState('');
-			setIsCreatingEvent(false);
-			reset();
-		} catch (error) {
-			// Notify Bugsnag with the error for monitoring and debugging
-			Bugsnag.notify(error);
-	
-			// Set an error state with a descriptive message and the error details
-			setErrorState('Error saving event: ' + error.message);
-		} finally {
-			// Set the saving state to indicate that the operation is complete
-			setSaving(false);
-		}
-	};
+      const currentDate = moment(new Date());
+      const formattedDate = currentDate.format('MMMM Do YYYY');
+      const formattedStartTime = currentDate.format('h:mm a');
+      const formattedEndTime = currentDate.format('h:mm a');
+
+      // Check if eventDate is not an empty string; otherwise, use the formatted date
+      const eventDate = data.eventDate ? data.eventDate : formattedDate;
+
+      // Check if dateStartTime is not an empty string; otherwise, use the formatted start time
+      const dateStartTime = data.dateStartTime ? data.dateStartTime : formattedStartTime;
+
+      // Check if dateEndTime is not an empty string; otherwise, use the formatted end time
+      const dateEndTime = data.dateEndTime ? data.dateEndTime : formattedEndTime;
+
+      // Update the data object with the modified date and time values
+      data.eventDate = eventDate;
+      data.dateStartTime = dateStartTime;
+      data.dateEndTime = dateEndTime;
+
+      // Add the event data to the "events" collection in Firebase
+      await addDoc(collection(db, 'events'), { ...data, participants: [], createdBy: uid });
+      // Clear any previous error state, indicating a successful operation
+      setErrorState('');
+      setIsCreatingEvent(false);
+      reset();
+    } catch (error) {
+      // Notify Bugsnag with the error for monitoring and debugging
+      Bugsnag.notify(error);
+
+      // Set an error state with a descriptive message and the error details
+      setErrorState('Error saving event: ' + error.message);
+    } finally {
+      // Set the saving state to indicate that the operation is complete
+      setSaving(false);
+    }
+  };
 
   // Simulated function to delete an event
   const deleteEvent = async (documentId, index) => {
-		try {
-			// Delete the event document from the 'events' collection using its document ID
-			await deleteDoc(doc(db, 'events', documentId));
-	
-			// If the deletion is successful, remove the event from the local state
-			const updatedEvents = [...events];
-			updatedEvents.splice(index, 1);
-			setEvents(updatedEvents);
-		} catch (error) {
-			// Handle any errors that may occur during deletion
-			console.error('Error deleting event:', error);
-		}
-	};
+    try {
+      // Delete the event document from the 'events' collection using its document ID
+      await deleteDoc(doc(db, 'events', documentId));
 
-	useEffect(() => {
-		const fetchEvents = async () => {
-			try {
-				const eventCollection = collection(db, 'events');
-				const querySnapshot = await getDocs(eventCollection);
-		
-				const eventsData = [];
-				querySnapshot.forEach((doc) => {
-					// Extract event data and add it to the eventsData array
-					const event = doc.data();
-					// Include the document ID as an 'id' key in the event object
-					eventsData.push({
-						id: doc.id,
-						...event,
-					});
-				});
-		
-				// Set the events state with the fetched data
-				setEvents(eventsData);
-			} catch (error) {
-				console.error('Error fetching events:', error);
-			}
-		};
-		// Call the fetchEvents function to populate the events state
-		fetchEvents();
-	}, []);
+      // If the deletion is successful, remove the event from the local state
+      const updatedEvents = [...events];
+      updatedEvents.splice(index, 1);
+      setEvents(updatedEvents);
+    } catch (error) {
+      // Handle any errors that may occur during deletion
+      console.error('Error deleting event:', error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const eventCollection = collection(db, 'events');
+        const querySnapshot = await getDocs(eventCollection);
+
+        const eventsData = [];
+        querySnapshot.forEach((doc) => {
+          // Extract event data and add it to the eventsData array
+          const event = doc.data();
+          // Include the document ID as an 'id' key in the event object
+          eventsData.push({
+            id: doc.id,
+            ...event,
+          });
+        });
+
+        // Set the events state with the fetched data
+        setEvents(eventsData);
+      } catch (error) {
+        console.error('Error fetching events:', error);
+      }
+    };
+    // Call the fetchEvents function to populate the events state
+    fetchEvents();
+  }, []);
 
   return (
     <ScrollView px={8} pt={8}>
@@ -154,7 +154,7 @@ export const EventOrganizerScreen = () => {
       {events.map((event, index) => (
         <EventCard
           key={event.id}
-					index={index}
+          index={index}
           event={event}
           isOrganizerCard
           deleteEvent={deleteEvent}
@@ -194,9 +194,9 @@ export const EventOrganizerScreen = () => {
 										</FormControl>*/}
 
               <FormControl>
-							<View textAlign="center">
-									{errorState != '' ? <ErrorMessage error={errorState} visible={true} /> : null}
-								</View>
+                <View textAlign="center">
+                  {errorState != '' ? <ErrorMessage error={errorState} visible={true} /> : null}
+                </View>
                 <FormControl.Label>Event Title</FormControl.Label>
                 <Controller
                   control={control}
@@ -219,7 +219,7 @@ export const EventOrganizerScreen = () => {
                 <Controller
                   control={control}
                   name="organizer"
-									rules={{ required: 'Field is required', minLength: 3 }}
+                  rules={{ required: 'Field is required', minLength: 3 }}
                   render={({ field: { onChange, value, onBlur } }) => (
                     <Input
                       value={value}
@@ -240,7 +240,7 @@ export const EventOrganizerScreen = () => {
                 <Controller
                   control={control}
                   name="location"
-									rules={{ required: 'Field is required', minLength: 3 }}
+                  rules={{ required: 'Field is required', minLength: 3 }}
                   render={({ field: { onChange, value, onBlur } }) => (
                     <Input
                       value={value}
@@ -261,7 +261,7 @@ export const EventOrganizerScreen = () => {
                 <Controller
                   control={control}
                   name="description"
-									rules={{ required: 'Field is required', minLength: 3 }}
+                  rules={{ required: 'Field is required', minLength: 3 }}
                   render={({ field: { onChange, value, onBlur } }) => (
                     <TextArea
                       value={value}
@@ -358,7 +358,7 @@ export const EventOrganizerScreen = () => {
                 <Controller
                   control={control}
                   name="totalParticipants"
-									rules={{ required: 'Field is required', min: 1 }}
+                  rules={{ required: 'Field is required', min: 1 }}
                   render={({ field: { onChange, value, onBlur } }) => (
                     <Input
                       value={value}

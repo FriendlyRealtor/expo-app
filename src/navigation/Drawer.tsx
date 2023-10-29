@@ -3,6 +3,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { AppTabs } from './AppTabs';
 import {
   EventScreen,
+  AIScreen,
   EventOrganizerScreen,
   PaymentScreen,
   DistancePropertiesScreen,
@@ -60,6 +61,7 @@ export const MyDrawer = ({ navigation, ...restProps }) => {
     >
       <Drawer.Screen name="Discover Events" component={AppTabs} />
       <Drawer.Screen name="Event Organizer" component={EventOrganizerScreen} />
+      <Drawer.Screen name="AI Realtor Assistant" component={AIScreen} />
       <Drawer.Screen name="CMA on Go" component={HomeScreen} />
       <Drawer.Screen name="Showings Proximity" component={DistancePropertiesScreen} />
       <Drawer.Screen name="Payment Method" component={PaymentScreen} />
