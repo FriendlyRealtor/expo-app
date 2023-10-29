@@ -1,4 +1,7 @@
 import { Colors } from './theme';
-import { auth, db, storage, realtimeDb } from './firebase';
 
+const auth = undefined;
+const db = undefined;
+const storage = undefined;
+const realtimeDb = undefined;
 export { Colors, auth, db, storage, realtimeDb };

@@ -8,12 +8,12 @@ import { AuthStack } from './AuthStack';
 import Bugsnag from '@bugsnag/expo';
 import { NativeBaseProvider } from 'native-base';
 import { NavigationContainer } from '@react-navigation/native';
-import { auth } from '../config';
 import { createStackNavigator } from '@react-navigation/stack';
 import { getTrackingPermissionsAsync } from 'expo-tracking-transparency';
 import { useNativeBaseTheme } from '../hooks';
 import { MyDrawer } from './Drawer';
 const Stack = createStackNavigator();
+import auth from '@react-native-firebase/auth';
 
 export const RootNavigator = inject('appStore')(
   observer(({ appStore }) => {
@@ -29,7 +29,7 @@ export const RootNavigator = inject('appStore')(
       };
 
       fetchUser();
-      const unsubscribe = auth.onAuthStateChanged((user) => {
+      const unsubscribe = auth().onAuthStateChanged((user) => {
         if (user) {
           setLocalUser(user);
         }
@@ -64,7 +64,7 @@ export const RootNavigator = inject('appStore')(
     return (
       <NativeBaseProvider theme={nativeBaseTheme}>
         <NavigationContainer>
-          {user && localUser && auth?.currentUser?.emailVerified ? (
+          {user && localUser && auth()?.currentUser?.emailVerified ? (
             <Stack.Navigator>
               <Stack.Group>
                 <Stack.Screen

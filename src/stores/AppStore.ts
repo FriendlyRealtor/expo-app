@@ -3,6 +3,7 @@ import { auth, db } from '../config';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 import Bugsnag from '@bugsnag/expo';
 import Constants from 'expo-constants';
@@ -113,10 +114,10 @@ class AppStore {
   };
 
   checkUsernameExists = async (username: string) => {
-    const usersRef = collection(db, 'users');
-    const q = query(usersRef, where('username', '==', username));
-    const querySnapshot = await getDocs(q);
-    return !!querySnapshot.docs.length;
+    const usersRef = firestore().collection('users'); // Reference to the "users" collection
+    const querySnapshot = await usersRef.where('userName', '==', username).get(); // Query for documents with the specified username
+
+    return !querySnapshot.empty; // Return true if any documents with the username exist, otherwise false
   };
 }
 

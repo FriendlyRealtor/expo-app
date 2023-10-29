@@ -2,11 +2,12 @@ import { Alert, Image, Linking, SafeAreaView, ScrollView, TouchableOpacity } fro
 import { Button, ErrorMessage, Loading, Text, TextInput, View } from '../../components';
 import { Formik, useFormik } from 'formik';
 import React, { useState } from 'react';
-import { auth, db } from '../../config';
-import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import { db } from '../../config';
 import { doc, setDoc } from 'firebase/firestore';
+import firestore from '@react-native-firebase/firestore';
 import { inject, observer } from 'mobx-react';
-
+import auth from '@react-native-firebase/auth';
+import firebase from '@react-native-firebase/app';
 import Bugsnag from '@bugsnag/expo';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -53,21 +54,22 @@ export const SignupScreen = inject('appStore')(
 
       try {
         const doesUserNameExists = await checkUsernameExists(userName);
+				console.log("what get here", doesUserNameExists)
         if (doesUserNameExists) {
           throw new Error('Username already exists');
         }
 
-        const res = await createUserWithEmailAndPassword(auth, email, password);
-        await sendEmailVerification(res.user);
+        const res = await auth().createUserWithEmailAndPassword(auth, email, password);
+        await firebase?.auth()?.currentUser?.sendEmailVerification(res.user);
         Alert.alert('Email Verification sent.');
-        await setDoc(doc(db, 'users', res.user.uid), {
-          name: `${firstName} ${lastName}`,
+				await firestore().collection('users').doc(res.user.uid).set({
+					name: `${firstName} ${lastName}`,
           ceRenewalDate: new Date(),
           userName: userName,
           emailAddress: email,
           photo:
             'https://firebasestorage.googleapis.com/v0/b/real-estate-app-9a719.appspot.com/o/default_photo%2Fimg_avatar.png?alt=media&token=ca7c1413-f7ea-4511-915a-699283568edc',
-        });
+				})
         navigation.navigate('Login');
         resetForm({});
       } catch (error) {

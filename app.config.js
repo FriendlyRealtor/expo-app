@@ -24,6 +24,7 @@ export default {
       config: {
         usesNonExemptEncryption: false,
       },
+      googleServicesFile: './GoogleService-Info.plist',
       infoPlist: {
         NSLocationWhenInUseUsageDescription:
           "Grant $(PRODUCT_NAME) access to your device's location, you'll be able to receive a list of nearby restaurants within a 5-mile radius. You can then select a restaurant from the list to get more information and directions",
@@ -52,6 +53,8 @@ export default {
       },
     },
     plugins: [
+      '@react-native-firebase/app',
+      ['expo-build-properties', { ios: { useFrameworks: 'static' } }],
       [
         'expo-contacts',
         {
