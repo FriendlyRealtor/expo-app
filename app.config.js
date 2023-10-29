@@ -24,7 +24,10 @@ export default {
       config: {
         usesNonExemptEncryption: false,
       },
-      googleServicesFile: './GoogleService-Info.plist',
+      googleServicesFile:
+        process.env.SERVER_URL === 'http://localhost:5001'
+          ? './GoogleService-Info.plist'
+          : './GoogleService-Info-Prod.plist',
       infoPlist: {
         NSLocationWhenInUseUsageDescription:
           "Grant $(PRODUCT_NAME) access to your device's location, you'll be able to receive a list of nearby restaurants within a 5-mile radius. You can then select a restaurant from the list to get more information and directions",
