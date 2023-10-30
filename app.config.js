@@ -10,6 +10,7 @@ export default {
     orientation: 'portrait',
     owner: 'jubileeinvestments',
     icon: './assets/logo.png',
+    jsEngine: 'hermes',
     updates: {
       fallbackToCacheTimeout: 0,
     },
