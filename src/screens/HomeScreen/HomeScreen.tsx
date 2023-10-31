@@ -140,11 +140,11 @@ export const HomeScreen = ({ navigation }) => {
                 understanding of the local real estate market and make informed decisions about
                 buying or selling a property.
               </Text>
-              {/*<GooglePlacesAutocomplete
+              <GooglePlacesAutocomplete
                 apiKey={Constants.manifest?.extra?.googleApiKey}
                 requestConfig={{ countries: ['US'] }}
                 onPlaceSelected={onPlaceSelected}
-			/>*/}
+              />
               {errorState !== '' ? <ErrorMessage error={errorState} visible={true} /> : null}
             </View>
             <View style={styles.footerContainer}>
