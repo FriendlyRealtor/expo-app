@@ -15,18 +15,26 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Icon } from 'native-base';
 import { Colors } from '../config';
 import { BusinessCard } from '../components';
+import { useAnalytics } from '@segment/analytics-react-native';
 
 const Drawer = createDrawerNavigator();
 
 export const MyDrawer = ({ navigation, ...restProps }) => {
   const [openBusinessCard, setOpenBusinessCard] = useState<boolean>(false);
+  const { track } = useAnalytics();
 
   return (
     <Drawer.Navigator
       screenOptions={{
         headerRight: () => (
           <View style={{ display: 'flex', flexDirection: 'row' }}>
-            <TouchableOpacity onPress={() => setOpenBusinessCard(true)} style={{ marginRight: 32 }}>
+            <TouchableOpacity
+              onPress={() => {
+                track('business card click');
+                setOpenBusinessCard(true);
+              }}
+              style={{ marginRight: 32 }}
+            >
               <Icon
                 as={MaterialCommunityIcons}
                 name="qrcode"
@@ -44,6 +52,7 @@ export const MyDrawer = ({ navigation, ...restProps }) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
+                track('chat click');
                 navigation.navigate('Chat');
               }}
             >

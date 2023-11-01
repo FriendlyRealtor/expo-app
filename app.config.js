@@ -48,6 +48,7 @@ export default {
       googleApiKey: process.env.GOOGLE_API_KEY,
       realTimeDbUrl: process.env.FIREBASE_REAL_TIME_DATABASE_URL,
       bugSnagApiKey: process.env.BUGSNAG_API_KEY,
+      segmentApiKey: process.env.SEGMENT_API_KEY,
       eas: {
         projectId: process.env.EAS_PROJECT_ID,
       },

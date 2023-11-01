@@ -7,19 +7,22 @@ import { AppTabs } from './AppTabs';
 import { AuthStack } from './AuthStack';
 import Bugsnag from '@bugsnag/expo';
 import { NativeBaseProvider } from 'native-base';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, NavigationState, PartialState } from '@react-navigation/native';
 import { auth } from '../config';
 import { createStackNavigator } from '@react-navigation/stack';
 import { getTrackingPermissionsAsync } from 'expo-tracking-transparency';
 import { useNativeBaseTheme } from '../hooks';
 import { MyDrawer } from './Drawer';
+import { useAnalytics } from '@segment/analytics-react-native';
 const Stack = createStackNavigator();
 
 export const RootNavigator = inject('appStore')(
   observer(({ appStore }) => {
+    const { screen } = useAnalytics();
     const [isLoading, setIsLoading] = useState(true);
     const { user, getUser, retrieveLoggedInUser } = appStore;
     const [localUser, setLocalUser] = useState(undefined);
+    const [routeName, setRouteName] = useState<string>('Unknown');
 
     const { theme: nativeBaseTheme } = useNativeBaseTheme();
 
@@ -61,9 +64,34 @@ export const RootNavigator = inject('appStore')(
       return <SplashScreen />;
     }
 
+    const getActiveRouteName = (
+      state: NavigationState | PartialState<NavigationState> | undefined,
+    ): string => {
+      if (!state || typeof state.index !== 'number') {
+        return 'Unknown';
+      }
+
+      const route = state.routes[state.index];
+
+      if (route.state) {
+        return getActiveRouteName(route.state);
+      }
+
+      return route.name;
+    };
+
     return (
       <NativeBaseProvider theme={nativeBaseTheme}>
-        <NavigationContainer>
+        <NavigationContainer
+          onStateChange={(state) => {
+            const newRouteName = getActiveRouteName(state);
+
+            if (routeName !== newRouteName) {
+              screen(newRouteName);
+              setRouteName(newRouteName);
+            }
+          }}
+        >
           {user && localUser && auth?.currentUser?.emailVerified ? (
             <Stack.Navigator>
               <Stack.Group>

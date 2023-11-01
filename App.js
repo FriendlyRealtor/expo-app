@@ -3,7 +3,7 @@ import * as eva from '@eva-design/eva';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
 import React, { useEffect, useState } from 'react';
 import { Text, View } from 'native-base';
-
+import { createClient, AnalyticsProvider } from '@segment/analytics-react-native';
 import { AuthenticatedUserProvider } from './src/providers';
 import Bugsnag from '@bugsnag/expo';
 import Constants from 'expo-constants';
@@ -21,6 +21,10 @@ import { useNativeBaseTheme } from './src/hooks';
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
+
+  const segmentClient = createClient({
+    writeKey: Constants?.manifest?.extra?.segmentApiKey,
+  });
 
   Bugsnag.start(Constants?.manifest?.extra?.bugSnagApiKey || '');
   const ErrorBoundary = Bugsnag.getPlugin('react').createErrorBoundary(React);
@@ -47,18 +51,20 @@ const App = () => {
 
   return (
     <ErrorBoundary FallbackComponent={ErrorView}>
-      <Provider {...stores}>
-        <AuthenticatedUserProvider>
-          <SafeAreaProvider>
-            <PaperProvider theme={theme}>
-              <IconRegistry icons={[EvaIconsPack]} />
-              <ApplicationProvider {...eva} theme={eva.light}>
-                <RootNavigator />
-              </ApplicationProvider>
-            </PaperProvider>
-          </SafeAreaProvider>
-        </AuthenticatedUserProvider>
-      </Provider>
+      <AnalyticsProvider client={segmentClient}>
+        <Provider {...stores}>
+          <AuthenticatedUserProvider>
+            <SafeAreaProvider>
+              <PaperProvider theme={theme}>
+                <IconRegistry icons={[EvaIconsPack]} />
+                <ApplicationProvider {...eva} theme={eva.light}>
+                  <RootNavigator />
+                </ApplicationProvider>
+              </PaperProvider>
+            </SafeAreaProvider>
+          </AuthenticatedUserProvider>
+        </Provider>
+      </AnalyticsProvider>
     </ErrorBoundary>
   );
 };

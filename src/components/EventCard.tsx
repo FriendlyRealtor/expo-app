@@ -5,8 +5,10 @@ import { EventOrganizerCategories } from '../screens/EventOrganizerScreen/EventO
 import { getAuth } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../config';
+import { useAnalytics } from '@segment/analytics-react-native';
 
 export const EventCard = ({ event, index, isOrganizerCard, deleteEvent }) => {
+  const { track } = useAnalytics();
   const [actionSheetVisible, setActionSheetVisible] = useState(false);
   const [saving, setSaving] = useState<boolean>(false);
   const [duplicateMsg, setDuplicateMsg] = useState<string>('');
@@ -57,7 +59,6 @@ export const EventCard = ({ event, index, isOrganizerCard, deleteEvent }) => {
     },
   ];
 
-  console.log('get here', duplicateMsg);
   return (
     <>
       <Box
@@ -113,7 +114,10 @@ export const EventCard = ({ event, index, isOrganizerCard, deleteEvent }) => {
             }
             return (
               <Button
-                onPress={button.onPress}
+                onPress={() => {
+                  track(`${button.text} click`);
+                  button.onPress();
+                }}
                 isLoading={button.text === 'Join Event' && saving}
                 style={{ backgroundColor: button.color, borderWidth: 1 }}
               >
