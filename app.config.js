@@ -6,14 +6,15 @@ export default {
     slug: 'friendlyrealtor',
     privacy: 'unlisted',
     platforms: ['ios'],
-    version: '1.0.21',
+    version: '1.0.22',
     orientation: 'portrait',
     owner: 'jubileeinvestments',
-    icon: './assets/logo.png',
+    icon: './assets/icon.png',
     jsEngine: 'hermes',
     updates: {
       fallbackToCacheTimeout: 0,
     },
+    entryPoint: './index.ts',
     runtimeVersion: {
       policy: 'sdkVersion',
     },

@@ -1,5 +1,6 @@
 {
   "private": true,
+  "main": "index.ts",
   "scripts": {
     "android": "expo run:android --device",
     "build:ios": "eas build --platform ios",
