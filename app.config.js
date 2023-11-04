@@ -6,14 +6,15 @@ export default {
     slug: 'friendlyrealtor',
     privacy: 'unlisted',
     platforms: ['ios'],
-    version: '1.0.20',
+    version: '1.0.22',
     orientation: 'portrait',
     owner: 'jubileeinvestments',
-    icon: './assets/logo.png',
+    icon: './assets/icon.png',
     jsEngine: 'hermes',
     updates: {
       fallbackToCacheTimeout: 0,
     },
+    entryPoint: './index.ts',
     runtimeVersion: {
       policy: 'sdkVersion',
     },
@@ -48,6 +49,7 @@ export default {
       googleApiKey: process.env.GOOGLE_API_KEY,
       realTimeDbUrl: process.env.FIREBASE_REAL_TIME_DATABASE_URL,
       bugSnagApiKey: process.env.BUGSNAG_API_KEY,
+      vexoApiKey: process.env.VEXO_API_KEY,
       eas: {
         projectId: process.env.EAS_PROJECT_ID,
       },

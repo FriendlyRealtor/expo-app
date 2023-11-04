@@ -3,7 +3,6 @@ import * as eva from '@eva-design/eva';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
 import React, { useEffect, useState } from 'react';
 import { Text, View } from 'native-base';
-
 import { AuthenticatedUserProvider } from './src/providers';
 import Bugsnag from '@bugsnag/expo';
 import Constants from 'expo-constants';
