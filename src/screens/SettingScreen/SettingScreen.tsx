@@ -534,12 +534,6 @@ export const SettingScreen = inject('appStore')(
                       </Text>
                     </HStack>
                   ))}
-                {/*<Divider thickness={1} bg="black" />
-									<View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginVertical: 16 }}>
-										<Button onPress={() => { try { restorePurchase(); } catch (error) { console.log('error', error); } }}>
-											<Text status="danger">Restore Purchases</Text>
-										</Button>
-									</View>*/}
                 <Divider thickness={1} bg="black" />
                 <HStack
                   alignItems="center"

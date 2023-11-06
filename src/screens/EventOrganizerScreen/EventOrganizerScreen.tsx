@@ -2,9 +2,9 @@ import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
-  Image,
   Button,
   Input,
+  Heading,
   ScrollView,
   Actionsheet,
   FormControl,
@@ -13,6 +13,7 @@ import {
   HStack,
   TextArea,
   VStack,
+  KeyboardAvoidingView,
 } from 'native-base';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { EventCard, ErrorMessage, CurrencyInput } from '../../components';
@@ -193,193 +194,200 @@ export const EventOrganizerScreen = () => {
 								/>
 										</FormControl>*/}
 
-              <FormControl>
-                <View textAlign="center">
-                  {errorState != '' ? <ErrorMessage error={errorState} visible={true} /> : null}
-                </View>
-                <FormControl.Label>Event Title</FormControl.Label>
-                <Controller
-                  control={control}
-                  name="title"
-                  rules={{ required: 'Field is required', minLength: 3 }}
-                  render={({ field: { onChange, value, onBlur } }) => (
-                    <Input
-                      value={value}
-                      onChangeText={(val) => onChange(val)}
-                      onBlur={onBlur}
-                      placeholder="Event Title"
-                      my={4}
-                    />
-                  )}
-                />
-                <ErrorMessage error={errors.title?.message} visible={!!errors.title?.message} />
-              </FormControl>
-              <FormControl>
-                <FormControl.Label>Event Organizer</FormControl.Label>
-                <Controller
-                  control={control}
-                  name="organizer"
-                  rules={{ required: 'Field is required', minLength: 3 }}
-                  render={({ field: { onChange, value, onBlur } }) => (
-                    <Input
-                      value={value}
-                      onChangeText={(val) => onChange(val)}
-                      onBlur={onBlur}
-                      placeholder="Event Organizer"
-                      my={4}
-                    />
-                  )}
-                />
-                <ErrorMessage
-                  error={errors.organizer?.message}
-                  visible={!!errors.organizer?.message}
-                />
-              </FormControl>
-              <FormControl>
-                <FormControl.Label>Event Location</FormControl.Label>
-                <Controller
-                  control={control}
-                  name="location"
-                  rules={{ required: 'Field is required', minLength: 3 }}
-                  render={({ field: { onChange, value, onBlur } }) => (
-                    <Input
-                      value={value}
-                      onChangeText={(val) => onChange(val)}
-                      onBlur={onBlur}
-                      placeholder="Event Location"
-                      my={4}
-                    />
-                  )}
-                />
-                <ErrorMessage
-                  error={errors.location?.message}
-                  visible={!!errors.location?.message}
-                />
-              </FormControl>
-              <FormControl>
-                <FormControl.Label>Event Description</FormControl.Label>
-                <Controller
-                  control={control}
-                  name="description"
-                  rules={{ required: 'Field is required', minLength: 3 }}
-                  render={({ field: { onChange, value, onBlur } }) => (
-                    <TextArea
-                      value={value}
-                      onChangeText={(val) => onChange(val)}
-                      onBlur={onBlur}
-                      placeholder="Event Description"
-                      my={4}
-                    />
-                  )}
-                />
-                <ErrorMessage
-                  error={errors.description?.message}
-                  visible={!!errors.description?.message}
-                />
-              </FormControl>
-              <FormControl>
-                <FormControl.Label>Event Category</FormControl.Label>
-                <Controller
-                  control={control}
-                  name="category"
-                  render={({ field: { onChange, value } }) => (
-                    <Select
-                      selectedValue={value}
-                      minWidth={200}
-                      onValueChange={(val) => onChange(val)}
-                      mt={4}
-                    >
-                      {EventOrganizerCategories.map((option, index) => (
-                        <Select.Item key={index} label={option.name} value={option.key} />
-                      ))}
-                    </Select>
-                  )}
-                />
-              </FormControl>
-              <Flex
-                flexDirection="row"
-                flexWrap="wrap"
-                alignItems="flex-start" // Adjust alignment as needed
-                my={4}
-              >
-                <HStack justifyContent="space-between" width="100%">
-                  <Text fontSize="md" fontWeight="bold">
-                    Event Date
-                  </Text>
-                  <Text fontSize="md" fontWeight="bold">
-                    Start Time
-                  </Text>
-                  <Text fontSize="md" fontWeight="bold">
-                    End Time
-                  </Text>
-                </HStack>
-                <HStack justifyContent="space-between" width="100%" mt={2}>
-                  <DateTimePicker
-                    testID="dateTimePicker"
-                    value={date}
-                    mode="date"
-                    display="default"
-                    minimumDate={new Date()}
-                    onChange={(event, selectedTime) => {
-                      if (event.type === 'set') {
-                        const formattedDate = moment(selectedTime).format('MMM Do YYYY');
-                        setValue('eventDate', formattedDate);
-                      }
-                    }}
+              <KeyboardAvoidingView>
+                <FormControl>
+                  <View textAlign="center">
+                    {errorState != '' ? <ErrorMessage error={errorState} visible={true} /> : null}
+                  </View>
+                  <FormControl.Label>
+                    <Heading size="sm">Event Title</Heading>
+                  </FormControl.Label>
+                  <Controller
+                    control={control}
+                    name="title"
+                    rules={{ required: 'Field is required', minLength: 3 }}
+                    render={({ field: { onChange, value, onBlur } }) => (
+                      <Input
+                        value={value}
+                        onChangeText={(val) => onChange(val)}
+                        onBlur={onBlur}
+                        placeholder="Event Title"
+                      />
+                    )}
                   />
-                  <DateTimePicker
-                    testID="dateTimePicker"
-                    value={startTime}
-                    mode="time"
-                    display="default"
-                    onChange={(event, selectedTime) => {
-                      if (event.type === 'set') {
-                        const formattedTime = moment(selectedTime).format('h:mm a');
-                        setValue('dateStartTime', formattedTime);
-                      }
-                    }}
+                  <ErrorMessage error={errors.title?.message} visible={!!errors.title?.message} />
+                </FormControl>
+                <FormControl>
+                  <FormControl.Label>
+                    <Heading size="sm">Event Organizer</Heading>
+                  </FormControl.Label>
+                  <Controller
+                    control={control}
+                    name="organizer"
+                    rules={{ required: 'Field is required', minLength: 3 }}
+                    render={({ field: { onChange, value, onBlur } }) => (
+                      <Input
+                        value={value}
+                        onChangeText={(val) => onChange(val)}
+                        onBlur={onBlur}
+                        placeholder="Event Organizer"
+                      />
+                    )}
                   />
-                  <DateTimePicker
-                    testID="dateTimePicker"
-                    value={endTime}
-                    mode="time"
-                    display="default"
-                    onChange={(event, selectedTime) => {
-                      if (event.type === 'set') {
-                        const formattedTime = moment(selectedTime).format('h:mm a');
-                        setValue('dateEndTime', formattedTime);
-                      }
-                    }}
+                  <ErrorMessage
+                    error={errors.organizer?.message}
+                    visible={!!errors.organizer?.message}
                   />
-                </HStack>
-              </Flex>
-              <FormControl>
-                <FormControl.Label>Total Available Participants</FormControl.Label>
-                <Controller
-                  control={control}
-                  name="totalParticipants"
-                  rules={{ required: 'Field is required', min: 1 }}
-                  render={({ field: { onChange, value, onBlur } }) => (
-                    <Input
-                      value={value}
-                      onChangeText={(val) => {
-                        // Use a regular expression to remove any non-numeric characters
-                        const numericValue = val.replace(/[^0-9]/g, '');
-                        onChange(numericValue);
+                </FormControl>
+                <FormControl>
+                  <FormControl.Label>
+                    <Heading size="sm">Event Location</Heading>
+                  </FormControl.Label>
+                  <Controller
+                    control={control}
+                    name="location"
+                    rules={{ required: 'Field is required', minLength: 3 }}
+                    render={({ field: { onChange, value, onBlur } }) => (
+                      <Input
+                        value={value}
+                        onChangeText={(val) => onChange(val)}
+                        onBlur={onBlur}
+                        placeholder="Event Location"
+                      />
+                    )}
+                  />
+                  <ErrorMessage
+                    error={errors.location?.message}
+                    visible={!!errors.location?.message}
+                  />
+                </FormControl>
+                <FormControl>
+                  <FormControl.Label>
+                    <Heading size="sm">Event Description</Heading>
+                  </FormControl.Label>
+                  <Controller
+                    control={control}
+                    name="description"
+                    rules={{ required: 'Field is required', minLength: 3 }}
+                    render={({ field: { onChange, value, onBlur } }) => (
+                      <TextArea
+                        value={value}
+                        onChangeText={(val) => onChange(val)}
+                        onBlur={onBlur}
+                        placeholder="Event Description"
+                      />
+                    )}
+                  />
+                  <ErrorMessage
+                    error={errors.description?.message}
+                    visible={!!errors.description?.message}
+                  />
+                </FormControl>
+                <FormControl>
+                  <FormControl.Label>
+                    <Heading size="sm">Event Category</Heading>
+                  </FormControl.Label>
+                  <Controller
+                    control={control}
+                    name="category"
+                    render={({ field: { onChange, value } }) => (
+                      <Select
+                        selectedValue={value}
+                        minWidth={200}
+                        onValueChange={(val) => onChange(val)}
+                        mt={4}
+                      >
+                        {EventOrganizerCategories.map((option, index) => (
+                          <Select.Item key={index} label={option.name} value={option.key} />
+                        ))}
+                      </Select>
+                    )}
+                  />
+                </FormControl>
+                <Flex
+                  flexDirection="row"
+                  flexWrap="wrap"
+                  alignItems="flex-start" // Adjust alignment as needed
+                >
+                  <HStack justifyContent="space-between" width="100%">
+                    <Text fontSize="md" fontWeight="bold">
+                      Event Date
+                    </Text>
+                    <Text fontSize="md" fontWeight="bold">
+                      Start Time
+                    </Text>
+                    <Text fontSize="md" fontWeight="bold">
+                      End Time
+                    </Text>
+                  </HStack>
+                  <HStack justifyContent="space-between" width="100%" mt={2}>
+                    <DateTimePicker
+                      testID="dateTimePicker"
+                      value={date}
+                      mode="date"
+                      display="default"
+                      minimumDate={new Date()}
+                      onChange={(event, selectedTime) => {
+                        if (event.type === 'set') {
+                          const formattedDate = moment(selectedTime).format('MMM Do YYYY');
+                          setValue('eventDate', formattedDate);
+                        }
                       }}
-                      onBlur={onBlur}
-                      placeholder="Total Available Participants"
-                      keyboardType="numeric"
-                      my={4}
                     />
-                  )}
-                />
-                <ErrorMessage
-                  error={errors.totalParticipants?.message}
-                  visible={!!errors.totalParticipants?.message}
-                />
-              </FormControl>
-
+                    <DateTimePicker
+                      testID="dateTimePicker"
+                      value={startTime}
+                      mode="time"
+                      display="default"
+                      onChange={(event, selectedTime) => {
+                        if (event.type === 'set') {
+                          const formattedTime = moment(selectedTime).format('h:mm a');
+                          setValue('dateStartTime', formattedTime);
+                        }
+                      }}
+                    />
+                    <DateTimePicker
+                      testID="dateTimePicker"
+                      value={endTime}
+                      mode="time"
+                      display="default"
+                      onChange={(event, selectedTime) => {
+                        if (event.type === 'set') {
+                          const formattedTime = moment(selectedTime).format('h:mm a');
+                          setValue('dateEndTime', formattedTime);
+                        }
+                      }}
+                    />
+                  </HStack>
+                </Flex>
+                <FormControl>
+                  <FormControl.Label>
+                    <Heading size="sm">Total Available Participants</Heading>
+                  </FormControl.Label>
+                  <Controller
+                    control={control}
+                    name="totalParticipants"
+                    rules={{ required: 'Field is required', min: 1 }}
+                    render={({ field: { onChange, value, onBlur } }) => (
+                      <Input
+                        value={value}
+                        onChangeText={(val) => {
+                          // Use a regular expression to remove any non-numeric characters
+                          const numericValue = val.replace(/[^0-9]/g, '');
+                          onChange(numericValue);
+                        }}
+                        onBlur={onBlur}
+                        placeholder="Total Available Participants"
+                        keyboardType="numeric"
+                      />
+                    )}
+                  />
+                  <ErrorMessage
+                    error={errors.totalParticipants?.message}
+                    visible={!!errors.totalParticipants?.message}
+                  />
+                </FormControl>
+              </KeyboardAvoidingView>
               {/*<FormControl>
                 <FormControl.Label>Cost of Event (0 = Free)</FormControl.Label>
                 <Controller
