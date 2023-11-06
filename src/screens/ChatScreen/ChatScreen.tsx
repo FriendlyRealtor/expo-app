@@ -137,65 +137,65 @@ export const ChatScreen = ({ navigation }) => {
           {messageList && messageList.length ? (
             <FlatList
               data={messageList}
-              renderItem={({ item }) => (
-                <SwipeableItem item={item}>
-                  <Pressable
-                    key={item.id}
-                    style={styles.messageContainer}
-                    onPress={() => {
-                      navigation.navigate('My Chat', { item });
-                    }}
-                  >
-                    <Box
-                      borderBottomWidth="1"
-                      _dark={{
-                        borderColor: 'muted.50',
+              renderItem={({ item }) => {
+                return (
+                  <SwipeableItem item={item}>
+                    <Pressable
+                      key={item.id}
+                      style={styles.messageContainer}
+                      onPress={() => {
+                        navigation.navigate('My Chat', { item });
                       }}
-                      borderColor="muted.800"
-                      pl={['0', '4']}
-                      pr={['0', '5']}
-                      py="2"
                     >
-                      <HStack space={[2, 3]} justifyContent="space-between">
-                        <Avatar
-                          size="48px"
-                          source={{
-                            uri: item.photo,
-                          }}
-                        />
-                        <VStack>
+                      <Box
+                        borderBottomWidth="1"
+                        _dark={{
+                          borderColor: 'muted.50',
+                        }}
+                        borderColor="muted.800"
+                        pl={['0', '4']}
+                        pr={['0', '5']}
+                        py="2"
+                      >
+                        <HStack space={[2, 3]} justifyContent="space-between">
+                          <Avatar
+                            size="48px"
+                            source={{
+                              uri: item.photo,
+                            }}
+                          />
+                          <VStack>
+                            <Text
+                              _dark={{
+                                color: 'warmGray.50',
+                              }}
+                              color="coolGray.800"
+                              bold
+                            >
+                              {item.userName || item.name}
+                            </Text>
+                          </VStack>
+                          <Spacer />
                           <Text
+                            fontSize="xs"
                             _dark={{
                               color: 'warmGray.50',
                             }}
                             color="coolGray.800"
-                            bold
+                            alignSelf="flex-start"
                           >
-                            {item.userName || item.name}
+                            {item.latestMessage?.timestamp
+                              ? moment
+                                  .unix(item.latestMessage.timestamp.seconds)
+                                  .format('MMMM, Do, h:mm:ss a')
+                              : 'No messages'}
                           </Text>
-                        </VStack>
-                        <Spacer />
-                        <Text
-                          fontSize="xs"
-                          _dark={{
-                            color: 'warmGray.50',
-                          }}
-                          color="coolGray.800"
-                          alignSelf="flex-start"
-                        >
-                          {moment
-                            .unix(
-                              item.latestMessage.timestamp
-                                ? item.latestMessage.timestamp.seconds
-                                : item.latestMessage.seconds,
-                            )
-                            .format('MMMM, Do, h:mm:ss a')}
-                        </Text>
-                      </HStack>
-                    </Box>
-                  </Pressable>
-                </SwipeableItem>
-              )}
+                        </HStack>
+                      </Box>
+                    </Pressable>
+                  </SwipeableItem>
+                );
+              }}
               keyExtractor={(item) => item.id}
             />
           ) : (

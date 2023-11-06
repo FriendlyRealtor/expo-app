@@ -59,7 +59,7 @@ export const MyDrawer = ({ navigation, ...restProps }) => {
         ),
       }}
     >
-      <Drawer.Screen name="Discover Events" component={AppTabs} />
+      <Drawer.Screen name="Home" component={AppTabs} />
       <Drawer.Screen name="Event Organizer" component={EventOrganizerScreen} />
       <Drawer.Screen name="AI Realtor Assistant" component={AIScreen} />
       <Drawer.Screen name="CMA on Go" component={HomeScreen} />

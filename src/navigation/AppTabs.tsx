@@ -66,7 +66,7 @@ export const AppTabs = (props) => {
         })}
       />
       <Tab.Screen
-        name="Client Details"
+        name="Contacts"
         options={{
           headerShown: false,
           tabBarIcon: () => (
@@ -77,7 +77,7 @@ export const AppTabs = (props) => {
         {() => <ContactScreen />}
       </Tab.Screen>
       <Tab.Screen
-        name="Client Contracts"
+        name="Manage Deals"
         component={ClientScreen}
         options={{
           headerShown: false,
