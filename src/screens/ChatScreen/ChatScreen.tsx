@@ -157,11 +157,13 @@ export const ChatScreen = ({ navigation }) => {
                         pr={['0', '5']}
                         py="2"
                       >
-                        <HStack space={[2, 3]} justifyContent="space-between">
+                        <HStack space={[2, 3]} justifyContent="space-between" alignItems="center">
                           <Avatar
                             size="48px"
                             source={{
-                              uri: item.photo,
+                              uri:
+                                item.photo ||
+                                'https://firebasestorage.googleapis.com/v0/b/real-estate-app-9a719.appspot.com/o/default_photo%2Fimg_avatar.png?alt=media&token=ca7c1413-f7ea-4511-915a-699283568edc',
                             }}
                           />
                           <VStack>
@@ -172,7 +174,15 @@ export const ChatScreen = ({ navigation }) => {
                               color="coolGray.800"
                               bold
                             >
-                              {item.userName || item.name}
+                              {item.userName ||
+                                (item.firstName && item.lastName
+                                  ? `${item.firstName} ${item.lastName}`
+                                  : item.name)}
+                            </Text>
+                            <Text>
+                              {item.latestMessage?.content.length > 20
+                                ? item.latestMessage?.content.slice(0, 20) + '...'
+                                : item.latestMessage?.content}
                             </Text>
                           </VStack>
                           <Spacer />
@@ -187,7 +197,7 @@ export const ChatScreen = ({ navigation }) => {
                             {item.latestMessage?.timestamp
                               ? moment
                                   .unix(item.latestMessage.timestamp.seconds)
-                                  .format('MMMM, Do, h:mm:ss a')
+                                  .format('MMM, Do, h:mm a')
                               : 'No messages'}
                           </Text>
                         </HStack>

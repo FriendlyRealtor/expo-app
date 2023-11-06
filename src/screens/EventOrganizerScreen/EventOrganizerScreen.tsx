@@ -68,7 +68,7 @@ export const EventOrganizerScreen = () => {
       const { uid } = userAuth.currentUser;
 
       const currentDate = moment(new Date());
-      const formattedDate = currentDate.format('MMMM Do YYYY');
+      const formattedDate = currentDate.format('MMM Do YYYY');
       const formattedStartTime = currentDate.format('h:mm a');
       const formattedEndTime = currentDate.format('h:mm a');
 
@@ -172,7 +172,7 @@ export const EventOrganizerScreen = () => {
             <VStack width="80%" space={4}>
               {/*<FormControl isInvalid={'photo' in errors}>
 								<FormControl.Label>Event Photo</FormControl.Label>
-								<Controller 
+								<Controller
 									control={control}
 									render={({ onChange }) => (
 										<TouchableOpacity>
@@ -322,7 +322,7 @@ export const EventOrganizerScreen = () => {
                     minimumDate={new Date()}
                     onChange={(event, selectedTime) => {
                       if (event.type === 'set') {
-                        const formattedDate = moment(selectedTime).format('MMMM Do YYYY');
+                        const formattedDate = moment(selectedTime).format('MMM Do YYYY');
                         setValue('eventDate', formattedDate);
                       }
                     }}

@@ -35,56 +35,43 @@ export const useChats = () => {
         const userIds = Object.keys(messagesData);
         const userRef = collection(db, 'users');
         const buyerRef = collection(db, 'buyers');
-
         const userQuery = query(userRef, where('__name__', 'in', userIds));
         const buyerQuery = query(buyerRef, where('__name__', 'in', userIds));
 
-        const userPromise = getDocs(userQuery);
-        const buyerPromise = getDocs(buyerQuery);
-
-        Promise.all([userPromise, buyerPromise])
-          .then((querySnapshots) => {
-            const combinedData = [];
-
-            // Process user data
-            const userQuerySnapshot = querySnapshots[0];
-            const usersData = userQuerySnapshot.docs.reduce((acc, doc) => {
+        Promise.all([getDocs(userQuery), getDocs(buyerQuery)])
+          .then(([userQuerySnapshot, buyerQuerySnapshot]) => {
+            const userDataMap = {};
+            userQuerySnapshot.docs.map((doc) => {
               const userData = doc.data();
               const userId = doc.id;
               const messages = messagesData[userId];
               const latestMessage = messages
                 ? Object.values(messages)[Object.values(messages).length - 1]
                 : null;
-              acc[userId] = {
+              userDataMap[userId] = {
                 ...userData,
-                id: userId,
+                id: doc.id,
                 latestMessage,
               };
-              return acc;
-            }, {});
-
-            // Process buyer data
-            const buyerQuerySnapshot = querySnapshots[1];
-            buyerQuerySnapshot.docs.forEach((doc) => {
-              const buyerData = doc.data();
-              const buyerId = doc.id;
-              if (usersData[buyerId]) {
-                // If the buyer is also a user, merge the data
-                combinedData.push({
-                  ...usersData[buyerId],
-                  ...buyerData,
-                });
-              } else {
-                // If the buyer is not in the user data, add it to the combined data
-                combinedData.push({
-                  ...buyerData,
-                  id: buyerId,
-                  latestMessage: null,
-                });
-              }
             });
 
-            setMessageList(combinedData);
+            const combinedData = buyerQuerySnapshot.docs.map((doc) => {
+              const buyerData = doc.data();
+              const buyerId = doc.id;
+              const messages = messagesData[buyerId];
+              const latestMessage = messages
+                ? Object.values(messages)[Object.values(messages).length - 1]
+                : null;
+              return {
+                ...buyerData,
+                id: doc.id,
+                latestMessage,
+              };
+            });
+
+            // Combine user and buyer data into a single array
+            const messageList = combinedData.concat(Object.values(userDataMap));
+            setMessageList(messageList);
           })
           .catch((error) => {
             Bugsnag.notify(error);
@@ -114,31 +101,56 @@ export const useChats = () => {
         }
 
         const userRef = collection(db, 'users');
+        const buyersRef = collection(db, 'buyers');
 
         // Create an array to hold the results
         const queries = chunks.map((chunk) => {
-          const q = query(userRef, where('__name__', 'in', chunk));
-          return getDocs(q);
+          const userQuery = query(userRef, where('__name__', 'in', chunk));
+          const buyerQuery = query(buyersRef, where('__name__', 'in', chunk));
+
+          const userDocsPromise = getDocs(userQuery);
+          const buyerDocsPromise = getDocs(buyerQuery);
+
+          return Promise.all([userDocsPromise, buyerDocsPromise]);
         });
 
         // Execute all queries concurrently using Promise.all()
         Promise.all(queries)
           .then((querySnapshots) => {
-            const usersData = querySnapshots.reduce((users, querySnapshot) => {
-              querySnapshot.docs.forEach((doc) => {
-                const userData = doc.data();
-                const userId = doc.id;
-                users[userId] = userData;
-              });
-              return users;
-            }, {});
+            const usersData = querySnapshots.reduce(
+              (users, [userQuerySnapshot, buyerQuerySnapshot]) => {
+                userQuerySnapshot.docs.forEach((doc) => {
+                  const userData = doc.data();
+                  const userId = doc.id;
+                  users[userId] = {
+                    userData,
+                    buyerData: {},
+                  };
+                });
 
-            // Combine messagesData and usersData
-            const flattenedArray = Object.entries(messagesData).map(([key, value]) => ({
-              id: key,
-              ...value,
-              user: usersData[value.senderId],
-            }));
+                // Combine buyer data with user data
+                buyerQuerySnapshot.docs.forEach((doc) => {
+                  const buyerData = doc.data();
+                  const buyerId = doc.id;
+                  if (users[buyerId]) {
+                    users[buyerId].buyerData = buyerData;
+                  }
+                });
+
+                return users;
+              },
+              {},
+            );
+
+            // Combine messagesData, usersData, and buyersData
+            const flattenedArray = Object.entries(messagesData).map(([key, value]) => {
+              return {
+                id: key,
+                ...value,
+                user: usersData[value.senderId]?.userData || null,
+                buyer: usersData[value.receiverId]?.buyerData || null,
+              };
+            });
 
             const sortedMessages = flattenedArray.sort((a, b) => {
               const timestampA = a.timestamp.seconds;
