@@ -26,7 +26,7 @@ import Bugsnag from '@bugsnag/expo';
 import { Formik } from 'formik';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { agentContactFormSchema } from '../../utils';
-import { db } from '../../config';
+import { db, Colors } from '../../config';
 import { getAuth } from 'firebase/auth';
 import uuid from 'react-native-uuid';
 
@@ -119,7 +119,7 @@ export const ContactScreen = () => {
     : contacts;
 
   return (
-    <View w="100%" px={8} textAlign="center">
+    <View w="100%" px={8} textAlign="center" backgroundColor={Colors.white}>
       {contacts.length === 0 ? (
         <Formik
           initialValues={{

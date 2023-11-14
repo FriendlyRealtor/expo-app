@@ -48,57 +48,61 @@ export const SignupScreen = inject('appStore')(
     } = useTogglePasswordVisibility();
 
     const handleSignup = async (values) => {
-			const { email, password, firstName, lastName, userName } = values;
-			const { checkUsernameExists } = appStore;
-		
-			// Trim values to remove leading and trailing spaces
-			const trimmedValues = {
-				email: email.trim(),
-				password,
-				firstName: firstName.trim(),
-				lastName: lastName.trim(),
-				userName: userName.trim(),
-			};
-		
-			try {
-				const doesUserNameExists = await checkUsernameExists(trimmedValues.userName);
-				if (doesUserNameExists) {
-					throw new Error('Username already exists');
-				}
-		
-				const res = await createUserWithEmailAndPassword(auth, trimmedValues.email, trimmedValues.password);
-				await sendEmailVerification(res.user);
-				Alert.alert('Email Verification sent.');
-				await setDoc(doc(db, 'users', res.user.uid), {
-					name: `${trimmedValues.firstName} ${trimmedValues.lastName}`,
-					ceRenewalDate: new Date(),
-					userName: trimmedValues.userName,
-					emailAddress: trimmedValues.email,
-					photo:
-						'https://firebasestorage.googleapis.com/v0/b/real-estate-app-9a719.appspot.com/o/default_photo%2Fimg_avatar.png?alt=media&token=ca7c1413-f7ea-4511-915a-699283568edc',
-				});
-				navigation.navigate('Login');
-				resetForm({});
-			} catch (error) {
-				Bugsnag.notify(error);
-				switch (error.code) {
-					case 'auth/email-already-in-use':
-						setErrorState('Email already in use, try another one.');
-						break;
-					case 'auth/invalid-email':
-						setErrorState('Please enter a valid email!');
-						break;
-					case 'auth/weak-password':
-						setErrorState('Please enter a stronger password!');
-						break;
-					case undefined:
-						setErrorState(error.message as string);
-						break;
-					default:
-						setErrorState(`Contact Support contact@friendlyrealtor.app ${error.message}`);
-				}
-			}
-		};
+      const { email, password, firstName, lastName, userName } = values;
+      const { checkUsernameExists } = appStore;
+
+      // Trim values to remove leading and trailing spaces
+      const trimmedValues = {
+        email: email.trim(),
+        password,
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        userName: userName.trim(),
+      };
+
+      try {
+        const doesUserNameExists = await checkUsernameExists(trimmedValues.userName);
+        if (doesUserNameExists) {
+          throw new Error('Username already exists');
+        }
+
+        const res = await createUserWithEmailAndPassword(
+          auth,
+          trimmedValues.email,
+          trimmedValues.password,
+        );
+        await sendEmailVerification(res.user);
+        Alert.alert('Email Verification sent.');
+        await setDoc(doc(db, 'users', res.user.uid), {
+          name: `${trimmedValues.firstName} ${trimmedValues.lastName}`,
+          ceRenewalDate: new Date(),
+          userName: trimmedValues.userName,
+          emailAddress: trimmedValues.email,
+          photo:
+            'https://firebasestorage.googleapis.com/v0/b/real-estate-app-9a719.appspot.com/o/default_photo%2Fimg_avatar.png?alt=media&token=ca7c1413-f7ea-4511-915a-699283568edc',
+        });
+        navigation.navigate('Login');
+        resetForm({});
+      } catch (error) {
+        Bugsnag.notify(error);
+        switch (error.code) {
+          case 'auth/email-already-in-use':
+            setErrorState('Email already in use, try another one.');
+            break;
+          case 'auth/invalid-email':
+            setErrorState('Please enter a valid email!');
+            break;
+          case 'auth/weak-password':
+            setErrorState('Please enter a stronger password!');
+            break;
+          case undefined:
+            setErrorState(error.message as string);
+            break;
+          default:
+            setErrorState(`Contact Support contact@friendlyrealtor.app ${error.message}`);
+        }
+      }
+    };
 
     return (
       <SafeAreaView>

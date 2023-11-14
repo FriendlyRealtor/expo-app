@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Input, Button, VStack, FormControl } from 'native-base';
+import { Colors } from '../../config';
 
 export const PaymentScreen = () => {
   const [cardNumber, setCardNumber] = useState('');
@@ -12,7 +13,7 @@ export const PaymentScreen = () => {
   };
 
   return (
-    <View flex={1} p={4}>
+    <View flex={1} p={4} backgroundColor={Colors.white}>
       <Text fontSize="xl" mb={4}>
         Add Card Information
       </Text>

@@ -1,6 +1,14 @@
 import * as Location from 'expo-location';
 
-import { ClientScreen, ContactScreen, HomeScreen, SettingScreen, EventScreen } from '../screens';
+import {
+  ClientScreen,
+  ContactScreen,
+  EventOrganizerScreen,
+  AIScreen,
+  HomeScreen,
+  SettingScreen,
+  EventScreen,
+} from '../screens';
 import React, { useEffect, useState } from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
 
@@ -66,7 +74,7 @@ export const AppTabs = (props) => {
         })}
       />
       <Tab.Screen
-        name="Contacts"
+        name="AI Realtor Assistant"
         options={{
           headerShown: false,
           tabBarIcon: () => (
@@ -74,11 +82,11 @@ export const AppTabs = (props) => {
           ),
         }}
       >
-        {() => <ContactScreen />}
+        {() => <AIScreen />}
       </Tab.Screen>
       <Tab.Screen
-        name="Manage Deals"
-        component={ClientScreen}
+        name="Event Organizer"
+        component={EventOrganizerScreen}
         options={{
           headerShown: false,
           tabBarIcon: () => (

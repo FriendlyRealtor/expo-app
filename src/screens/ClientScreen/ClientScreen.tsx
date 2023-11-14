@@ -13,7 +13,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { StatusBar } from 'expo-status-bar';
 import _ from 'lodash';
-import { db } from '../../config';
+import { Colors, db } from '../../config';
 import { getAuth } from 'firebase/auth';
 import moment from 'moment';
 import { passwordResetSchema } from '../../utils';
@@ -165,7 +165,7 @@ export const AddDeal = ({ modalVisible, setModalVisible, formData, setUserDeals 
         setModalVisible(!modalVisible);
       }}
     >
-      <View style={styles.centeredView}>
+      <View style={{ ...styles.centeredView, backgroundColor: Colors.white }}>
         <View style={styles.modalView}>
           <Pressable onPress={() => setModalVisible(!modalVisible)} style={styles.close}>
             <Icon style={{ marginRight: 8 }} name="close" size={24} />

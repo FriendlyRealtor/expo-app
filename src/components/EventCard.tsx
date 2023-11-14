@@ -48,12 +48,12 @@ export const EventCard = ({ event, index, isOrganizerCard, deleteEvent }) => {
     {
       text: isOrganizerCard ? '' : 'Event Details',
       onPress: () => (isOrganizerCard ? () => {} : setActionSheetVisible(true)),
-      color: Colors.blue,
+      color: Colors.mediumGray,
     },
     {
       text: isOrganizerCard ? 'Delete Event' : 'Join Event',
       onPress: () => (isOrganizerCard ? deleteEvent(event?.id, index) : handleJoinEvent()),
-      color: Colors.transparent,
+      color: Colors.black,
     },
   ];
 
@@ -62,7 +62,7 @@ export const EventCard = ({ event, index, isOrganizerCard, deleteEvent }) => {
     <>
       <Box
         width="90%"
-        backgroundColor="white"
+        backgroundColor={Colors.color2}
         borderRadius={8}
         shadow={2}
         p={4}
@@ -75,28 +75,28 @@ export const EventCard = ({ event, index, isOrganizerCard, deleteEvent }) => {
           </Text>
         )}
         {/* Event Details */}
-        <Text fontSize="xl" fontWeight="bold" color={Colors.color2}>
+        <Text fontSize="xl" fontWeight="bold" color={Colors.white}>
           {event.title}
         </Text>
-        <Text fontSize="md" color="gray.600" my={2}>
+        <Text fontSize="md" color={Colors.white} my={2}>
           <Text fontWeight="bold" color="black">
             Location:
           </Text>{' '}
           {event.location}
         </Text>
-        <Text fontSize="md" color="gray.600">
+        <Text fontSize="md" color={Colors.white}>
           <Text fontWeight="bold" color="black">
             Date:
           </Text>{' '}
           {event.eventDate}
         </Text>
-        <Text fontSize="md" color="gray.600" my={2}>
+        <Text fontSize="md" color={Colors.white} my={2}>
           <Text fontWeight="bold" color="black">
             Participants:
           </Text>{' '}
           {event.participants.length} | {event.totalParticipants}
         </Text>
-        <Text fontSize="md" color="gray.600">
+        <Text fontSize="md" color={Colors.white}>
           <Text fontWeight="bold" color="black">
             Category:
           </Text>{' '}
@@ -117,9 +117,7 @@ export const EventCard = ({ event, index, isOrganizerCard, deleteEvent }) => {
                 isLoading={button.text === 'Join Event' && saving}
                 style={{ backgroundColor: button.color, borderWidth: 1 }}
               >
-                <Text color={button.text === 'Event Details' ? 'white' : 'black'}>
-                  {button.text}
-                </Text>
+                <Text color={Colors.white}>{button.text}</Text>
               </Button>
             );
           })}
