@@ -13,14 +13,13 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { StatusBar } from 'expo-status-bar';
 import { ScrollView, Input, View, Box, Text, Heading, Button } from 'native-base';
 import _ from 'lodash';
-import { db } from '../../config';
+import { Colors, db } from '../../config';
 import { getAuth } from 'firebase/auth';
 import moment from 'moment';
 import { useIsFocused } from '@react-navigation/native';
 import uuid from 'react-native-uuid';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { ClientScreenStyles } from './ClientStyles';
-import { Colors } from '../../config';
 
 export const AddDeal = ({ modalVisible, setModalVisible, formData, setUserDeals }) => {
   const styles = ClientScreenStyles;
@@ -126,7 +125,7 @@ export const AddDeal = ({ modalVisible, setModalVisible, formData, setUserDeals 
         setModalVisible(!modalVisible);
       }}
     >
-      <SafeAreaView style={styles.centeredView}>
+      <View style={{ ...styles.centeredView, backgroundColor: Colors.white }}>
         <View style={styles.modalView}>
           <Pressable onPress={() => setModalVisible(!modalVisible)} style={styles.close}>
             <Icon style={{ marginRight: 8 }} name="close" size={24} />

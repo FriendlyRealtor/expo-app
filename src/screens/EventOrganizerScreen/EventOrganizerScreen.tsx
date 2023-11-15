@@ -24,6 +24,7 @@ import Bugsnag from '@bugsnag/expo';
 import { getDocs, deleteDoc, doc, addDoc, collection } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { db } from '../../config';
+import { Colors } from '../../config';
 
 export const EventOrganizerScreen = () => {
   const userAuth = getAuth();
@@ -149,8 +150,25 @@ export const EventOrganizerScreen = () => {
   }, []);
 
   return (
-    <ScrollView px={8} pt={8}>
-      <Button onPress={() => setIsCreatingEvent(true)}>Create Event</Button>
+    <ScrollView px={8} pt={8} background="white">
+      <Text fontSize="xl" fontWeight="bold" mb={4}>
+        Follow these simple steps to create your event and connect with your audience:
+      </Text>
+
+      <Text fontSize="md" mb={4}>
+        1. Tap "Create Event" below.
+      </Text>
+
+      <Text fontSize="md" mb={4}>
+        2. Fill in event details, choose a category, and set the date.
+      </Text>
+
+      <Text fontSize="md" mb={4}>
+        3. Specify total participants and hit "Save Event."
+      </Text>
+      <Button onPress={() => setIsCreatingEvent(true)} color={Colors.color2}>
+        Create Event
+      </Button>
       {/* List of Events */}
       {events.map((event, index) => (
         <EventCard

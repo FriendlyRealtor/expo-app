@@ -51,20 +51,33 @@ export const SignupScreen = inject('appStore')(
       const { email, password, firstName, lastName, userName } = values;
       const { checkUsernameExists } = appStore;
 
+      // Trim values to remove leading and trailing spaces
+      const trimmedValues = {
+        email: email.trim(),
+        password,
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        userName: userName.trim(),
+      };
+
       try {
-        const doesUserNameExists = await checkUsernameExists(userName);
+        const doesUserNameExists = await checkUsernameExists(trimmedValues.userName);
         if (doesUserNameExists) {
           throw new Error('Username already exists');
         }
 
-        const res = await createUserWithEmailAndPassword(auth, email, password);
+        const res = await createUserWithEmailAndPassword(
+          auth,
+          trimmedValues.email,
+          trimmedValues.password,
+        );
         await sendEmailVerification(res.user);
         Alert.alert('Email Verification sent.');
         await setDoc(doc(db, 'users', res.user.uid), {
-          name: `${firstName} ${lastName}`,
+          name: `${trimmedValues.firstName} ${trimmedValues.lastName}`,
           ceRenewalDate: new Date(),
-          userName: userName,
-          emailAddress: email,
+          userName: trimmedValues.userName,
+          emailAddress: trimmedValues.email,
           photo:
             'https://firebasestorage.googleapis.com/v0/b/real-estate-app-9a719.appspot.com/o/default_photo%2Fimg_avatar.png?alt=media&token=ca7c1413-f7ea-4511-915a-699283568edc',
         });

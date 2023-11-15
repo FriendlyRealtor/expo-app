@@ -15,7 +15,7 @@ import { StatusBar } from 'expo-status-bar';
 import { TouchableOpacity } from 'react-native';
 import _ from 'lodash';
 import axios from 'axios';
-import { db } from '../../config';
+import { db, Colors } from '../../config';
 import { getAuth } from 'firebase/auth';
 import { useIsFocused } from '@react-navigation/native';
 import uuid from 'react-native-uuid';
@@ -120,7 +120,7 @@ export const HomeScreen = ({ navigation }) => {
   }, []);
 
   return (
-    <View style={styles.layout}>
+    <View style={styles.layout} backgroundColor={Colors.white}>
       <StatusBar style="auto" />
       <KeyboardAwareScrollView style={styles.keyboard}>
         <Formik validationSchema={locationValidationSchema}>

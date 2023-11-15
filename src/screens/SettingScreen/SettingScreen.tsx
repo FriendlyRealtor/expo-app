@@ -24,7 +24,7 @@ import {
   useSharedValue,
 } from 'react-native-reanimated';
 import React, { useCallback, useEffect, useState } from 'react';
-import { db, storage } from '../../config';
+import { db, storage, Colors } from '../../config';
 import { doc, updateDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { inject, observer } from 'mobx-react';
@@ -297,7 +297,7 @@ export const SettingScreen = inject('appStore')(
     const day = moment().format('D');
 
     return (
-      <Container style={styles.container}>
+      <Container style={{ ...styles.container, backgroundColor: Colors.white }}>
         <StatusBar style="auto" />
         <View
           style={{
