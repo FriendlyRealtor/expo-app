@@ -81,12 +81,20 @@ export const EventScreen = ({ navigation }) => {
   }, [events, searchQuery, isFreeEvent, selectedCategories, selectedDate]);
 
   return (
-    <View flex={1} p={4}>
+    <View flex={1} p={4} background="white">
       {false && (
         <TouchableOpacity onPress={() => navigation.navigate('Event Organizer')}>
           <UpgradePrompt />
         </TouchableOpacity>
       )}
+      <Center mt={2} mb={4}>
+        <Text fontSize="lg" fontWeight="bold">
+          All events in your area will be viewed here.
+        </Text>
+        <Text fontSize="md" mt={2} textAlign="center" color="gray.600">
+          Explore and stay updated with the latest events relevant to your real estate interests.
+        </Text>
+      </Center>
       <View mb={12}>
         <Input
           placeholder="Search For Events by name..."

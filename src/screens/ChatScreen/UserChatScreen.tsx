@@ -3,7 +3,7 @@ import { Avatar, FlatList, View, Text, Input, Button, ScrollView } from 'native-
 import { useRoute } from '@react-navigation/native';
 import { useChats } from './ChatHooks';
 import moment from 'moment';
-import { auth } from '../../config';
+import { auth, Colors } from '../../config';
 
 export const UserChatScreen = () => {
   const [value, setValue] = useState<string>('');
@@ -55,7 +55,7 @@ export const UserChatScreen = () => {
   };
 
   return (
-    <View flex={1} marginY={16} marginX={4}>
+    <View flex={1} marginY={16} marginX={4} backgroundColor={Colors.white}>
       <ScrollView
         marginBottom={6}
         ref={scrollViewRef}

@@ -12,6 +12,7 @@ import Bugsnag from '@bugsnag/expo';
 import Constants from 'expo-constants';
 import { EvilIcons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Colors } from '../../config';
 
 export const DistancePropertiesScreen = () => {
   const [currentPosition, setCurrentPosition] = useState<Address | null>(null);
@@ -105,7 +106,7 @@ export const DistancePropertiesScreen = () => {
   };
 
   return (
-    <Container flex={1} width="full" maxWidth="100%" mt={8} ml={8}>
+    <Container flex={1} width="full" maxWidth="100%" mt={8} ml={8} backgroundColor={Colors.white}>
       <FormikProvider value={formik}>
         <ScrollView width="3/4">
           <Text>

@@ -45,7 +45,7 @@ export const ChatScreen = ({ navigation }) => {
   const { isRefreshing, onRefresh } = useRefresh({ handleRefresh });
 
   return (
-    <View marginTop="4">
+    <View marginTop="4" backgroundColor={Colors.white}>
       <StatusBar />
       <IconButton
         icon={<Icon as={EvilIcons} name="plus" size="2xl" color="black.500" />}

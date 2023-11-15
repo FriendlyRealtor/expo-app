@@ -18,6 +18,8 @@ export const AIScreen = ({ navigation }) => {
   const [messages, setMessages] = useState([]);
   const [isChatSaved, setIsChatSaved] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
+  const placeholderText =
+    'Get started with your personal AI assistant for realtors. Ask any questions about real estate.';
 
   useEffect(() => {
     const fetchVoiceToSpeechStatus = async () => {
@@ -245,15 +247,26 @@ export const AIScreen = ({ navigation }) => {
       </View>
       <StatusBar style="auto" />
       <View style={{ flex: 1, justifyContent: 'center' }}>
-        <GiftedChat
-          messages={messages}
-          user={{ _id: 1 }}
-          renderInputToolbar={() => undefined}
-          minInputToolbarHeight={0}
-          renderMessage={renderMessage}
-        />
+        {messages.length === 0 ? (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Text style={{ fontSize: 18, color: COLORS.gray }}>{placeholderText}</Text>
+          </View>
+        ) : (
+          <GiftedChat
+            messages={messages}
+            user={{ _id: 1 }}
+            renderInputToolbar={() => undefined}
+            minInputToolbarHeight={0}
+            renderMessage={renderMessage}
+          />
+        )}
       </View>
-
       <View
         style={{
           flexDirection: 'row',
