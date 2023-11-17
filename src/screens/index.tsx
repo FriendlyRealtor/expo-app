@@ -5,6 +5,7 @@ import { ForgotPasswordScreen } from './ForgotPasswordScreen';
 import { ContactScreen } from './ContactScreen';
 import { FeedScreen } from './FeedScreen';
 import { AIScreen } from './AIScreen';
+import { FacebookScreen } from './FacebookScreen';
 import { SettingScreen } from './SettingScreen';
 import { LocalRestaurantScreen } from './LocalRestaurantScreen';
 import { ContinueEducationScreen } from './ContinueEducationScreen';
@@ -27,6 +28,7 @@ export {
   DistancePropertiesScreen,
   ChatScreen,
   ContactScreen,
+  FacebookScreen,
   FeedScreen,
   PostScreen,
   EventScreen,

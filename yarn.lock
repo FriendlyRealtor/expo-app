@@ -12567,6 +12567,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-fbsdk-next@npm:^12.1.1":
+  version: 12.1.1
+  resolution: "react-native-fbsdk-next@npm:12.1.1"
+  dependencies:
+    xml2js: ^0.4.23
+  peerDependencies:
+    expo: ">=47.0.0"
+    react-native: ">=0.63.3"
+  peerDependenciesMeta:
+    expo:
+      optional: true
+  checksum: 8f3eb7668c15f621a895c7490cc3e020240bc7fa2cc4dfb1ceb8d369bf8b976f9999e070301bd09637370a2d8a9879a6f63206c2521ace924b614b494c3f471a
+  languageName: node
+  linkType: hard
+
 "react-native-gesture-handler@npm:~2.8.0":
   version: 2.8.0
   resolution: "react-native-gesture-handler@npm:2.8.0"
@@ -13442,6 +13457,7 @@ __metadata:
     react-native: 0.70.8
     react-native-blob-util: ^0.17.3
     react-native-dotenv: ^3.4.8
+    react-native-fbsdk-next: ^12.1.1
     react-native-gesture-handler: ~2.8.0
     react-native-gifted-chat: ^2.4.0
     react-native-google-places-autocomplete: ^2.5.1
@@ -15415,7 +15431,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"xml2js@npm:0.4.23":
+"xml2js@npm:0.4.23, xml2js@npm:^0.4.23":
   version: 0.4.23
   resolution: "xml2js@npm:0.4.23"
   dependencies:

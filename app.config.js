@@ -6,7 +6,7 @@ export default {
     slug: 'friendlyrealtor',
     privacy: 'unlisted',
     platforms: ['ios'],
-    version: '1.0.25',
+    version: '1.0.26',
     orientation: 'portrait',
     owner: 'jubileeinvestments',
     icon: './assets/icon.png',
@@ -90,6 +90,19 @@ export default {
       ],
       ['@config-plugins/react-native-pdf'],
       ['@config-plugins/react-native-blob-util'],
+      [
+        'react-native-fbsdk-next',
+        {
+          appID: '1339976196848860',
+          clientToken: 'b95fc35e1b5d307b7f270c60ab423ac0',
+          displayName: 'Friendly Realtor',
+          advertiserIDCollectionEnabled: false,
+          autoLogAppEventsEnabled: false,
+          isAutoInitEnabled: true,
+          iosUserTrackingPermission:
+            'This identifier will be used to deliver personalized ads to you.',
+        },
+      ],
     ],
   },
 };
