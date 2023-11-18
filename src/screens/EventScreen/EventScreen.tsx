@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { View, Text, Center, Input, ScrollView, VStack } from 'native-base';
+import { View, Text, Center, Input, ScrollView, HStack } from 'native-base';
 import { EventCard, Filter, UpgradePrompt } from '../../components';
 import { EventCategories, EventDates } from './EventTypes';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import moment from 'moment';
-import { db } from '../../config';
+import { db, Colors } from '../../config';
 import { getDocs, collection } from 'firebase/firestore';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export const EventScreen = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -83,55 +84,54 @@ export const EventScreen = ({ navigation }) => {
   }, [events, searchQuery, isFreeEvent, selectedCategories, selectedDate]);
 
   return (
-    <View flex={1} p={4} background="white">
-      {false && (
-        <TouchableOpacity onPress={() => navigation.navigate('Event Organizer')}>
-          <UpgradePrompt />
-        </TouchableOpacity>
-      )}
-      <Center mt={2} mb={4}>
-        <Text fontSize="lg" fontWeight="bold">
-          All events in your area will be viewed here.
-        </Text>
-        <Text fontSize="md" mt={2} textAlign="center" color="gray.600">
-          Explore and stay updated with the latest events relevant to your real estate interests.
-        </Text>
-      </Center>
-      <View mb={12}>
-        <Input
-          placeholder="Search For Events by name..."
-          value={searchQuery}
-          onChangeText={(text) => setSearchQuery(text)}
-        />
-      </View>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white, padding: 4 }}>
       <ScrollView>
-        <VStack>
-          <Filter
-            title="Date"
-            options={EventDates.map((date) => date.name)}
-            onFilterChange={(filters) => setSelectedDate(filters)}
+        {false && (
+          <TouchableOpacity onPress={() => navigation.navigate('Event Organizer')}>
+            <UpgradePrompt />
+          </TouchableOpacity>
+        )}
+        <View mb={4} mx={1} textAlign="left">
+          <Text fontSize="2xl" fontWeight={700}>
+            Explore Local Events.
+          </Text>
+          <Text fontSize="xs" mt={1} mb={3} width={400} color={Colors.mediumGray}>
+            Explore and stay updated with the latest events relevant to your real estate interests.
+          </Text>
+        </View>
+        <View mb={2} mx={1}>
+          <Input
+            placeholder="Search For Events by name..."
+            value={searchQuery}
+            onChangeText={(text) => setSearchQuery(text)}
           />
+        </View>
+        <HStack mx={1} mb={12} alignItems="center">
+          <View mr={4}>
+            <Filter
+              title="Date"
+              options={EventDates.map((date) => date.name)}
+              onFilterChange={(filters) => setSelectedDate(filters)}
+            />
+          </View>
           <Filter
             title="Select Categories"
             options={EventCategories.map((category) => category.name)}
             onFilterChange={(filters) => setSelectedCategories(filters)}
           />
-          {/*<ToggleSwitch
-            label="Only Free Events"
-            initialValue={isFreeEvent}
-            onValueChange={(value) => setIsFreeEvent(value)}
-			/>*/}
-        </VStack>
-        {filteredEvents.length === 0 ? (
-          <Center mt={16}>
-            <Text fontWeight="bold" fontSize="lg">
-              No events found for your search query or selected filters.
-            </Text>
-          </Center>
-        ) : (
-          filteredEvents.map((event) => <EventCard key={event.id} event={event} />)
-        )}
+        </HStack>
+        <View px={6}>
+          {filteredEvents.length === 0 ? (
+            <Center mt={16}>
+              <Text fontWeight="bold" fontSize="lg">
+                No events found for your search query or selected filters.
+              </Text>
+            </Center>
+          ) : (
+            filteredEvents.map((event) => <EventCard key={event.id} event={event} />)
+          )}
+        </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
