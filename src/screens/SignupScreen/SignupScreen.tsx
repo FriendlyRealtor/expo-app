@@ -38,6 +38,7 @@ export const SignupScreen = inject('appStore')(
       });
 
     const [errorState, setErrorState] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const {
       passwordVisibility,
@@ -62,6 +63,7 @@ export const SignupScreen = inject('appStore')(
       };
 
       try {
+        setIsLoading(true);
         const doesUserNameExists = await checkUsernameExists(trimmedValues.userName);
         if (doesUserNameExists) {
           throw new Error('Username already exists');
@@ -102,6 +104,8 @@ export const SignupScreen = inject('appStore')(
           default:
             setErrorState(`Contact Support contact@friendlyrealtor.app ${error.message}`);
         }
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -253,7 +257,12 @@ export const SignupScreen = inject('appStore')(
                     </TouchableOpacity>
                     applies.
                   </Text>
-                  <Button onPress={handleSubmit} backgroundColor={Colors.blue} mt={8}>
+                  <Button
+                    onPress={handleSubmit}
+                    isLoading={isLoading}
+                    backgroundColor={Colors.blue}
+                    mt={8}
+                  >
                     <Text style={styles.buttonText} color="white">
                       Sign Up
                     </Text>
