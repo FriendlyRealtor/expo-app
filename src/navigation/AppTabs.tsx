@@ -85,7 +85,7 @@ export const AppTabs = (props) => {
         name="AI Realtor Assistant"
         options={{
           headerShown: false,
-          tabBarLabel: 'AI Realtor Assistant',
+          tabBarLabel: 'AI Realtor',
           tabBarIcon: () => (
             <Icon as={MaterialCommunityIcons} name="account" size="2xl" color={Colors.color2} />
           ),
@@ -101,6 +101,31 @@ export const AppTabs = (props) => {
           tabBarLabel: 'Event Organizer',
           tabBarIcon: () => (
             <Icon as={MaterialCommunityIcons} name="handshake" size="2xl" color={Colors.color2} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Settings"
+        component={SettingScreen}
+        options={{
+          headerShown: false,
+          tabBarLabel: 'Profile',
+          tabBarIcon: () => (
+            <Image
+              source={
+                props.route?.params?.user
+                  ? { uri: props.route?.params?.user?.photo }
+                  : require('../../assets/icon.png')
+              }
+              style={{
+                width: 25,
+                height: 25,
+                borderRadius: 25 / 2,
+                borderColor: 'lightgray',
+                borderWidth: 2,
+                overflow: 'hidden',
+              }}
+            />
           ),
         }}
       />
