@@ -5,6 +5,7 @@ import {
   ContactScreen,
   EventOrganizerScreen,
   AIScreen,
+  FeedScreen,
   HomeScreen,
   SettingScreen,
   EventScreen,
@@ -50,7 +51,7 @@ export const AppTabs = (props) => {
     <Tab.Navigator>
       <Tab.Screen
         name="Discover Events"
-        component={EventScreen}
+        component={FeedScreen}
         options={({ navigation }) => ({
           headerShown: false,
           tabBarIcon: () => (
