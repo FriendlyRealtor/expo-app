@@ -47,12 +47,20 @@ export const AppTabs = (props) => {
   }, []);
 
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarStyle: {
+          backgroundColor: Colors.white,
+          borderTopWidth: 1,
+        },
+      }}
+    >
       <Tab.Screen
         name="Discover Events"
         component={EventScreen}
         options={({ navigation }) => ({
           headerShown: false,
+          tabBarLabel: 'Discover Events',
           tabBarIcon: () => (
             <Icon as={MaterialCommunityIcons} name="map-search" size="2xl" color={Colors.color2} />
           ),
@@ -77,6 +85,7 @@ export const AppTabs = (props) => {
         name="AI Realtor Assistant"
         options={{
           headerShown: false,
+          tabBarLabel: 'AI Realtor Assistant',
           tabBarIcon: () => (
             <Icon as={MaterialCommunityIcons} name="account" size="2xl" color={Colors.color2} />
           ),
@@ -89,6 +98,7 @@ export const AppTabs = (props) => {
         component={EventOrganizerScreen}
         options={{
           headerShown: false,
+          tabBarLabel: 'Event Organizer',
           tabBarIcon: () => (
             <Icon as={MaterialCommunityIcons} name="handshake" size="2xl" color={Colors.color2} />
           ),

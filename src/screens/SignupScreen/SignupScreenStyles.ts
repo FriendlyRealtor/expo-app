@@ -7,10 +7,6 @@ export const SignupScreenStyles = StyleSheet.create({
     backgroundColor: Colors.transparent,
     paddingHorizontal: 12,
   },
-  logoContainer: {
-    alignItems: 'center',
-    marginLeft: 32,
-  },
   logo: { width: 175, height: 175 },
   screenTitle: {
     fontSize: 32,

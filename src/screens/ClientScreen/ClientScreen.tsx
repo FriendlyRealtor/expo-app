@@ -125,7 +125,7 @@ export const AddDeal = ({ modalVisible, setModalVisible, formData, setUserDeals 
         setModalVisible(!modalVisible);
       }}
     >
-      <View style={{ ...styles.centeredView, backgroundColor: Colors.white }}>
+      <SafeAreaView style={{ ...styles.centeredView, backgroundColor: Colors.white }}>
         <View style={styles.modalView}>
           <Pressable onPress={() => setModalVisible(!modalVisible)} style={styles.close}>
             <Icon style={{ marginRight: 8 }} name="close" size={24} />
