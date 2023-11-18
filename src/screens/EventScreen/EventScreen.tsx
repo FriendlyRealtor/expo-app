@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { View, Text, Center, Input, ScrollView, VStack } from 'native-base';
-import { EventCard, Filter, ToggleSwitch, UpgradePrompt } from '../../components';
-import { EventCategories, EventDates, EventData } from './EventTypes';
+import { EventCard, Filter, UpgradePrompt } from '../../components';
+import { EventCategories, EventDates } from './EventTypes';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import moment from 'moment';
 import { db } from '../../config';
@@ -25,10 +25,12 @@ export const EventScreen = ({ navigation }) => {
         querySnapshot.forEach((doc) => {
           // Extract event data and add it to the eventsData array
           const event = doc.data();
+          const formattedDate = moment(event.eventDate, 'MMMM Do, YYYY').format('MMM Do');
           // Include the document ID as an 'id' key in the event object
           eventsData.push({
             id: doc.id,
             ...event,
+            eventDate: formattedDate,
           });
         });
 

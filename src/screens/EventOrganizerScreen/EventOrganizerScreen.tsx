@@ -132,10 +132,12 @@ export const EventOrganizerScreen = () => {
         querySnapshot.forEach((doc) => {
           // Extract event data and add it to the eventsData array
           const event = doc.data();
+          const formattedDate = moment(event.eventDate, 'MMMM Do, YYYY').format('MMM Do');
           // Include the document ID as an 'id' key in the event object
           eventsData.push({
             id: doc.id,
             ...event,
+            eventDate: formattedDate,
           });
         });
 

@@ -1,10 +1,24 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, Box, Actionsheet, Button, HStack } from 'native-base';
+import {
+  View,
+  Text,
+  ScrollView,
+  Card,
+  Box,
+  Actionsheet,
+  Button,
+  IconButton,
+  HStack,
+  Image,
+  Icon,
+} from 'native-base';
 import { Colors } from '../config';
 import { EventOrganizerCategories } from '../screens/EventOrganizerScreen/EventOrganizerScreenTypes';
 import { getAuth } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { db } from '../config';
+import { TouchableOpacity } from 'react-native';
 
 export const EventCard = ({ event, index, isOrganizerCard, deleteEvent }) => {
   const [actionSheetVisible, setActionSheetVisible] = useState(false);
@@ -20,7 +34,7 @@ export const EventCard = ({ event, index, isOrganizerCard, deleteEvent }) => {
     // Check if the user's ID is already in the participants array
     if (event.participants.includes(uid)) {
       // User is already added to the event
-      setDuplicateMsg('User is already successfully added to the event.');
+      setDuplicateMsg('User already successfully added to the event.');
       setActionSheetVisible(false); // Close the action sheet
       setSaving(false); // Set the saving state to indicate that the operation is complete
       return;
@@ -44,84 +58,133 @@ export const EventCard = ({ event, index, isOrganizerCard, deleteEvent }) => {
     }
   };
 
-  const buttons = [
-    {
-      text: isOrganizerCard ? '' : 'Event Details',
-      onPress: () => (isOrganizerCard ? () => {} : setActionSheetVisible(true)),
-      color: Colors.mediumGray,
-    },
-    {
-      text: isOrganizerCard ? 'Delete Event' : 'Join Event',
-      onPress: () => (isOrganizerCard ? deleteEvent(event?.id, index) : handleJoinEvent()),
-      color: Colors.black,
-    },
-  ];
-
   return (
     <>
-      <Box
-        width="90%"
-        backgroundColor={Colors.color2}
+      <Card
+        width="100%"
+        backgroundColor={Colors.white}
         borderRadius={8}
-        shadow={2}
-        p={4}
+        borderWidth={1}
+        borderColor={Colors.black}
         my={4}
+        padding={0}
         onPress={() => setActionSheetVisible(true)}
       >
+        <View>
+          <Image
+            source={{
+              uri: 'https://images.ctfassets.net/v3wxyl8kvdve/VQkWluyreLE1dXFecnq1B/22ea33614953cdf35ecf635c99fb49a4/Icon_cyan_background.png',
+            }}
+            alt="Event Image"
+            resizeMode="cover"
+            borderTopRadius={8}
+            height={175}
+            width="100%"
+          />
+          <View
+            style={{
+              position: 'absolute',
+              top: 5,
+              left: 5,
+              justifyContent: 'flex-end',
+              alignItems: 'flex-start',
+              padding: 0,
+            }}
+          >
+            <Box backgroundColor={Colors.white} borderRadius={8} px={2.5} py={1.5}>
+              <Text color={Colors.blue} fontWeight={700}>
+                {event.eventDate}
+              </Text>
+            </Box>
+          </View>
+          <View
+            style={{
+              position: 'absolute',
+              bottom: 5,
+              right: 5,
+              justifyContent: 'flex-end',
+              alignItems: 'flex-start',
+              padding: 0,
+            }}
+          >
+            <TouchableOpacity
+              onPress={
+                isOrganizerCard ? () => deleteEvent(event?.id, index) : () => handleJoinEvent()
+              }
+              style={{
+                backgroundColor: isOrganizerCard ? Colors.red : Colors.mediumGray,
+                paddingHorizontal: 6,
+                paddingVertical: 4,
+                borderRadius: 8,
+              }}
+            >
+              <Text color={Colors.white} fontWeight={700}>
+                {isOrganizerCard ? 'Delete Event' : 'Join Event'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          {!isOrganizerCard && (
+            <View
+              style={{
+                position: 'absolute',
+                top: 5,
+                right: 5,
+                justifyContent: 'flex-end',
+                alignItems: 'flex-start',
+                padding: 0,
+              }}
+            >
+              <IconButton
+                onPress={() => setActionSheetVisible(true)}
+                _pressed={{
+                  bg: 'transparent',
+                }}
+              >
+                <Icon
+                  as={MaterialCommunityIcons}
+                  name="information"
+                  size="lg"
+                  color={Colors.black}
+                />
+              </IconButton>
+            </View>
+          )}
+        </View>
         {duplicateMsg && (
-          <Text fontSize="md" color="red.600">
+          <Text fontSize="md" color={Colors.red} mb={2}>
             {duplicateMsg}
           </Text>
         )}
-        {/* Event Details */}
-        <Text fontSize="xl" fontWeight="bold" color={Colors.white}>
-          {event.title}
-        </Text>
-        <Text fontSize="md" color={Colors.white} my={2}>
-          <Text fontWeight="bold" color="black">
-            Location:
-          </Text>{' '}
-          {event.location}
-        </Text>
-        <Text fontSize="md" color={Colors.white}>
-          <Text fontWeight="bold" color="black">
-            Date:
-          </Text>{' '}
-          {event.eventDate}
-        </Text>
-        <Text fontSize="md" color={Colors.white} my={2}>
-          <Text fontWeight="bold" color="black">
-            Participants:
-          </Text>{' '}
-          {event.participants.length} | {event.totalParticipants}
-        </Text>
-        <Text fontSize="md" color={Colors.white}>
-          <Text fontWeight="bold" color="black">
-            Category:
-          </Text>{' '}
-          {EventOrganizerCategories.find((cat) => cat.key === event.category)?.name || ''}
-        </Text>
-        <HStack justifyContent="space-between" mt={4}>
-          {buttons.map((button, index) => {
-            if (
-              !button.text ||
-              (button.text === 'Join Event' &&
-                parseInt(event.totalParticipants) <= event.participants.length)
-            ) {
-              return null;
-            }
-            return (
-              <Button
-                onPress={button.onPress}
-                isLoading={button.text === 'Join Event' && saving}
-                style={{ backgroundColor: button.color, borderWidth: 1 }}
-              >
-                <Text color={Colors.white}>{button.text}</Text>
-              </Button>
-            );
-          })}
-        </HStack>
-      </Box>
+        <View p={2} textAlign="left">
+          <Text fontSize="2xl" fontWeight={600} color={Colors.blue}>
+            {event.title}
+          </Text>
+          <HStack alignItems="center" mt={4} mb={2}>
+            <Icon
+              as={MaterialCommunityIcons}
+              name="account-group"
+              size="2xl"
+              color={Colors.black}
+              mr={4}
+              alignItems="center"
+            />
+            <Text fontSize="md" color={Colors.black}>
+              {event.participants.length} | {event.totalParticipants}
+            </Text>
+          </HStack>
+          <Box borderWidth={1} borderColor={Colors.blue} borderRadius={8} px={1} py={1.5}>
+            <Text color={Colors.blue} fontWeight={700}>
+              {EventOrganizerCategories.find((cat) => cat.key === event.category)?.name || ''}
+            </Text>
+          </Box>
+          <HStack my={2} alignItems="center">
+            <Icon as={MaterialCommunityIcons} name="map-marker" size="2xl" color={Colors.color2} />
+            <Text fontWeight={400} letterSpacing={1} color={Colors.black}>
+              {event.location}
+            </Text>
+          </HStack>
+        </View>
+      </Card>
       <Actionsheet isOpen={actionSheetVisible} onClose={() => setActionSheetVisible(false)}>
         <Actionsheet.Content px={8}>
           <ScrollView>
