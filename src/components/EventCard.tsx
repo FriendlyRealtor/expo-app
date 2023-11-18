@@ -73,7 +73,7 @@ export const EventCard = ({ event, index, isOrganizerCard, deleteEvent }) => {
         <View>
           <Image
             source={{
-              uri: 'https://images.ctfassets.net/v3wxyl8kvdve/VQkWluyreLE1dXFecnq1B/22ea33614953cdf35ecf635c99fb49a4/Icon_cyan_background.png',
+              uri: 'https://images.ctfassets.net/v3wxyl8kvdve/6LZCfjWBLPSbOboqV9Y7Ar/306b59797cde3d63e94b32defe6f78b4/640-it-students-view.JPG',
             }}
             alt="Event Image"
             resizeMode="cover"
@@ -112,7 +112,7 @@ export const EventCard = ({ event, index, isOrganizerCard, deleteEvent }) => {
                 isOrganizerCard ? () => deleteEvent(event?.id, index) : () => handleJoinEvent()
               }
               style={{
-                backgroundColor: isOrganizerCard ? Colors.red : Colors.mediumGray,
+                backgroundColor: isOrganizerCard ? Colors.red : Colors.blue,
                 paddingHorizontal: 6,
                 paddingVertical: 4,
                 borderRadius: 8,
