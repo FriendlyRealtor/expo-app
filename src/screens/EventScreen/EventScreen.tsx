@@ -95,7 +95,7 @@ export const EventScreen = ({ navigation }) => {
           <Text fontSize="2xl" fontWeight={700}>
             Explore Local Events.
           </Text>
-          <Text fontSize="xs" mt={1} mb={3} width={400} color={Colors.mediumGray}>
+          <Text fontSize="xs" mt={1} mb={3} width={375} color={Colors.mediumGray}>
             Explore and stay updated with the latest events relevant to your real estate interests.
           </Text>
         </View>
@@ -117,7 +117,12 @@ export const EventScreen = ({ navigation }) => {
           <Filter
             title="Select Categories"
             options={EventCategories.map((category) => category.name)}
-            onFilterChange={(filters) => setSelectedCategories(filters)}
+            onFilterChange={(filters) => {
+              const filter = EventCategories.find((category) => category.name === filters[0]);
+              if (filter && filter.key) {
+                setSelectedCategories([filter.key]);
+              }
+            }}
           />
         </HStack>
         <View px={6}>

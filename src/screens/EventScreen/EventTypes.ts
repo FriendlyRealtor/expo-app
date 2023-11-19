@@ -7,7 +7,7 @@ export const EventDates = [
 ];
 
 export const EventCategories = [
-  { key: 'open_house', name: 'Open House' },
+  { key: 'open_houses', name: 'Open Houses' },
   { key: 'property_tours', name: 'Property Tours' },
   { key: 'realtor_networking', name: 'Realtor Networking' },
   { key: 'homebuyer_seminars', name: 'Homebuyer Seminars' },

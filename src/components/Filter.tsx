@@ -19,7 +19,7 @@ export const Filter = ({ title = 'Select Filters', options, multiSelect, onFilte
 
   useEffect(() => {
     onFilterChange(selectedFilters);
-  }, [selectedFilters, onFilterChange]);
+  }, [selectedFilters]);
 
   const toggleFilter = (filter) => {
     if (multiSelect) {
