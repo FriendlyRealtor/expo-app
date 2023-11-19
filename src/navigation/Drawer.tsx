@@ -69,7 +69,7 @@ export const MyDrawer = ({ navigation, ...restProps }) => {
       />
       <Drawer.Screen name="DealHub" component={ClientScreen} />
       <Drawer.Screen name="MarketView Pro" component={HomeScreen} />
-      <Drawer.Screen name="Agent Showings" component={DistancePropertiesScreen} />
+      <Drawer.Screen name="Realtor Showings" component={DistancePropertiesScreen} />
       <Drawer.Screen name="Contacts" component={ContactScreen} />
       {/*<Drawer.Screen name="Payment Method" component={PaymentScreen} />*/}
     </Drawer.Navigator>
