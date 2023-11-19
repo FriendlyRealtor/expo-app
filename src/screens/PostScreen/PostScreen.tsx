@@ -39,7 +39,7 @@ export const PostScreen = () => {
             uploadTask.on(
               'state_changed',
               (error) => {
-                console.log('error performing upload image: ', error);
+                Bugsnag.notify(error);
               },
               () => {
                 getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {

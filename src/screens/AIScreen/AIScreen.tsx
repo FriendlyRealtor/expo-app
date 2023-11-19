@@ -10,7 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Bugsnag from '@bugsnag/expo';
 
-export const AIScreen = ({ navigation }) => {
+export const AIScreen = () => {
   const [inputMessage, setInputMessage] = useState('');
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -219,24 +219,12 @@ export const AIScreen = ({ navigation }) => {
           right: 0,
           alignItems: 'center',
           flexDirection: 'row',
-          justifyContent: 'space-between',
+          justifyContent: 'flex-end',
           paddingHorizontal: 22,
           width: SIZES.width,
           zIndex: 999,
         }}
       >
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={{
-            height: 40,
-            width: 40,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <MaterialIcons name="keyboard-arrow-left" size={24} color={'#0B0B0B'} />
-        </TouchableOpacity>
-
         <TouchableOpacity onPress={saveChat}>
           {isChatSaved ? (
             <Ionicons name="bookmark" size={24} color={'#0B0B0B'} />

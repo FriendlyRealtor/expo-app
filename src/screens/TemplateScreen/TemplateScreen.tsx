@@ -194,17 +194,11 @@ export const TemplateScreen = () => {
             const data = { pdf, email: userAuth.currentUser?.email };
             axios.post(clouldUrl, data).catch((error) => {
               Bugsnag.notify(error);
-              console.log('error', error);
             });
           }
         }
       } catch (error) {
         Bugsnag.notify(error);
-        if (!error.userCancelled) {
-          console.log('cancel error', error);
-        } else {
-          console.log('error', error);
-        }
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -282,7 +276,7 @@ export const TemplateScreen = () => {
                     ref={pdfRef}
                     source={{ uri: pdf, cache: true }}
                     onError={(error) => {
-                      console.log(error);
+                      Bugsnag.notify(error);
                     }}
                     style={{
                       flex: 1,

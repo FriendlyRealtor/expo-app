@@ -19,7 +19,7 @@ export const Filter = ({ title = 'Select Filters', options, multiSelect, onFilte
 
   useEffect(() => {
     onFilterChange(selectedFilters);
-  }, [selectedFilters, onFilterChange]);
+  }, [selectedFilters]);
 
   const toggleFilter = (filter) => {
     if (multiSelect) {
@@ -47,11 +47,11 @@ export const Filter = ({ title = 'Select Filters', options, multiSelect, onFilte
         variant="ghost"
         padding={0}
       >
-        <HStack space={2} alignItems="center">
+        <HStack space={2} alignItems="center" borderWidth={1} px={2}>
           <Text>{selectFiltersLabel}</Text>
           <Icon
             as={MaterialCommunityIcons}
-            name={isDropdownOpen ? 'arrow-down-thin' : 'arrow-up-thin'}
+            name={isDropdownOpen ? 'arrow-down' : 'arrow-up'}
             size="lg"
             backgroundColor={'transparent'}
             ml={2}

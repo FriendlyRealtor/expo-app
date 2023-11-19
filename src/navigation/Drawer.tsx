@@ -9,7 +9,6 @@ import {
   DistancePropertiesScreen,
   HomeScreen,
   ContactScreen,
-  SettingScreen,
   ClientScreen,
 } from '../screens';
 import { TouchableOpacity, View } from 'react-native';
@@ -61,13 +60,18 @@ export const MyDrawer = ({ navigation, ...restProps }) => {
         ),
       }}
     >
-      <Drawer.Screen name="Home" component={AppTabs} />
-      <Drawer.Screen name="Manage Deals" component={ClientScreen} />
-      <Drawer.Screen name="CMA on Go" component={HomeScreen} />
-      <Drawer.Screen name="Showings Proximity" component={DistancePropertiesScreen} />
+      <Drawer.Screen
+        name="Home"
+        component={AppTabs}
+        initialParams={{
+          user: restProps.route?.params?.currentUser || null,
+        }}
+      />
+      <Drawer.Screen name="DealHub" component={ClientScreen} />
+      <Drawer.Screen name="MarketView Pro" component={HomeScreen} />
+      <Drawer.Screen name="Realtor Showings" component={DistancePropertiesScreen} />
       <Drawer.Screen name="Contacts" component={ContactScreen} />
-      <Drawer.Screen name="Payment Method" component={PaymentScreen} />
-      <Drawer.Screen name="Settings" component={SettingScreen} />
+      {/*<Drawer.Screen name="Payment Method" component={PaymentScreen} />*/}
     </Drawer.Navigator>
   );
 };
