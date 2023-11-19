@@ -67,11 +67,11 @@ export const MyDrawer = ({ navigation, ...restProps }) => {
           user: restProps.route?.params?.currentUser || null,
         }}
       />
-      <Drawer.Screen name="Manage Deals" component={ClientScreen} />
-      <Drawer.Screen name="CMA on Go" component={HomeScreen} />
-      <Drawer.Screen name="Showings Proximity" component={DistancePropertiesScreen} />
+      <Drawer.Screen name="DealHub" component={ClientScreen} />
+      <Drawer.Screen name="MarketView Pro" component={HomeScreen} />
+      <Drawer.Screen name="Agent Showings" component={DistancePropertiesScreen} />
       <Drawer.Screen name="Contacts" component={ContactScreen} />
-      <Drawer.Screen name="Payment Method" component={PaymentScreen} />
+      {/*<Drawer.Screen name="Payment Method" component={PaymentScreen} />*/}
     </Drawer.Navigator>
   );
 };

@@ -6,7 +6,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import moment from 'moment';
 import { db, Colors } from '../../config';
 import { getDocs, collection } from 'firebase/firestore';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native';
 
 export const EventScreen = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
