@@ -2,16 +2,17 @@ import * as Linking from 'expo-linking';
 import * as Location from 'expo-location';
 import * as geolib from 'geolib';
 
-import { Button, Container, Icon, Input, ScrollView, Text, View } from 'native-base';
+import { Button, Icon, Input, Heading, ScrollView, Text, View } from 'native-base';
 import { FieldArray, FormikProvider, useFormik } from 'formik';
 import { GooglePlacesAutocomplete, PlaceDetails } from 'expo-google-places-autocomplete';
 import React, { useEffect, useState } from 'react';
-
 import { Address } from './DistancePropertiesScreenTypes';
 import Bugsnag from '@bugsnag/expo';
 import Constants from 'expo-constants';
 import { EvilIcons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Colors } from '../../config';
+import { SafeAreaView } from 'react-native';
 
 export const DistancePropertiesScreen = () => {
   const [currentPosition, setCurrentPosition] = useState<Address | null>(null);
@@ -105,13 +106,12 @@ export const DistancePropertiesScreen = () => {
   };
 
   return (
-    <Container flex={1} width="full" maxWidth="100%" mt={8} ml={8}>
-      <FormikProvider value={formik}>
-        <ScrollView width="3/4">
-          <Text>
-            Enter the properties you will be showing and calculate the shortest distance to reach
-            them.
-          </Text>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white, padding: 4 }}>
+      <ScrollView>
+        <FormikProvider value={formik}>
+          <Heading fontSize="2xl" fontWeight={700}>
+            Add the properties you'll show and find the shortest route to reach them.
+          </Heading>
           <View textAlign="right">
             <TouchableOpacity onPress={addField}>
               <Icon as={EvilIcons} name="plus" size="2xl" color="primary.500" />
@@ -155,8 +155,8 @@ export const DistancePropertiesScreen = () => {
           >
             Submit
           </Button>
-        </ScrollView>
-      </FormikProvider>
-    </Container>
+        </FormikProvider>
+      </ScrollView>
+    </SafeAreaView>
   );
 };

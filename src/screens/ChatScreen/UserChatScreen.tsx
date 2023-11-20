@@ -3,7 +3,7 @@ import { Avatar, FlatList, View, Text, Input, Button, ScrollView } from 'native-
 import { useRoute } from '@react-navigation/native';
 import { useChats } from './ChatHooks';
 import moment from 'moment';
-import { auth } from '../../config';
+import { auth, Colors } from '../../config';
 
 export const UserChatScreen = () => {
   const [value, setValue] = useState<string>('');
@@ -35,7 +35,9 @@ export const UserChatScreen = () => {
             <Avatar
               size="48px"
               source={{
-                uri: item.user.photo,
+                uri:
+                  item.user?.photo ||
+                  'https://firebasestorage.googleapis.com/v0/b/real-estate-app-9a719.appspot.com/o/default_photo%2Fimg_avatar.png?alt=media&token=ca7c1413-f7ea-4511-915a-699283568edc',
               }}
               mt={4}
             />
@@ -43,7 +45,7 @@ export const UserChatScreen = () => {
           {isFirstMessageFromSender && (
             <Text textAlign="right">
               {' '}
-              {moment.unix(item.timestamp.seconds).format('MMMM, Do, h:mm:ss a')}
+              {moment.unix(item.timestamp.seconds).format('MMM, Do, h:mm a')}
             </Text>
           )}
         </View>
@@ -53,7 +55,7 @@ export const UserChatScreen = () => {
   };
 
   return (
-    <View flex={1} marginY={16} marginX={4}>
+    <View flex={1} marginY={16} marginX={4} backgroundColor={Colors.white}>
       <ScrollView
         marginBottom={6}
         ref={scrollViewRef}

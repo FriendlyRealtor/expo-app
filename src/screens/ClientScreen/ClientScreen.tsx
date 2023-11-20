@@ -1,102 +1,61 @@
 import * as Linking from 'expo-linking';
 
-import { Alert, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { Card, Divider, Input, Layout, List, ListItem } from '@ui-kitten/components';
-import { ErrorMessage, Text } from '../../components';
+import { Alert, Modal, Pressable, SafeAreaView, StyleSheet } from 'react-native';
+import { Card, Divider, Layout, List, ListItem } from '@ui-kitten/components';
+import { ErrorMessage } from '../../components';
 import { Formik, useFormik } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 
 import Bugsnag from '@bugsnag/expo';
-import { Button } from '../../components';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { StatusBar } from 'expo-status-bar';
+import { ScrollView, Input, View, Box, Text, Heading, Button } from 'native-base';
 import _ from 'lodash';
-import { db } from '../../config';
+import { Colors, db } from '../../config';
 import { getAuth } from 'firebase/auth';
 import moment from 'moment';
-import { passwordResetSchema } from '../../utils';
 import { useIsFocused } from '@react-navigation/native';
 import uuid from 'react-native-uuid';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { ClientScreenStyles } from './ClientStyles';
 
 export const AddDeal = ({ modalVisible, setModalVisible, formData, setUserDeals }) => {
-  const styles = StyleSheet.create({
-    centeredView: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginTop: 22,
-    },
-    modalView: {
-      height: 600,
-      width: '100%',
-      backgroundColor: 'white',
-      borderRadius: 20,
-      padding: 35,
-      alignItems: 'center',
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 4,
-      elevation: 5,
-    },
-    button: {
-      borderRadius: 20,
-      padding: 10,
-      elevation: 2,
-    },
-    buttonOpen: {
-      backgroundColor: '#F194FF',
-    },
-    buttonClose: {
-      backgroundColor: '#2196F3',
-    },
-    textStyle: {
-      color: 'white',
-      fontWeight: 'bold',
-      textAlign: 'center',
-    },
-    modalText: {
-      marginBottom: 15,
-      textAlign: 'center',
-    },
-    close: {
-      position: 'absolute',
-      background: 'red',
-      color: 'white',
-      top: 10,
-      right: 10,
-    },
-  });
+  const styles = ClientScreenStyles;
+  const [saving, setSaving] = useState(false);
 
   const userAuth = getAuth();
   const { values, touched, errors, setFieldValue, handleChange, handleSubmit, resetForm } =
     useFormik({
       onSubmit: async (submitValues) => {
-        submitValues.id = uuid.v4();
-        if (formData && formData.id) {
-          const { uid } = userAuth.currentUser;
-          const docRef = await doc(db, 'users', uid);
-          const docSnap = await getDoc(docRef);
+        try {
+          setSaving(true);
+          submitValues.id = uuid.v4();
+          if (formData && formData.id) {
+            const { uid } = userAuth.currentUser;
+            const docRef = await doc(db, 'users', uid);
+            const docSnap = await getDoc(docRef);
 
-          if (docSnap.exists()) {
-            const firebaseData = docSnap.data();
-            const docIndex = firebaseData.deals.findIndex((deal) => deal.id === formData.id);
-            const updatedDeals = firebaseData.deals.filter((deal) => deal.id !== formData.id);
-            updatedDeals.splice(1, docIndex, submitValues);
-            if (docRef) {
-              await updateDoc(docRef, { deals: updatedDeals });
-              setUserDeals(updatedDeals);
-              resetForm();
-              setModalVisible(false);
+            if (docSnap.exists()) {
+              const firebaseData = docSnap.data();
+              const docIndex = firebaseData.deals.findIndex((deal) => deal.id === formData.id);
+              const updatedDeals = firebaseData.deals.filter((deal) => deal.id !== formData.id);
+              updatedDeals.splice(1, docIndex, submitValues);
+              if (docRef) {
+                await updateDoc(docRef, { deals: updatedDeals });
+                setUserDeals(updatedDeals);
+                resetForm();
+                setModalVisible(false);
+              }
             }
+          } else {
+            handleAddDeal(submitValues);
           }
-        } else {
-          handleAddDeal(submitValues);
+        } catch (error) {
+          Bugsnag.notify(error);
+        } finally {
+          setSaving(false);
         }
       },
     });
@@ -116,6 +75,7 @@ export const AddDeal = ({ modalVisible, setModalVisible, formData, setUserDeals 
         agentPhone: formData && formData.agentPhone ? formData.agentPhone : '',
         inspectorName: formData && formData.inspectorName ? formData.inspectorName : '',
         inspectorPhone: formData && formData.inspectorPhone ? formData.inspectorPhone : '',
+        price: formData && formData.price ? formData.price : '',
         titleName: formData && formData.titleName ? formData.titleName : '',
         titlePhone: formData && formData.titlePhone ? formData.titlePhone : '',
         lenderName: formData && formData.lenderName ? formData.lenderName : '',
@@ -165,153 +125,178 @@ export const AddDeal = ({ modalVisible, setModalVisible, formData, setUserDeals 
         setModalVisible(!modalVisible);
       }}
     >
-      <View style={styles.centeredView}>
+      <SafeAreaView style={{ ...styles.centeredView, backgroundColor: Colors.white }}>
         <View style={styles.modalView}>
           <Pressable onPress={() => setModalVisible(!modalVisible)} style={styles.close}>
             <Icon style={{ marginRight: 8 }} name="close" size={24} />
           </Pressable>
-          <Formik validationSchema={passwordResetSchema}>
+          <Formik>
             {() => (
               <ScrollView style={{ width: '100%' }}>
-                <View style={{ marginBottom: 16 }}>
-                  <Input
-                    name="address"
-                    placeholder="Enter Address"
-                    label="Address"
-                    value={values.address}
-                    onChangeText={handleChange('address')}
-                  />
-                  <ErrorMessage error={errors.address} visible={touched.address} />
-                </View>
-                <View>
-                  <Text>Closing Date:</Text>
-                  <DateTimePicker
-                    testID="dateTimePicker"
-                    value={values.closingDate}
-                    mode={'date'}
-                    display="default"
-                    onChange={(event, value) => {
-                      setFieldValue('closingDate', value);
+                <KeyboardAwareScrollView>
+                  <View style={{ marginBottom: 16 }}>
+                    <Heading size="sm">Current Address</Heading>
+                    <Input
+                      name="address"
+                      placeholder="Enter Address"
+                      value={values.address}
+                      onChangeText={handleChange('address')}
+                      size="md"
+                    />
+                    <ErrorMessage error={errors.address} visible={touched.address} />
+                  </View>
+                  <View style={{ marginBottom: 16 }}>
+                    <Heading size="sm">Sale Price</Heading>
+                    <Input
+                      name="address"
+                      placeholder="Enter Address"
+                      value={values.price}
+                      onChangeText={handleChange('price')}
+                      size="md"
+                    />
+                    <ErrorMessage error={errors.price} visible={touched.price} />
+                  </View>
+                  <View>
+                    <Heading size="sm">Closing Date</Heading>
+                    <DateTimePicker
+                      testID="dateTimePicker"
+                      value={values.closingDate}
+                      mode={'date'}
+                      display="default"
+                      onChange={(event, value) => {
+                        setFieldValue('closingDate', value);
+                      }}
+                      style={{ width: '100%', marginBottom: 16 }}
+                    />
+                  </View>
+                  <ErrorMessage error={errors.closingDate} visible={touched.closingDate} />
+                  <View style={{ marginBottom: 16 }}>
+                    <Heading size="sm">Client Name</Heading>
+                    <Input
+                      name="clientName"
+                      placeholder="Enter Full Name"
+                      value={values.clientName}
+                      onChangeText={handleChange('clientName')}
+                      size="md"
+                    />
+                    <ErrorMessage error={errors.clientName} visible={touched.clientName} />
+                    <Box mt={2} />
+                    <Input
+                      name="clientPhone"
+                      placeholder="Enter Phone Number"
+                      keyboardType="numeric"
+                      value={values.clientPhone}
+                      onChangeText={handleChange('clientPhone')}
+                      size="md"
+                    />
+                    <ErrorMessage error={errors.clientPhone} visible={touched.clientPhone} />
+                  </View>
+                  <View style={{ marginBottom: 16 }}>
+                    <Heading size="sm">Agent Name</Heading>
+                    <Input
+                      name="agentName"
+                      placeholder="Enter Full Name"
+                      value={values.agentName}
+                      onChangeText={handleChange('agentName')}
+                      size="md"
+                    />
+                    <ErrorMessage error={errors.agentName} visible={touched.agentName} />
+                    <Box mt={2} />
+
+                    <Input
+                      name="agentPhone"
+                      placeholder="Enter Phone Number"
+                      keyboardType="numeric"
+                      value={values.agentPhone}
+                      onChangeText={handleChange('agentPhone')}
+                      size="md"
+                    />
+                    <ErrorMessage error={errors.agentPhone} visible={touched.agentPhone} />
+                  </View>
+                  <View style={{ marginBottom: 16 }}>
+                    <Heading size="sm">Inspector Name</Heading>
+                    <Input
+                      name="inspectorName"
+                      placeholder="Enter Full Name"
+                      value={values.inspectorName}
+                      onChangeText={handleChange('inspectorName')}
+                      size="md"
+                    />
+                    <ErrorMessage error={errors.inspectorName} visible={touched.inspectorName} />
+                    <Box mt={2} />
+                    <Input
+                      name="inspectorPhone"
+                      placeholder="Enter Phone Number"
+                      keyboardType="numeric"
+                      value={values.inspectorPhone}
+                      onChangeText={handleChange('inspectorPhone')}
+                      size="md"
+                    />
+                    <ErrorMessage error={errors.inspectorPhone} visible={touched.inspectorPhone} />
+                  </View>
+                  <View style={{ marginBottom: 16 }}>
+                    <Heading size="sm">Title Company</Heading>
+                    <Input
+                      name="titleName"
+                      placeholder="Enter Full Name"
+                      value={values.titleName}
+                      onChangeText={handleChange('titleName')}
+                      size="md"
+                    />
+                    <ErrorMessage error={errors.titleName} visible={touched.titleName} />
+                    <Box mt={2} />
+                    <Input
+                      name="titlePhone"
+                      placeholder="Enter Phone Number"
+                      keyboardType="numeric"
+                      value={values.titlePhone}
+                      onChangeText={handleChange('titlePhone')}
+                      size="md"
+                    />
+                    <ErrorMessage error={errors.titlePhone} visible={touched.titlePhone} />
+                  </View>
+                  <View style={{ marginBottom: 16 }}>
+                    <Heading size="sm">Lender Name</Heading>
+                    <Input
+                      name="lenderName"
+                      placeholder="Enter Full Name"
+                      value={values.lenderName}
+                      onChangeText={handleChange('lenderName')}
+                      size="md"
+                    />
+                    <ErrorMessage error={errors.lenderName} visible={touched.lenderName} />
+                    <Box mt={2} />
+                    <Input
+                      name="lenderPhone"
+                      placeholder="Enter Phone Number"
+                      keyboardType="numeric"
+                      value={values.lenderPhone}
+                      onChangeText={handleChange('lenderPhone')}
+                      size="md"
+                    />
+                    <ErrorMessage error={errors.lenderPhone} visible={touched.lenderPhone} />
+                  </View>
+                  <Button
+                    style={{
+                      width: 250,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      padding: 10,
+                      borderRadius: 8,
+                      marginTop: 16,
+                      backgroundColor: Colors.color2,
                     }}
-                    style={{ width: '100%', marginBottom: 16 }}
-                  />
-                </View>
-                <ErrorMessage error={errors.closingDate} visible={touched.closingDate} />
-                <View style={{ marginBottom: 16 }}>
-                  <Input
-                    name="clientName"
-                    placeholder="Enter Full Name"
-                    label="Client"
-                    value={values.clientName}
-                    onChangeText={handleChange('clientName')}
-                  />
-                  <ErrorMessage error={errors.clientName} visible={touched.clientName} />
-                  <Input
-                    name="clientPhone"
-                    placeholder="Enter Phone Number"
-                    keyboardType="numeric"
-                    value={values.clientPhone}
-                    onChangeText={handleChange('clientPhone')}
-                    style={{ marginTop: 8 }}
-                  />
-                  <ErrorMessage error={errors.clientPhone} visible={touched.clientPhone} />
-                </View>
-                <View style={{ marginBottom: 16 }}>
-                  <Input
-                    name="agentName"
-                    label="Agent"
-                    placeholder="Enter Full Name"
-                    value={values.agentName}
-                    onChangeText={handleChange('agentName')}
-                  />
-                  <ErrorMessage error={errors.agentName} visible={touched.agentName} />
-                  <Input
-                    name="agentPhone"
-                    placeholder="Enter Phone Number"
-                    keyboardType="numeric"
-                    value={values.agentPhone}
-                    onChangeText={handleChange('agentPhone')}
-                    style={{ marginTop: 8 }}
-                  />
-                  <ErrorMessage error={errors.agentPhone} visible={touched.agentPhone} />
-                </View>
-                <View style={{ marginBottom: 16 }}>
-                  <Input
-                    name="inspectorName"
-                    label="Inspector"
-                    placeholder="Enter Full Name"
-                    value={values.inspectorName}
-                    onChangeText={handleChange('inspectorName')}
-                  />
-                  <ErrorMessage error={errors.inspectorName} visible={touched.inspectorName} />
-                  <Input
-                    name="inspectorPhone"
-                    placeholder="Enter Phone Number"
-                    keyboardType="numeric"
-                    value={values.inspectorPhone}
-                    onChangeText={handleChange('inspectorPhone')}
-                    style={{ marginTop: 8 }}
-                  />
-                  <ErrorMessage error={errors.inspectorPhone} visible={touched.inspectorPhone} />
-                </View>
-                <View style={{ marginBottom: 16 }}>
-                  <Input
-                    name="titleName"
-                    label="Title Company"
-                    placeholder="Enter Full Name"
-                    value={values.titleName}
-                    onChangeText={handleChange('titleName')}
-                  />
-                  <ErrorMessage error={errors.titleName} visible={touched.titleName} />
-                  <Input
-                    name="titlePhone"
-                    placeholder="Enter Phone Number"
-                    keyboardType="numeric"
-                    value={values.titlePhone}
-                    onChangeText={handleChange('titlePhone')}
-                    style={{ marginTop: 8 }}
-                  />
-                  <ErrorMessage error={errors.titlePhone} visible={touched.titlePhone} />
-                </View>
-                <View style={{ marginBottom: 16 }}>
-                  <Input
-                    name="lenderName"
-                    placeholder="Enter Full Name"
-                    label="Lender"
-                    value={values.lenderName}
-                    onChangeText={handleChange('lenderName')}
-                  />
-                  <ErrorMessage error={errors.lenderName} visible={touched.lenderName} />
-                  <Input
-                    name="lenderPhone"
-                    placeholder="Enter Phone Number"
-                    keyboardType="numeric"
-                    value={values.lenderPhone}
-                    onChangeText={handleChange('lenderPhone')}
-                    style={{ marginTop: 8 }}
-                  />
-                  <ErrorMessage error={errors.lenderPhone} visible={touched.lenderPhone} />
-                </View>
-                <Button
-                  style={{
-                    width: 250,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    padding: 10,
-                    borderRadius: 8,
-                    marginTop: 16,
-                    backgroundColor: '#02FDAA',
-                    fontFamily: 'Ubuntu',
-                  }}
-                  onPress={handleSubmit}
-                >
-                  <Text>Save</Text>
-                </Button>
+                    isLoading={saving}
+                    onPress={handleSubmit}
+                  >
+                    <Text style={{ color: '#FFFFFF' }}>Save</Text>
+                  </Button>
+                </KeyboardAwareScrollView>
               </ScrollView>
             )}
           </Formik>
         </View>
-      </View>
+      </SafeAreaView>
     </Modal>
   );
 };
@@ -346,12 +331,19 @@ export const ClientScreen = ({ navigation }) => {
 
   const renderItemHeader = (headerProps, item) => {
     return (
-      <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+      <View
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
         <StatusBar style="auto" />
         <Text category="h6" {...headerProps} status="info">
           {item.address}
         </Text>
-        <View style={{ display: 'flex', flexDirection: 'row' }}>
+        <View style={{ display: 'flex', flexDirection: 'row', paddingRight: 12 }}>
           <Icon
             {...headerProps}
             name="pencil-square-o"
@@ -360,12 +352,14 @@ export const ClientScreen = ({ navigation }) => {
               setFormData(item);
               setModalVisible(true);
             }}
+            style={{ paddingHorizontal: 0, paddingRight: 12 }}
           />
           <Icon
             {...headerProps}
             name="trash"
             size={24}
             color="red"
+            style={{ paddingHorizontal: 0 }}
             onPress={async () => {
               try {
                 const userAuth = getAuth();
@@ -389,9 +383,25 @@ export const ClientScreen = ({ navigation }) => {
     const formattedDate = moment(duration).format('MM-DD-YYYY');
 
     return (
-      <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Text {...footerProps}>Status: {item.status}</Text>
-        <Text {...footerProps}>Closing: {formattedDate}</Text>
+      <View style={{ display: 'flex', flexDirection: 'row', flexWrap: 1 }}>
+        <View display="flex" flexDirection="row" alignItems="center">
+          <Text {...footerProps} fontWeight="bold">
+            Sale Price:
+          </Text>
+          <Text>{item.price}</Text>
+        </View>
+        <View display="flex" flexDirection="row" alignItems="center">
+          <Text {...footerProps} fontWeight="bold">
+            Status:
+          </Text>
+          <Text>{item.status}</Text>
+        </View>
+        <View display="flex" flexDirection="row" alignItems="center">
+          <Text {...footerProps} fontWeight="bold">
+            Closing:
+          </Text>
+          <Text>{formattedDate}</Text>
+        </View>
       </View>
     );
   };
@@ -414,7 +424,7 @@ export const ClientScreen = ({ navigation }) => {
           style={{ marginRight: 8 }}
           name="commenting"
           size={24}
-          color="#02FDAA"
+          color={Colors.color2}
           onPress={() => {
             Linking.openURL(`sms:+1${tel}`);
           }}

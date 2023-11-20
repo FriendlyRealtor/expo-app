@@ -2,11 +2,6 @@ import { StyleSheet } from 'react-native';
 import { Colors } from '../../config';
 
 export const SettingScreenStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 0,
-    paddingBottom: 32,
-  },
   flexRow: {
     display: 'flex',
     flexDirection: 'row',
@@ -24,11 +19,6 @@ export const SettingScreenStyles = StyleSheet.create({
   },
   textView: {
     justifyContent: 'center',
-  },
-  layout: {
-    borderRadius: 12,
-    marginHorizontal: 24,
-    backgroundColor: Colors.lightGray,
   },
   rows: {
     paddingVertical: 16,

@@ -45,7 +45,7 @@ export const ChatScreen = ({ navigation }) => {
   const { isRefreshing, onRefresh } = useRefresh({ handleRefresh });
 
   return (
-    <View marginTop="4">
+    <View marginTop="4" backgroundColor={Colors.white}>
       <StatusBar />
       <IconButton
         icon={<Icon as={EvilIcons} name="plus" size="2xl" color="black.500" />}
@@ -137,65 +137,75 @@ export const ChatScreen = ({ navigation }) => {
           {messageList && messageList.length ? (
             <FlatList
               data={messageList}
-              renderItem={({ item }) => (
-                <SwipeableItem item={item}>
-                  <Pressable
-                    key={item.id}
-                    style={styles.messageContainer}
-                    onPress={() => {
-                      navigation.navigate('My Chat', { item });
-                    }}
-                  >
-                    <Box
-                      borderBottomWidth="1"
-                      _dark={{
-                        borderColor: 'muted.50',
+              renderItem={({ item }) => {
+                return (
+                  <SwipeableItem item={item}>
+                    <Pressable
+                      key={item.id}
+                      style={styles.messageContainer}
+                      onPress={() => {
+                        navigation.navigate('My Chat', { item });
                       }}
-                      borderColor="muted.800"
-                      pl={['0', '4']}
-                      pr={['0', '5']}
-                      py="2"
                     >
-                      <HStack space={[2, 3]} justifyContent="space-between">
-                        <Avatar
-                          size="48px"
-                          source={{
-                            uri: item.photo,
-                          }}
-                        />
-                        <VStack>
+                      <Box
+                        borderBottomWidth="1"
+                        _dark={{
+                          borderColor: 'muted.50',
+                        }}
+                        borderColor="muted.800"
+                        pl={['0', '4']}
+                        pr={['0', '5']}
+                        py="2"
+                      >
+                        <HStack space={[2, 3]} justifyContent="space-between" alignItems="center">
+                          <Avatar
+                            size="48px"
+                            source={{
+                              uri:
+                                item.photo ||
+                                'https://firebasestorage.googleapis.com/v0/b/real-estate-app-9a719.appspot.com/o/default_photo%2Fimg_avatar.png?alt=media&token=ca7c1413-f7ea-4511-915a-699283568edc',
+                            }}
+                          />
+                          <VStack>
+                            <Text
+                              _dark={{
+                                color: 'warmGray.50',
+                              }}
+                              color="coolGray.800"
+                              bold
+                            >
+                              {item.userName ||
+                                (item.firstName && item.lastName
+                                  ? `${item.firstName} ${item.lastName}`
+                                  : item.name)}
+                            </Text>
+                            <Text>
+                              {item.latestMessage?.content.length > 20
+                                ? item.latestMessage?.content.slice(0, 20) + '...'
+                                : item.latestMessage?.content}
+                            </Text>
+                          </VStack>
+                          <Spacer />
                           <Text
+                            fontSize="xs"
                             _dark={{
                               color: 'warmGray.50',
                             }}
                             color="coolGray.800"
-                            bold
+                            alignSelf="flex-start"
                           >
-                            {item.userName || item.name}
+                            {item.latestMessage?.timestamp
+                              ? moment
+                                  .unix(item.latestMessage.timestamp.seconds)
+                                  .format('MMM, Do, h:mm a')
+                              : 'No messages'}
                           </Text>
-                        </VStack>
-                        <Spacer />
-                        <Text
-                          fontSize="xs"
-                          _dark={{
-                            color: 'warmGray.50',
-                          }}
-                          color="coolGray.800"
-                          alignSelf="flex-start"
-                        >
-                          {moment
-                            .unix(
-                              item.latestMessage.timestamp
-                                ? item.latestMessage.timestamp.seconds
-                                : item.latestMessage.seconds,
-                            )
-                            .format('MMMM, Do, h:mm:ss a')}
-                        </Text>
-                      </HStack>
-                    </Box>
-                  </Pressable>
-                </SwipeableItem>
-              )}
+                        </HStack>
+                      </Box>
+                    </Pressable>
+                  </SwipeableItem>
+                );
+              }}
               keyExtractor={(item) => item.id}
             />
           ) : (

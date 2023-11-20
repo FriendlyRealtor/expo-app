@@ -10,7 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Bugsnag from '@bugsnag/expo';
 
-export const AIScreen = ({ navigation }) => {
+export const AIScreen = () => {
   const [inputMessage, setInputMessage] = useState('');
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -18,6 +18,8 @@ export const AIScreen = ({ navigation }) => {
   const [messages, setMessages] = useState([]);
   const [isChatSaved, setIsChatSaved] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
+  const placeholderText =
+    'Get started with your personal AI assistant for realtors. Ask any questions about real estate.';
 
   useEffect(() => {
     const fetchVoiceToSpeechStatus = async () => {
@@ -217,24 +219,12 @@ export const AIScreen = ({ navigation }) => {
           right: 0,
           alignItems: 'center',
           flexDirection: 'row',
-          justifyContent: 'space-between',
+          justifyContent: 'flex-end',
           paddingHorizontal: 22,
           width: SIZES.width,
           zIndex: 999,
         }}
       >
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={{
-            height: 40,
-            width: 40,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <MaterialIcons name="keyboard-arrow-left" size={24} color={'#0B0B0B'} />
-        </TouchableOpacity>
-
         <TouchableOpacity onPress={saveChat}>
           {isChatSaved ? (
             <Ionicons name="bookmark" size={24} color={'#0B0B0B'} />
@@ -245,15 +235,26 @@ export const AIScreen = ({ navigation }) => {
       </View>
       <StatusBar style="auto" />
       <View style={{ flex: 1, justifyContent: 'center' }}>
-        <GiftedChat
-          messages={messages}
-          user={{ _id: 1 }}
-          renderInputToolbar={() => undefined}
-          minInputToolbarHeight={0}
-          renderMessage={renderMessage}
-        />
+        {messages.length === 0 ? (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Text style={{ fontSize: 18, color: COLORS.gray }}>{placeholderText}</Text>
+          </View>
+        ) : (
+          <GiftedChat
+            messages={messages}
+            user={{ _id: 1 }}
+            renderInputToolbar={() => undefined}
+            minInputToolbarHeight={0}
+            renderMessage={renderMessage}
+          />
+        )}
       </View>
-
       <View
         style={{
           flexDirection: 'row',
