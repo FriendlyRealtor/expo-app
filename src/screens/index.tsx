@@ -10,7 +10,6 @@ import { LocalRestaurantScreen } from './LocalRestaurantScreen';
 import { ContinueEducationScreen } from './ContinueEducationScreen';
 import { PostScreen } from './PostScreen';
 import { SplashScreen } from './SplashScreen';
-import { TemplateScreen } from './TemplateScreen';
 import { ClientScreen } from './ClientScreen/ClientScreen';
 import { ChatScreen } from './ChatScreen/ChatScreen';
 import { UserChatScreen } from './ChatScreen/UserChatScreen';
@@ -38,6 +37,5 @@ export {
   SettingScreen,
   LocalRestaurantScreen,
   ContinueEducationScreen,
-  TemplateScreen,
   UserChatScreen,
 };

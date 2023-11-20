@@ -88,7 +88,6 @@ export default {
             'Allow $(PRODUCT_NAME) to accesses your camera to let you share them with your friends.',
         },
       ],
-      ['@config-plugins/react-native-pdf'],
       ['@config-plugins/react-native-blob-util'],
     ],
   },

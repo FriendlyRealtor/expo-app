@@ -18,7 +18,6 @@
   "dependencies": {
     "@bugsnag/expo": "^47.0.0",
     "@config-plugins/react-native-blob-util": "^5.0.0",
-    "@config-plugins/react-native-pdf": "^5.0.0",
     "@eva-design/eva": "^2.1.1",
     "@react-native-async-storage/async-storage": "1.17.11",
     "@react-native-community/datetimepicker": "7.6.1",
@@ -82,7 +81,6 @@
     "react-native-google-places-autocomplete": "^2.5.1",
     "react-native-keyboard-aware-scroll-view": "^0.9.4",
     "react-native-paper": "^5.2.0",
-    "react-native-pdf": "^6.6.2",
     "react-native-purchases": "^5.13.1",
     "react-native-qrcode-svg": "^6.2.0",
     "react-native-reanimated": "~2.12.0",
