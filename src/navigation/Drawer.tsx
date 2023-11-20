@@ -29,7 +29,6 @@ export const MyDrawer = ({ navigation, ...restProps }) => {
     ];
   }, [restProps?.route?.params?.currentUser]);
 
-  console.log('get here', isProfessional);
   return (
     <Drawer.Navigator
       screenOptions={{
