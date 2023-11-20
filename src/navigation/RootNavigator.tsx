@@ -18,7 +18,7 @@ const Stack = createStackNavigator();
 export const RootNavigator = inject('appStore')(
   observer(({ appStore }) => {
     const [isLoading, setIsLoading] = useState(true);
-    const { user, getUser, retrieveLoggedInUser } = appStore;
+    const { user, retrieveLoggedInUser } = appStore;
     const [localUser, setLocalUser] = useState(undefined);
 
     const { theme: nativeBaseTheme } = useNativeBaseTheme();

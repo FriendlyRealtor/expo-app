@@ -283,8 +283,8 @@ export const SettingScreen = inject('appStore')(
 
     const restorePurchase = async () => {
       try {
-        const restoredEntitlements = await Purchases.restorePurchases();
-        if (restoredEntitlements.length > 0) {
+        const restorePurchases = await Purchases.restorePurchases();
+        if (restorePurchases.length > 0) {
           Alert.alert('Successfully restored purchases.');
         } else {
           Alert.alert('No purchases to restore.');
@@ -516,6 +516,32 @@ export const SettingScreen = inject('appStore')(
                   </HStack>
                 </Card>
               )}
+							<Card backgroundColor={Colors.lightGray} my={2}>
+                <HStack alignItems="center" justifyContent="space-between">
+                  <Heading size="xs">Restore Purchase</Heading>
+                  <TouchableOpacity
+                    onPress={() => {
+                      try {
+                        restorePurchase();
+                        setErrorState('');
+                      } catch (error) {
+                        Bugsnag.notify(error);
+                        setErrorState('Error restoring purchase for user');
+                      }
+                    }}
+                    style={{
+                      backgroundColor: Colors.red,
+                      paddingHorizontal: 6,
+                      paddingVertical: 4,
+                      borderRadius: 4,
+                    }}
+                  >
+                    <Text fontSize="md" color="white">
+                      Restore
+                    </Text>
+                  </TouchableOpacity>
+                </HStack>
+              </Card>
               <Card backgroundColor={Colors.lightGray} my={2}>
                 <HStack alignItems="center" justifyContent="space-between">
                   <Heading size="xs">Delete Account</Heading>
