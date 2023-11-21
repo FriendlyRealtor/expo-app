@@ -47,11 +47,11 @@ export const PaymentScreen = (props) => {
               {rcProducts[0].title}
             </Text>
             <Text color="gray.600">{rcProducts[0].description}</Text>
-            <Text fontSize="sm" italic color="primary.500" mt={2}>
+            <Text fontSize="xl" fontWeight={700} color="primary.500" mt={2}>
               Price: {rcProducts[0].priceString}
             </Text>
             <Text mt={3} fontWeight="medium">
-              Features Included:
+              Premium Features:
             </Text>
             <VStack space={2} pl={2} alignItems="flex-start">
               <Text>
@@ -72,6 +72,37 @@ export const PaymentScreen = (props) => {
             >
               Purchase
             </Button>
+            <Text fontSize="xs" mt={4}>
+              A {rcProducts[0].priceString} purchase will be applied to your iTunes account at the
+              end of the trial or intro on confirmation. Subscriptions automatically renew each
+              month unless canceled within 24-hours before the end of the current period. You can
+              cancel anytime with your iTunes account settings. Any unused portion of a free trial
+              will be forfeited if you purchase a subscription. For more information, see our
+              <Text
+                color="blue.500"
+                onPress={() =>
+                  Linking.openURL(
+                    'https://app.termly.io/document/terms-and-conditions/22db5147-f672-4e1a-8ce9-0568d1c88332',
+                  )
+                }
+              >
+                {' '}
+                Terms of Service{' '}
+              </Text>
+              and
+              <Text
+                color="blue.500"
+                onPress={() =>
+                  Linking.openURL(
+                    'https://app.termly.io/document/privacy-policy/73841773-0c89-4160-9269-9bc3ba0a4dbd',
+                  )
+                }
+              >
+                {' '}
+                Privacy Policy
+              </Text>
+              .
+            </Text>
           </VStack>
         )}
       </VStack>
