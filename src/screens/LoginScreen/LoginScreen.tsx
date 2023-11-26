@@ -78,7 +78,7 @@ export const LoginScreen = inject('appStore')(
             );
         }
       } finally {
-        setIsLoading(false); // Set isLoading to false once the login process is completed
+        setIsLoading(false);
       }
     };
 
@@ -110,7 +110,6 @@ export const LoginScreen = inject('appStore')(
                   autoCapitalize="none"
                   keyboardType="email-address"
                   textContentType="emailAddress"
-                  autoFocus={true}
                   value={values.email}
                   onChangeText={handleChange('email')}
                   mt={4}
