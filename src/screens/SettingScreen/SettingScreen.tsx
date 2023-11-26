@@ -516,7 +516,7 @@ export const SettingScreen = inject('appStore')(
                   </HStack>
                 </Card>
               )}
-							<Card backgroundColor={Colors.lightGray} my={2}>
+              <Card backgroundColor={Colors.lightGray} my={2}>
                 <HStack alignItems="center" justifyContent="space-between">
                   <Heading size="xs">Restore Purchase</Heading>
                   <TouchableOpacity
