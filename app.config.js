@@ -50,6 +50,7 @@ export default {
       realTimeDbUrl: process.env.FIREBASE_REAL_TIME_DATABASE_URL,
       bugSnagApiKey: process.env.BUGSNAG_API_KEY,
       vexoApiKey: process.env.VEXO_API_KEY,
+      fbBaseUrl: process.env.FB_BASE_URL,
       eas: {
         projectId: process.env.EAS_PROJECT_ID,
       },
