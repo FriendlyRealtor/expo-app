@@ -5,21 +5,16 @@ import { LoginButton, AccessToken } from 'react-native-fbsdk-next';
 import Bugsnag from '@bugsnag/expo';
 import Constants from 'expo-constants';
 import _ from 'lodash';
-import { Colors } from '../../config';
 
 export const FacebookScreen = () => {
-  const [pageId, setPageId] = useState('');
-  const [userAccessToken, setUserAccessToken] = useState('');
-  const [pageAccessToken, setPageAccessToken] = useState('');
   const [isImageLoading, setIsImageLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [data, setData] = useState();
-  const [generateImage, setGenerateImage] = useState();
+  const [generateImage, setGenerateImage] = useState(undefined);
   const [userId, setUserId] = useState('');
   const [selectedPage, setSelectedPage] = useState(undefined);
-  const [userPages, setUserPages] = useState([]);
   const [postText, setPostText] = useState('');
-  const [addImage, setAddImage] = useState(true); // Toggle for adding image or not
+  const [addImage, setAddImage] = useState(false);
   const [imageDescription, setImageDescription] = useState('');
 
   const fetchUserPages = async (accessToken, userId) => {
@@ -32,7 +27,6 @@ export const FacebookScreen = () => {
       if (data?.error) {
         throw new Error(data.error.message);
       }
-      setUserPages(data?.data || []);
     } catch (error) {
       Bugsnag.notify(`Error fetching user pages: ${error}`);
       Alert.alert('Error', 'Unable to fetch user pages.');
@@ -46,11 +40,9 @@ export const FacebookScreen = () => {
       const baseUrl = Constants?.manifest?.extra?.fbBaseUrl;
       const pageId = selectedPage.id;
       const accessToken = selectedPage.access_token;
-
-      if (addImage) {
-        const imageUrl = encodeURIComponent(generateImage?.url);
-        const captionText = encodeURIComponent(postText);
-
+      const imageUrl = encodeURIComponent(generateImage?.url || '');
+      const captionText = encodeURIComponent(postText);
+      if (addImage && imageUrl) {
         const url = `${baseUrl}/${pageId}/photos?url=${imageUrl}&caption=${captionText}&access_token=${accessToken}`;
 
         const response = await fetch(url, {
@@ -63,10 +55,9 @@ export const FacebookScreen = () => {
           throw new Error(res.error.message);
         }
       } else {
-        const messageUrl = `${baseUrl}/${userId}/feed?message=${encodeURIComponent(
+        const messageUrl = `${baseUrl}/${pageId}/feed?message=${encodeURIComponent(
           postText,
         )}&access_token=${accessToken}`;
-
         const response = await fetch(messageUrl, {
           method: 'POST',
         });
@@ -79,6 +70,8 @@ export const FacebookScreen = () => {
       }
 
       Alert.alert('Success', 'Post submitted successfully.');
+      setPostText('');
+      setGenerateImage(undefined);
     } catch (error) {
       Bugsnag.notify(`Error submitting post: ${error}`);
       Alert.alert('Error', 'Unable to submit post.');
@@ -119,7 +112,6 @@ export const FacebookScreen = () => {
     const fetchToken = async () => {
       const token = await AccessToken.getCurrentAccessToken();
       if (token) {
-        setUserAccessToken(token.accessToken);
         setUserId(token.userID);
         fetchUserPages(token.accessToken, token.userID);
       }
@@ -138,7 +130,16 @@ export const FacebookScreen = () => {
             permissions.
           </Text>
         </Center>
-        <LoginButton />
+        <LoginButton
+          onLoginFinished={async () => {
+            const token = await AccessToken.getCurrentAccessToken();
+            fetchUserPages(token?.accessToken, token?.userID);
+          }}
+          onLogoutFinished={() => {
+            setSelectedPage(undefined);
+            setData(undefined);
+          }}
+        />
       </View>
       <View>
         <Select
@@ -178,16 +179,18 @@ export const FacebookScreen = () => {
           <Switch value={addImage} onValueChange={() => setAddImage(!addImage)} />
         </HStack>
         {addImage && (
-          <TextInput
-            placeholder="Describe the image (optional)"
-            value={imageDescription}
-            onChangeText={(text) => setImageDescription(text)}
-            style={{ borderBottomWidth: 1, marginBottom: 12 }}
-          />
+          <View>
+            <TextInput
+              placeholder="Describe the image (optional)"
+              value={imageDescription}
+              onChangeText={(text) => setImageDescription(text)}
+              style={{ borderBottomWidth: 1, marginBottom: 12 }}
+            />
+            <Button onPress={generateImages} isLoading={isImageLoading}>
+              Generate Image
+            </Button>
+          </View>
         )}
-        <Button onPress={generateImages} isLoading={isImageLoading}>
-          Generate Image
-        </Button>
         <TextArea
           autoCompleteType={false}
           placeholder="Enter your post here"
