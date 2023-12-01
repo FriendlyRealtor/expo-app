@@ -10,7 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Bugsnag from '@bugsnag/expo';
 
-export const AIScreen = ({ navigation }) => {
+export const AIScreen = () => {
   const [inputMessage, setInputMessage] = useState('');
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);

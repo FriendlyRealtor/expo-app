@@ -1,7 +1,7 @@
 import * as Device from 'expo-device';
 import * as ImagePicker from 'expo-image-picker';
 
-import { Alert, Animated, Linking, ScrollView, TouchableOpacity } from 'react-native';
+import { Alert, Animated, Linking, TouchableOpacity } from 'react-native';
 import { AsYouType, validatePhoneNumberLength } from 'libphonenumber-js';
 import {
   Button,
@@ -10,9 +10,11 @@ import {
   Heading,
   Image,
   Input,
+  Card,
   Link,
   Text,
   TextArea,
+  ScrollView,
   View,
 } from 'native-base';
 import { Chip, Container, ErrorMessage } from '../../components';
@@ -43,6 +45,7 @@ import { getAuth } from 'firebase/auth';
 import moment from 'moment';
 import { useIsFocused } from '@react-navigation/native';
 import { useLayout } from '../../hooks';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export const SettingScreen = inject('appStore')(
   observer(({ appStore }) => {
@@ -280,8 +283,8 @@ export const SettingScreen = inject('appStore')(
 
     const restorePurchase = async () => {
       try {
-        const restoredEntitlements = await Purchases.restorePurchases();
-        if (restoredEntitlements.length > 0) {
+        const restorePurchases = await Purchases.restorePurchases();
+        if (restorePurchases.length > 0) {
           Alert.alert('Successfully restored purchases.');
         } else {
           Alert.alert('No purchases to restore.');
@@ -297,122 +300,113 @@ export const SettingScreen = inject('appStore')(
     const day = moment().format('D');
 
     return (
-      <Container style={{ ...styles.container, backgroundColor: Colors.white }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>
         <StatusBar style="auto" />
-        <View
-          style={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            width: '100%',
-            flexDirection: 'row',
-            paddingVertical: 24,
-            paddingRight: 32,
-          }}
-        >
-          <Text fontSize="md" bold onPress={() => signOut()}>
-            LOG OUT
-          </Text>
-        </View>
-        <View>
-          {photoProgress && photoProgress !== 1 && (
-            <ProgressBar style={{ marginBottom: 10 }} progress={photoProgress} color="#02FDAA" />
-          )}
-        </View>
-        <View>
-          <View style={styles.layout}>
-            <HStack mt={4} mr={6} justifyContent="flex-end">
-              <Button
-                onPress={handleSaveToFirebase}
-                isLoading={saving}
-                isLoadingText="Save"
-                spinnerPlacement="end"
-              >
-                Save
-              </Button>
-            </HStack>
-            <View textAlign="center">
-              {errorState != '' ? <ErrorMessage error={errorState} visible={true} /> : null}
-            </View>
-            <Animated.View style={scaleAvatar}>
-              <TouchableOpacity onPress={pickImage}>
-                {user.photo && !photoShow && (
-                  <Image
-                    source={{ uri: user.photo }}
-                    rounded="full"
-                    display="flex"
-                    alignItems="center"
-                    alt="User Profile Photo"
-                    style={{
-                      alignSelf: 'center',
-                      width: 96,
-                      height: 96,
-                      marginTop: 8,
-                      marginBottom: 32,
-                    }}
-                  />
-                )}
-                {photoShow && (
-                  <Image
-                    source={{ uri: photoShow }}
-                    rounded="full"
-                    display="flex"
-                    alignItems="center"
-                    alt="User Profile Photo"
-                    style={{
-                      alignSelf: 'center',
-                      width: 96,
-                      height: 96,
-                      marginTop: 8,
-                      marginBottom: 32,
-                    }}
-                  />
-                )}
-              </TouchableOpacity>
-            </Animated.View>
-            <View style={{ height: 450 }}>
-              <ScrollView>
-                <HStack
-                  alignItems="center"
-                  paddingY={2}
-                  paddingX={4}
-                  justifyContent="space-between"
+        <ScrollView>
+          <View>
+            {photoProgress && photoProgress !== 1 && (
+              <ProgressBar style={{ marginBottom: 10 }} progress={photoProgress} color="#02FDAA" />
+            )}
+          </View>
+          <View>
+            <View mx={4}>
+              <HStack mx={4} justifyContent="space-between">
+                <Button
+                  onPress={handleSaveToFirebase}
+                  isLoading={saving}
+                  isLoadingText="Save"
+                  spinnerPlacement="end"
                 >
+                  Save
+                </Button>
+                <View
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    width: '100%',
+                    flexDirection: 'row',
+                    paddingRight: 32,
+                  }}
+                >
+                  <Text fontSize="md" bold onPress={() => signOut()}>
+                    LOG OUT
+                  </Text>
+                </View>
+              </HStack>
+              <View textAlign="center">
+                {errorState != '' ? <ErrorMessage error={errorState} visible={true} /> : null}
+              </View>
+              <Animated.View style={scaleAvatar}>
+                <TouchableOpacity onPress={pickImage}>
+                  {user.photo && !photoShow && (
+                    <Image
+                      source={{ uri: user.photo }}
+                      rounded="full"
+                      display="flex"
+                      alignItems="center"
+                      alt="User Profile Photo"
+                      style={{
+                        alignSelf: 'center',
+                        width: 96,
+                        height: 96,
+                        marginTop: 8,
+                        marginBottom: 32,
+                      }}
+                    />
+                  )}
+                  {photoShow && (
+                    <Image
+                      source={{ uri: photoShow }}
+                      rounded="full"
+                      display="flex"
+                      alignItems="center"
+                      alt="User Profile Photo"
+                      style={{
+                        alignSelf: 'center',
+                        width: 96,
+                        height: 96,
+                        marginTop: 8,
+                        marginBottom: 32,
+                      }}
+                    />
+                  )}
+                </TouchableOpacity>
+              </Animated.View>
+              <Card backgroundColor={Colors.lightGray} my={2}>
+                <HStack alignItems="center" justifyContent="space-between">
                   <Heading size="xs">Username</Heading>
                   <Text fontSize="md">{user.username || user.userName || ''}</Text>
                 </HStack>
-                <Divider thickness={1} bg="black" />
-                <HStack
-                  alignItems="center"
-                  paddingY={2}
-                  paddingX={4}
-                  justifyContent="space-between"
-                >
+              </Card>
+              <Card backgroundColor={Colors.lightGray}>
+                <HStack alignItems="center" justifyContent="space-between">
                   <Heading size="xs">Name</Heading>
                   <Text fontSize="md">{user.name || ''}</Text>
                 </HStack>
-                <Divider thickness={1} bg="black" />
-                <HStack
-                  alignItems="center"
-                  space={2}
-                  paddingY={2}
-                  paddingX={4}
-                  justifyContent="space-between"
-                >
+              </Card>
+              <Card backgroundColor={Colors.lightGray} my={2}>
+                <HStack alignItems="center" justifyContent="space-between">
                   <Heading size="xs">Email</Heading>
                   {userAuth.currentUser && userAuth.currentUser.email && (
                     <Text fontSize="md">{userAuth.currentUser.email}</Text>
                   )}
                 </HStack>
-                <Divider thickness={1} bg="black" />
-                <HStack
-                  alignItems="center"
-                  space={2}
-                  paddingY={2}
-                  paddingX={4}
-                  justifyContent="space-between"
-                >
-                  <Heading size="xs">Phone Number</Heading>
-                  <View flex={1}>
+              </Card>
+              <Card backgroundColor={Colors.lightGray} my={2}>
+                {user.username ||
+                  (user.userName && (
+                    <HStack alignItems="center" justifyContent="space-between">
+                      <Heading size="xs">Referral Link</Heading>
+                      <Text fontSize="md">
+                        <Link onPress={visitPublicProfile}>Visit Public Profile</Link>
+                      </Text>
+                    </HStack>
+                  ))}
+              </Card>
+              <Card backgroundColor={Colors.lightGray} my={2}>
+                <HStack alignItems="center" justifyContent="space-between">
+                  <Heading size="xs">Phone</Heading>
+                  <View width={150}>
                     <Input
                       placeholder="Phone Number"
                       value={phoneNumber}
@@ -426,14 +420,9 @@ export const SettingScreen = inject('appStore')(
                     />
                   </View>
                 </HStack>
-                <Divider thickness={1} bg="black" />
-                <HStack
-                  alignItems="center"
-                  space={2}
-                  paddingY={2}
-                  paddingX={4}
-                  justifyContent="space-between"
-                >
+              </Card>
+              <Card backgroundColor={Colors.lightGray} my={2}>
+                <HStack alignItems="center" justifyContent="space-between">
                   <Heading size="xs">Bio</Heading>
                   <TextArea
                     placeholder="Tell your viewers more about you."
@@ -448,20 +437,22 @@ export const SettingScreen = inject('appStore')(
                     fontSize="sm"
                   />
                 </HStack>
-                <Divider thickness={1} bg="black" />
-                <HStack
-                  alignItems="center"
-                  space={2}
-                  paddingY={2}
-                  paddingX={4}
-                  justifyContent="space-between"
-                >
-                  <Heading size="xs">Service Areas By ZipCode</Heading>
-                  <View display="flex" flexDirection="column" flex={1}>
-                    {!!locations?.length &&
-                      locations.map((loc, index) => (
-                        <Chip label={loc} onPress={() => handleDeleteChip(index)} />
-                      ))}
+              </Card>
+              <Card backgroundColor={Colors.lightGray} my={2}>
+                <HStack alignItems="center" justifyContent="space-between">
+                  <View>
+                    <Heading size="xs">Service Areas</Heading>
+                    <Text fontSize="xs" fontWeight={300} color={Colors.mediumGray}>
+                      Enter By Zip Codes
+                    </Text>
+                  </View>
+                  <View display="flex" flexDirection="column" width={200}>
+                    <View flexWrap="wrap" flexDirection="row">
+                      {!!locations?.length &&
+                        locations.map((loc, index) => (
+                          <Chip label={loc} onPress={() => handleDeleteChip(index)} />
+                        ))}
+                    </View>
                     <Input
                       placeholder="Enter service locations by zip code."
                       value={chipValue}
@@ -469,46 +460,37 @@ export const SettingScreen = inject('appStore')(
                       onSubmitEditing={handleAddChip}
                       keyboardType="numeric"
                       width="100%"
+                      mt={2}
                     />
                   </View>
                 </HStack>
-                <Divider thickness={1} bg="black" />
-                <HStack
-                  alignItems="center"
-                  space={2}
-                  paddingY={2}
-                  paddingX={4}
-                  justifyContent="space-between"
-                >
+              </Card>
+              <Card backgroundColor={Colors.lightGray} my={2}>
+                <HStack alignItems="center" justifyContent="space-between">
                   <Heading size="xs">Upload Profile Video</Heading>
                   <Button onPress={pickVideo}>Pick Video</Button>
+                  {videoProgress && videoProgress !== 1 && (
+                    <ProgressBar
+                      style={{ marginBottom: 10 }}
+                      progress={videoProgress}
+                      color="#02FDAA"
+                    />
+                  )}
+                  {videoUri && (
+                    <Video
+                      source={{ uri: videoUri }}
+                      rate={1.0}
+                      volume={1.0}
+                      isMuted={false}
+                      resizeMode="cover"
+                      useNativeControls
+                      style={{ width: '100%', height: 200 }}
+                    />
+                  )}
                 </HStack>
-                {videoProgress && videoProgress !== 1 && (
-                  <ProgressBar
-                    style={{ marginBottom: 10 }}
-                    progress={videoProgress}
-                    color="#02FDAA"
-                  />
-                )}
-                {videoUri && (
-                  <Video
-                    source={{ uri: videoUri }}
-                    rate={1.0}
-                    volume={1.0}
-                    isMuted={false}
-                    resizeMode="cover"
-                    useNativeControls
-                    style={{ width: '100%', height: 200 }}
-                  />
-                )}
-                <Divider thickness={1} bg="black" />
-                <HStack
-                  alignItems="center"
-                  space={2}
-                  paddingY={2}
-                  paddingX={4}
-                  justifyContent="space-between"
-                >
+              </Card>
+              <Card backgroundColor={Colors.lightGray} my={2}>
+                <HStack alignItems="center" justifyContent="space-between">
                   <Heading size="xs">Renew Education License</Heading>
                   <DateTimePicker
                     testID="dateTimePicker"
@@ -519,58 +501,51 @@ export const SettingScreen = inject('appStore')(
                     minimumDate={new Date(year, month, day)}
                   />
                 </HStack>
-                <Divider thickness={1} bg="black" />
-                {user.username ||
-                  (user.userName && (
-                    <HStack
-                      alignItems="center"
-                      paddingY={2}
-                      paddingX={4}
-                      justifyContent="space-between"
-                    >
-                      <Heading size="xs">Referral Link</Heading>
-                      <Text fontSize="md">
-                        <Link onPress={visitPublicProfile}>Visit Public Profile</Link>
-                      </Text>
-                    </HStack>
-                  ))}
-                {/*<Divider thickness={1} bg="black" />
-									<View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginVertical: 16 }}>
-										<Button onPress={() => { try { restorePurchase(); } catch (error) { console.log('error', error); } }}>
-											<Text status="danger">Restore Purchases</Text>
-										</Button>
-									</View>*/}
-                <Divider thickness={1} bg="black" />
-                <HStack
-                  alignItems="center"
-                  paddingY={2}
-                  paddingX={4}
-                  justifyContent="space-between"
-                >
+              </Card>
+              <Card backgroundColor={Colors.lightGray} my={2}>
+                <HStack alignItems="center" justifyContent="space-between">
                   <Heading size="xs">App Version</Heading>
                   <Text fontSize="md">{Constants?.manifest?.version}</Text>
                 </HStack>
-                <Divider thickness={1} bg="black" />
-                {Device.osVersion && (
-                  <HStack
-                    alignItems="center"
-                    paddingY={2}
-                    paddingX={4}
-                    justifyContent="space-between"
-                  >
-                    <Heading size="sm">Ios Version</Heading>
+              </Card>
+              {Device.osVersion && (
+                <Card backgroundColor={Colors.lightGray} my={2}>
+                  <HStack alignItems="center" justifyContent="space-between">
+                    <Heading size="sm">IOS Version</Heading>
                     <Text fontSize="md">{Device.osVersion}</Text>
                   </HStack>
-                )}
-                {Device.osVersion && <Divider thickness={1} bg="black" />}
-                <HStack
-                  alignItems="center"
-                  paddingY={2}
-                  paddingX={4}
-                  justifyContent="space-between"
-                >
+                </Card>
+              )}
+              <Card backgroundColor={Colors.lightGray} my={2}>
+                <HStack alignItems="center" justifyContent="space-between">
+                  <Heading size="xs">Restore Purchase</Heading>
+                  <TouchableOpacity
+                    onPress={() => {
+                      try {
+                        restorePurchase();
+                        setErrorState('');
+                      } catch (error) {
+                        Bugsnag.notify(error);
+                        setErrorState('Error restoring purchase for user');
+                      }
+                    }}
+                    style={{
+                      backgroundColor: Colors.red,
+                      paddingHorizontal: 6,
+                      paddingVertical: 4,
+                      borderRadius: 4,
+                    }}
+                  >
+                    <Text fontSize="md" color="white">
+                      Restore
+                    </Text>
+                  </TouchableOpacity>
+                </HStack>
+              </Card>
+              <Card backgroundColor={Colors.lightGray} my={2}>
+                <HStack alignItems="center" justifyContent="space-between">
                   <Heading size="xs">Delete Account</Heading>
-                  <Button
+                  <TouchableOpacity
                     onPress={() => {
                       try {
                         deleteUserAccount();
@@ -580,31 +555,23 @@ export const SettingScreen = inject('appStore')(
                         setErrorState('Error deleting user account');
                       }
                     }}
-                    colorScheme="red"
-                    size="sm"
+                    style={{
+                      backgroundColor: Colors.red,
+                      paddingHorizontal: 6,
+                      paddingVertical: 4,
+                      borderRadius: 4,
+                    }}
                   >
                     <Text fontSize="md" color="white">
                       Delete
                     </Text>
-                  </Button>
+                  </TouchableOpacity>
                 </HStack>
-              </ScrollView>
-              <View style={styles.rows}>
-                {/*localCmaRows && _.size(localCmaRows) > 0 ? (
-								<View>
-									<Text category="h6" style={{ marginTop: 24, textAlign: 'center' }}>
-										CMA History
-									</Text>
-									<View style={{ textAlign: 'center' }}>
-										<List data={localCmaRows} ItemSeparatorComponent={Divider} renderItem={renderItem} />
-									</View>
-								</View>
-							) : null*/}
-              </View>
+              </Card>
             </View>
           </View>
-        </View>
-      </Container>
+        </ScrollView>
+      </SafeAreaView>
     );
   }),
 );

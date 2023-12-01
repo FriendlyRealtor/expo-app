@@ -1,19 +1,20 @@
-import { Alert, Image, Linking, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
-import { Button, ErrorMessage, Loading, Text, TextInput, View } from '../../components';
+import { Alert, Image, Linking, SafeAreaView, TouchableOpacity } from 'react-native';
+import { ErrorMessage } from '../../components';
 import { Formik, useFormik } from 'formik';
 import React, { useState } from 'react';
-import { auth, db } from '../../config';
+import { auth, db, Colors } from '../../config';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { inject, observer } from 'mobx-react';
 
 import Bugsnag from '@bugsnag/expo';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { SignupScreenStyles } from './SignupScreenStyles';
 import { StatusBar } from 'expo-status-bar';
 import { signupValidationSchema } from '../../utils';
 import { useTogglePasswordVisibility } from '../../hooks';
+import { Button, IconButton, ScrollView, View, Text, Input, FormControl, Icon } from 'native-base';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export const SignupScreen = inject('appStore')(
   observer(({ appStore, navigation }) => {
@@ -37,6 +38,7 @@ export const SignupScreen = inject('appStore')(
       });
 
     const [errorState, setErrorState] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const {
       passwordVisibility,
@@ -61,6 +63,7 @@ export const SignupScreen = inject('appStore')(
       };
 
       try {
+        setIsLoading(true);
         const doesUserNameExists = await checkUsernameExists(trimmedValues.userName);
         if (doesUserNameExists) {
           throw new Error('Username already exists');
@@ -101,102 +104,137 @@ export const SignupScreen = inject('appStore')(
           default:
             setErrorState(`Contact Support contact@friendlyrealtor.app ${error.message}`);
         }
+      } finally {
+        setIsLoading(false);
       }
     };
 
     return (
-      <SafeAreaView>
+      <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>
         <StatusBar style="auto" />
         <ScrollView>
           <KeyboardAwareScrollView>
-            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-              <Button onPress={() => navigation.goBack()}>
-                <Icon style={{ marginLeft: 64 }} name="chevron-left" size={24} />
-              </Button>
-              <View style={styles.logoContainer}>
-                <Image source={require('../../../assets/logo.png')} style={styles.logo} />
-                <Text style={styles.screenTitle}>Sign Up!</Text>
-              </View>
-            </View>
             <Formik>
               {() => (
                 <View isSafe style={styles.container}>
-                  <Text category="p1">* Please complete all fields.</Text>
+                  <Text fontSize={32} fontWeight={500}>
+                    Sign Up
+                  </Text>
+                  <Text style={{ color: 'red', fontWeight: 'bold', marginBottom: 16 }}>
+                    * Please complete all fields.
+                  </Text>
                   {errorState !== '' ? <ErrorMessage error={errorState} visible={true} /> : null}
-                  <TextInput
+                  <FormControl.Label>First Name</FormControl.Label>
+                  <Input
                     name="firstName"
-                    placeholder="First Name"
+                    placeholder="Enter your First Name"
                     autoCapitalize="none"
                     autoFocus={true}
                     value={values.firstName}
                     onChangeText={handleChange('firstName')}
                     onBlur={handleBlur('firstName')}
+                    my={1}
                   />
                   <ErrorMessage error={errors.firstName} visible={touched.firstName} />
-                  <TextInput
+                  <FormControl.Label>Last Name</FormControl.Label>
+                  <Input
                     name="lastName"
-                    placeholder="Last Name"
+                    placeholder="Enter your Last Name"
                     autoCapitalize="none"
                     value={values.lastName}
                     onChangeText={handleChange('lastName')}
                     onBlur={handleBlur('lastName')}
+                    my={1}
                   />
                   <ErrorMessage error={errors.lastName} visible={touched.lastName} />
-                  <TextInput
+                  <FormControl.Label>User Name</FormControl.Label>
+                  <Input
                     name="username"
                     placeholder="User Name"
                     autoCapitalize="none"
                     value={values.userName}
                     onChangeText={handleChange('userName')}
                     onBlur={handleBlur('userName')}
+                    my={1}
                   />
+
                   <ErrorMessage error={errors.userName} visible={touched.userName} />
-                  <TextInput
+                  <FormControl.Label>Email</FormControl.Label>
+                  <Input
                     name="email"
-                    leftIconName="email"
-                    placeholder="Email"
+                    placeholder="Enter your Email"
                     autoCapitalize="none"
                     keyboardType="email-address"
                     textContentType="emailAddress"
                     value={values.email}
                     onChangeText={handleChange('email')}
                     onBlur={handleBlur('email')}
+                    leftElement={<Icon as={MaterialCommunityIcons} name="email" size="sm" ml={2} />}
+                    my={1}
                   />
                   <ErrorMessage error={errors.email} visible={touched.email} />
-                  <TextInput
+                  <FormControl.Label>Password</FormControl.Label>
+                  <Input
                     name="password"
-                    leftIconName="key-variant"
-                    placeholder="Password"
+                    placeholder="Enter your Password"
                     autoCapitalize="none"
                     autoCorrect={false}
                     secureTextEntry={passwordVisibility}
                     textContentType="newPassword"
-                    rightIcon={rightIcon}
-                    handlePasswordVisibility={handlePasswordVisibility}
+                    my={1}
+                    rightElement={
+                      <IconButton
+                        onPress={handlePasswordVisibility}
+                        _pressed={{
+                          bg: 'transparent',
+                        }}
+                        height={1}
+                      >
+                        <Icon
+                          as={MaterialCommunityIcons}
+                          name={passwordVisibility ? 'eye' : 'eye-off'}
+                          size="sm"
+                          mr={2}
+                        />
+                      </IconButton>
+                    }
                     value={values.password}
                     onChangeText={handleChange('password')}
                     onBlur={handleBlur('password')}
                   />
                   <ErrorMessage error={errors.password} visible={touched.password} />
-                  <TextInput
+                  <FormControl.Label>Confirm Password</FormControl.Label>
+                  <Input
                     name="confirmPassword"
-                    leftIconName="key-variant"
-                    placeholder="Confirm password"
+                    placeholder="Confirm your password"
                     autoCapitalize="none"
                     autoCorrect={false}
                     secureTextEntry={confirmPasswordVisibility}
                     textContentType="password"
-                    rightIcon={confirmPasswordIcon}
-                    handlePasswordVisibility={handleConfirmPasswordVisibility}
+                    rightElement={
+                      <IconButton
+                        onPress={handleConfirmPasswordVisibility}
+                        _pressed={{
+                          bg: 'transparent',
+                        }}
+                        height={1}
+                      >
+                        <Icon
+                          as={MaterialCommunityIcons}
+                          name={confirmPasswordVisibility ? 'eye' : 'eye-off'}
+                          size="sm"
+                          mr={2}
+                        />
+                      </IconButton>
+                    }
                     value={values.confirmPassword}
                     onChangeText={handleChange('confirmPassword')}
                     onBlur={handleBlur('confirmPassword')}
+                    my={1}
                   />
+
                   <ErrorMessage error={errors.confirmPassword} visible={touched.confirmPassword} />
-                  <Text
-                    appearance="hint"
-                    style={{ fontSize: 12, textAlign: 'center', marginTop: 10 }}
-                  >
+                  <Text style={{ fontSize: 12, textAlign: 'center', marginTop: 10 }}>
                     By clicking Sign Up, you are agreeing to JubileeInvestmentLLC's
                     <TouchableOpacity
                       onPress={() =>
@@ -205,9 +243,7 @@ export const SignupScreen = inject('appStore')(
                         )
                       }
                     >
-                      <Text category="label" appearance="hint" status="info">
-                        Terms of Service
-                      </Text>
+                      <Text color={Colors.blue}>Terms of Service </Text>
                     </TouchableOpacity>
                     and are acknowledging our{' '}
                     <TouchableOpacity
@@ -217,24 +253,30 @@ export const SignupScreen = inject('appStore')(
                         )
                       }
                     >
-                      <Text category="label" appearance="hint" status="info">
-                        Privacy Notice
-                      </Text>
+                      <Text color={Colors.blue}>Privacy Notice</Text>
                     </TouchableOpacity>
                     applies.
                   </Text>
-                  <Button style={styles.button} onPress={handleSubmit}>
-                    <Text style={styles.buttonText}>Signup</Text>
+                  <Button
+                    onPress={handleSubmit}
+                    isLoading={isLoading}
+                    backgroundColor={Colors.blue}
+                    mt={8}
+                  >
+                    <Text style={styles.buttonText} color="white">
+                      Sign Up
+                    </Text>
                   </Button>
                 </View>
               )}
             </Formik>
             <Button
-              style={styles.borderlessButtonContainer}
-              borderless
-              title={'Already have an account?'}
               onPress={() => navigation.navigate('Login')}
-            />
+              backgroundColor={Colors.transparent}
+              mt={2}
+            >
+              <Text color={Colors.blue}>Already have an account?</Text>
+            </Button>
           </KeyboardAwareScrollView>
         </ScrollView>
       </SafeAreaView>
