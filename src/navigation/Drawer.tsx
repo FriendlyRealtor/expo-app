@@ -81,7 +81,7 @@ export const MyDrawer = ({ navigation, ...restProps }) => {
         }}
       />
       <Drawer.Screen name="DealHub" component={ClientScreen} />
-      <Drawer.Screen name="Facebook Post" component={FacebookScreen} />
+      <Drawer.Screen name="AI Social Tool" component={FacebookScreen} />
       {isProfessional && <Drawer.Screen name="MarketView Pro" component={HomeScreen} />}
       {isProfessional && (
         <Drawer.Screen name="Realtor Showings" component={DistancePropertiesScreen} />

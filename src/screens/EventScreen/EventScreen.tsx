@@ -91,7 +91,7 @@ export const EventScreen = ({ navigation }) => {
             <UpgradePrompt />
           </TouchableOpacity>
         )}
-        <View mb={4} mx={1} textAlign="left">
+        <View mb={4} mx={4} textAlign="left">
           <Text fontSize="2xl" fontWeight={700}>
             Explore Local Events.
           </Text>
@@ -99,14 +99,14 @@ export const EventScreen = ({ navigation }) => {
             Explore and stay updated with the latest events relevant to your real estate interests.
           </Text>
         </View>
-        <View mb={2} mx={1}>
+        <View mb={2} mx={4}>
           <Input
             placeholder="Search For Events by name..."
             value={searchQuery}
             onChangeText={(text) => setSearchQuery(text)}
           />
         </View>
-        <HStack mx={1} mb={12} alignItems="center">
+        <HStack mx={4} mb={12} alignItems="center">
           <View mr={4}>
             <Filter
               title="Date"

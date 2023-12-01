@@ -58,7 +58,7 @@ export const AppTabs = (props) => {
     >
       <Tab.Screen
         name="Discover Events"
-        component={FacebookScreen}
+        component={EventScreen}
         options={({ navigation }) => ({
           headerShown: false,
           tabBarLabel: 'Discover Events',

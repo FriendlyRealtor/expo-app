@@ -20,7 +20,7 @@ export const FacebookScreen = () => {
   const fetchUserPages = async (accessToken, userId) => {
     try {
       const response = await fetch(
-        `${Constants?.manifest?.extra?.fbBaseUrl}/${userId}/accounts?access_token=${accessToken}`,
+        `https://graph.facebook.com/v18.0/${userId}/accounts?access_token=${accessToken}`,
       );
       const res = await response.json();
       setData(res.data);
@@ -37,13 +37,12 @@ export const FacebookScreen = () => {
     try {
       setIsSubmitting(true);
 
-      const baseUrl = Constants?.manifest?.extra?.fbBaseUrl;
       const pageId = selectedPage.id;
       const accessToken = selectedPage.access_token;
       const imageUrl = encodeURIComponent(generateImage?.url || '');
       const captionText = encodeURIComponent(postText);
       if (addImage && imageUrl) {
-        const url = `${baseUrl}/${pageId}/photos?url=${imageUrl}&caption=${captionText}&access_token=${accessToken}`;
+        const url = `https://graph.facebook.com/v18.0/${pageId}/photos?url=${imageUrl}&caption=${captionText}&access_token=${accessToken}`;
 
         const response = await fetch(url, {
           method: 'POST',
@@ -55,7 +54,7 @@ export const FacebookScreen = () => {
           throw new Error(res.error.message);
         }
       } else {
-        const messageUrl = `${baseUrl}/${pageId}/feed?message=${encodeURIComponent(
+        const messageUrl = `https://graph.facebook.com/v18.0/${pageId}/feed?message=${encodeURIComponent(
           postText,
         )}&access_token=${accessToken}`;
         const response = await fetch(messageUrl, {
