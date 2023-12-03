@@ -2,6 +2,7 @@ import * as Linking from 'expo-linking';
 import * as Location from 'expo-location';
 import * as geolib from 'geolib';
 
+import { Alert } from 'react-native';
 import { Button, Icon, Input, Heading, ScrollView, Text, View } from 'native-base';
 import { FieldArray, FormikProvider, useFormik } from 'formik';
 import { GooglePlacesAutocomplete, PlaceDetails } from 'expo-google-places-autocomplete';
@@ -39,14 +40,26 @@ export const DistancePropertiesScreen = () => {
 
   useEffect(() => {
     const retrieveCurrentPosition = async () => {
-      const { coords } = await Location.getCurrentPositionAsync({});
-      const currentPosition: Address = {
-        latitude: coords.latitude,
-        longitude: coords.longitude,
-        address: '',
-      };
+      try {
+        const { status } = await Location.requestForegroundPermissionsAsync();
 
-      setCurrentPosition(currentPosition);
+        if (status !== 'granted') {
+          throw new Error('Location permission not granted');
+        }
+
+        const { coords } = await Location.getCurrentPositionAsync({});
+
+        const currentPosition = {
+          latitude: coords.latitude,
+          longitude: coords.longitude,
+          address: '',
+        };
+
+        setCurrentPosition(currentPosition);
+      } catch (error) {
+        Bugsnag.notify(error);
+        Alert.alert('Error', error.message);
+      }
     };
 
     retrieveCurrentPosition();
@@ -73,7 +86,6 @@ export const DistancePropertiesScreen = () => {
         );
 
         const url = `http://maps.apple.com/?daddr=${formattedAddresses.join('+to:')}`;
-
         const isSupported = await Linking.canOpenURL(url);
 
         if (isSupported) {
@@ -86,6 +98,7 @@ export const DistancePropertiesScreen = () => {
       setIsLoading(false);
     }
   };
+
   const initialValues = {
     distances: [''], // Initial value with one input field
   };
@@ -106,8 +119,8 @@ export const DistancePropertiesScreen = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white, padding: 4 }}>
-      <ScrollView>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>
+      <ScrollView p={4}>
         <FormikProvider value={formik}>
           <Heading fontSize="2xl" fontWeight={700}>
             Add the properties you'll show and find the shortest route to reach them.
