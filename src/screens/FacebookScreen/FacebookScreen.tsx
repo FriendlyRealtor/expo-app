@@ -5,6 +5,7 @@ import { LoginButton, AccessToken } from 'react-native-fbsdk-next';
 import Bugsnag from '@bugsnag/expo';
 import Constants from 'expo-constants';
 import _ from 'lodash';
+import fetch from 'node-fetch'; // Import node-fetch
 
 export const FacebookScreen = () => {
   const [isImageLoading, setIsImageLoading] = useState(false);
@@ -16,6 +17,8 @@ export const FacebookScreen = () => {
   const [postText, setPostText] = useState('');
   const [addImage, setAddImage] = useState(false);
   const [imageDescription, setImageDescription] = useState('');
+  const [businessAccess, setBusinessAccess] = useState(false); // New state for business access
+  const [pageId, setPageId] = useState(''); // New state for page ID
 
   const fetchUserPages = async (accessToken, userId) => {
     try {
@@ -24,8 +27,8 @@ export const FacebookScreen = () => {
       );
       const res = await response.json();
       setData(res.data);
-      if (data?.error) {
-        throw new Error(data.error.message);
+      if (res.error) {
+        throw new Error(res.error.message);
       }
     } catch (error) {
       Bugsnag.notify(`Error fetching user pages: ${error}`);
@@ -37,35 +40,31 @@ export const FacebookScreen = () => {
     try {
       setIsSubmitting(true);
 
-      const pageId = selectedPage.id;
-      const accessToken = selectedPage.access_token;
+      const pageIdToUse = businessAccess ? pageId : selectedPage.id; // Use the selected Page ID or the manually input Page ID
+      const accessTokenToUse = businessAccess
+        ? selectedPage.access_token
+        : selectedPage.access_token;
       const imageUrl = encodeURIComponent(generateImage?.url || '');
       const captionText = encodeURIComponent(postText);
+
+      let url = `https://graph.facebook.com/v18.0/${pageIdToUse}/`;
+
       if (addImage && imageUrl) {
-        const url = `https://graph.facebook.com/v18.0/${pageId}/photos?url=${imageUrl}&caption=${captionText}&access_token=${accessToken}`;
-
-        const response = await fetch(url, {
-          method: 'POST',
-        });
-
-        const res = await response.json();
-
-        if (res.error) {
-          throw new Error(res.error.message);
-        }
+        url += 'photos';
       } else {
-        const messageUrl = `https://graph.facebook.com/v18.0/${pageId}/feed?message=${encodeURIComponent(
-          postText,
-        )}&access_token=${accessToken}`;
-        const response = await fetch(messageUrl, {
-          method: 'POST',
-        });
+        url += 'feed';
+      }
 
-        const res = await response.json();
+      url += `?url=${imageUrl}&caption=${captionText}&access_token=${accessTokenToUse}`;
 
-        if (res.error) {
-          throw new Error(res.error.message);
-        }
+      const response = await fetch(url, {
+        method: 'POST',
+      });
+
+      const res = await response.json();
+
+      if (res.error) {
+        throw new Error(res.error.message);
       }
 
       Alert.alert('Success', 'Post submitted successfully.');
@@ -129,16 +128,6 @@ export const FacebookScreen = () => {
             permissions.
           </Text>
         </Center>
-        <LoginButton
-          onLoginFinished={async () => {
-            const token = await AccessToken.getCurrentAccessToken();
-            fetchUserPages(token?.accessToken, token?.userID);
-          }}
-          onLogoutFinished={() => {
-            setSelectedPage(undefined);
-            setData(undefined);
-          }}
-        />
       </View>
       <View>
         <Select
@@ -177,6 +166,20 @@ export const FacebookScreen = () => {
           <Text mr={4}>Add Image To Post</Text>
           <Switch value={addImage} onValueChange={() => setAddImage(!addImage)} />
         </HStack>
+        <HStack my={4} alignItems="center">
+          <Text mr={4}>Grant Business Access</Text>
+          <Switch value={businessAccess} onValueChange={() => setBusinessAccess(!businessAccess)} />
+        </HStack>
+        {businessAccess && (
+          <View>
+            <TextInput
+              placeholder="Enter Page ID"
+              value={pageId}
+              onChangeText={(text) => setPageId(text)}
+              style={{ borderBottomWidth: 1, marginBottom: 12 }}
+            />
+          </View>
+        )}
         {addImage && (
           <View>
             <TextInput
