@@ -5,6 +5,7 @@ import {
   ContactScreen,
   EventOrganizerScreen,
   AIScreen,
+  FacebookScreen,
   HomeScreen,
   SettingScreen,
   EventScreen,
@@ -91,7 +92,7 @@ export const AppTabs = (props) => {
           ),
         }}
       >
-        {() => <AIScreen />}
+        {({ navigation }) => <AIScreen navigation={navigation} />}
       </Tab.Screen>
       <Tab.Screen
         name="Event Organizer"

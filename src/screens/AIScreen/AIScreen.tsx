@@ -174,7 +174,7 @@ export const AIScreen = () => {
     try {
       setIsLoading(true);
       const response = await axios.post(`${process.env.SERVER_URL}/prompt-images`, {
-        prompt: inputMessage,
+        inputMessage: inputMessage,
         n: 1,
         size: '1024x1024',
       });

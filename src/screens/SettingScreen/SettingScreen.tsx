@@ -426,7 +426,7 @@ export const SettingScreen = inject('appStore')(
                   <Heading size="xs">Bio</Heading>
                   <TextArea
                     placeholder="Tell your viewers more about you."
-                    autoCompleteType="false"
+                    autoCompleteType={false}
                     value={bio}
                     multiline={true}
                     onChangeText={(nextValue) => setBio(nextValue)}

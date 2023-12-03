@@ -6,7 +6,7 @@ export default {
     slug: 'friendlyrealtor',
     privacy: 'unlisted',
     platforms: ['ios'],
-    version: '1.0.33',
+    version: '1.0.34',
     orientation: 'portrait',
     owner: 'jubileeinvestments',
     icon: './assets/icon.png',
@@ -50,6 +50,7 @@ export default {
       realTimeDbUrl: process.env.FIREBASE_REAL_TIME_DATABASE_URL,
       bugSnagApiKey: process.env.BUGSNAG_API_KEY,
       vexoApiKey: process.env.VEXO_API_KEY,
+      fbBaseUrl: process.env.FB_BASE_URL,
       eas: {
         projectId: process.env.EAS_PROJECT_ID,
       },
@@ -89,6 +90,19 @@ export default {
         },
       ],
       ['@config-plugins/react-native-blob-util'],
+      [
+        'react-native-fbsdk-next',
+        {
+          appID: '1339976196848860',
+          clientToken: 'b95fc35e1b5d307b7f270c60ab423ac0',
+          displayName: 'Friendly Realtor',
+          advertiserIDCollectionEnabled: false,
+          autoLogAppEventsEnabled: false,
+          isAutoInitEnabled: true,
+          iosUserTrackingPermission:
+            'This identifier will be used to deliver personalized ads to you.',
+        },
+      ],
     ],
   },
 };

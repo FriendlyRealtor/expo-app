@@ -122,35 +122,35 @@ export const EventOrganizerScreen = () => {
     }
   };
 
-	useEffect(() => {
-		const { uid } = userAuth.currentUser;
-		const fetchEvents = async () => {
-			try {
-				const eventCollection = collection(db, 'events');
-				const querySnapshot = await getDocs(eventCollection);
-	
-				const eventsData = [];
-				querySnapshot.forEach((doc) => {
-					const event = doc.data();
-					const formattedDate = moment(event.eventDate, 'MMMM Do, YYYY').format('MMM Do');
-					
-					if (event.createdBy === uid) {
-						eventsData.push({
-							id: doc.id,
-							...event,
-							eventDate: formattedDate,
-						});
-					}
-				});
-	
-				setEvents(eventsData);
-			} catch (error) {
-				console.error('Error fetching events:', error);
-			}
-		};
-	
-		fetchEvents();
-	}, []);
+  useEffect(() => {
+    const { uid } = userAuth.currentUser;
+    const fetchEvents = async () => {
+      try {
+        const eventCollection = collection(db, 'events');
+        const querySnapshot = await getDocs(eventCollection);
+
+        const eventsData = [];
+        querySnapshot.forEach((doc) => {
+          const event = doc.data();
+          const formattedDate = moment(event.eventDate, 'MMMM Do, YYYY').format('MMM Do');
+
+          if (event.createdBy === uid) {
+            eventsData.push({
+              id: doc.id,
+              ...event,
+              eventDate: formattedDate,
+            });
+          }
+        });
+
+        setEvents(eventsData);
+      } catch (error) {
+        console.error('Error fetching events:', error);
+      }
+    };
+
+    fetchEvents();
+  }, []);
 
   return (
     <ScrollView px={8} pt={8} background="white">
