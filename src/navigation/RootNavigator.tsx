@@ -1,10 +1,15 @@
-import { ChatScreen, DistancePropertiesScreen, HomeScreen } from '../screens';
+import {
+  LoginScreen,
+  SignupScreen,
+  ForgotPasswordScreen,
+  ChatScreen,
+  DistancePropertiesScreen,
+  HomeScreen,
+} from '../screens';
 import React, { useEffect, useState } from 'react';
 import { SplashScreen, UserChatScreen } from '../screens';
 import { inject, observer } from 'mobx-react';
-
-import { AppTabs } from './AppTabs';
-import { AuthStack } from './AuthStack';
+import { useFonts } from 'expo-font';
 import Bugsnag from '@bugsnag/expo';
 import { NativeBaseProvider } from 'native-base';
 import { NavigationContainer } from '@react-navigation/native';
@@ -13,31 +18,34 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { getTrackingPermissionsAsync } from 'expo-tracking-transparency';
 import { useNativeBaseTheme } from '../hooks';
 import { MyDrawer } from './Drawer';
+
 const Stack = createStackNavigator();
 
 export const RootNavigator = inject('appStore')(
   observer(({ appStore }) => {
     const [isLoading, setIsLoading] = useState(true);
     const { user, retrieveLoggedInUser } = appStore;
-    const [localUser, setLocalUser] = useState(undefined);
 
     const { theme: nativeBaseTheme } = useNativeBaseTheme();
+    const [fontsLoaded] = useFonts({
+      Ubuntu: require('../../assets/fonts/Ubuntu/Ubuntu-Regular.ttf'),
+    });
 
     useEffect(() => {
-      const fetchUser = async () => {
-        await retrieveLoggedInUser();
+      const fetchData = async () => {
+        try {
+          await retrieveLoggedInUser();
+        } catch (error) {
+          Bugsnag.notify(error);
+        } finally {
+          setIsLoading(false);
+        }
       };
 
-      fetchUser();
-      const unsubscribe = auth.onAuthStateChanged((user) => {
-        if (user) {
-          setLocalUser(user);
-        }
-        setIsLoading(false);
-      });
-
-      return () => unsubscribe();
-    }, []);
+      if (fontsLoaded) {
+        fetchData();
+      }
+    }, [fontsLoaded]);
 
     useEffect(() => {
       const requestTrackingData = async () => {
@@ -64,14 +72,14 @@ export const RootNavigator = inject('appStore')(
     return (
       <NativeBaseProvider theme={nativeBaseTheme}>
         <NavigationContainer>
-          {user && localUser && auth?.currentUser?.emailVerified ? (
+          {!isLoading && user && (
             <Stack.Navigator>
               <Stack.Group>
                 <Stack.Screen
                   name="Home"
                   component={MyDrawer}
                   initialParams={{
-                    user: localUser,
+                    user: user,
                     currentUser: user,
                   }}
                   options={{ headerShown: false }}
@@ -82,8 +90,13 @@ export const RootNavigator = inject('appStore')(
                 <Stack.Screen name="My Chat" component={UserChatScreen} />
               </Stack.Group>
             </Stack.Navigator>
-          ) : (
-            <AuthStack />
+          )}
+          {!isLoading && user === null && (
+            <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="Login" component={LoginScreen} />
+              <Stack.Screen name="Signup" component={SignupScreen} />
+              <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+            </Stack.Navigator>
           )}
         </NavigationContainer>
       </NativeBaseProvider>

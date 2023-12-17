@@ -65,8 +65,8 @@ class AppStore {
   };
 
   retrieveLoggedInUser = async () => {
-    try {
-      onAuthStateChanged(auth, async (authenticatedUser) => {
+    return new Promise<void>((resolve, reject) => {
+      const unsubscribe = onAuthStateChanged(auth, async (authenticatedUser) => {
         if (authenticatedUser) {
           const { uid } = authenticatedUser;
           const docSnap = await getDoc(doc(db, 'users', uid));
@@ -77,17 +77,19 @@ class AppStore {
             });
             const customerInfo = await Purchases.getCustomerInfo();
             const updatedObj = {
+              ...authenticatedUser,
               ...docSnap.data(),
               customerInfo,
             };
             this.setUser(updatedObj);
+          } else {
+            this.setUser(null);
           }
         }
+        unsubscribe();
+        resolve();
       });
-      return this.user;
-    } catch (error) {
-      Bugsnag.notify(error);
-    }
+    });
   };
 
   signOut = () => {
