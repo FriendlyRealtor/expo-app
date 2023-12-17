@@ -57,7 +57,7 @@ export const LoginScreen = inject('appStore')(
 
         switch (error.code) {
           case 'auth/user-not-found':
-            setErrorState('User not found!');
+            setErrorState('Try Again!');
             break;
           case 'auth/too-many-requests':
             setErrorState(
