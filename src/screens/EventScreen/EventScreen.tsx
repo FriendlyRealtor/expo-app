@@ -5,9 +5,10 @@ import { EventCategories, EventDates } from './EventTypes';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import moment from 'moment';
 import { db, Colors } from '../../config';
-import { getDocs, collection } from 'firebase/firestore';
-import { SafeAreaView } from 'react-native';
-
+import { getDocs, collection, query, orderBy } from 'firebase/firestore';
+import { SafeAreaView, RefreshControl } from 'react-native';
+import { useRefresh } from '../../hooks';
+import _ from 'lodash';
 export const EventScreen = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
@@ -15,36 +16,44 @@ export const EventScreen = ({ navigation }) => {
   const [events, setEvents] = useState([]);
   const [isFreeEvent, setIsFreeEvent] = useState(false);
 
-  useEffect(() => {
-    // Function to fetch events from the "events" collection
-    const fetchEvents = async () => {
-      try {
-        const eventCollection = collection(db, 'events');
-        const querySnapshot = await getDocs(eventCollection);
+  // Function to fetch events from the "events" collection
+  const fetchEvents = async () => {
+    try {
+      const eventCollection = collection(db, 'events');
+      const querySnapshot = await getDocs(query(eventCollection, orderBy('createdAt', 'desc')));
 
-        const eventsData = [];
-        querySnapshot.forEach((doc) => {
-          // Extract event data and add it to the eventsData array
-          const event = doc.data();
-          const formattedDate = moment(event.eventDate, 'MMMM Do, YYYY').format('MMM Do');
-          // Include the document ID as an 'id' key in the event object
-          eventsData.push({
-            id: doc.id,
-            ...event,
-            eventDate: formattedDate,
-          });
+      const eventsData = [];
+      querySnapshot.forEach((doc) => {
+        // Extract event data and add it to the eventsData array
+        const event = doc.data();
+        const formattedDate = moment(event.eventDate, 'MMMM Do, YYYY').format('MMM Do');
+        // Include the document ID as an 'id' key in the event object
+        eventsData.push({
+          id: doc.id,
+          ...event,
+          eventDate: formattedDate,
         });
+      });
 
-        // Set the events state with the fetched data
-        setEvents(eventsData);
-      } catch (error) {
-        console.error('Error fetching events:', error);
-      }
-    };
+      // Set the events state with the fetched and ordered data
+      setEvents(eventsData);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    }
+  };
 
+  useEffect(() => {
     // Call the fetchEvents function to populate the events state
     fetchEvents();
   }, []);
+
+  const handleRefresh = async (): Promise<void> => {
+    setTimeout(() => {
+      fetchEvents();
+    }, 2000);
+  };
+
+  const { isRefreshing, onRefresh } = useRefresh({ handleRefresh });
 
   const isDateFilterMatch = (eventDate, selectedDateFilter) => {
     const today = moment();
@@ -85,7 +94,10 @@ export const EventScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white, padding: 4 }}>
-      <ScrollView>
+      <ScrollView
+        height="full"
+        refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />}
+      >
         {false && (
           <TouchableOpacity onPress={() => navigation.navigate('Event Organizer')}>
             <UpgradePrompt />
