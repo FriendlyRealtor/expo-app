@@ -28,4 +28,6 @@ export type CreateEventFormType = {
   totalParticipants: string;
   cost: string;
   category: string;
+  link?: string;
+  virtual: boolean;
 };
