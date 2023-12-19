@@ -14,27 +14,40 @@ import {
   TextArea,
   VStack,
   KeyboardAvoidingView,
+  Switch,
 } from 'native-base';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { EventCard, ErrorMessage, CurrencyInput } from '../../components';
+import { EventCard, ErrorMessage } from '../../components';
 import { EventOrganizerCategories, CreateEventFormType } from './EventOrganizerScreenTypes';
 import { useForm, Controller } from 'react-hook-form';
+import { RefreshControl } from 'react-native';
 import moment from 'moment';
 import Bugsnag from '@bugsnag/expo';
-import { getDocs, deleteDoc, doc, addDoc, collection } from 'firebase/firestore';
+import {
+  getDocs,
+  deleteDoc,
+  doc,
+  addDoc,
+  collection,
+  serverTimestamp,
+  query,
+  orderBy,
+} from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { db } from '../../config';
 import { Colors } from '../../config';
+import { useRefresh } from '../../hooks';
+import _ from 'lodash';
 
 export const EventOrganizerScreen = () => {
   const userAuth = getAuth();
   const {
     control,
     handleSubmit,
-    getValues,
     setValue,
     formState: { errors },
     reset,
+    watch,
   } = useForm<CreateEventFormType>({
     defaultValues: {
       title: '',
@@ -45,6 +58,8 @@ export const EventOrganizerScreen = () => {
       dateEndTime: '',
       photo: '',
       category: 'open_houses',
+      link: '',
+      virtual: false,
       totalParticipants: '',
       //cost: '',
     },
@@ -62,6 +77,44 @@ export const EventOrganizerScreen = () => {
   const [saving, setSaving] = useState<boolean>(false);
   const [photoProgress, setPhotoProgress] = useState<number | undefined>(undefined);
   const [errorState, setErrorState] = useState<string>('');
+
+  const { uid } = userAuth.currentUser;
+  const fetchEvents = async () => {
+    try {
+      const eventCollection = collection(db, 'events');
+      const querySnapshot = await getDocs(query(eventCollection, orderBy('createdAt', 'desc')));
+
+      const eventsData = [];
+      querySnapshot.forEach((doc) => {
+        const event = doc.data();
+        const formattedDate = moment(event.eventDate, 'MMMM Do, YYYY').format('MMM Do');
+
+        if (event.createdBy === uid) {
+          eventsData.push({
+            id: doc.id,
+            ...event,
+            eventDate: formattedDate,
+          });
+        }
+      });
+
+      setEvents(eventsData);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  const handleRefresh = async (): Promise<void> => {
+    setTimeout(() => {
+      fetchEvents();
+    }, 2000);
+  };
+
+  const { isRefreshing, onRefresh } = useRefresh({ handleRefresh });
 
   const onCreateEvent = async (data) => {
     try {
@@ -89,7 +142,12 @@ export const EventOrganizerScreen = () => {
       data.dateEndTime = dateEndTime;
 
       // Add the event data to the "events" collection in Firebase
-      await addDoc(collection(db, 'events'), { ...data, participants: [], createdBy: uid });
+      await addDoc(collection(db, 'events'), {
+        ...data,
+        participants: [],
+        createdBy: uid,
+        createdAt: serverTimestamp(),
+      });
       // Clear any previous error state, indicating a successful operation
       setErrorState('');
       setIsCreatingEvent(false);
@@ -122,38 +180,14 @@ export const EventOrganizerScreen = () => {
     }
   };
 
-  useEffect(() => {
-    const { uid } = userAuth.currentUser;
-    const fetchEvents = async () => {
-      try {
-        const eventCollection = collection(db, 'events');
-        const querySnapshot = await getDocs(eventCollection);
-
-        const eventsData = [];
-        querySnapshot.forEach((doc) => {
-          const event = doc.data();
-          const formattedDate = moment(event.eventDate, 'MMMM Do, YYYY').format('MMM Do');
-
-          if (event.createdBy === uid) {
-            eventsData.push({
-              id: doc.id,
-              ...event,
-              eventDate: formattedDate,
-            });
-          }
-        });
-
-        setEvents(eventsData);
-      } catch (error) {
-        console.error('Error fetching events:', error);
-      }
-    };
-
-    fetchEvents();
-  }, []);
-
   return (
-    <ScrollView px={8} pt={8} background="white">
+    <ScrollView
+      px={8}
+      pt={8}
+      background="white"
+      height="full"
+      refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />}
+    >
       <Text fontSize="xl" fontWeight="bold" mb={4}>
         Follow these simple steps to create your event and connect with your audience:
       </Text>
@@ -304,6 +338,45 @@ export const EventOrganizerScreen = () => {
                     visible={!!errors.description?.message}
                   />
                 </FormControl>
+                <FormControl>
+                  <FormControl.Label>
+                    <Heading size="sm">Online Event</Heading>
+                  </FormControl.Label>
+                  <Controller
+                    control={control}
+                    name="virtual"
+                    render={({ field: { onChange, value } }) => (
+                      <Switch value={value} onValueChange={(val) => onChange(val)} />
+                    )}
+                  />
+                </FormControl>
+
+                {watch('virtual') && (
+                  <FormControl>
+                    <FormControl.Label>
+                      <Heading size="sm">Link Url</Heading>
+                    </FormControl.Label>
+                    <Controller
+                      control={control}
+                      name="link"
+                      rules={{
+                        required: 'Field is required',
+                        minLength: 1,
+                      }}
+                      render={({ field: { onChange, value, onBlur } }) => (
+                        <Input
+                          value={value}
+                          onChangeText={(val) => {
+                            onChange(val);
+                          }}
+                          onBlur={onBlur}
+                          placeholder="Online Meeting Link"
+                        />
+                      )}
+                    />
+                    <ErrorMessage error={errors.link?.message} visible={!!errors.link?.message} />
+                  </FormControl>
+                )}
                 <FormControl>
                   <FormControl.Label>
                     <Heading size="sm">Event Category</Heading>

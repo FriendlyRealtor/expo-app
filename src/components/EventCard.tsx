@@ -172,6 +172,12 @@ export const EventCard = ({ event, index, isOrganizerCard, deleteEvent }) => {
               {event.participants.length} | {event.totalParticipants}
             </Text>
           </HStack>
+          <HStack>{event.virtual && <Text my={2}>Online Event</Text>}</HStack>
+          <HStack>
+            <Text my={2} color={Colors.color2}>
+              Start: {event.dateStartTime} | End: {event.dateEndTime}
+            </Text>
+          </HStack>
           <Box borderWidth={1} borderColor={Colors.blue} borderRadius={8} px={1} py={1.5}>
             <Text color={Colors.blue} fontWeight={700}>
               {EventOrganizerCategories.find((cat) => cat.key === event.category)?.name || ''}
