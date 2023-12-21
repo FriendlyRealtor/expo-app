@@ -5,6 +5,7 @@ import {
   ChatScreen,
   DistancePropertiesScreen,
   HomeScreen,
+  EventOrganizerScreen,
 } from '../screens';
 import React, { useEffect, useState } from 'react';
 import { SplashScreen, UserChatScreen } from '../screens';
@@ -18,6 +19,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { getTrackingPermissionsAsync } from 'expo-tracking-transparency';
 import { useNativeBaseTheme } from '../hooks';
 import { MyDrawer } from './Drawer';
+import { AppTabs } from './AppTabs';
 
 const Stack = createStackNavigator();
 
@@ -77,17 +79,17 @@ export const RootNavigator = inject('appStore')(
               <Stack.Group>
                 <Stack.Screen
                   name="Home"
-                  component={MyDrawer}
+                  component={AppTabs}
                   initialParams={{
                     user: user,
                     currentUser: user,
                   }}
                   options={{ headerShown: false }}
                 />
-                <Stack.Screen name="CMA" component={HomeScreen} />
+                {/*<Stack.Screen name="CMA" component={HomeScreen} />
                 <Stack.Screen name="Chat" component={ChatScreen} />
                 <Stack.Screen name="Distance Properties" component={DistancePropertiesScreen} />
-                <Stack.Screen name="My Chat" component={UserChatScreen} />
+                <Stack.Screen name="My Chat" component={UserChatScreen} />*/}
               </Stack.Group>
             </Stack.Navigator>
           )}
