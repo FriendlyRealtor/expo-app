@@ -4,11 +4,14 @@ import { Button, HStack, View, Text, TextArea, Center, Select } from 'native-bas
 import { LoginButton, AccessToken } from 'react-native-fbsdk-next';
 import Bugsnag from '@bugsnag/expo';
 import Constants from 'expo-constants';
+import axios from 'axios';
 import _ from 'lodash';
+import { Colors } from '../../config';
 
 export const FacebookScreen = () => {
   const [isImageLoading, setIsImageLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [textLoading, setTextLoading] = useState(false);
   const [data, setData] = useState();
   const [generateImage, setGenerateImage] = useState(undefined);
   const [userId, setUserId] = useState('');
@@ -16,6 +19,7 @@ export const FacebookScreen = () => {
   const [postText, setPostText] = useState('');
   const [addImage, setAddImage] = useState(false);
   const [imageDescription, setImageDescription] = useState('');
+  const [generateText, setGeneratedText] = useState('');
 
   const fetchUserPages = async (accessToken, userId) => {
     try {
@@ -40,7 +44,7 @@ export const FacebookScreen = () => {
       const pageId = selectedPage.id;
       const accessToken = selectedPage.access_token;
       const imageUrl = encodeURIComponent(generateImage?.url || '');
-      const captionText = encodeURIComponent(postText);
+      const captionText = encodeURIComponent(generateText?.length ? generateText : postText);
       if (addImage && imageUrl) {
         const url = `https://graph.facebook.com/v18.0/${pageId}/photos?url=${imageUrl}&caption=${captionText}&access_token=${accessToken}`;
 
@@ -107,6 +111,26 @@ export const FacebookScreen = () => {
     }
   };
 
+  const textGenerated = async () => {
+    try {
+      setTextLoading(true);
+      const response = await axios.post(`${process.env.SERVER_URL}/mobile-prompt`, {
+        inputMessage:
+          postText || 'Generate me 50 word facebook caption about real estate industry.',
+      });
+
+      if (response.status === 200) {
+        const text =
+          response.data?.choices[0]?.message?.content || 'Assistant could not find a responose.';
+        setPostText(text);
+      }
+    } catch (error) {
+      Bugsnag.notify(error);
+    } finally {
+      setTextLoading(false);
+    }
+  };
+
   useEffect(() => {
     const fetchToken = async () => {
       const token = await AccessToken.getCurrentAccessToken();
@@ -120,25 +144,39 @@ export const FacebookScreen = () => {
   }, []);
 
   return (
-    <ScrollView style={{ flex: 1, padding: 10 }}>
+    <ScrollView style={{ flex: 1, padding: 10, marginTop: 48 }}>
       <StatusBar style="auto" />
       <View mb={2}>
         <Center>
-          <Text my={4}>
+          <Text mt={4} fontSize={18}>
+            Generative tool to creating a better social presence.
+          </Text>
+          <Text mt={2} mb={4}>
             To access this feature, please log in to your Facebook account to grant necessary
             permissions.
           </Text>
         </Center>
-        <LoginButton
-          onLoginFinished={async () => {
-            const token = await AccessToken.getCurrentAccessToken();
-            fetchUserPages(token?.accessToken, token?.userID);
-          }}
-          onLogoutFinished={() => {
-            setSelectedPage(undefined);
-            setData(undefined);
-          }}
-        />
+        <HStack justifyContent="center" px={4}>
+          <LoginButton
+            onLoginFinished={async () => {
+              const token = await AccessToken.getCurrentAccessToken();
+              fetchUserPages(token?.accessToken, token?.userID);
+            }}
+            onLogoutFinished={() => {
+              setSelectedPage(undefined);
+              setData(undefined);
+            }}
+          />
+          <Button
+            onPress={textGenerated}
+            backgroundColor={Colors.black}
+            isLoading={textLoading}
+            mb={6}
+            ml={6}
+          >
+            AI Generative Content
+          </Button>
+        </HStack>
       </View>
       <View>
         <Select
