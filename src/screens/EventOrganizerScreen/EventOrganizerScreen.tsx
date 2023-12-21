@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   View,
   Text,
@@ -21,6 +21,7 @@ import { EventCard, ErrorMessage } from '../../components';
 import { EventOrganizerCategories, CreateEventFormType } from './EventOrganizerScreenTypes';
 import { useForm, Controller } from 'react-hook-form';
 import { RefreshControl } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import moment from 'moment';
 import Bugsnag from '@bugsnag/expo';
 import {
@@ -39,7 +40,7 @@ import { Colors } from '../../config';
 import { useRefresh } from '../../hooks';
 import _ from 'lodash';
 
-export const EventOrganizerScreen = () => {
+export const EventOrganizerScreen = (props) => {
   const userAuth = getAuth();
   const {
     control,
@@ -180,53 +181,69 @@ export const EventOrganizerScreen = () => {
     }
   };
 
+  const isProfessional = useMemo(() => {
+    return props.route.params.isProfessional;
+  }, [props.route.params.isProfessional]);
+
   return (
-    <ScrollView
-      px={8}
-      pt={8}
-      background="white"
-      height="full"
-      refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />}
-    >
-      <Text fontSize="xl" fontWeight="bold" mb={4}>
-        Follow these simple steps to create your event and connect with your audience:
-      </Text>
-
-      <Text fontSize="md" mb={4}>
-        1. Tap "Create Event" below.
-      </Text>
-
-      <Text fontSize="md" mb={4}>
-        2. Fill in event details, choose a category, and set the date.
-      </Text>
-
-      <Text fontSize="md" mb={4}>
-        3. Specify total participants and hit "Save Event."
-      </Text>
-      <Button onPress={() => setIsCreatingEvent(true)} color={Colors.color2}>
-        Create Event
-      </Button>
-      {/* List of Events */}
-      {events.map((event, index) => (
-        <EventCard
-          key={event.id}
-          index={index}
-          event={event}
-          isOrganizerCard
-          deleteEvent={deleteEvent}
-        />
-      ))}
-      <Actionsheet
-        isOpen={isCreatingEvent}
-        onClose={() => {
-          setIsCreatingEvent(false);
-          setEditingEventIndex(-1);
-        }}
+    <View style={{ flex: 1 }} backgroundColor={Colors.white}>
+      <StatusBar style="auto" />
+      <ScrollView
+        px={8}
+        pt={8}
+        background="white"
+        height="full"
+        refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />}
       >
-        <Actionsheet.Content>
-          <ScrollView width="100%">
-            <VStack width="80%" space={4}>
-              {/*<FormControl isInvalid={'photo' in errors}>
+        <Text fontSize="xl" fontWeight="bold" mt={12} mb={4}>
+          Take these decisive steps to launch your groundbreaking event and boost your real estate
+          cash flow:
+        </Text>
+        <Text fontSize="md" mb={2}>
+          1. Initiate the process by tapping "Organize Event" below.
+        </Text>
+        <Text fontSize="md" mb={2}>
+          2. Provide comprehensive event details, select a relevant category, and set the event
+          date.
+        </Text>
+        <Text fontSize="md" mb={2}>
+          3. Define the total participants and confirm by clicking "Save Event."
+        </Text>
+
+        <Text fontSize="lg" fontWeight="bold" my={2}>
+          Empowering realtors for quicker cash flow and lasting success.
+        </Text>
+
+        {!isProfessional && events.length >= 3 ? (
+          <Text style={{ fontWeight: 'bold', color: Colors.color2 }}>
+            Upgrade to Premium for Unlimited Event Creation!
+          </Text>
+        ) : (
+          <Button onPress={() => setIsCreatingEvent(true)} color={Colors.color2}>
+            Create Event Now
+          </Button>
+        )}
+        {/* List of Events */}
+        {events.map((event, index) => (
+          <EventCard
+            key={event.id}
+            index={index}
+            event={event}
+            isOrganizerCard
+            deleteEvent={deleteEvent}
+          />
+        ))}
+        <Actionsheet
+          isOpen={isCreatingEvent}
+          onClose={() => {
+            setIsCreatingEvent(false);
+            setEditingEventIndex(-1);
+          }}
+        >
+          <Actionsheet.Content>
+            <ScrollView width="100%">
+              <VStack width="80%" space={4}>
+                {/*<FormControl isInvalid={'photo' in errors}>
 								<FormControl.Label>Event Photo</FormControl.Label>
 								<Controller
 									control={control}
@@ -249,240 +266,240 @@ export const EventOrganizerScreen = () => {
 								/>
 										</FormControl>*/}
 
-              <KeyboardAvoidingView>
-                <FormControl>
-                  <View textAlign="center">
-                    {errorState != '' ? <ErrorMessage error={errorState} visible={true} /> : null}
-                  </View>
-                  <FormControl.Label>
-                    <Heading size="sm">Event Title</Heading>
-                  </FormControl.Label>
-                  <Controller
-                    control={control}
-                    name="title"
-                    rules={{ required: 'Field is required', minLength: 3 }}
-                    render={({ field: { onChange, value, onBlur } }) => (
-                      <Input
-                        value={value}
-                        onChangeText={(val) => onChange(val)}
-                        onBlur={onBlur}
-                        placeholder="Event Title"
-                      />
-                    )}
-                  />
-                  <ErrorMessage error={errors.title?.message} visible={!!errors.title?.message} />
-                </FormControl>
-                <FormControl>
-                  <FormControl.Label>
-                    <Heading size="sm">Event Organizer</Heading>
-                  </FormControl.Label>
-                  <Controller
-                    control={control}
-                    name="organizer"
-                    rules={{ required: 'Field is required', minLength: 3 }}
-                    render={({ field: { onChange, value, onBlur } }) => (
-                      <Input
-                        value={value}
-                        onChangeText={(val) => onChange(val)}
-                        onBlur={onBlur}
-                        placeholder="Event Organizer"
-                      />
-                    )}
-                  />
-                  <ErrorMessage
-                    error={errors.organizer?.message}
-                    visible={!!errors.organizer?.message}
-                  />
-                </FormControl>
-                <FormControl>
-                  <FormControl.Label>
-                    <Heading size="sm">Event Location</Heading>
-                  </FormControl.Label>
-                  <Controller
-                    control={control}
-                    name="location"
-                    rules={{ required: 'Field is required', minLength: 3 }}
-                    render={({ field: { onChange, value, onBlur } }) => (
-                      <Input
-                        value={value}
-                        onChangeText={(val) => onChange(val)}
-                        onBlur={onBlur}
-                        placeholder="Event Location"
-                      />
-                    )}
-                  />
-                  <ErrorMessage
-                    error={errors.location?.message}
-                    visible={!!errors.location?.message}
-                  />
-                </FormControl>
-                <FormControl>
-                  <FormControl.Label>
-                    <Heading size="sm">Event Description</Heading>
-                  </FormControl.Label>
-                  <Controller
-                    control={control}
-                    name="description"
-                    rules={{ required: 'Field is required', minLength: 3 }}
-                    render={({ field: { onChange, value, onBlur } }) => (
-                      <TextArea
-                        value={value}
-                        onChangeText={(val) => onChange(val)}
-                        onBlur={onBlur}
-                        placeholder="Event Description"
-                      />
-                    )}
-                  />
-                  <ErrorMessage
-                    error={errors.description?.message}
-                    visible={!!errors.description?.message}
-                  />
-                </FormControl>
-                <FormControl>
-                  <FormControl.Label>
-                    <Heading size="sm">Online Event</Heading>
-                  </FormControl.Label>
-                  <Controller
-                    control={control}
-                    name="virtual"
-                    render={({ field: { onChange, value } }) => (
-                      <Switch value={value} onValueChange={(val) => onChange(val)} />
-                    )}
-                  />
-                </FormControl>
-
-                {watch('virtual') && (
+                <KeyboardAvoidingView>
                   <FormControl>
+                    <View textAlign="center">
+                      {errorState != '' ? <ErrorMessage error={errorState} visible={true} /> : null}
+                    </View>
                     <FormControl.Label>
-                      <Heading size="sm">Link Url</Heading>
+                      <Heading size="sm">Event Title</Heading>
                     </FormControl.Label>
                     <Controller
                       control={control}
-                      name="link"
-                      rules={{
-                        required: 'Field is required',
-                        minLength: 1,
-                      }}
+                      name="title"
+                      rules={{ required: 'Field is required', minLength: 3 }}
+                      render={({ field: { onChange, value, onBlur } }) => (
+                        <Input
+                          value={value}
+                          onChangeText={(val) => onChange(val)}
+                          onBlur={onBlur}
+                          placeholder="Event Title"
+                        />
+                      )}
+                    />
+                    <ErrorMessage error={errors.title?.message} visible={!!errors.title?.message} />
+                  </FormControl>
+                  <FormControl>
+                    <FormControl.Label>
+                      <Heading size="sm">Event Organizer</Heading>
+                    </FormControl.Label>
+                    <Controller
+                      control={control}
+                      name="organizer"
+                      rules={{ required: 'Field is required', minLength: 3 }}
+                      render={({ field: { onChange, value, onBlur } }) => (
+                        <Input
+                          value={value}
+                          onChangeText={(val) => onChange(val)}
+                          onBlur={onBlur}
+                          placeholder="Event Organizer"
+                        />
+                      )}
+                    />
+                    <ErrorMessage
+                      error={errors.organizer?.message}
+                      visible={!!errors.organizer?.message}
+                    />
+                  </FormControl>
+                  <FormControl>
+                    <FormControl.Label>
+                      <Heading size="sm">Event Location</Heading>
+                    </FormControl.Label>
+                    <Controller
+                      control={control}
+                      name="location"
+                      rules={{ required: 'Field is required', minLength: 3 }}
+                      render={({ field: { onChange, value, onBlur } }) => (
+                        <Input
+                          value={value}
+                          onChangeText={(val) => onChange(val)}
+                          onBlur={onBlur}
+                          placeholder="Event Location"
+                        />
+                      )}
+                    />
+                    <ErrorMessage
+                      error={errors.location?.message}
+                      visible={!!errors.location?.message}
+                    />
+                  </FormControl>
+                  <FormControl>
+                    <FormControl.Label>
+                      <Heading size="sm">Event Description</Heading>
+                    </FormControl.Label>
+                    <Controller
+                      control={control}
+                      name="description"
+                      rules={{ required: 'Field is required', minLength: 3 }}
+                      render={({ field: { onChange, value, onBlur } }) => (
+                        <TextArea
+                          value={value}
+                          onChangeText={(val) => onChange(val)}
+                          onBlur={onBlur}
+                          placeholder="Event Description"
+                        />
+                      )}
+                    />
+                    <ErrorMessage
+                      error={errors.description?.message}
+                      visible={!!errors.description?.message}
+                    />
+                  </FormControl>
+                  <FormControl>
+                    <FormControl.Label>
+                      <Heading size="sm">Online Event</Heading>
+                    </FormControl.Label>
+                    <Controller
+                      control={control}
+                      name="virtual"
+                      render={({ field: { onChange, value } }) => (
+                        <Switch value={value} onValueChange={(val) => onChange(val)} />
+                      )}
+                    />
+                  </FormControl>
+
+                  {watch('virtual') && (
+                    <FormControl>
+                      <FormControl.Label>
+                        <Heading size="sm">Link Url</Heading>
+                      </FormControl.Label>
+                      <Controller
+                        control={control}
+                        name="link"
+                        rules={{
+                          required: 'Field is required',
+                          minLength: 1,
+                        }}
+                        render={({ field: { onChange, value, onBlur } }) => (
+                          <Input
+                            value={value}
+                            onChangeText={(val) => {
+                              onChange(val);
+                            }}
+                            onBlur={onBlur}
+                            placeholder="Online Meeting Link"
+                          />
+                        )}
+                      />
+                      <ErrorMessage error={errors.link?.message} visible={!!errors.link?.message} />
+                    </FormControl>
+                  )}
+                  <FormControl>
+                    <FormControl.Label>
+                      <Heading size="sm">Event Category</Heading>
+                    </FormControl.Label>
+                    <Controller
+                      control={control}
+                      name="category"
+                      render={({ field: { onChange, value } }) => (
+                        <Select
+                          selectedValue={value}
+                          minWidth={200}
+                          onValueChange={(val) => onChange(val)}
+                          mt={4}
+                        >
+                          {EventOrganizerCategories.map((option, index) => (
+                            <Select.Item key={index} label={option.name} value={option.key} />
+                          ))}
+                        </Select>
+                      )}
+                    />
+                  </FormControl>
+                  <Flex
+                    flexDirection="row"
+                    flexWrap="wrap"
+                    alignItems="flex-start" // Adjust alignment as needed
+                  >
+                    <HStack justifyContent="space-between" width="100%">
+                      <Text fontSize="md" fontWeight="bold">
+                        Event Date
+                      </Text>
+                      <Text fontSize="md" fontWeight="bold">
+                        Start Time
+                      </Text>
+                      <Text fontSize="md" fontWeight="bold">
+                        End Time
+                      </Text>
+                    </HStack>
+                    <HStack justifyContent="space-between" width="100%" mt={2}>
+                      <DateTimePicker
+                        testID="dateTimePicker"
+                        value={date}
+                        mode="date"
+                        display="default"
+                        minimumDate={new Date()}
+                        onChange={(event, selectedTime) => {
+                          if (event.type === 'set') {
+                            const formattedDate = moment(selectedTime).format('MMM Do YYYY');
+                            setValue('eventDate', formattedDate);
+                          }
+                        }}
+                      />
+                      <DateTimePicker
+                        testID="dateTimePicker"
+                        value={startTime}
+                        mode="time"
+                        display="default"
+                        onChange={(event, selectedTime) => {
+                          if (event.type === 'set') {
+                            const formattedTime = moment(selectedTime).format('h:mm a');
+                            setValue('dateStartTime', formattedTime);
+                          }
+                        }}
+                      />
+                      <DateTimePicker
+                        testID="dateTimePicker"
+                        value={endTime}
+                        mode="time"
+                        display="default"
+                        onChange={(event, selectedTime) => {
+                          if (event.type === 'set') {
+                            const formattedTime = moment(selectedTime).format('h:mm a');
+                            setValue('dateEndTime', formattedTime);
+                          }
+                        }}
+                      />
+                    </HStack>
+                  </Flex>
+                  <FormControl>
+                    <FormControl.Label>
+                      <Heading size="sm">Total Available Participants</Heading>
+                    </FormControl.Label>
+                    <Controller
+                      control={control}
+                      name="totalParticipants"
+                      rules={{ required: 'Field is required', min: 1 }}
                       render={({ field: { onChange, value, onBlur } }) => (
                         <Input
                           value={value}
                           onChangeText={(val) => {
-                            onChange(val);
+                            // Use a regular expression to remove any non-numeric characters
+                            const numericValue = val.replace(/[^0-9]/g, '');
+                            onChange(numericValue);
                           }}
                           onBlur={onBlur}
-                          placeholder="Online Meeting Link"
+                          placeholder="Total Available Participants"
+                          keyboardType="numeric"
                         />
                       )}
                     />
-                    <ErrorMessage error={errors.link?.message} visible={!!errors.link?.message} />
+                    <ErrorMessage
+                      error={errors.totalParticipants?.message}
+                      visible={!!errors.totalParticipants?.message}
+                    />
                   </FormControl>
-                )}
-                <FormControl>
-                  <FormControl.Label>
-                    <Heading size="sm">Event Category</Heading>
-                  </FormControl.Label>
-                  <Controller
-                    control={control}
-                    name="category"
-                    render={({ field: { onChange, value } }) => (
-                      <Select
-                        selectedValue={value}
-                        minWidth={200}
-                        onValueChange={(val) => onChange(val)}
-                        mt={4}
-                      >
-                        {EventOrganizerCategories.map((option, index) => (
-                          <Select.Item key={index} label={option.name} value={option.key} />
-                        ))}
-                      </Select>
-                    )}
-                  />
-                </FormControl>
-                <Flex
-                  flexDirection="row"
-                  flexWrap="wrap"
-                  alignItems="flex-start" // Adjust alignment as needed
-                >
-                  <HStack justifyContent="space-between" width="100%">
-                    <Text fontSize="md" fontWeight="bold">
-                      Event Date
-                    </Text>
-                    <Text fontSize="md" fontWeight="bold">
-                      Start Time
-                    </Text>
-                    <Text fontSize="md" fontWeight="bold">
-                      End Time
-                    </Text>
-                  </HStack>
-                  <HStack justifyContent="space-between" width="100%" mt={2}>
-                    <DateTimePicker
-                      testID="dateTimePicker"
-                      value={date}
-                      mode="date"
-                      display="default"
-                      minimumDate={new Date()}
-                      onChange={(event, selectedTime) => {
-                        if (event.type === 'set') {
-                          const formattedDate = moment(selectedTime).format('MMM Do YYYY');
-                          setValue('eventDate', formattedDate);
-                        }
-                      }}
-                    />
-                    <DateTimePicker
-                      testID="dateTimePicker"
-                      value={startTime}
-                      mode="time"
-                      display="default"
-                      onChange={(event, selectedTime) => {
-                        if (event.type === 'set') {
-                          const formattedTime = moment(selectedTime).format('h:mm a');
-                          setValue('dateStartTime', formattedTime);
-                        }
-                      }}
-                    />
-                    <DateTimePicker
-                      testID="dateTimePicker"
-                      value={endTime}
-                      mode="time"
-                      display="default"
-                      onChange={(event, selectedTime) => {
-                        if (event.type === 'set') {
-                          const formattedTime = moment(selectedTime).format('h:mm a');
-                          setValue('dateEndTime', formattedTime);
-                        }
-                      }}
-                    />
-                  </HStack>
-                </Flex>
-                <FormControl>
-                  <FormControl.Label>
-                    <Heading size="sm">Total Available Participants</Heading>
-                  </FormControl.Label>
-                  <Controller
-                    control={control}
-                    name="totalParticipants"
-                    rules={{ required: 'Field is required', min: 1 }}
-                    render={({ field: { onChange, value, onBlur } }) => (
-                      <Input
-                        value={value}
-                        onChangeText={(val) => {
-                          // Use a regular expression to remove any non-numeric characters
-                          const numericValue = val.replace(/[^0-9]/g, '');
-                          onChange(numericValue);
-                        }}
-                        onBlur={onBlur}
-                        placeholder="Total Available Participants"
-                        keyboardType="numeric"
-                      />
-                    )}
-                  />
-                  <ErrorMessage
-                    error={errors.totalParticipants?.message}
-                    visible={!!errors.totalParticipants?.message}
-                  />
-                </FormControl>
-              </KeyboardAvoidingView>
-              {/*<FormControl>
+                </KeyboardAvoidingView>
+                {/*<FormControl>
                 <FormControl.Label>Cost of Event (0 = Free)</FormControl.Label>
                 <Controller
                   control={control}
@@ -502,16 +519,17 @@ export const EventOrganizerScreen = () => {
                 <ErrorMessage error={errors.cost?.message} visible={!!errors.cost?.message} />
 									</FormControl>*/}
 
-              <HStack justifyContent="space-between" mt={4}>
-                <Button onPress={handleSubmit(onCreateEvent)} isLoading={saving}>
-                  Save Event
-                </Button>
-                <Button onPress={() => setIsCreatingEvent(false)}>Cancel</Button>
-              </HStack>
-            </VStack>
-          </ScrollView>
-        </Actionsheet.Content>
-      </Actionsheet>
-    </ScrollView>
+                <HStack justifyContent="space-between" mt={4}>
+                  <Button onPress={handleSubmit(onCreateEvent)} isLoading={saving}>
+                    Save Event
+                  </Button>
+                  <Button onPress={() => setIsCreatingEvent(false)}>Cancel</Button>
+                </HStack>
+              </VStack>
+            </ScrollView>
+          </Actionsheet.Content>
+        </Actionsheet>
+      </ScrollView>
+    </View>
   );
 };

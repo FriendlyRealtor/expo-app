@@ -35,7 +35,7 @@ export const MyDrawer = ({ navigation, ...restProps }) => {
       screenOptions={{
         headerRight: () => (
           <View style={{ display: 'flex', flexDirection: 'row' }}>
-            {isProfessional && (
+            {false && (
               <TouchableOpacity
                 onPress={() => setOpenBusinessCard(true)}
                 style={{ marginRight: 32 }}
@@ -56,7 +56,7 @@ export const MyDrawer = ({ navigation, ...restProps }) => {
                 />
               </TouchableOpacity>
             )}
-            <TouchableOpacity
+            {/*<TouchableOpacity
               onPress={() => {
                 navigation.navigate('Chat');
               }}
@@ -68,7 +68,7 @@ export const MyDrawer = ({ navigation, ...restProps }) => {
                 style={{ marginRight: 16 }}
                 color={Colors.color2}
               />
-            </TouchableOpacity>
+            </TouchableOpacity>*/}
           </View>
         ),
       }}

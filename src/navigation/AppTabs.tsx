@@ -9,8 +9,9 @@ import {
   HomeScreen,
   SettingScreen,
   EventScreen,
+  PaymentScreen,
 } from '../screens';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
 
 import { Colors } from '../config';
@@ -18,6 +19,7 @@ import { Icon, Modal, View, Text } from 'native-base';
 import { Image } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { ProfessionalEntitlement } from '../types';
 import { usePermissions } from '../hooks';
 import QRCode from 'react-native-qrcode-svg';
 import Bugsnag from '@bugsnag/expo';
@@ -47,6 +49,12 @@ export const AppTabs = (props) => {
     getLocation();
   }, []);
 
+  const isProfessional = useMemo(() => {
+    return props.route?.params?.currentUser.customerInfo.entitlements.active[
+      ProfessionalEntitlement
+    ];
+  }, [props?.route?.params?.currentUser]);
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -57,11 +65,25 @@ export const AppTabs = (props) => {
       }}
     >
       <Tab.Screen
+        name="Event Organizer"
+        component={EventOrganizerScreen}
+        options={{
+          headerShown: false,
+          tabBarLabel: 'Organize',
+          tabBarIcon: () => (
+            <Icon as={MaterialCommunityIcons} name="handshake" size="2xl" color={Colors.color2} />
+          ),
+        }}
+        initialParams={{
+          isProfessional: isProfessional,
+        }}
+      />
+      <Tab.Screen
         name="Discover Events"
         component={EventScreen}
         options={({ navigation }) => ({
           headerShown: false,
-          tabBarLabel: 'Discover Events',
+          tabBarLabel: 'Explore',
           tabBarIcon: () => (
             <Icon as={MaterialCommunityIcons} name="map-search" size="2xl" color={Colors.color2} />
           ),
@@ -81,8 +103,39 @@ export const AppTabs = (props) => {
             </TouchableOpacity>
           ),
         })}
+        initialParams={{
+          isProfessional: isProfessional,
+        }}
       />
       <Tab.Screen
+        name="AI Social Tool"
+        component={FacebookScreen}
+        options={{
+          headerShown: false,
+          tabBarLabel: 'AI Social',
+          tabBarIcon: () => (
+            <Icon as={MaterialCommunityIcons} name="smart-card" size="2xl" color={Colors.color2} />
+          ),
+        }}
+        initialParams={{
+          isProfessional: isProfessional,
+        }}
+      />
+      <Tab.Screen
+        name="Payment Method"
+        component={PaymentScreen}
+        options={{
+          headerShown: false,
+          tabBarLabel: 'Subscription',
+          tabBarIcon: () => (
+            <Icon as={MaterialCommunityIcons} name="credit-card" size="2xl" color={Colors.color2} />
+          ),
+        }}
+        initialParams={{
+          isProfessional: isProfessional,
+        }}
+      />
+      {/*<Tab.Screen
         name="AI Realtor Assistant"
         options={{
           headerShown: false,
@@ -93,18 +146,7 @@ export const AppTabs = (props) => {
         }}
       >
         {({ navigation }) => <AIScreen navigation={navigation} />}
-      </Tab.Screen>
-      <Tab.Screen
-        name="Event Organizer"
-        component={EventOrganizerScreen}
-        options={{
-          headerShown: false,
-          tabBarLabel: 'Event Organizer',
-          tabBarIcon: () => (
-            <Icon as={MaterialCommunityIcons} name="handshake" size="2xl" color={Colors.color2} />
-          ),
-        }}
-      />
+      </Tab.Screen>*/}
       <Tab.Screen
         name="Settings"
         component={SettingScreen}

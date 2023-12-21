@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { View, Text, Button, VStack, Badge, Icon } from 'native-base';
 import { Colors } from '../../config';
 import Purchases from 'react-native-purchases';
@@ -7,6 +7,10 @@ import { RevenueCatProductIDS } from '../../types';
 
 export const PaymentScreen = (props) => {
   const [rcProducts, setRcProducts] = useState([]);
+
+  const isProfessional = useMemo(() => {
+    return props.route.params.isProfessional;
+  }, [props.route.params.isProfessional]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -26,12 +30,12 @@ export const PaymentScreen = (props) => {
   };
 
   return (
-    <View flex={1} p={4} backgroundColor={Colors.white}>
+    <View flex={1} mt={24} p={4} backgroundColor={Colors.white}>
       <Text fontSize="xl" mb={4}>
         Membership Options
       </Text>
       <VStack space={4}>
-        {props?.route?.params?.isProfessional ? (
+        {isProfessional ? (
           <Badge colorScheme="success" variant="solid" rounded="md" mb={4}>
             <Text color="white">Enrolled in Professional Plan</Text>
           </Badge>
@@ -55,13 +59,7 @@ export const PaymentScreen = (props) => {
             </Text>
             <VStack space={2} pl={2} alignItems="flex-start">
               <Text>
-                <Icon name="check-circle" size="sm" color="green.500" /> Realtor Showings
-              </Text>
-              <Text>
-                <Icon name="check-circle" size="sm" color="green.500" /> MarketPro
-              </Text>
-              <Text>
-                <Icon name="check-circle" size="sm" color="green.500" /> Quick scan business card
+                <Icon name="check-circle" size="sm" color="green.500" /> Unlimited Event Creation
               </Text>
             </VStack>
             <Button
