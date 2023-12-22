@@ -18,7 +18,8 @@ import { getAuth } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { db } from '../config';
-import { TouchableOpacity } from 'react-native';
+import Constants from 'expo-constants';
+import Bugsnag from '@bugsnag/expo';
 
 export const EventCard = ({ event, index, isOrganizerCard, deleteEvent }) => {
   const [actionSheetVisible, setActionSheetVisible] = useState(false);
@@ -29,7 +30,7 @@ export const EventCard = ({ event, index, isOrganizerCard, deleteEvent }) => {
 
   const handleJoinEvent = async () => {
     setSaving(true); // Set the saving state to indicate that the operation is in progress
-    const { uid } = userAuth.currentUser; // Get the user's unique ID
+    const { uid, email } = userAuth.currentUser; // Get the user's unique ID
 
     // Check if the user's ID is already in the participants array
     if (event.participants.includes(uid)) {
@@ -47,11 +48,39 @@ export const EventCard = ({ event, index, isOrganizerCard, deleteEvent }) => {
     const eventRef = doc(db, 'events', event.id);
 
     try {
-      // Update the document with the updated participants array
-      await updateDoc(eventRef, { participants: updatedParticipants });
+      const eventDateTimeString = `${event?.eventDate} ${event?.dateStartTime} - ${event?.dateEndTime}`;
+
+      // Send a POST request to your send-event-email API
+      const response = await fetch(`${Constants?.manifest?.extra?.serverUrl}/send-event-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          virtual: event.virtual || false,
+          eventLink: event.link || '',
+          location: event.location || '',
+          date: eventDateTimeString,
+          name: event.title,
+        }),
+      });
+
+      if (response.ok) {
+        // Update the document with the updated participants array
+        await updateDoc(eventRef, { participants: updatedParticipants });
+        setDuplicateMsg('Email sent successfully!, check your email');
+      } else {
+        setDuplicateMsg(`Error joining event:', ${response.statusText}`);
+      }
+
+      setTimeout(() => {
+        setDuplicateMsg('');
+      }, 2000);
+
       setActionSheetVisible(false); // Close the action sheet
     } catch (error) {
-      console.error('Error updating event:', error);
+      Bugsnag.notify(error);
       // Handle the error as needed
     } finally {
       setSaving(false); // Set the saving state to indicate that the operation is complete
@@ -107,10 +136,11 @@ export const EventCard = ({ event, index, isOrganizerCard, deleteEvent }) => {
               padding: 0,
             }}
           >
-            <TouchableOpacity
+            <Button
               onPress={
                 isOrganizerCard ? () => deleteEvent(event?.id, index) : () => handleJoinEvent()
               }
+              isLoading={saving}
               style={{
                 backgroundColor: isOrganizerCard ? Colors.red : Colors.blue,
                 paddingHorizontal: 6,
@@ -121,7 +151,7 @@ export const EventCard = ({ event, index, isOrganizerCard, deleteEvent }) => {
               <Text color={Colors.white} fontWeight={700}>
                 {isOrganizerCard ? 'Delete Event' : 'Join Event'}
               </Text>
-            </TouchableOpacity>
+            </Button>
           </View>
           {!isOrganizerCard && (
             <View
@@ -151,7 +181,16 @@ export const EventCard = ({ event, index, isOrganizerCard, deleteEvent }) => {
           )}
         </View>
         {duplicateMsg && (
-          <Text fontSize="md" color={Colors.red} mb={2}>
+          <Text
+            fontSize="md"
+            color={
+              duplicateMsg === 'Email sent successfully!, check your email'
+                ? Colors.color2
+                : Colors.red
+            }
+            mb={2}
+            ml={2}
+          >
             {duplicateMsg}
           </Text>
         )}
