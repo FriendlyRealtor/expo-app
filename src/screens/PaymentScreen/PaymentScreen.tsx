@@ -4,6 +4,7 @@ import { Colors } from '../../config';
 import Purchases from 'react-native-purchases';
 import Bugsnag from '@bugsnag/expo';
 import { RevenueCatProductIDS } from '../../types';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export const PaymentScreen = (props) => {
   const [rcProducts, setRcProducts] = useState([]);
@@ -54,12 +55,22 @@ export const PaymentScreen = (props) => {
             <Text fontSize="xl" fontWeight={700} color="primary.500" mt={2}>
               Price: {rcProducts[0].priceString}
             </Text>
-            <Text mt={3} fontWeight="medium">
-              Premium Features:
+            <Text mt={3} fontWeight="bold">
+              Free Features:
             </Text>
             <VStack space={2} pl={2} alignItems="flex-start">
               <Text>
-                <Icon name="check-circle" size="sm" color="green.500" /> Unlimited Event Creation
+                <Icon as={MaterialCommunityIcons} name="information" size="lg" color="green.500" />{' '}
+                Create Up to 3 events
+              </Text>
+            </VStack>
+            <Text mt={3} fontWeight="bold">
+              Premium Features:
+            </Text>
+            <VStack space={2} my={4} pl={2} alignItems="flex-start">
+              <Text>
+                <Icon as={MaterialCommunityIcons} name="information" size="lg" color="green.500" />{' '}
+                Unlimited Event Creation
               </Text>
             </VStack>
             <Button
