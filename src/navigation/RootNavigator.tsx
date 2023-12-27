@@ -2,6 +2,7 @@ import {
   LoginScreen,
   SignupScreen,
   ForgotPasswordScreen,
+  EventScreen,
   ChatScreen,
   DistancePropertiesScreen,
   HomeScreen,
@@ -18,7 +19,7 @@ import { auth } from '../config';
 import { createStackNavigator } from '@react-navigation/stack';
 import { getTrackingPermissionsAsync } from 'expo-tracking-transparency';
 import { useNativeBaseTheme } from '../hooks';
-import { MyDrawer } from './Drawer';
+// import { MyDrawer } from './Drawer';
 import { AppTabs } from './AppTabs';
 
 const Stack = createStackNavigator();
@@ -94,7 +95,18 @@ export const RootNavigator = inject('appStore')(
             </Stack.Navigator>
           )}
           {!isLoading && user === null && (
-            <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+            <Stack.Navigator
+              initialRouteName="Discover Events"
+              screenOptions={{ headerShown: false }}
+            >
+              <Stack.Screen
+                name="Discover Events"
+                component={EventScreen}
+                initialParams={{
+                  user: user,
+                  currentUser: user,
+                }}
+              />
               <Stack.Screen name="Login" component={LoginScreen} />
               <Stack.Screen name="Signup" component={SignupScreen} />
               <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />

@@ -20,8 +20,9 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { db } from '../config';
 import Constants from 'expo-constants';
 import Bugsnag from '@bugsnag/expo';
+import { customEvent } from 'vexo-analytics';
 
-export const EventCard = ({ event, index, isOrganizerCard, deleteEvent }) => {
+export const EventCard = ({ event, index, isOrganizerCard, deleteEvent, navigation }) => {
   const [actionSheetVisible, setActionSheetVisible] = useState(false);
   const [saving, setSaving] = useState<boolean>(false);
   const [duplicateMsg, setDuplicateMsg] = useState<string>('');
@@ -29,25 +30,29 @@ export const EventCard = ({ event, index, isOrganizerCard, deleteEvent }) => {
   const userAuth = getAuth(); // Get the user's authentication information
 
   const handleJoinEvent = async () => {
-    setSaving(true); // Set the saving state to indicate that the operation is in progress
-    const { uid, email } = userAuth.currentUser; // Get the user's unique ID
-
-    // Check if the user's ID is already in the participants array
-    if (event.participants.includes(uid)) {
-      // User is already added to the event
-      setDuplicateMsg('User already successfully added to the event.');
-      setActionSheetVisible(false); // Close the action sheet
-      setSaving(false); // Set the saving state to indicate that the operation is complete
-      return;
-    }
-
-    // Add the user's ID to the participants array
-    const updatedParticipants = [...event.participants, uid];
-
-    // Create a reference to the event document in the "events" collection
-    const eventRef = doc(db, 'events', event.id);
-
     try {
+      if (!userAuth?.currentUser?.uid) {
+        customEvent('user-join-event-login', {
+          description: 'User not logged in, joining event',
+        });
+        navigation.navigate('Login');
+      }
+      setSaving(true); // Set the saving state to indicate that the operation is in progress
+      // Check if the user's ID is already in the participants array
+      if (event.participants.includes(userAuth?.currentUser?.uid)) {
+        // User is already added to the event
+        setDuplicateMsg('User already successfully added to the event.');
+        setActionSheetVisible(false); // Close the action sheet
+        setSaving(false); // Set the saving state to indicate that the operation is complete
+        return;
+      }
+
+      // Add the user's ID to the participants array
+      const updatedParticipants = [...event.participants, userAuth?.currentUser?.uid];
+
+      // Create a reference to the event document in the "events" collection
+      const eventRef = doc(db, 'events', event.id);
+
       const eventDateTimeString = `${event?.eventDate} ${event?.dateStartTime} - ${event?.dateEndTime}`;
 
       // Send a POST request to your send-event-email API
@@ -57,7 +62,7 @@ export const EventCard = ({ event, index, isOrganizerCard, deleteEvent }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: email,
+          email: userAuth?.currentUser?.email,
           virtual: event.virtual || false,
           eventLink: event.link || '',
           location: event.location || '',
@@ -70,6 +75,9 @@ export const EventCard = ({ event, index, isOrganizerCard, deleteEvent }) => {
         // Update the document with the updated participants array
         await updateDoc(eventRef, { participants: updatedParticipants });
         setDuplicateMsg('Email sent successfully!, check your email');
+        customEvent('user-join-event', {
+          description: 'User joining event',
+        });
       } else {
         setDuplicateMsg(`Error joining event:', ${response.statusText}`);
       }
