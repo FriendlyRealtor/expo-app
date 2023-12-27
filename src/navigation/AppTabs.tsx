@@ -65,20 +65,6 @@ export const AppTabs = (props) => {
       }}
     >
       <Tab.Screen
-        name="Event Organizer"
-        component={EventOrganizerScreen}
-        options={{
-          headerShown: false,
-          tabBarLabel: 'Organize',
-          tabBarIcon: () => (
-            <Icon as={MaterialCommunityIcons} name="handshake" size="2xl" color={Colors.color2} />
-          ),
-        }}
-        initialParams={{
-          isProfessional: isProfessional,
-        }}
-      />
-      <Tab.Screen
         name="Discover Events"
         component={EventScreen}
         options={({ navigation }) => ({
@@ -103,6 +89,20 @@ export const AppTabs = (props) => {
             </TouchableOpacity>
           ),
         })}
+        initialParams={{
+          isProfessional: isProfessional,
+        }}
+      />
+      <Tab.Screen
+        name="Event Organizer"
+        component={EventOrganizerScreen}
+        options={{
+          headerShown: false,
+          tabBarLabel: 'Create',
+          tabBarIcon: () => (
+            <Icon as={MaterialCommunityIcons} name="handshake" size="2xl" color={Colors.color2} />
+          ),
+        }}
         initialParams={{
           isProfessional: isProfessional,
         }}

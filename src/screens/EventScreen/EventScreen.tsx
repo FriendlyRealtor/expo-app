@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { View, Text, Center, Input, ScrollView, HStack } from 'native-base';
+import { View, Text, Center, Input, ScrollView, HStack, Button } from 'native-base';
 import { EventCard, Filter, UpgradePrompt } from '../../components';
 import { EventCategories, EventDates } from './EventTypes';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -9,7 +9,8 @@ import { getDocs, collection, query, orderBy } from 'firebase/firestore';
 import { SafeAreaView, RefreshControl } from 'react-native';
 import { useRefresh } from '../../hooks';
 import _ from 'lodash';
-export const EventScreen = ({ navigation }) => {
+
+export const EventScreen = ({ navigation, ...restProps }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedCategories, setSelectedCategories] = useState('');
@@ -103,6 +104,31 @@ export const EventScreen = ({ navigation }) => {
             <UpgradePrompt />
           </TouchableOpacity>
         )}
+        {restProps?.route?.params?.currentUser === null && (
+          <View>
+            <Text mt={12} mx={4} fontSize="lg" color={Colors.mediumGray}>
+              To join an event, you need an account.
+            </Text>
+            <HStack mx={4} mt={2} mb={4} alignItems="center">
+              <Button
+                onPress={() => navigation.navigate('Login')}
+                colorScheme="primary"
+                mr={2}
+                px={16}
+              >
+                Login
+              </Button>
+              <Button
+                onPress={() => navigation.navigate('Signup')}
+                variant="outline"
+                colorScheme="primary"
+                px={16}
+              >
+                Sign Up
+              </Button>
+            </HStack>
+          </View>
+        )}
         <View mb={4} mx={4} textAlign="left">
           <Text fontSize="2xl" fontWeight={700}>
             Explore Local Events.
@@ -145,7 +171,9 @@ export const EventScreen = ({ navigation }) => {
               </Text>
             </Center>
           ) : (
-            filteredEvents.map((event) => <EventCard key={event.id} event={event} />)
+            filteredEvents.map((event) => (
+              <EventCard key={event.id} event={event} navigation={navigation} />
+            ))
           )}
         </View>
       </ScrollView>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { View, Text, Button, VStack, Badge, Icon } from 'native-base';
+import { View, Text, Button, VStack, Badge, Icon, ScrollView } from 'native-base';
 import { Colors } from '../../config';
 import Purchases from 'react-native-purchases';
 import Bugsnag from '@bugsnag/expo';
@@ -31,7 +31,7 @@ export const PaymentScreen = (props) => {
   };
 
   return (
-    <View flex={1} mt={24} p={4} backgroundColor={Colors.white}>
+    <ScrollView flex={1} mt={24} p={4} backgroundColor={Colors.white}>
       <Text fontSize="xl" mb={4}>
         Membership Options
       </Text>
@@ -115,6 +115,6 @@ export const PaymentScreen = (props) => {
           </VStack>
         )}
       </VStack>
-    </View>
+    </ScrollView>
   );
 };
