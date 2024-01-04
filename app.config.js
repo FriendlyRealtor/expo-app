@@ -6,11 +6,12 @@ export default {
     slug: 'friendlyrealtor',
     privacy: 'unlisted',
     platforms: ['ios'],
-    version: '1.0.44',
+    version: '1.0.46',
     orientation: 'portrait',
     owner: 'jubileeinvestments',
     icon: './assets/icon.png',
     jsEngine: 'hermes',
+    scheme: 'friendlyrealtor',
     updates: {
       fallbackToCacheTimeout: 0,
     },
@@ -23,6 +24,7 @@ export default {
       supportsTablet: true,
       bundleIdentifier: 'jubileeinvestments.Real-Estate-App',
       buildNumber: '1',
+      associatedDomains: ['applinks:friendlyrealtor.app'],
       config: {
         usesNonExemptEncryption: false,
       },

@@ -3,17 +3,17 @@ import {
   SignupScreen,
   ForgotPasswordScreen,
   EventScreen,
+  SplashScreen,
   ChatScreen,
   DistancePropertiesScreen,
   HomeScreen,
   EventOrganizerScreen,
 } from '../screens';
 import React, { useEffect, useState } from 'react';
-import { SplashScreen, UserChatScreen } from '../screens';
 import { inject, observer } from 'mobx-react';
 import { useFonts } from 'expo-font';
 import Bugsnag from '@bugsnag/expo';
-import { NativeBaseProvider } from 'native-base';
+import { NativeBaseProvider, Text } from 'native-base';
 import { NavigationContainer } from '@react-navigation/native';
 import { auth } from '../config';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -21,8 +21,10 @@ import { getTrackingPermissionsAsync } from 'expo-tracking-transparency';
 import { useNativeBaseTheme } from '../hooks';
 // import { MyDrawer } from './Drawer';
 import { AppTabs } from './AppTabs';
+import * as Linking from 'expo-linking';
 
 const Stack = createStackNavigator();
+const prefix = Linking.createURL('/');
 
 export const RootNavigator = inject('appStore')(
   observer(({ appStore }) => {
@@ -72,9 +74,20 @@ export const RootNavigator = inject('appStore')(
       return <SplashScreen />;
     }
 
+    const linking = {
+      prefixes: [prefix],
+      config: {
+        screens: {
+          Home: 'home',
+          Signup: 'signup',
+          Login: 'login',
+        },
+      },
+    };
+
     return (
       <NativeBaseProvider theme={nativeBaseTheme}>
-        <NavigationContainer>
+        <NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
           {!isLoading && user && (
             <Stack.Navigator>
               <Stack.Group>
