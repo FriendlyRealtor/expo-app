@@ -98,6 +98,12 @@ export const LoginScreen = inject('appStore')(
             <Text fontSize={32} fontWeight={700}>
               Friendly Realtor
             </Text>
+            <Text fontSize={16} mt={4} mb={2} textAlign="center" color="blue.500">
+              Discover the power of Friendly Realtor! Connect, network, and succeed in real estate.
+            </Text>
+            <Text fontSize={12} textAlign="center">
+              Don't have an account yet? Click below to get started!
+            </Text>
           </View>
           <Formik validationSchema={loginValidationSchema}>
             {() => (
