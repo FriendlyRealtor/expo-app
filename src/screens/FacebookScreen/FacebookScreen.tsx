@@ -7,6 +7,7 @@ import Constants from 'expo-constants';
 import axios from 'axios';
 import _ from 'lodash';
 import { Colors } from '../../config';
+import { customEvent } from 'vexo-analytics';
 
 export const FacebookScreen = () => {
   const [isImageLoading, setIsImageLoading] = useState(false);
@@ -40,7 +41,9 @@ export const FacebookScreen = () => {
   const handlePostSubmit = async () => {
     try {
       setIsSubmitting(true);
-
+      customEvent('social post submitted', {
+        description: 'User clicked social submit post button',
+      });
       const pageId = selectedPage.id;
       const accessToken = selectedPage.access_token;
       const imageUrl = encodeURIComponent(generateImage?.url || '');
@@ -124,6 +127,9 @@ export const FacebookScreen = () => {
           response.data?.choices[0]?.message?.content || 'Assistant could not find a responose.';
         setPostText(text);
       }
+      customEvent('ai-generated-content', {
+        description: 'User clicked generate description button',
+      });
     } catch (error) {
       Bugsnag.notify(error);
     } finally {
@@ -149,33 +155,37 @@ export const FacebookScreen = () => {
       <View mb={2}>
         <Center>
           <Text mt={4} fontSize={18}>
-            Generative tool to creating a better social presence.
+            AI Content Generation Tool for Enhancing Social Presence.
           </Text>
           <Text mt={2} mb={4}>
             To access this feature, please log in to your Facebook account to grant necessary
             permissions.
           </Text>
         </Center>
-        <HStack justifyContent="center" px={4}>
+        <HStack justifyContent="center" alignItems="center" px={4}>
+          <Button
+            onPress={textGenerated}
+            backgroundColor={Colors.black}
+            isLoading={textLoading}
+            mr={2}
+            pt={1}
+            pb={1}
+          >
+            Generate Description
+          </Button>
           <LoginButton
             onLoginFinished={async () => {
               const token = await AccessToken.getCurrentAccessToken();
               fetchUserPages(token?.accessToken, token?.userID);
+              customEvent('facebook-logged-in', {
+                description: 'User clicked facebook login',
+              });
             }}
             onLogoutFinished={() => {
               setSelectedPage(undefined);
               setData(undefined);
             }}
           />
-          <Button
-            onPress={textGenerated}
-            backgroundColor={Colors.black}
-            isLoading={textLoading}
-            mb={6}
-            ml={6}
-          >
-            AI Generative Content
-          </Button>
         </HStack>
       </View>
       <View>
