@@ -1,5 +1,18 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { View, Text, Center, Input, ScrollView, HStack, Button } from 'native-base';
+import {
+  View,
+  Text,
+  Center,
+  Input,
+  ScrollView,
+  HStack,
+  Button,
+  Alert,
+  VStack,
+  Box,
+  IconButton,
+  CloseIcon,
+} from 'native-base';
 import { EventCard, Filter, UpgradePrompt } from '../../components';
 import { EventCategories, EventDates } from './EventTypes';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -8,6 +21,7 @@ import { db, Colors } from '../../config';
 import { getDocs, collection, query, orderBy } from 'firebase/firestore';
 import { SafeAreaView, RefreshControl } from 'react-native';
 import { useRefresh } from '../../hooks';
+import { customEvent } from 'vexo-analytics';
 import _ from 'lodash';
 
 export const EventScreen = ({ navigation, ...restProps }) => {
@@ -130,10 +144,50 @@ export const EventScreen = ({ navigation, ...restProps }) => {
           </View>
         )}
         <View mb={4} mx={4} textAlign="left">
+          <TouchableOpacity
+            onPress={() => {
+              customEvent('alert navigating to ai screen', {
+                description: 'clicked alert for navigating to ai screen',
+              });
+              navigation.navigate('AI Social Tool');
+            }}
+          >
+            <Alert status="info" colorScheme="info">
+              <VStack space={2} flexShrink={1} w="100%">
+                <HStack flexShrink={1} space={2} alignItems="center" justifyContent="space-between">
+                  <HStack flexShrink={1} space={2} alignItems="center">
+                    <Alert.Icon />
+                    <Text fontSize="md" fontWeight="medium" color="coolGray.800">
+                      Elevate Your Brand with Automated AI Marketing
+                    </Text>
+                  </HStack>
+                  <IconButton
+                    variant="unstyled"
+                    _focus={{
+                      borderWidth: 0,
+                    }}
+                    icon={<CloseIcon size="3" />}
+                    _icon={{
+                      color: 'coolGray.600',
+                    }}
+                  />
+                </HStack>
+                <Box
+                  pl="6"
+                  _text={{
+                    color: 'coolGray.600',
+                  }}
+                >
+                  Boost brand presence with AI: optimize, automate, and foster social growth
+                </Box>
+              </VStack>
+            </Alert>
+          </TouchableOpacity>
+
           <Text fontSize="2xl" fontWeight={700}>
             Explore Local Events.
           </Text>
-          <Text fontSize="xs" mt={1} mb={3} width={375} color={Colors.mediumGray}>
+          <Text fontSize="xs" mt={1} mb={3} color={Colors.mediumGray}>
             Explore and stay updated with the latest events relevant to your real estate interests.
           </Text>
         </View>
@@ -149,13 +203,21 @@ export const EventScreen = ({ navigation, ...restProps }) => {
             <Filter
               title="Date"
               options={EventDates.map((date) => date.name)}
-              onFilterChange={(filters) => setSelectedDate(filters)}
+              onFilterChange={(filters) => {
+                customEvent('date filter change', {
+                  description: 'User clicked date filter change button',
+                });
+                setSelectedDate(filters);
+              }}
             />
           </View>
           <Filter
             title="Select Categories"
             options={EventCategories.map((category) => category.name)}
             onFilterChange={(filters) => {
+              customEvent('categories filter change', {
+                description: 'User clicked categories filter change button',
+              });
               const filter = EventCategories.find((category) => category.name === filters[0]);
               if (filter && filter.key) {
                 setSelectedCategories([filter.key]);

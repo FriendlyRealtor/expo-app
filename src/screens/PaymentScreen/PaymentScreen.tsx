@@ -5,6 +5,7 @@ import Purchases from 'react-native-purchases';
 import Bugsnag from '@bugsnag/expo';
 import { RevenueCatProductIDS } from '../../types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { customEvent } from 'vexo-analytics';
 
 export const PaymentScreen = (props) => {
   const [rcProducts, setRcProducts] = useState([]);
@@ -26,8 +27,15 @@ export const PaymentScreen = (props) => {
     fetchProducts();
   }, []);
 
-  const handlePurchase = () => {
-    Purchases.purchaseProduct(rcProducts[0].identifier);
+  const handlePurchase = async () => {
+    try {
+      customEvent('handle purchase btn', {
+        description: 'User clicked handle purchase button',
+      });
+      await Purchases.purchaseProduct(rcProducts[0].identifier);
+    } catch (error) {
+      Bugsnag.notify(error);
+    }
   };
 
   return (

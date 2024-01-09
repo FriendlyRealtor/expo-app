@@ -39,6 +39,7 @@ import { db } from '../../config';
 import { Colors } from '../../config';
 import { useRefresh } from '../../hooks';
 import _ from 'lodash';
+import { customEvent } from 'vexo-analytics';
 
 export const EventOrganizerScreen = (props) => {
   const userAuth = getAuth();
@@ -219,7 +220,18 @@ export const EventOrganizerScreen = (props) => {
             Upgrade to Premium for Unlimited Event Creation!
           </Text>
         ) : (
-          <Button onPress={() => setIsCreatingEvent(true)} color={Colors.color2}>
+          <Button
+            onPress={() => {
+              setIsCreatingEvent(true);
+
+              if (isCreatingEvent) {
+                customEvent('create new event', {
+                  description: 'User clicked create new event button',
+                });
+              }
+            }}
+            color={Colors.color2}
+          >
             Create Event Now
           </Button>
         )}
