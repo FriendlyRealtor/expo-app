@@ -2,12 +2,15 @@
   "private": true,
   "main": "index.ts",
   "scripts": {
-    "android": "expo run:android --device",
     "build:ios": "eas build --platform ios",
+    "build:android": "eas build --platform android",
+    "build:all": "eas build --platform all",
     "buildCheck": "tsc --noEmit",
     "devBuild:ios": "eas build --profile development-simulator --platform ios",
+    "devBuild:android": "eas build --profile development-simulator --platform android",
     "eject": "expo eject",
     "expo:start": "npx expo start",
+    "android": "expo run:android --device",
     "ios": "expo run:ios --device",
     "lint": "eslint 'src/components/**/*.{ts,tsx,js,jsx}' 'src/config/**/*.{ts,tsx,js,jsx}' 'src/hooks/**/*.{ts,tsx,js,jsx}' 'src/navigation/**/*.{ts,tsx,js,jsx}' 'src/providers/**/*.{ts,tsx,js,jsx}' 'src/screens/**/*.{ts,tsx,js,jsx}' 'src/utils/**/*.{ts,tsx,js,jsx}'  'src/stores/**/*.{ts,tsx,js,jsx}' --fix",
     "prettier": "prettier --write 'src/components/**/*.{ts,tsx,js,jsx}' 'src/config/**/*.{ts,tsx,js,jsx}' 'src/hooks/**/*.{ts,tsx,js,jsx}' 'src/navigation/**/*.{ts,tsx,js,jsx}' 'src/providers/**/*.{ts,tsx,js,jsx}' 'src/screens/**/*.{ts,tsx,js,jsx}' 'src/utils/**/*.{ts,tsx,js,jsx}' 'src/stores/**/*.{ts,tsx,js,jsx}' ",
@@ -107,5 +110,7 @@
     "babel-plugin-transform-inline-environment-variables": "^0.4.4",
     "babel-preset-expo": "^9.3.0",
     "react-native-dotenv": "^3.4.8"
-  }
+  },
+  "name": "friendly-realtor-app",
+  "version": "1.0.0"
 }

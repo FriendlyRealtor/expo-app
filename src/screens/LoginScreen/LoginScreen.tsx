@@ -91,15 +91,12 @@ export const LoginScreen = inject('appStore')(
         <StatusBar style="auto" />
         <KeyboardAwareScrollView>
           <View style={styles.logoContainer}>
-            <Image
-              source={require('../../../assets/icon.png')}
-              style={{ width: 250, height: 250 }}
-            />
+            <View style={{ width: 250, height: 250 }} />
             <Text fontSize={32} fontWeight={700}>
-              Friendly Realtor
+              JubileeSpace
             </Text>
             <Text fontSize={16} mt={4} mb={2} textAlign="center" color="blue.500">
-              Discover the power of Friendly Realtor! Connect, network, and succeed in real estate.
+              Discover the power of JubileeSpace! Connect, network, and succeed in real estate.
             </Text>
             <Text fontSize={12} textAlign="center">
               Don't have an account yet? Click below to get started!

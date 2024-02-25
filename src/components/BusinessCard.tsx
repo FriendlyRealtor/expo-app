@@ -6,9 +6,9 @@ import Bugsnag from '@bugsnag/expo';
 export const BusinessCard = (props) => {
   const vCardData = `BEGIN:VCARD
 											VERSION:3.0
-											FN:${props.route.params.currentUser.name}
-											EMAIL:${props.route.params.currentUser.emailAddress || props.route.params.user.email}
-											TEL:${props.route.params.currentUser.phone || ''}
+											FN:${props.userInfo.name}
+											EMAIL:${props.userInfo.emailAddress}
+											TEL:${props.userInfo.phone || ''}
 											TITLE:Real Estate Agent
 											END:VCARD`;
   return (
@@ -18,9 +18,9 @@ export const BusinessCard = (props) => {
         <Modal.Header style={styles.modalHeader}>Business Card</Modal.Header>
         <Modal.Body>
           <View style={styles.cardContainer}>
-            {props.route.params.currentUser.photo && (
+            {props.userInfo.photo && (
               <Image
-                source={{ uri: props.route.params.currentUser.photo }}
+                source={{ uri: props.userInfo.photo }}
                 style={{
                   width: 100,
                   height: 100,
@@ -33,20 +33,14 @@ export const BusinessCard = (props) => {
               />
             )}
             <View>
-              {props.route.params.currentUser.name && (
-                <Text
-                  style={styles.nameText}
-                >{`Name: ${props.route.params.currentUser.name}`}</Text>
+              {props.userInfo.name && (
+                <Text style={styles.nameText}>{`Name: ${props.userInfo.name}`}</Text>
               )}
-              {(props.route.params.currentUser.emailAddress || props.route.params.user.email) && (
-                <Text style={styles.contactText}>{`Email: ${
-                  props.route.params.currentUser.emailAddress || props.route.params.user.email
-                }`}</Text>
+              {props.userInfo.emailAddress && (
+                <Text style={styles.contactText}>{`Email: ${props.userInfo.emailAddress}`}</Text>
               )}
-              {props.route.params.currentUser.phone && (
-                <Text
-                  style={styles.contactText}
-                >{`Phone: ${props.route.params.currentUser.phone}`}</Text>
+              {props.userInfo.phone && (
+                <Text style={styles.contactText}>{`Phone: ${props.userInfo.phone}`}</Text>
               )}
               <Text style={styles.contactText}>Title: Real Estate Agent</Text>
             </View>

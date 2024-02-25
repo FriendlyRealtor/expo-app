@@ -11,13 +11,13 @@ import {
   Image,
   Input,
   Card,
-  Link,
   Text,
+  Icon,
   TextArea,
   ScrollView,
   View,
 } from 'native-base';
-import { Chip, Container, ErrorMessage } from '../../components';
+import { Chip, BusinessCard, ErrorMessage } from '../../components';
 import {
   Extrapolate,
   interpolate,
@@ -46,6 +46,7 @@ import moment from 'moment';
 import { useIsFocused } from '@react-navigation/native';
 import { useLayout } from '../../hooks';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export const SettingScreen = inject('appStore')(
   observer(({ appStore }) => {
@@ -69,7 +70,7 @@ export const SettingScreen = inject('appStore')(
     const [bio, setBio] = useState(user.bio || '');
     const [locations, setLocations] = useState<string[]>(user.serviceZipCodes || []);
     const [saving, setSaving] = useState<boolean>(false);
-
+    const [openBusinessCard, setOpenBusinessCard] = useState<boolean>(false);
     const [phoneNumber, setPhoneNumber] = useState(user.phone || '');
     const [chipValue, setChipValue] = useState<string>('');
     const [localCmaRows, setLocalCmaRows] = useState();
@@ -229,9 +230,7 @@ export const SettingScreen = inject('appStore')(
     }, []);
 
     const visitPublicProfile = () => {
-      const publicProfileURL = `https://friendlyrealtor.app/agent/${
-        user.username || user.userName
-      }`;
+      const publicProfileURL = `https://jubileespace.com/agent/${user.username || user.userName}`;
       Linking.openURL(publicProfileURL);
     };
 
@@ -393,15 +392,33 @@ export const SettingScreen = inject('appStore')(
                 </HStack>
               </Card>
               <Card backgroundColor={Colors.lightGray} my={2}>
-                {user.username ||
-                  (user.userName && (
-                    <HStack alignItems="center" justifyContent="space-between">
-                      <Heading size="xs">Referral Link</Heading>
-                      <Text fontSize="md">
-                        <Link onPress={visitPublicProfile}>Visit Public Profile</Link>
-                      </Text>
-                    </HStack>
-                  ))}
+                <HStack alignItems="center" justifyContent="space-between">
+                  <Heading size="xs">Business Card</Heading>
+                  <TouchableOpacity
+                    onPress={() => setOpenBusinessCard(true)}
+                    style={{ marginRight: 32 }}
+                  >
+                    <Icon
+                      as={MaterialCommunityIcons}
+                      name="qrcode"
+                      size="2xl"
+                      marginLeft="16px"
+                      color={Colors.black}
+                      borderWidth={1}
+                      alignItems="center"
+                    />
+                    <BusinessCard
+                      openBusinessCard={openBusinessCard}
+                      setOpenBusinessCard={setOpenBusinessCard}
+                      userInfo={{
+                        name: user.name,
+                        emailAddress: userAuth?.currentUser?.email,
+                        phone: user.phone,
+                        photo: user.photo,
+                      }}
+                    />
+                  </TouchableOpacity>
+                </HStack>
               </Card>
               <Card backgroundColor={Colors.lightGray} my={2}>
                 <HStack alignItems="center" justifyContent="space-between">
@@ -487,19 +504,6 @@ export const SettingScreen = inject('appStore')(
                       style={{ width: '100%', height: 200 }}
                     />
                   )}
-                </HStack>
-              </Card>
-              <Card backgroundColor={Colors.lightGray} my={2}>
-                <HStack alignItems="center" justifyContent="space-between">
-                  <Heading size="xs">Renew Education License</Heading>
-                  <DateTimePicker
-                    testID="dateTimePicker"
-                    value={date}
-                    mode={'date'}
-                    onChange={onChange}
-                    display="default"
-                    minimumDate={new Date(year, month, day)}
-                  />
                 </HStack>
               </Card>
               <Card backgroundColor={Colors.lightGray} my={2}>
