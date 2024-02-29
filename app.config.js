@@ -23,6 +23,9 @@ export default {
 		android: {
 			package: 'com.jubileeinvestments.jubileespace',
       versionCode: 1,
+      compileSdkVersion: 33,
+      targetSdkVersion: 33,
+      buildToolsVersion: '33.0.0',
 		},
     ios: {
       supportsTablet: true,
@@ -57,11 +60,15 @@ export default {
       bugSnagApiKey: process.env.BUGSNAG_API_KEY,
       vexoApiKey: process.env.VEXO_API_KEY,
       fbBaseUrl: process.env.FB_BASE_URL,
+      bugsnag: {
+        apiKey: 'e2f1d89b3b8b9a0e64139d98ad459114',
+      },
       eas: {
         projectId: process.env.EAS_PROJECT_ID,
       },
     },
     plugins: [
+      ['@bugsnag/plugin-expo-eas-sourcemaps'],
       [
         'expo-contacts',
         {
