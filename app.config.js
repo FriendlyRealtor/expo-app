@@ -22,7 +22,7 @@ export default {
     assetBundlePatterns: ['**/*'],
 		android: {
 			package: 'com.jubileeinvestments.jubileespace',
-      versionCode: 1,
+      versionCode: 2,
       compileSdkVersion: 33,
       targetSdkVersion: 33,
       buildToolsVersion: '33.0.0',
