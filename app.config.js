@@ -22,7 +22,7 @@ export default {
     assetBundlePatterns: ['**/*'],
 		android: {
 			package: 'com.jubileeinvestments.jubileespace',
-      versionCode: 1
+      versionCode: 1,
 		},
     ios: {
       supportsTablet: true,
