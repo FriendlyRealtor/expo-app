@@ -2,7 +2,7 @@ import 'dotenv/config';
 
 export default {
   expo: {
-    name: 'JubileeSpace',
+    name: 'Friendly Realtor',
     slug: 'friendlyrealtor',
     privacy: 'unlisted',
     platforms: ['ios', 'android'],
@@ -21,7 +21,8 @@ export default {
     },
     assetBundlePatterns: ['**/*'],
 		android: {
-			package: 'com.jubileeinvestments.jubileespace'
+			package: 'com.jubileeinvestments.jubileespace',
+      versionCode: 1
 		},
     ios: {
       supportsTablet: true,
@@ -100,7 +101,7 @@ export default {
         {
           appID: '1339976196848860',
           clientToken: 'b95fc35e1b5d307b7f270c60ab423ac0',
-          displayName: 'JubileeSpace',
+          displayName: 'Friendly Realtor',
           advertiserIDCollectionEnabled: false,
           autoLogAppEventsEnabled: false,
           isAutoInitEnabled: true,

@@ -1,6 +1,6 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { initializeFirestore } from 'firebase/firestore';
 import { getDatabase } from 'firebase/database';
 import { getStorage } from 'firebase/storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -8,13 +8,13 @@ import Constants from 'expo-constants';
 
 // add firebase config
 const firebaseConfig = {
-  apiKey: Constants.manifest.extra.apiKey,
-  authDomain: Constants.manifest.extra.authDomain,
-  projectId: Constants.manifest.extra.projectId,
-  storageBucket: Constants.manifest.extra.storageBucket,
-  messagingSenderId: Constants.manifest.extra.messagingSenderId,
-  databaseURL: Constants.manifest.extra.realTimeDbUrl,
-  appId: Constants.manifest.extra.appId,
+  apiKey: Constants.manifest?.extra?.apiKey,
+  authDomain: Constants.manifest?.extra?.authDomain,
+  projectId: Constants.manifest?.extra?.projectId,
+  storageBucket: Constants.manifest?.extra?.storageBucket,
+  messagingSenderId: Constants.manifest?.extra?.messagingSenderId ,
+  databaseURL: Constants.manifest?.extra?.realTimeDbUrl,
+  appId: Constants.manifest?.extra?.appId,
 };
 
 // initialize firebase
@@ -25,7 +25,9 @@ const auth = initializeAuth(app, {
 });
 
 // initialize db
-const db = getFirestore(app);
+const db = initializeFirestore(app, {
+  experimentalForceLongPolling: true,
+});
 
 // initialize storage
 const storage = getStorage();
