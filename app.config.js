@@ -22,10 +22,7 @@ export default {
     assetBundlePatterns: ['**/*'],
 		android: {
 			package: 'com.jubileeinvestments.jubileespace',
-      versionCode: 2,
-      compileSdkVersion: 33,
-      targetSdkVersion: 33,
-      buildToolsVersion: '33.0.0',
+      versionCode: 3,
 		},
     ios: {
       supportsTablet: true,
@@ -73,6 +70,16 @@ export default {
         'expo-contacts',
         {
           contactsPermission: 'Allow $(PRODUCT_NAME) to access your contacts.',
+        },
+      ],
+      [
+        'expo-build-properties',
+        {
+          android: {
+            compileSdkVersion: 33,
+            targetSdkVersion: 33,
+            buildToolsVersion: '33.0.0',
+          },
         },
       ],
       [
