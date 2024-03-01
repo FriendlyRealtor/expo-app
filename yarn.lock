@@ -4632,6 +4632,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@revenuecat/purchases-typescript-internal@npm:9.8.0":
+  version: 9.8.0
+  resolution: "@revenuecat/purchases-typescript-internal@npm:9.8.0"
+  checksum: 3747642f514e39b9658db372e5f26a93b1df80991b477d9bb2aa4e4517b4a9ef5df85f96eb99bb35a777c4640ef4f7903108f9a18aa7c26b6a871b766fa55377
+  languageName: node
+  linkType: hard
+
 "@segment/loosely-validate-event@npm:^2.0.0":
   version: 2.0.0
   resolution: "@segment/loosely-validate-event@npm:2.0.0"
@@ -8471,11 +8478,11 @@ __metadata:
     react-native-google-places-autocomplete: ^2.5.1
     react-native-keyboard-aware-scroll-view: ^0.9.4
     react-native-paper: ^5.2.0
-    react-native-purchases: ^5.13.1
+    react-native-purchases: 7.22.0
     react-native-qrcode-svg: ^6.2.0
     react-native-reanimated: ~2.12.0
     react-native-safe-area-context: 4.4.1
-    react-native-screens: ~3.18.0
+    react-native-screens: 3.29.0
     react-native-svg: ^13.13.0
     react-native-tracking-transparency: ^0.1.2
     react-native-uuid: ^2.0.1
@@ -12799,13 +12806,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-purchases@npm:^5.13.1":
-  version: 5.13.2
-  resolution: "react-native-purchases@npm:5.13.2"
+"react-native-purchases@npm:7.22.0":
+  version: 7.22.0
+  resolution: "react-native-purchases@npm:7.22.0"
+  dependencies:
+    "@revenuecat/purchases-typescript-internal": 9.8.0
   peerDependencies:
     react: ">= 16.6.3"
     react-native: ">= 0.58.2"
-  checksum: 6d9386343f6d2f15161e0739f54699c7f182d06dd164f9d89f1a0d4add1b72ae99710a1c5f66ac3e80ce27a5493a2ab4ecee737a55cf006897097dd298a286bb
+  checksum: 9d31b0c376a336e9fde7cfcf7d4038ca7b63537d5aaaaddd58233206a6698e6a75031ef3e54a95e4c66812fedf07bc4efa57186c47a170ee248a6b2c724e4190
   languageName: node
   linkType: hard
 
@@ -12863,16 +12872,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-screens@npm:~3.18.0":
-  version: 3.18.2
-  resolution: "react-native-screens@npm:3.18.2"
+"react-native-screens@npm:3.29.0":
+  version: 3.29.0
+  resolution: "react-native-screens@npm:3.29.0"
   dependencies:
     react-freeze: ^1.0.0
     warn-once: ^0.1.0
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 8f7202baced736220710138469aea2c7b543662d820eb47170bfc98a0503f8c764d7509596ccbcc76cac6158e47a2c029444d6e1f78c20e98bcafeda15027ac1
+  checksum: c1879eea8386f32c2655fedd79d41d8e25d2f4e7f883abbcad2c747ea7ac859f4a7f469475a519948e7c5ea317a7ebd8df92c6365627f6a5da1e4a208cece7e1
   languageName: node
   linkType: hard
 
